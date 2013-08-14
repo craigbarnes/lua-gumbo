@@ -1,7 +1,7 @@
 package.path = ""
 package.cpath = "./?.so"
 
-local gumbo = require "lgumbo"
+local gumbo = require "gumbo"
 
 local output = gumbo.parse [[
     <title>Test Document</title>

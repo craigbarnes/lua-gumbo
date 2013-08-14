@@ -6,14 +6,14 @@ CFLAGS  = -Wall -O2 -std=c99 $(GUMBO_CFLAGS)
 LDFLAGS = -shared
 LDLIBS  = $(GUMBO_LDLIBS)
 
-lgumbo.so: lgumbo.o
+gumbo.so: lgumbo.o
 	$(CC) $(LDFLAGS) $(LDLIBS) $< -o $@
 
-check: lgumbo.so
+check: gumbo.so
 	lua test.lua
 
 clean:
-	rm -f lgumbo.{so,o}
+	rm -f gumbo.so lgumbo.o
 
 
 .PHONY: check clean

@@ -14,7 +14,7 @@ static const luaL_reg R[] = {
     {NULL, NULL}
 };
 
-int luaopen_lgumbo(lua_State *L) {
-    luaL_register(L, "lgumbo", R);
+int luaopen_gumbo(lua_State *L) {
+    luaL_register(L, "gumbo", R);
     return 1;
 }
