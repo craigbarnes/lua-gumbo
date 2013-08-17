@@ -20,8 +20,8 @@ install: gumbo.so
 uninstall:
 	rm -f $(DESTDIR)$(LUACDIR)/gumbo.so
 
-check: gumbo.so
-	lua test.lua
+check: gumbo.so test.lua
+	@lua test.lua && echo "All tests passed"
 
 clean:
 	rm -f gumbo.so lgumbo.o
