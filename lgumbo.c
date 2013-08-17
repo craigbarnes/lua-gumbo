@@ -12,7 +12,7 @@ static void build_element(lua_State *L, GumboElement *element) {
 
     GumboVector *attrs = &element->attributes;
     unsigned int nattrs = attrs->length;
-    if (nattrs >= 1) {
+    if (nattrs) {
         lua_createtable(L, 0, nattrs);
         for (int i = 0; i < nattrs; ++i) {
             GumboAttribute *attribute = attrs->data[i];
