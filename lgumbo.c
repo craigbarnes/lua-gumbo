@@ -4,13 +4,13 @@
 
 static void build_node(lua_State *L, GumboNode* node);
 
-static void build_element(lua_State *L, GumboNode *node) {
-    lua_newtable(L);
-    lua_pushstring(L, gumbo_normalized_tagname(node->v.element.tag));
+static void build_element(lua_State *L, GumboElement *element) {
+    unsigned int len = element->children.length;
+    lua_createtable(L, len, 1);
+    lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     lua_setfield(L, -2, "tag");
-    GumboVector* children = &node->v.element.children;
-    for (int i = 0; i < children->length; ++i) {
-        build_node(L, children->data[i]);
+    for (int i = 0; i < len; ++i) {
+        build_node(L, element->children.data[i]);
         lua_rawseti(L, -2, i+1);
     }
 }
@@ -18,7 +18,7 @@ static void build_element(lua_State *L, GumboNode *node) {
 static void build_node(lua_State *L, GumboNode* node) {
     switch (node->type) {
     case GUMBO_NODE_ELEMENT:
-        build_element(L, node);
+        build_element(L, &node->v.element);
         break;
 
     case GUMBO_NODE_TEXT:
@@ -38,10 +38,9 @@ static int parse(lua_State *L) {
     size_t len;
     const char *input;
     GumboOutput *output;
-
     input = luaL_checklstring(L, 1, &len);
     output = gumbo_parse_with_options(&kGumboDefaultOptions, input, len);
-    build_element(L, output->root);
+    build_element(L, &output->root->v.element);
     gumbo_destroy_output(&kGumboDefaultOptions, output);
     return 1;
 }
