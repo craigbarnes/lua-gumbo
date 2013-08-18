@@ -30,18 +30,16 @@ static void build_element(lua_State *L, GumboElement *element) {
     unsigned int nchildren = element->children.length;
     unsigned int nattrs = element->attributes.length;
 
-    // Add tag name
     lua_createtable(L, nchildren, 2);
-    addfield(L, "tag", gumbo_normalized_tagname(element->tag));
 
-    // If the element tag is not recognized, the normalized tag name is an
-    // empty string. In this case, we also provide the original_tag field,
-    // which comes via a GumboStringPiece pointing at the raw text in the
-    // input buffer (including delimiters and attributes).
+    // Add tag name
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece *original_tag = &element->original_tag;
+        gumbo_tag_from_original_text(original_tag);
         lua_pushlstring(L, original_tag->data, original_tag->length);
-        lua_setfield(L, -2, "original_tag");
+        lua_setfield(L, -2, "tag");
+    } else {
+        addfield(L, "tag", gumbo_normalized_tagname(element->tag));
     }
 
     // Add attributes
