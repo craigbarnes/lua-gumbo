@@ -60,7 +60,7 @@ static int parse(lua_State *L) {
     GumboOutput *output;
     input = luaL_checklstring(L, 1, &len);
     output = gumbo_parse_with_options(&kGumboDefaultOptions, input, len);
-    build_element(L, &output->root->v.element);
+    build_node(L, output->root);
     gumbo_destroy_output(&kGumboDefaultOptions, output);
     return 1;
 }
