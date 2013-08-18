@@ -55,7 +55,7 @@ static void build_node(lua_State *L, GumboNode* node) {
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT:
         build_document(L, &node->v.document);
-        break;
+        return;
 
     case GUMBO_NODE_ELEMENT:
         build_element(L, &node->v.element);
@@ -65,18 +65,18 @@ static void build_node(lua_State *L, GumboNode* node) {
             lua_pushboolean(L, true);
             lua_setfield(L, -2, "parse_flags");
         }
-        break;
+        return;
 
     case GUMBO_NODE_COMMENT:
         lua_createtable(L, 0, 1);
         addfield(L, "comment", node->v.text.text);
-        break;
+        return;
 
     case GUMBO_NODE_TEXT:
     case GUMBO_NODE_CDATA:
     case GUMBO_NODE_WHITESPACE:
         lua_pushstring(L, node->v.text.text);
-        break;
+        return;
 
     default:
         luaL_error(L, "Invalid node type");
