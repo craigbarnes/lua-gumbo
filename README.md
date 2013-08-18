@@ -22,7 +22,7 @@ Example
 Todo
 ----
 
-* Include comment nodes in the output tree
+* Handle `GUMBO_TAG_UNKNOWN` properly (discard `tag` and use `original_tag`)
 * Add a Lua-friendly interface for the `parse_flags` bit vector field
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
