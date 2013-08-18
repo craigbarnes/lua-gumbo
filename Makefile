@@ -3,7 +3,7 @@ GUMBO_LDLIBS  = $(shell pkg-config --libs-only-l gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs-only-L gumbo)
 
 CC		= cc
-CFLAGS  = -Wall -O2 -std=c99 $(GUMBO_CFLAGS)
+CFLAGS  = -O2 -Wall -Wextra -std=c99 -pedantic $(GUMBO_CFLAGS)
 LDFLAGS = -shared $(GUMBO_LDFLAGS)
 LDLIBS  = $(GUMBO_LDLIBS)
 PREFIX  = /usr/local

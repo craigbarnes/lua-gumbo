@@ -37,7 +37,7 @@ static void build_element(lua_State *L, GumboElement *element) {
     // Add attributes
     if (nattrs) {
         lua_createtable(L, 0, nattrs);
-        for (int i = 0; i < nattrs; ++i) {
+        for (unsigned int i = 0; i < nattrs; ++i) {
             GumboAttribute *attribute = element->attributes.data[i];
             addfield(L, attribute->name, attribute->value);
         }
@@ -45,7 +45,7 @@ static void build_element(lua_State *L, GumboElement *element) {
     }
 
     // Recursively add children
-    for (int i = 0; i < nchildren; ++i) {
+    for (unsigned int i = 0; i < nchildren; ++i) {
         build_node(L, element->children.data[i]);
         lua_rawseti(L, -2, i+1);
     }
