@@ -2,13 +2,18 @@
 #include <lauxlib.h>
 #include <gumbo.h>
 
+// Set a string field on the table at the top of the stack
+static void addfield(lua_State *L, const char *name, const char *value) {
+    lua_pushstring(L, value);
+    lua_setfield(L, -2, name);
+}
+
 static void build_node(lua_State *L, GumboNode* node);
 
 static void build_element(lua_State *L, GumboElement *element) {
     unsigned int nchildren = element->children.length;
     lua_createtable(L, nchildren, 2);
-    lua_pushstring(L, gumbo_normalized_tagname(element->tag));
-    lua_setfield(L, -2, "tag");
+    addfield(L, "tag", gumbo_normalized_tagname(element->tag));
 
     GumboVector *attrs = &element->attributes;
     unsigned int nattrs = attrs->length;
@@ -16,8 +21,7 @@ static void build_element(lua_State *L, GumboElement *element) {
         lua_createtable(L, 0, nattrs);
         for (int i = 0; i < nattrs; ++i) {
             GumboAttribute *attribute = attrs->data[i];
-            lua_pushstring(L, attribute->value);
-            lua_setfield(L, -2, attribute->name);
+            addfield(L, attribute->name, attribute->value);
         }
         lua_setfield(L, -2, "attrs");
     }
