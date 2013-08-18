@@ -67,9 +67,13 @@ static void build_node(lua_State *L, GumboNode* node) {
         }
         break;
 
+    case GUMBO_NODE_COMMENT:
+        lua_createtable(L, 0, 1);
+        addfield(L, "comment", node->v.text.text);
+        break;
+
     case GUMBO_NODE_TEXT:
     case GUMBO_NODE_CDATA:
-    case GUMBO_NODE_COMMENT:
     case GUMBO_NODE_WHITESPACE:
         lua_pushstring(L, node->v.text.text);
         break;
