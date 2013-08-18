@@ -12,20 +12,23 @@ static void build_node(lua_State *L, GumboNode* node);
 
 static void build_element(lua_State *L, GumboElement *element) {
     unsigned int nchildren = element->children.length;
+    unsigned int nattrs = element->attributes.length;
+
+    // Add tag name
     lua_createtable(L, nchildren, 2);
     addfield(L, "tag", gumbo_normalized_tagname(element->tag));
 
-    GumboVector *attrs = &element->attributes;
-    unsigned int nattrs = attrs->length;
+    // Add attributes
     if (nattrs) {
         lua_createtable(L, 0, nattrs);
         for (int i = 0; i < nattrs; ++i) {
-            GumboAttribute *attribute = attrs->data[i];
+            GumboAttribute *attribute = element->attributes.data[i];
             addfield(L, attribute->name, attribute->value);
         }
         lua_setfield(L, -2, "attrs");
     }
 
+    // Recursively add children
     for (int i = 0; i < nchildren; ++i) {
         build_node(L, element->children.data[i]);
         lua_rawseti(L, -2, i+1);
