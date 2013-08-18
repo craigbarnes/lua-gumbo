@@ -19,6 +19,18 @@ Example
     local gumbo = require "gumbo"
     local output = gumbo.parse "<h1>Hello World</h1>"
 
+Todo
+----
+
+* Include comment nodes in the output tree
+* Add a Lua-friendly interface for the `parse_flags` bit vector field
+* Provide metamethods for nodes
+  * `__tostring` on elements could return a serialised subtree
+  * `__tostring` on comments could include `<!--` and `-->` delimeters
+* Add example code for tree-walking
+* Document the tree structure
+* Return an array of errors as a second return value
+
 [License]
 ---------
 
