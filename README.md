@@ -6,7 +6,12 @@ Lua bindings for the [Gumbo] HTML5 parsing library.
 Status
 ------
 
-Currently a work in progress.
+*Mostly stable*. Future development will focus on additional metadata (e.g.
+line numbers), reporting parser warnings and basic (re-)serialization.
+
+Unlike SAX style parsers, the Gumbo library handles the vast majority of
+behaviour itself and has quite impressive test coverage. lua-gumbo simply
+does a tree-to-tree translation, as recommended by the Gumbo documentation.
 
 Installation
 ------------
