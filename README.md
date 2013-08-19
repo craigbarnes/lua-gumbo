@@ -86,12 +86,12 @@ the full document structure is to use a table dumping library such as
 Todo
 ----
 
-* Add a Lua-friendly interface for the `parse_flags` bit vector field
+* Add a Lua-friendly interface for the `parse_flags` bit vector
+* Add example code for tree-walking
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
   * `__tostring` on comments could include `<!--` and `-->` delimeters
-* Add example code for tree-walking
-* Return an array of errors as a second return value
+* Return an array of errors as a second return value (requires upsteam API)
 
 [License]
 ---------
