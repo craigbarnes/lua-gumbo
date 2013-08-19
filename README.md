@@ -37,8 +37,8 @@ contains all other nodes as descendants. It contains the following fields:
 Element nodes are represented as tables, with child nodes stored in numeric
 indices and the following named fields:
 
-* `tag`: The HTML tag name. This is normalized to lower case for valid tags,
-  and verbatim for unrecognized ones.
+* `tag`: The tag name. Normalized to lower case for valid tags,
+  verbatim for unrecognized ones.
 * `attrs`: A table of attributes associated with the element. Fields are
   `name="value"` pairs.
 
