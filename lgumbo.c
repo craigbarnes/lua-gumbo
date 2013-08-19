@@ -2,24 +2,27 @@
 #include <lauxlib.h>
 #include <gumbo.h>
 
+static void build_node(lua_State *L, GumboNode* node);
+
 // Set a string field on the table at the top of the stack
 static void addfield(lua_State *L, const char *name, const char *value) {
     lua_pushstring(L, value);
     lua_setfield(L, -2, name);
 }
 
-static void build_node(lua_State *L, GumboNode* node);
-
 static void build_document(lua_State *L, GumboDocument *document) {
     unsigned int nchildren = document->children.length;
 
     lua_createtable(L, nchildren, 4);
+
+    // Add doctype fields
     addfield(L, "name", document->name);
     addfield(L, "public_identifier", document->public_identifier);
     addfield(L, "system_identifier", document->system_identifier);
     lua_pushboolean(L, document->has_doctype);
     lua_setfield(L, -2, "has_doctype");
 
+    // Recursively add children
     for (unsigned int i = 0; i < nchildren; i++) {
         build_node(L, document->children.data[i]);
         lua_rawseti(L, -2, i+1);
