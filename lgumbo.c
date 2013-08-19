@@ -66,12 +66,6 @@ static void build_node(lua_State *L, GumboNode* node) {
 
     case GUMBO_NODE_ELEMENT:
         build_element(L, &node->v.element);
-        // TODO: Push the actual value, possibly as a userdatum
-        // TODO: Set this field on all nodes? Relevant to text nodes?
-        if (node->parse_flags) {
-            lua_pushboolean(L, true);
-            lua_setfield(L, -2, "parse_flags");
-        }
         return;
 
     case GUMBO_NODE_COMMENT:
