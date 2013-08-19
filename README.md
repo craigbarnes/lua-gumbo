@@ -44,7 +44,7 @@ indices and the following named fields:
 
 * `tag`: The tag name. Normalized to lower case for valid tags,
   verbatim for unrecognized ones.
-* `attrs`: A table of attributes associated with the element. Fields are
+* `attr`: A table of attributes associated with the element. Fields are
   `name="value"` pairs.
 
 Elements are the only nodes with a `tag` field and can be identified simply

@@ -49,7 +49,7 @@ static void build_element(lua_State *L, GumboElement *element) {
             GumboAttribute *attribute = element->attributes.data[i];
             addfield(L, attribute->name, attribute->value);
         }
-        lua_setfield(L, -2, "attrs");
+        lua_setfield(L, -2, "attr");
     }
 
     // Recursively add children
