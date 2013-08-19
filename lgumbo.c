@@ -37,7 +37,9 @@ static void build_element(lua_State *L, GumboElement *element) {
         GumboStringPiece *original_tag = &element->original_tag;
         gumbo_tag_from_original_text(original_tag);
         lua_pushlstring(L, original_tag->data, original_tag->length);
-    } else lua_pushstring(L, gumbo_normalized_tagname(element->tag));
+    } else {
+        lua_pushstring(L, gumbo_normalized_tagname(element->tag));
+    }
     lua_setfield(L, -2, "tag");
 
     // Add attributes
