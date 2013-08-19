@@ -22,7 +22,7 @@ static void build_document(lua_State *L, GumboDocument *document) {
     // Recursively add children
     for (unsigned int i = 0; i < nchildren; i++) {
         build_node(L, document->children.data[i]);
-        lua_rawseti(L, -2, i+1);
+        lua_rawseti(L, -2, i + 1);
     }
 }
 
@@ -56,7 +56,7 @@ static void build_element(lua_State *L, GumboElement *element) {
     // Recursively add children
     for (unsigned int i = 0; i < nchildren; ++i) {
         build_node(L, element->children.data[i]);
-        lua_rawseti(L, -2, i+1);
+        lua_rawseti(L, -2, i + 1);
     }
 }
 
