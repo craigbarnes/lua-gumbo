@@ -4,21 +4,18 @@
 
 static void build_node(lua_State *L, GumboNode* node);
 
-// Set a string field on the table at the top of the stack
-static void addfield(lua_State *L, const char *name, const char *value) {
-    lua_pushstring(L, value);
-    lua_setfield(L, -2, name);
-}
-
 static void build_document(lua_State *L, GumboDocument *document) {
     unsigned int nchildren = document->children.length;
 
     lua_createtable(L, nchildren, 4);
 
     // Add doctype fields
-    addfield(L, "name", document->name);
-    addfield(L, "public_identifier", document->public_identifier);
-    addfield(L, "system_identifier", document->system_identifier);
+    lua_pushstring(L, document->name);
+    lua_setfield(L, -2, "name");
+    lua_pushstring(L, document->public_identifier);
+    lua_setfield(L, -2, "public_identifier");
+    lua_pushstring(L, document->system_identifier);
+    lua_setfield(L, -2, "system_identifier");
     lua_pushboolean(L, document->has_doctype);
     lua_setfield(L, -2, "has_doctype");
 
@@ -40,17 +37,16 @@ static void build_element(lua_State *L, GumboElement *element) {
         GumboStringPiece *original_tag = &element->original_tag;
         gumbo_tag_from_original_text(original_tag);
         lua_pushlstring(L, original_tag->data, original_tag->length);
-        lua_setfield(L, -2, "tag");
-    } else {
-        addfield(L, "tag", gumbo_normalized_tagname(element->tag));
-    }
+    } else lua_pushstring(L, gumbo_normalized_tagname(element->tag));
+    lua_setfield(L, -2, "tag");
 
     // Add attributes
     if (nattrs) {
         lua_createtable(L, 0, nattrs);
         for (unsigned int i = 0; i < nattrs; ++i) {
             GumboAttribute *attribute = element->attributes.data[i];
-            addfield(L, attribute->name, attribute->value);
+            lua_pushstring(L, attribute->value);
+            lua_setfield(L, -2, attribute->name);
         }
         lua_setfield(L, -2, "attr");
     }
@@ -80,7 +76,8 @@ static void build_node(lua_State *L, GumboNode* node) {
 
     case GUMBO_NODE_COMMENT:
         lua_createtable(L, 0, 1);
-        addfield(L, "comment", node->v.text.text);
+        lua_pushstring(L, node->v.text.text);
+        lua_setfield(L, -2, "comment");
         return;
 
     case GUMBO_NODE_TEXT:
