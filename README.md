@@ -63,7 +63,7 @@ being the only string values stored in numeric indices.
 
 Comments are stored as "boxed" strings, i.e. tables with a single `comment`
 field. This is to differentiate them from other text nodes. The value of
-the field is the comment text, minus the `<!--` and `-->` delimeters.
+the field is the comment text, minus the `<!--` and `-->` delimiters.
 
 Example
 -------
@@ -90,8 +90,8 @@ Todo
 * Add example code for tree-walking
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
-  * `__tostring` on comments could include `<!--` and `-->` delimeters
-* Return an array of errors as a second return value (requires upsteam API)
+  * `__tostring` on comments could include `<!--` and `-->` delimiters
+* Return an array of errors as a second return value (requires upstream API)
 
 [License]
 ---------
