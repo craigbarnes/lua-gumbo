@@ -58,7 +58,7 @@ being the only string values stored in numeric indices.
 
 Comments are stored as "boxed" strings, i.e. tables with a single `comment`
 field. This is to differentiate them from other text nodes. The value of
-the field is the comment text, without the start and end delimeters.
+the field is the comment text, minus the `<!--` and `-->` delimeters.
 
 Example
 -------
