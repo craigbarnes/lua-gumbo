@@ -70,11 +70,11 @@ Example
     local document = gumbo.parse "<h1>Hello World</h1>"
     print(document[1][2][1][1]) --> Hello World
 
-A full document outline is created implicitly if not present in the
-input, as dictated by the HTML5 parsing rules. In the example, `[1]` is
-the `html` node, `[1][2]` is the `body` node, etc. The easiest way to see
-the full document structure is to use a table dumping library such as
-[serpent], for example:
+A full document outline is created implicitly if not present in the input,
+as dictated by the HTML5 parsing rules. In the above example, `document[1]`
+is the `html` node, `document[1][2]` is the `body` node, etc.  The easiest
+way to see the full document structure is to use a table dumping library
+such as [serpent], for example:
 
     local gumbo = require "gumbo"
     local serpent = require "serpent"
@@ -85,6 +85,8 @@ Todo
 ----
 
 * Add a Lua-friendly interface for the `parse_flags` bit vector
+* Handle SVG and MathML namespaces properly.
+* Add option to discard whitespace nodes
 * Add example code for tree-walking
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
