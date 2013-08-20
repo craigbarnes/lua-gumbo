@@ -117,7 +117,7 @@ static int parse_file(lua_State *L) {
     filename = luaL_checkstring(L, 1);
 
     // Try to open the file
-    file = fopen(filename, "r");
+    file = fopen(filename, "rb");
     if (!file) goto error;
 
     // Seek to the end, record the position, then rewind
@@ -127,7 +127,7 @@ static int parse_file(lua_State *L) {
     if (fseek(file, 0, SEEK_SET) == -1) goto error;
 
     // Read the file into memory and add a NUL terminator
-    input = malloc(len + 1);
+    input = malloc((len + 1) * sizeof(char));
     if (!input) goto error;
     fread(input, len, 1, file);
     if (ferror(file)) goto error;
