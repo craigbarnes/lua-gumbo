@@ -1,3 +1,8 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
@@ -100,8 +105,46 @@ static int parse(lua_State *L) {
     return 1;
 }
 
+static int parse_file(lua_State *L) {
+    const char *filename = luaL_checkstring(L, 1);
+
+    // Try to open the file
+    FILE *file = fopen(filename, "r");
+    if (!file) goto error;
+
+    // Seek to the end, record the position, then rewind
+    fseek(file, 0, SEEK_END);
+    long len = ftell(file);
+    rewind(file);
+
+    // Read the file into memory and add a NUL terminator
+    char *input = malloc(len + 1);
+    if (!input) {
+        fclose(file);
+        goto error;
+    }
+    fread(input, len, 1, file);
+    fclose(file);
+    input[len] = '\0';
+
+    GumboOutput *output;
+    output = gumbo_parse_with_options(&kGumboDefaultOptions, input, len);
+    build_node(L, output->document);
+    lua_rawgeti(L, -1, output->root->index_within_parent + 1);
+    lua_setfield(L, -2, "root");
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    free(input);
+    return 1;
+
+  error: // Return nil and an error message on failure
+    lua_pushnil(L);
+    lua_pushstring(L, strerror(errno));
+    return 2;
+}
+
 static const luaL_reg R[] = {
     {"parse", parse},
+    {"parse_file", parse_file},
     {NULL, NULL}
 };
 
