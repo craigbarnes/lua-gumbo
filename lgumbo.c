@@ -106,28 +106,32 @@ static int parse(lua_State *L) {
 }
 
 static int parse_file(lua_State *L) {
-    const char *filename = luaL_checkstring(L, 1);
+    const char *filename;
+    FILE *file = NULL;
+    char *input = NULL;
+    long len;
+    GumboOutput *output;
+
+    filename = luaL_checkstring(L, 1);
 
     // Try to open the file
-    FILE *file = fopen(filename, "r");
+    file = fopen(filename, "r");
     if (!file) goto error;
 
     // Seek to the end, record the position, then rewind
-    fseek(file, 0, SEEK_END);
-    long len = ftell(file);
-    rewind(file);
+    if (fseek(file, 0, SEEK_END) == -1) goto error;
+    len = ftell(file);
+    if (len == -1) goto error;
+    if (fseek(file, 0, SEEK_SET) == -1) goto error;
 
     // Read the file into memory and add a NUL terminator
-    char *input = malloc(len + 1);
-    if (!input) {
-        fclose(file);
-        goto error;
-    }
+    input = malloc(len + 1);
+    if (!input) goto error;
     fread(input, len, 1, file);
+    if (ferror(file)) goto error;
     fclose(file);
     input[len] = '\0';
 
-    GumboOutput *output;
     output = gumbo_parse_with_options(&kGumboDefaultOptions, input, len);
     build_node(L, output->document);
     lua_rawgeti(L, -1, output->root->index_within_parent + 1);
@@ -137,6 +141,8 @@ static int parse_file(lua_State *L) {
     return 1;
 
   error: // Return nil and an error message on failure
+    if (file) fclose(file);
+    if (input) free(input);
     lua_pushnil(L);
     lua_pushstring(L, strerror(errno));
     return 2;
