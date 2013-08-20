@@ -92,16 +92,19 @@ static void build_node(lua_State *L, GumboNode* node) {
     }
 }
 
-static int parse(lua_State *L) {
-    size_t len;
-    const char *input;
+static inline void parse(lua_State *L, const char *input, size_t len) {
     GumboOutput *output;
-    input = luaL_checklstring(L, 1, &len);
     output = gumbo_parse_with_options(&kGumboDefaultOptions, input, len);
     build_node(L, output->document);
     lua_rawgeti(L, -1, output->root->index_within_parent + 1);
     lua_setfield(L, -2, "root");
     gumbo_destroy_output(&kGumboDefaultOptions, output);
+}
+
+static int parse_string(lua_State *L) {
+    size_t len;
+    const char *input = luaL_checklstring(L, 1, &len);
+    parse(L, input, len);
     return 1;
 }
 
@@ -110,7 +113,6 @@ static int parse_file(lua_State *L) {
     FILE *file = NULL;
     char *input = NULL;
     long len;
-    GumboOutput *output;
 
     filename = luaL_checkstring(L, 1);
 
@@ -132,11 +134,7 @@ static int parse_file(lua_State *L) {
     fclose(file);
     input[len] = '\0';
 
-    output = gumbo_parse_with_options(&kGumboDefaultOptions, input, len);
-    build_node(L, output->document);
-    lua_rawgeti(L, -1, output->root->index_within_parent + 1);
-    lua_setfield(L, -2, "root");
-    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    parse(L, input, len);
     free(input);
     return 1;
 
@@ -149,7 +147,7 @@ static int parse_file(lua_State *L) {
 }
 
 static const luaL_reg R[] = {
-    {"parse", parse},
+    {"parse", parse_string},
     {"parse_file", parse_file},
     {NULL, NULL}
 };
