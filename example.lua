@@ -1,12 +1,13 @@
 package.cpath = "./?.so"
 local gumbo = require "gumbo"
 
-local document = gumbo.parse [[
+local input = [[
     <title>Test Document</title>
     <h1>Test Heading</h1>
     <p><a href=foobar.html><strong>Bold Text</strong> etc.</a></p>
 ]]
 
+local document = gumbo.parse(input)
 
 local function write(text, depth, quoted)
     local indent = string.rep(" ", depth*4)
@@ -15,7 +16,7 @@ local function write(text, depth, quoted)
     io.write(string.format(format, indent, text))
 end
 
-local depth = 0
+local depth = 1
 local function dump(node)
     if node.tag then
         write(node.tag, depth)
@@ -29,4 +30,5 @@ local function dump(node)
     end
 end
 
+io.write(string.format("\nInput:\n\n%s\nOutput:\n\n", input))
 dump(document.root)
