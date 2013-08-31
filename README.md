@@ -30,8 +30,9 @@ structured as follows:
 
 ### Document
 
-The document node is the top-level table returned by `gumbo.parse` and
-contains all other nodes as descendants. It contains the following fields:
+The document node is the top-level table returned by the parse functions
+and contains all other nodes as descendants. It contains the following
+fields:
 
 * `name`
 * `public_identifier`
