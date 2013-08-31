@@ -12,7 +12,7 @@ static void build_node(lua_State *L, GumboNode* node);
 static void build_document(lua_State *L, GumboDocument *document) {
     unsigned int nchildren = document->children.length;
 
-    lua_createtable(L, nchildren, 4);
+    lua_createtable(L, nchildren, 4+1); // +1 for "root" field added later
 
     // Add doctype fields
     lua_pushstring(L, document->name);
