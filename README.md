@@ -6,10 +6,8 @@ Lua bindings for the [Gumbo] HTML5 parsing library.
 Status
 ------
 
-*Mostly stable*. Unlike SAX-style parsers, the Gumbo library handles
-tree-building itself, so the testing requirements and scope of lua-gumbo are
-minimal. It just does a simple tree-to-tree translation, as recommended by
-the Gumbo documentation.
+*Work in progress*. The structure of text nodes is likely to change at
+some point.
 
 Installation
 ------------
@@ -86,6 +84,17 @@ such as [serpent], for example:
     local serpent = require "serpent"
     local document = gumbo.parse "<h1>Hello World</h1>"
     print(serpent.dump(document))
+
+Testing
+-------
+
+Some basic sanity tests can be run using `make check`, mostly for
+checking that the module was built, linked and loaded correctly.
+
+Unlike SAX-style parsers, the Gumbo library handles tree-building
+itself, so the testing requirements and scope of lua-gumbo are minimal.
+It just does a simple tree-to-tree translation, as recommended by the
+Gumbo documentation.
 
 Todo
 ----
