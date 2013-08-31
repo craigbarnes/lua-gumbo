@@ -19,9 +19,14 @@ Installation
 Usage
 -----
 
-The `gumbo` module provides a single `parse` function, which takes a string
-of HTML and returns a parsed document tree in table form. The nodes
-contained in the document tree are structured as follows:
+The `gumbo` module provides 2 functions:
+
+* parse(string_of_html)
+* parse_file(filename)
+
+Both functions return a document tree in table form, or `nil` and an
+error message on failure. The nodes contained in the document tree are
+structured as follows:
 
 ### Document
 
