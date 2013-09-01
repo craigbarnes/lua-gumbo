@@ -127,10 +127,9 @@ static int parse_file(lua_State *L) {
     if (fseek(file, 0, SEEK_SET) == -1) goto error;
 
     // Read the file into memory and add a NUL terminator
-    input = malloc((len + 1) * sizeof(char));
+    input = malloc(len + 1);
     if (!input) goto error;
-    fread(input, len, 1, file);
-    if (ferror(file)) goto error;
+    if (fread(input, 1, len, file) != (unsigned long)len) goto error;
     fclose(file);
     input[len] = '\0';
 
