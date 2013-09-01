@@ -83,7 +83,7 @@ such as [serpent], for example:
     local gumbo = require "gumbo"
     local serpent = require "serpent"
     local document = gumbo.parse "<h1>Hello World</h1>"
-    print(serpent.dump(document))
+    print(serpent.block(document))
 
 Testing
 -------
