@@ -2,7 +2,7 @@ GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDLIBS  = $(shell pkg-config --libs-only-l gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs-only-L gumbo)
 
-CC		= cc
+CC      = cc
 CFLAGS  = -O2 -Wall -Wextra -std=c99 -pedantic $(GUMBO_CFLAGS)
 LDFLAGS = -shared $(GUMBO_LDFLAGS)
 LDLIBS  = $(GUMBO_LDLIBS)
