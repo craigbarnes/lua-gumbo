@@ -1,7 +1,7 @@
 package.cpath = "./?.so"
 local gumbo = require "gumbo"
 
-local document = gumbo.parse_file "test.html"
+local document = assert(gumbo.parse_file "test.html")
 local root = document.root
 
 assert(root.tag == "html")
