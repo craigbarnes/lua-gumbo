@@ -10,6 +10,10 @@ PREFIX  = /usr/local
 LUAVER  = 5.1
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
 
+ifeq ($(shell uname),Darwin)
+  LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
+endif
+
 gumbo.so: lgumbo.o
 	$(CC) $(LDFLAGS) $(LDLIBS) $< -o $@
 
