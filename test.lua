@@ -14,3 +14,5 @@ assert(root[2][3][1].attr.href == "foobar.html")
 assert(root[2][5].tag == "invalid")
 assert(root[2][5].attr.foo == "bar")
 assert(root[2][5][1] == "abc")
+
+assert(not gumbo.parse_file "non-existent-file")

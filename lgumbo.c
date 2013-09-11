@@ -108,6 +108,8 @@ static int parse_string(lua_State *L) {
     return 1;
 }
 
+#define assert(cond) if (!(cond)) goto error
+
 static int parse_file(lua_State *L) {
     const char *filename;
     FILE *file = NULL;
@@ -116,28 +118,19 @@ static int parse_file(lua_State *L) {
 
     filename = luaL_checkstring(L, 1);
 
-    // Try to open the file
-    file = fopen(filename, "rb");
-    if (!file) goto error;
-
-    // Seek to the end, record the position, then rewind
-    if (fseek(file, 0, SEEK_END) == -1) goto error;
-    len = ftell(file);
-    if (len == -1) goto error;
+    assert(file = fopen(filename, "rb"));
+    assert(fseek(file, 0, SEEK_END) != -1);
+    assert((len = ftell(file)) != -1);
     rewind(file);
-
-    // Read the file into memory and add a NUL terminator
-    input = malloc(len + 1);
-    if (!input) goto error;
-    if (fread(input, 1, len, file) != (unsigned long)len) goto error;
+    assert(input = malloc(len + 1));
+    assert(fread(input, 1, len, file) == (unsigned long)len);
     fclose(file);
     input[len] = '\0';
-
     parse(L, input, len);
     free(input);
     return 1;
 
-  error: // Return nil and an error message on failure
+  error: // Return nil and an error message if an assertion fails
     if (file) fclose(file);
     if (input) free(input);
     lua_pushnil(L);
