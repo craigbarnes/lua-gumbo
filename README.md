@@ -88,13 +88,11 @@ such as [serpent], for example:
 Testing
 -------
 
-Some basic sanity tests can be run using `make check`, mostly for
-checking that the module was built, linked and loaded correctly.
+Some basic sanity tests can be run using `make check`.
 
-Unlike SAX-style parsers, the Gumbo library handles tree-building
-itself, so the testing requirements and scope of lua-gumbo are minimal.
-It just does a simple tree-to-tree translation, as recommended by the
-Gumbo documentation.
+Note: the Gumbo library handles tree-building itself, so the testing
+requirements and scope of lua-gumbo are minimal. It just does a simple
+tree-to-tree translation, as recommended by the Gumbo documentation.
 
 Todo
 ----
