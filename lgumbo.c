@@ -124,7 +124,7 @@ static int parse_file(lua_State *L) {
     if (fseek(file, 0, SEEK_END) == -1) goto error;
     len = ftell(file);
     if (len == -1) goto error;
-    if (fseek(file, 0, SEEK_SET) == -1) goto error;
+    rewind(file);
 
     // Read the file into memory and add a NUL terminator
     input = malloc(len + 1);
