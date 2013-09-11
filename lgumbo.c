@@ -152,6 +152,11 @@ static const luaL_reg R[] = {
 };
 
 int luaopen_gumbo(lua_State *L) {
-    luaL_register(L, "gumbo", R);
+#if LUA_VERSION_NUM < 502
+    lua_createtable(L, 0, 2);
+    luaL_register(L, NULL, R);
+#else
+    luaL_newlib(L, R);
+#endif
     return 1;
 }
