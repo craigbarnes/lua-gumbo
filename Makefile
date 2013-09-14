@@ -17,6 +17,9 @@ endif
 gumbo.so: lgumbo.o
 	$(CC) $(LDFLAGS) $(LDLIBS) $< -o $@
 
+tags: lgumbo.c
+	ctags $^
+
 install: gumbo.so
 	mkdir -p $(DESTDIR)$(LUACDIR)
 	install -pm0755 gumbo.so $(DESTDIR)$(LUACDIR)
@@ -28,7 +31,7 @@ check: gumbo.so test.lua
 	@lua test.lua && echo "All tests passed"
 
 clean:
-	rm -f gumbo.so lgumbo.o
+	rm -f gumbo.so lgumbo.o tags
 
 
 .PHONY: install uninstall check clean
