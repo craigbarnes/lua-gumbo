@@ -1,7 +1,9 @@
 package.cpath = "./?.so"
 local gumbo = require "gumbo"
 
-local document = assert(gumbo.parse_file "test.html")
+local filename = ...
+assert(filename, "A filename argument is required")
+local document = assert(gumbo.parse_file(filename))
 local depth = 1
 
 local function write(text, depth, quoted)
