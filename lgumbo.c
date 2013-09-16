@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
 #include "lgumbo.h"
 
 static inline void add_children(lua_State *L, GumboVector *children) {
@@ -74,8 +70,7 @@ static bool build_node(lua_State *L, GumboNode* node) {
         return false;
 
     default:
-        luaL_error(L, "Invalid node type");
-        return false;
+        return luaL_error(L, "Invalid node type");
     }
 }
 
@@ -94,8 +89,6 @@ static int parse_string(lua_State *L) {
     parse(L, input, len);
     return 1;
 }
-
-#define assert(cond) if (!(cond)) goto error
 
 static int parse_file(lua_State *L) {
     const char *filename;
