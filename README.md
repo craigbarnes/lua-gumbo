@@ -104,8 +104,7 @@ Todo
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
   * `__tostring` on comments could include `<!--` and `-->` delimiters
-  * Elements could store a count of their children in an `n` field and
-    return it via a `__len` metamethod, to make `#element` O(1) time.
+  * `__len` on elements could return the `length` field
 * Return an array of errors as a second return value (requires upstream API)
 
 [License]
