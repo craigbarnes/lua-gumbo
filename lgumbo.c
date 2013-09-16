@@ -7,6 +7,8 @@
 #include <gumbo.h>
 #include "compat.h"
 
+#define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
+
 static bool build_node(lua_State *L, GumboNode* node);
 
 static inline void add_children(lua_State *L, GumboVector *children) {
@@ -16,20 +18,15 @@ static inline void add_children(lua_State *L, GumboVector *children) {
             lua_rawseti(L, -2, ++tl);
         }
     }
-    lua_pushinteger(L, tl);
-    lua_setfield(L, -2, "length");
+    add_field(L, integer, "length", tl);
 }
 
 static void build_document(lua_State *L, GumboDocument *document) {
     lua_createtable(L, document->children.length, 5);
-    lua_pushstring(L, document->name);
-    lua_setfield(L, -2, "name");
-    lua_pushstring(L, document->public_identifier);
-    lua_setfield(L, -2, "public_identifier");
-    lua_pushstring(L, document->system_identifier);
-    lua_setfield(L, -2, "system_identifier");
-    lua_pushboolean(L, document->has_doctype);
-    lua_setfield(L, -2, "has_doctype");
+    add_field(L, string, "name", document->name);
+    add_field(L, string, "public_identifier", document->public_identifier);
+    add_field(L, string, "system_identifier", document->system_identifier);
+    add_field(L, boolean, "has_doctype", document->has_doctype);
     add_children(L, &document->children);
 }
 
@@ -52,8 +49,7 @@ static void build_element(lua_State *L, GumboElement *element) {
         lua_createtable(L, 0, nattrs);
         for (unsigned int i = 0; i < nattrs; ++i) {
             GumboAttribute *attribute = element->attributes.data[i];
-            lua_pushstring(L, attribute->value);
-            lua_setfield(L, -2, attribute->name);
+            add_field(L, string, attribute->name, attribute->value);
         }
         lua_setfield(L, -2, "attr");
     }
@@ -73,8 +69,7 @@ static bool build_node(lua_State *L, GumboNode* node) {
 
     case GUMBO_NODE_COMMENT:
         lua_createtable(L, 0, 1);
-        lua_pushstring(L, node->v.text.text);
-        lua_setfield(L, -2, "comment");
+        add_field(L, string, "comment", node->v.text.text);
         return true;
 
     case GUMBO_NODE_TEXT:
