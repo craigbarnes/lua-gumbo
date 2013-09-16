@@ -1,3 +1,10 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include <lua.h>
+#include <lauxlib.h>
+#include <gumbo.h>
 #include "lgumbo.h"
 
 static inline void add_children(lua_State *L, GumboVector *children) {
