@@ -17,7 +17,7 @@ local function dump(node)
     if node.tag then
         write(node.tag, depth)
         depth = depth + 1
-        for i = 1, #node do
+        for i = 1, node.length do
            dump(node[i])
         end
         depth = depth - 1

@@ -10,11 +10,14 @@
 static bool build_node(lua_State *L, GumboNode* node);
 
 static inline void add_children(lua_State *L, GumboVector *children) {
-    for (unsigned int i = 0, j = 0, n = children->length; i < n; i++) {
+    unsigned int tl = 0;
+    for (unsigned int i = 0, cl = children->length; i < cl; i++) {
         if (build_node(L, children->data[i])) {
-            lua_rawseti(L, -2, ++j);
+            lua_rawseti(L, -2, ++tl);
         }
     }
+    lua_pushinteger(L, tl);
+    lua_setfield(L, -2, "length");
 }
 
 static void build_document(lua_State *L, GumboDocument *document) {
