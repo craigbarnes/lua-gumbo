@@ -99,7 +99,6 @@ Todo
 
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
-* Add option to discard whitespace nodes
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
   * `__tostring` on comments could include `<!--` and `-->` delimiters

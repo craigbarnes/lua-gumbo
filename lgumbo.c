@@ -7,14 +7,18 @@
 #include <lauxlib.h>
 #include <gumbo.h>
 
-static void build_node(lua_State *L, GumboNode* node);
+static bool build_node(lua_State *L, GumboNode* node);
+
+static inline void add_children(lua_State *L, GumboVector *children) {
+    for (unsigned int i = 0, j = 0, n = children->length; i < n; i++) {
+        if (build_node(L, children->data[i])) {
+            lua_rawseti(L, -2, ++j);
+        }
+    }
+}
 
 static void build_document(lua_State *L, GumboDocument *document) {
-    unsigned int nchildren = document->children.length;
-
-    lua_createtable(L, nchildren, 4+1); // +1 for "root" field added later
-
-    // Add doctype fields
+    lua_createtable(L, document->children.length, 5);
     lua_pushstring(L, document->name);
     lua_setfield(L, -2, "name");
     lua_pushstring(L, document->public_identifier);
@@ -23,19 +27,12 @@ static void build_document(lua_State *L, GumboDocument *document) {
     lua_setfield(L, -2, "system_identifier");
     lua_pushboolean(L, document->has_doctype);
     lua_setfield(L, -2, "has_doctype");
-
-    // Recursively add children
-    for (unsigned int i = 0; i < nchildren; i++) {
-        build_node(L, document->children.data[i]);
-        lua_rawseti(L, -2, i + 1);
-    }
+    add_children(L, &document->children);
 }
 
 static void build_element(lua_State *L, GumboElement *element) {
-    unsigned int nchildren = element->children.length;
     unsigned int nattrs = element->attributes.length;
-
-    lua_createtable(L, nchildren, 2);
+    lua_createtable(L, element->children.length, 2);
 
     // Add tag name
     if (element->tag == GUMBO_TAG_UNKNOWN) {
@@ -58,37 +55,36 @@ static void build_element(lua_State *L, GumboElement *element) {
         lua_setfield(L, -2, "attr");
     }
 
-    // Recursively add children
-    for (unsigned int i = 0; i < nchildren; ++i) {
-        build_node(L, element->children.data[i]);
-        lua_rawseti(L, -2, i + 1);
-    }
+    add_children(L, &element->children);
 }
 
-static void build_node(lua_State *L, GumboNode* node) {
+static bool build_node(lua_State *L, GumboNode* node) {
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT:
         build_document(L, &node->v.document);
-        return;
+        return true;
 
     case GUMBO_NODE_ELEMENT:
         build_element(L, &node->v.element);
-        return;
+        return true;
 
     case GUMBO_NODE_COMMENT:
         lua_createtable(L, 0, 1);
         lua_pushstring(L, node->v.text.text);
         lua_setfield(L, -2, "comment");
-        return;
+        return true;
 
     case GUMBO_NODE_TEXT:
     case GUMBO_NODE_CDATA:
-    case GUMBO_NODE_WHITESPACE:
         lua_pushstring(L, node->v.text.text);
-        return;
+        return true;
+
+    case GUMBO_NODE_WHITESPACE:
+        return false;
 
     default:
         luaL_error(L, "Invalid node type");
+        return false;
     }
 }
 
