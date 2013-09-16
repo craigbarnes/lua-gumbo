@@ -21,6 +21,8 @@ local function dump(node)
            dump(node[i])
         end
         depth = depth - 1
+    elseif node.comment then
+        return
     else
         write(node, depth, true)
     end
