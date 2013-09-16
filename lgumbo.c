@@ -15,7 +15,7 @@ static inline void add_children(lua_State *L, GumboVector *children) {
 }
 
 static void build_document(lua_State *L, GumboDocument *document) {
-    lua_createtable(L, document->children.length, 5);
+    lua_createtable(L, document->children.length, 6);
     add_field(L, string, "name", document->name);
     add_field(L, string, "public_identifier", document->public_identifier);
     add_field(L, string, "system_identifier", document->system_identifier);
@@ -25,7 +25,7 @@ static void build_document(lua_State *L, GumboDocument *document) {
 
 static void build_element(lua_State *L, GumboElement *element) {
     unsigned int nattrs = element->attributes.length;
-    lua_createtable(L, element->children.length, 2);
+    lua_createtable(L, element->children.length, nattrs ? 3 : 2);
 
     // Add tag name
     if (element->tag == GUMBO_TAG_UNKNOWN) {
