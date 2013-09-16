@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
+#include "compat.h"
 
 static bool build_node(lua_State *L, GumboNode* node);
 
@@ -144,11 +144,7 @@ static const luaL_reg R[] = {
 };
 
 int luaopen_gumbo(lua_State *L) {
-#if LUA_VERSION_NUM < 502
     lua_createtable(L, 0, 2);
     luaL_register(L, NULL, R);
-#else
-    luaL_newlib(L, R);
-#endif
     return 1;
 }
