@@ -17,7 +17,7 @@ endif
 gumbo.so: lgumbo.o
 	$(CC) $(LDFLAGS) $(LDLIBS) $< -o $@
 
-lgumbo.o: lgumbo.c compat.h
+lgumbo.o: lgumbo.c lgumbo.h
 
 tags: lgumbo.c
 	ctags $^

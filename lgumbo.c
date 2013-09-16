@@ -2,14 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <lua.h>
-#include <lauxlib.h>
-#include <gumbo.h>
-#include "compat.h"
-
-#define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
-
-static bool build_node(lua_State *L, GumboNode* node);
+#include "lgumbo.h"
 
 static inline void add_children(lua_State *L, GumboVector *children) {
     unsigned int tl = 0;
