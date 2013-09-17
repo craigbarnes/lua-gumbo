@@ -1,4 +1,4 @@
-package.cpath = "./?.so"
+package.cpath = "./?.so;../?.so"
 local gumbo = require "gumbo"
 
 local filename = ...

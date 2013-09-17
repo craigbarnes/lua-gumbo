@@ -1,28 +1,32 @@
+// This graph illustrates the parse structure of graph.html
+// To compile, use: dot -T png -o graph.png graph.dot
+// or run "make examples/graph.png" in the base directory
+
 digraph {
     nodesep=0.6
     node [shape=record fontname=monospace]
 
     doc [label="{has_doctype = true|name = \"html\"|public_identifier = \"\"|system_identifier = \"\"|length = 1|{<i1>[1]|<root>root}}"]
     html [label="{tag = \"html\"|length = 2|{<attr>attr|<1>[1]|<2>[2]}}"]
-    htmlattr [label="{lang = \"en\"}" style=dashed]
+    attr_html [label="{lang = \"en\"}" style=dashed]
 
     head [label="{tag = \"head\"|length = 2|{<1>[1]|<2>[2]}}"]
     title [label="{tag = \"title\"|length = 1|<1>[1] = \"Test Document\"}"]
     meta [label="{tag = \"meta\"|length = 0|<attr>attr}"]
-    metaattr [label="{charset = \"utf-8\"}" style=dashed]
+    attr_meta [label="{charset = \"utf-8\"}" style=dashed]
 
     body [label="{tag = \"body\"|length = 1|{<1>[1]}}"]
     h1 [label="{tag = \"h1\"|length = 1|[1] = \"Hello\"|<attr>attr}"]
-    h1attr [label="{class = \"heading\"}" style=dashed]
+    attr_h1 [label="{class = \"heading\"}" style=dashed]
 
     "doc":root -> html
     "doc":i1 -> html
-    "html":attr -> htmlattr
+    "html":attr -> attr_html
     "html":1 -> head
     "html":2 -> body
     "head":1 -> meta
     "head":2 -> title
-    "meta":attr -> metaattr
+    "meta":attr -> attr_meta
     "body":1 -> h1
-    "h1":attr -> h1attr
+    "h1":attr -> attr_h1
 }
