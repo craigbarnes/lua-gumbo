@@ -72,20 +72,29 @@ the field is the comment text, minus the `<!--` and `-->` delimiters.
 Example
 -------
 
-    local gumbo = require "gumbo"
-    local document = gumbo.parse "<h1>Hello World</h1>"
-    print(document[1][2][1][1]) --> Hello World
+Basic usage examples can be seen in [`example.lua`] and [`test.lua`].
 
-A full document outline is created implicitly if not present in the input,
-as dictated by the HTML5 parsing rules. In the above example, `document[1]`
-is the `html` node, `document[1][2]` is the `body` node, etc.  The easiest
-way to see the full document structure is to use a table dumping library
-such as [serpent], for example:
+The following usage:
 
-    local gumbo = require "gumbo"
-    local serpent = require "serpent"
-    local document = gumbo.parse "<h1>Hello World</h1>"
-    print(serpent.block(document))
+```lua
+local gumbo = require "gumbo"
+local document = gumbo.parse [[
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Test Document</title>
+    </head>
+    <body>
+        <h1 class=heading>Hello</h1>
+    </body>
+    </html>
+]]
+```
+
+will produce the output structure:
+
+![Table Graph](http://cra.igbarn.es/img/lua-gumbo-graph.png)
 
 Testing
 -------
@@ -128,3 +137,5 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Gumbo]: https://github.com/google/gumbo-parser
 [serpent]: https://github.com/pkulchenko/serpent
+[`example.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/example.lua
+[`test.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/test.lua
