@@ -1,6 +1,14 @@
 package.cpath = "./?.so"
 local gumbo = require "gumbo"
-local document = assert(gumbo.parse_file "test.html")
+
+local document = gumbo.parse [[
+    <TITLE>Test Document</TITLE>
+    <h1>Test Heading</h1>
+    <p><a href=foobar.html>Quux</a></p>
+    <iNValID foo="bar">abc</invalid>
+    <p class=empty></p>
+]]
+
 local root = assert(document.root)
 local head, body = root[1], root[2]
 
