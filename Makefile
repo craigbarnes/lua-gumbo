@@ -22,6 +22,9 @@ lgumbo.o: lgumbo.c lgumbo.h
 tags: lgumbo.c lgumbo.h $(shell gcc -M lgumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
+graph.png: graph.dot
+	dot -T png -o $@ $<
+
 install: gumbo.so
 	mkdir -p $(DESTDIR)$(LUACDIR)
 	install -pm0755 gumbo.so $(DESTDIR)$(LUACDIR)
