@@ -72,9 +72,10 @@ the field is the comment text, minus the `<!--` and `-->` delimiters.
 Example
 -------
 
-Basic usage examples can be seen in [`example.lua`] and [`test.lua`].
+Basic usage examples can be seen in [`dump.lua`], [`outline.lua`] and
+[`test.lua`].
 
-The following usage:
+As a visual example, the following usage:
 
 ```lua
 local gumbo = require "gumbo"
@@ -137,5 +138,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Gumbo]: https://github.com/google/gumbo-parser
 [serpent]: https://github.com/pkulchenko/serpent
-[`example.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/example.lua
+[`dump.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/dump.lua
+[`outline.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/outline.lua
 [`test.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/test.lua
