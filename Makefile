@@ -19,8 +19,8 @@ gumbo.so: lgumbo.o
 
 lgumbo.o: lgumbo.c lgumbo.h
 
-tags: lgumbo.c
-	ctags $^
+tags: lgumbo.c lgumbo.h $(shell gcc -M lgumbo.c | grep -o '[^ ]*/gumbo.h')
+	ctags --c-kinds=+p $^
 
 install: gumbo.so
 	mkdir -p $(DESTDIR)$(LUACDIR)
