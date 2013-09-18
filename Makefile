@@ -22,6 +22,9 @@ lgumbo.o: lgumbo.c lgumbo.h
 tags: lgumbo.c lgumbo.h $(shell gcc -M lgumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
+docs: docs.lua lgumbo.c README.md examples/outline.lua test.lua
+	@ldoc -c $< .
+
 examples/graph.png: examples/graph.dot
 	dot -T png -o $@ $<
 
@@ -37,6 +40,7 @@ check: gumbo.so test.lua
 
 clean:
 	rm -f gumbo.so lgumbo.o tags
+	rm -rf docs
 
 
 .PHONY: install uninstall check clean

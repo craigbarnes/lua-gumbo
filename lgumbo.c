@@ -1,3 +1,9 @@
+/// @module gumbo
+// Lua bindings for the [Gumbo][] HTML5 parsing library.
+// [Gumbo]: https://github.com/google/gumbo-parser
+// @copyright 2013 Craig Barnes
+// @license ISC
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -90,6 +96,11 @@ static inline void parse(lua_State *L, const char *input, size_t len) {
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
 
+/// Parse a string of HTML
+// @function parse
+// @param document String containing HTML
+// @return Abstract syntax tree table
+// @see README.md
 static int parse_string(lua_State *L) {
     size_t len;
     const char *input = luaL_checklstring(L, 1, &len);
@@ -97,6 +108,11 @@ static int parse_string(lua_State *L) {
     return 1;
 }
 
+/// Read and parse a HTML file
+// @function parse_file
+// @param filename Path to HTML file
+// @return Abstract syntax tree table
+// @return `nil, error_message` (if opening or reading file fails)
 static int parse_file(lua_State *L) {
     const char *filename;
     FILE *file = NULL;
