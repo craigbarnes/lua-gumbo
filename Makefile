@@ -22,7 +22,7 @@ lgumbo.o: lgumbo.c lgumbo.h
 tags: lgumbo.c lgumbo.h $(shell gcc -M lgumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
-docs: docs.lua lgumbo.c README.md examples/outline.lua test.lua
+docs: config.ld lgumbo.c README.md examples/outline.lua test.lua
 	@ldoc -c $< .
 
 examples/graph.png: examples/graph.dot
