@@ -72,8 +72,7 @@ the field is the comment text, minus the `<!--` and `-->` delimiters.
 Example
 -------
 
-Basic usage examples can be seen in [`dump.lua`], [`outline.lua`] and
-[`test.lua`].
+There are various, basic usage examples in the [examples] directory.
 
 As a visual example, the following usage:
 
@@ -138,6 +137,4 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Gumbo]: https://github.com/google/gumbo-parser
 [serpent]: https://github.com/pkulchenko/serpent
-[`dump.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/dump.lua
-[`outline.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/outline.lua
-[`test.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/test.lua
+[examples]: https://github.com/craigbarnes/lua-gumbo/tree/master/examples
