@@ -2,6 +2,7 @@ project     = "lua-gumbo"
 title       = "lua-gumbo"
 description = "Lua bindings for the Gumbo HTML5 parsing library"
 no_summary  = true
+not_luadoc  = true
 format      = "markdown"
 dir         = "docs"
 file        = "lgumbo.c"
