@@ -48,8 +48,6 @@ indices and the following named fields:
   verbatim for unrecognized tags.
 * `attr`: A table of attributes associated with the element. Fields are
   `name="value"` pairs.
-* `length`: The number of child elements. This is a static value and can
-  be used as an `O(1)` alternative to the length operator (`#`).
 
 Elements are the only nodes with a `tag` field and can be identified simply
 by checking that it's value is non-`nil`, e.g.
@@ -113,7 +111,6 @@ Todo
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
   * `__tostring` on comments could include `<!--` and `-->` delimiters
-  * `__len` on elements could return the `length` field
 * Return an array of errors as a second return value (requires upstream API)
 
 [License]

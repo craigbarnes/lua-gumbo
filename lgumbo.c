@@ -21,7 +21,6 @@ static inline void add_children(lua_State *L, GumboVector *children) {
             lua_rawseti(L, -2, ++tl);
         }
     }
-    add_field(L, integer, "length", tl);
 }
 
 static void build_document(lua_State *L, GumboDocument *document) {
