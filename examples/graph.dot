@@ -5,15 +5,15 @@
 digraph {
     node      [shape=record fontname=monospace]
 
-    doc       [label="{has_doctype = true|name = \"html\"|public_identifier = \"\"|system_identifier = \"\"|length = 1|{<1>[1]|<root>root}}"]
-    html      [label="{tag = \"html\"|length = 2|{<attr>attr|<1>[1]|<2>[2]}}"]
+    doc       [label="{has_doctype = true|name = \"html\"|public_identifier = \"\"|system_identifier = \"\"|{<1>[1]|<root>root}}"]
+    html      [label="{tag = \"html\"|{<attr>attr|<1>[1]|<2>[2]}}"]
     attr_html [label="{lang = \"en\"}" style=dashed]
-    head      [label="{tag = \"head\"|length = 2|{<1>[1]|<2>[2]}}"]
-    title     [label="{tag = \"title\"|length = 1|<1>[1] = \"Test Document\"}"]
-    meta      [label="{tag = \"meta\"|length = 0|<attr>attr}"]
+    head      [label="{tag = \"head\"|{<1>[1]|<2>[2]}}"]
+    title     [label="{tag = \"title\"|<1>[1] = \"Test Document\"}"]
+    meta      [label="{tag = \"meta\"|<attr>attr}"]
     attr_meta [label="{charset = \"utf-8\"}" style=dashed]
-    body      [label="{tag = \"body\"|length = 1|{<1>[1]}}"]
-    h1        [label="{tag = \"h1\"|length = 1|[1] = \"Hello\"|<attr>attr}"]
+    body      [label="{tag = \"body\"|{<1>[1]}}"]
+    h1        [label="{tag = \"h1\"|[1] = \"Hello\"|<attr>attr}"]
     attr_h1   [label="{class = \"heading\"}" style=dashed]
 
     doc:root  -> html
