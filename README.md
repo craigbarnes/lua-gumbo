@@ -6,8 +6,8 @@ Lua bindings for the [Gumbo] HTML5 parsing library.
 Status
 ------
 
-*Work in progress*. The structure of text nodes is likely to change at
-some point.
+*Work in progress*. A versioned release will be made when the API has
+stabilized.
 
 Installation
 ------------
@@ -97,10 +97,10 @@ will produce the output structure:
 Testing
 -------
 
-Some basic sanity tests can be run using `make check`.
+Some basic tests can be run via `make check`.
 
 Note: the Gumbo library handles tree-building itself, so the testing
-requirements and scope of lua-gumbo are minimal. It just does a simple
+requirements and scope of lua-gumbo are minimal. It just does a
 tree-to-tree translation, as recommended by the Gumbo documentation.
 
 Todo
