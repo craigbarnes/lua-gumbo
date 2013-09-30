@@ -1,7 +1,6 @@
 /// Lua bindings for the Gumbo HTML5 parsing library
 // @copyright 2013 Craig Barnes
 // @license ISC
-// @module gumbo
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -11,7 +10,7 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
-#include "lgumbo.h"
+#include "compat.h"
 
 static inline void add_children(lua_State *L, GumboVector *children) {
     unsigned int tl = 0;

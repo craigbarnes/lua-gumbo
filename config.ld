@@ -5,6 +5,6 @@ no_summary  = true
 not_luadoc  = true
 format      = "markdown"
 dir         = "docs"
-file        = "lgumbo.c"
+file        = "gumbo.c"
 readme      = "README.md"
 examples    = {"examples/outline.lua", "test.lua"}

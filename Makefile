@@ -14,15 +14,15 @@ ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-gumbo.so: lgumbo.o
+gumbo.so: gumbo.o
 	$(CC) $(LDFLAGS) $(LDLIBS) $< -o $@
 
-lgumbo.o: lgumbo.c lgumbo.h
+gumbo.o: gumbo.c compat.h
 
-tags: lgumbo.c lgumbo.h $(shell gcc -M lgumbo.c | grep -o '[^ ]*/gumbo.h')
+tags: gumbo.c compat.h $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
-docs: config.ld lgumbo.c README.md examples/outline.lua test.lua
+docs: config.ld gumbo.c README.md examples/outline.lua test.lua
 	@ldoc -c $< .
 
 examples/graph.png: examples/graph.dot
@@ -39,7 +39,7 @@ check: gumbo.so test.lua
 	@lua test.lua && echo "All tests passed"
 
 clean:
-	rm -f gumbo.so lgumbo.o tags
+	rm -f gumbo.so gumbo.o tags
 	rm -rf docs
 
 
