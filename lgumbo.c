@@ -1,8 +1,7 @@
-/// @module gumbo
-// Lua bindings for the [Gumbo][] HTML5 parsing library.
-// [Gumbo]: https://github.com/google/gumbo-parser
+/// Lua bindings for the Gumbo HTML5 parsing library
 // @copyright 2013 Craig Barnes
 // @license ISC
+// @module gumbo
 
 #include <stdbool.h>
 #include <stdlib.h>
