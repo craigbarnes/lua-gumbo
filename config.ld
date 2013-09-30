@@ -7,4 +7,4 @@ format      = "markdown"
 dir         = "docs"
 file        = "gumbo.c"
 readme      = "README.md"
-examples    = {"examples/outline.lua", "test.lua"}
+examples    = {"example.lua", "test.lua"}

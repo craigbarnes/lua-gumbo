@@ -22,11 +22,8 @@ gumbo.o: gumbo.c compat.h
 tags: gumbo.c compat.h $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
-docs: config.ld gumbo.c README.md examples/outline.lua test.lua
+docs: config.ld gumbo.c README.md example.lua test.lua
 	@ldoc -c $< .
-
-examples/graph.png: examples/graph.dot
-	dot -T png -o $@ $<
 
 install: gumbo.so
 	mkdir -p $(DESTDIR)$(LUACDIR)
