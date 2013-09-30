@@ -12,6 +12,10 @@
 #include <gumbo.h>
 #include "compat.h"
 
+#define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
+#define assert(cond) if (!(cond)) goto error
+static bool build_node(lua_State *L, GumboNode* node);
+
 static inline void add_children(lua_State *L, GumboVector *children) {
     unsigned int tl = 0;
     for (unsigned int i = 0, cl = children->length; i < cl; i++) {
