@@ -67,6 +67,10 @@ Comments are stored as "boxed" strings, i.e. tables with a single `comment`
 field. This is to differentiate them from other text nodes. The value of
 the field is the comment text, minus the `<!--` and `-->` delimiters.
 
+### CDATA
+
+Structured the same as comment nodes, with a single `cdata` field.
+
 Example
 -------
 

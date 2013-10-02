@@ -76,8 +76,12 @@ static bool build_node(lua_State *L, GumboNode* node) {
         add_field(L, string, "comment", node->v.text.text);
         return true;
 
-    case GUMBO_NODE_TEXT:
     case GUMBO_NODE_CDATA:
+        lua_createtable(L, 0, 1);
+        add_field(L, string, "cdata", node->v.text.text);
+        return true;
+
+    case GUMBO_NODE_TEXT:
         lua_pushstring(L, node->v.text.text);
         return true;
 
