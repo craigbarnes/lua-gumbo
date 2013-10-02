@@ -33,7 +33,7 @@ uninstall:
 	rm -f $(DESTDIR)$(LUACDIR)/gumbo.so
 
 check: gumbo.so test.lua
-	@lua test.lua && echo "All tests passed"
+	@lua test.lua
 
 clean:
 	rm -f gumbo.so gumbo.o tags
