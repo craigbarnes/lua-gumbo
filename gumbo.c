@@ -90,12 +90,12 @@ static bool build_node(lua_State *L, GumboNode* node) {
 }
 
 static inline void parse(lua_State *L, const char *input, size_t len) {
-    GumboOutput *output;
-    output = gumbo_parse_with_options(&kGumboDefaultOptions, input, len);
+    GumboOptions options = kGumboDefaultOptions;
+    GumboOutput *output = gumbo_parse_with_options(&options, input, len);
     build_node(L, output->document);
     lua_rawgeti(L, -1, output->root->index_within_parent + 1);
     lua_setfield(L, -2, "root");
-    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    gumbo_destroy_output(&options, output);
 }
 
 /// Parse a string of HTML
