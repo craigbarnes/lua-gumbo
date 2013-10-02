@@ -89,14 +89,20 @@ static bool build_node(lua_State *L, GumboNode* node) {
     }
 }
 
-static bool parse(lua_State *L, const char *input, size_t len) {
+static int parse(lua_State *L, const char *input, size_t len) {
     GumboOptions options = kGumboDefaultOptions;
     GumboOutput *output = gumbo_parse_with_options(&options, input, len);
-    build_node(L, output->document);
-    lua_rawgeti(L, -1, output->root->index_within_parent + 1);
-    lua_setfield(L, -2, "root");
-    gumbo_destroy_output(&options, output);
-    return true; // Always true until Gumbo gets proper error handling
+    if (output) {
+        build_node(L, output->document);
+        lua_rawgeti(L, -1, output->root->index_within_parent + 1);
+        lua_setfield(L, -2, "root");
+        gumbo_destroy_output(&options, output);
+        return 1;
+    } else {
+        lua_pushnil(L);
+        lua_pushstring(L, "Failed to parse");
+        return 2;
+    }
 }
 
 /// Parse a string of HTML
@@ -107,13 +113,7 @@ static bool parse(lua_State *L, const char *input, size_t len) {
 static int parse_string(lua_State *L) {
     size_t len;
     const char *input = luaL_checklstring(L, 1, &len);
-    if (parse(L, input, len)) {
-        return 1;
-    } else {
-        lua_pushnil(L);
-        lua_pushstring(L, strerror(errno));
-        return 2;
-    }
+    return parse(L, input, len);
 }
 
 /// Read and parse a HTML file
@@ -126,6 +126,7 @@ static int parse_file(lua_State *L) {
     FILE *file = NULL;
     char *input = NULL;
     long len;
+    int ret;
 
     filename = luaL_checkstring(L, 1);
 
@@ -137,9 +138,9 @@ static int parse_file(lua_State *L) {
     assert(fread(input, 1, len, file) == (unsigned long)len);
     fclose(file);
     input[len] = '\0';
-    assert(parse(L, input, len));
+    ret = parse(L, input, len);
     free(input);
-    return 1;
+    return ret;
 
   error: // Return nil and an error message if an assertion fails
     if (file) fclose(file);
