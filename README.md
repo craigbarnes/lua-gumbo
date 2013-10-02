@@ -38,24 +38,26 @@ detailed below.
 Document Structure
 ------------------
 
-### Document
+### Document Node
 
 The document node is the top-level table returned by the parse functions
 and contains all other nodes as descendants. It contains the following
 fields:
 
+* `type`: The node type. Always has a value of `document` for document nodes.
 * `name`
 * `public_identifier`
 * `system_identifier`
 * `has_doctype`
-* `root`: a convenient reference to the child `html` element
-* `[1..n]`: child nodes
+* `root`: A convenient reference to the child `html` element
+* `[1..n]`: Child nodes
 
-### Elements
+### Element Nodes
 
 Element nodes are represented as tables, with child nodes stored in numeric
 indices and the following named fields:
 
+* `type`: The node type. Always has a value of `element` for element nodes.
 * `tag`: The tag name. Normalized to lower case for valid tags,
   verbatim for unrecognized tags.
 * `attr`: A table of attributes associated with the element. Fields are
@@ -68,20 +70,12 @@ by checking that it's value is non-`nil`, e.g.
         print "This node is an element"
     end
 
-### Text
+### Text Nodes
 
-Text nodes are stored as plain strings. They can be easily recognised as
-being the only string values stored in numeric indices.
+Text nodes are represented as tables with 2 fields:
 
-### Comments
-
-Comments are stored as "boxed" strings, i.e. tables with a single `comment`
-field. This is to differentiate them from other text nodes. The value of
-the field is the comment text, minus the `<!--` and `-->` delimiters.
-
-### CDATA
-
-Structured the same as comment nodes, with a single `cdata` field.
+* `type`: The type of text node. Can be `text`, `comment` or `cdata`.
+* `text`: The text contents. Does not include comment/cdata delimiters.
 
 Example
 -------

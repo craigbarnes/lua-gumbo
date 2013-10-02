@@ -63,6 +63,15 @@ static void build_element(lua_State *L, GumboElement *element) {
     add_children(L, &element->children);
 }
 
+static const char *const type_string[] = {
+//    [GUMBO_NODE_DOCUMENT] = "document",
+//    [GUMBO_NODE_ELEMENT] = "element",
+//    [GUMBO_NODE_WHITESPACE] = "whitespace",
+    [GUMBO_NODE_TEXT] = "text",
+    [GUMBO_NODE_COMMENT] = "comment",
+    [GUMBO_NODE_CDATA] = "cdata"
+};
+
 static bool build_node(lua_State *L, GumboNode* node) {
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT:
@@ -73,20 +82,12 @@ static bool build_node(lua_State *L, GumboNode* node) {
         build_element(L, &node->v.element);
         return true;
 
+    case GUMBO_NODE_TEXT:
     case GUMBO_NODE_COMMENT:
-        lua_createtable(L, 0, 2);
-        add_field(L, string, "type", "comment");
-        add_field(L, string, "text", node->v.text.text);
-        return true;
-
     case GUMBO_NODE_CDATA:
         lua_createtable(L, 0, 2);
-        add_field(L, string, "type", "cdata");
+        add_field(L, string, "type", type_string[node->type]);
         add_field(L, string, "text", node->v.text.text);
-        return true;
-
-    case GUMBO_NODE_TEXT:
-        lua_pushstring(L, node->v.text.text);
         return true;
 
     case GUMBO_NODE_WHITESPACE:

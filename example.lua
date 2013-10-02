@@ -23,17 +23,15 @@ local function write(text, depth, quoted)
 end
 
 local function dump(node)
-    if node.tag then
+    if node.type == "element" then
         write(node.tag, depth)
         depth = depth + 1
         for i = 1, #node do
            dump(node[i])
         end
         depth = depth - 1
-    elseif node.comment then
-        return
-    else
-        write(node, depth, true)
+    elseif node.type == "text" then
+        write(node.text, depth, true)
     end
 end
 
