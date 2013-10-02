@@ -9,6 +9,15 @@ Status
 *Work in progress*. A versioned release will be made when the API has
 stabilized.
 
+Requirements
+------------
+
+* C99 compiler
+* GNU Make
+* pkg-config
+* `libgumbo.so`
+* `gumbo.h`
+
 Installation
 ------------
 
