@@ -27,6 +27,7 @@ static inline void add_children(lua_State *L, GumboVector *children) {
 
 static void build_document(lua_State *L, GumboDocument *document) {
     lua_createtable(L, document->children.length, 6);
+    add_field(L, string, "type", "document");
     add_field(L, string, "name", document->name);
     add_field(L, string, "public_identifier", document->public_identifier);
     add_field(L, string, "system_identifier", document->system_identifier);
@@ -37,6 +38,7 @@ static void build_document(lua_State *L, GumboDocument *document) {
 static void build_element(lua_State *L, GumboElement *element) {
     unsigned int nattrs = element->attributes.length;
     lua_createtable(L, element->children.length, nattrs ? 3 : 2);
+    add_field(L, string, "type", "element");
 
     // Add tag name
     if (element->tag == GUMBO_TAG_UNKNOWN) {
@@ -72,13 +74,15 @@ static bool build_node(lua_State *L, GumboNode* node) {
         return true;
 
     case GUMBO_NODE_COMMENT:
-        lua_createtable(L, 0, 1);
-        add_field(L, string, "comment", node->v.text.text);
+        lua_createtable(L, 0, 2);
+        add_field(L, string, "type", "comment");
+        add_field(L, string, "text", node->v.text.text);
         return true;
 
     case GUMBO_NODE_CDATA:
-        lua_createtable(L, 0, 1);
-        add_field(L, string, "cdata", node->v.text.text);
+        lua_createtable(L, 0, 2);
+        add_field(L, string, "type", "cdata");
+        add_field(L, string, "text", node->v.text.text);
         return true;
 
     case GUMBO_NODE_TEXT:
