@@ -16,7 +16,7 @@ Requirements
 * GNU Make
 * pkg-config
 * Lua headers (`lua.h`, `lauxlib.h`)
-* An [installation of Gumbo] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
+* An [installation of Gumbo][] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
 
 Installation
 ------------
