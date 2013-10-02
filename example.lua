@@ -1,10 +1,19 @@
-package.cpath = "./?.so;../?.so"
+package.cpath = "./?.so"
 local gumbo = require "gumbo"
-
-local filename = ...
-assert(filename, "A filename argument is required")
-local document = assert(gumbo.parse_file(filename))
 local depth = 1
+
+local document = gumbo.parse [[
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Test Document</title>
+</head>
+<body>
+    <h1 class=heading>Hello</h1>
+</body>
+</html>
+]]
 
 local function write(text, depth, quoted)
     local indent = string.rep(" ", depth*4)
