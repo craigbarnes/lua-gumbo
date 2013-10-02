@@ -63,13 +63,6 @@ indices and the following named fields:
 * `attr`: A table of attributes associated with the element. Fields are
   `name="value"` pairs.
 
-Elements are the only nodes with a `tag` field and can be identified simply
-by checking that it's value is non-`nil`, e.g.
-
-    if node.tag then
-        print "This node is an element"
-    end
-
 ### Text Nodes
 
 Text nodes are represented as tables with 2 fields:
