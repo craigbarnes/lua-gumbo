@@ -122,13 +122,11 @@ static int parse_string(lua_State *L) {
 // @return Abstract syntax tree table
 // @return `nil, error_message` (if opening or reading file fails)
 static int parse_file(lua_State *L) {
-    const char *filename;
+    int ret;
+    long len;
     FILE *file = NULL;
     char *input = NULL;
-    long len;
-    int ret;
-
-    filename = luaL_checkstring(L, 1);
+    const char *filename = luaL_checkstring(L, 1);
 
     assert(file = fopen(filename, "rb"));
     assert(fseek(file, 0, SEEK_END) != -1);
