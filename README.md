@@ -15,8 +15,8 @@ Requirements
 * C99 compiler
 * GNU Make
 * pkg-config
-* `libgumbo.so`
-* `gumbo.h`
+* Gumbo installation (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
+* Lua headers (`lua.h`, `lauxlib.h`)
 
 Installation
 ------------
