@@ -91,10 +91,10 @@ local document = gumbo.parse [[
     <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Test Document</title>
+        <title>Test</title>
     </head>
     <body>
-        <h1 class=heading>Hello</h1>
+        <h1>Hello</h1>
     </body>
     </html>
 ]]
