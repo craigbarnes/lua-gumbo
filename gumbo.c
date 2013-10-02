@@ -96,7 +96,7 @@ static bool parse(lua_State *L, const char *input, size_t len) {
     lua_rawgeti(L, -1, output->root->index_within_parent + 1);
     lua_setfield(L, -2, "root");
     gumbo_destroy_output(&options, output);
-    return true;
+    return true; // Always true until Gumbo gets proper error handling
 }
 
 /// Parse a string of HTML
