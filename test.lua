@@ -7,6 +7,7 @@ local input = [[
     <p><a href=foobar.html>Quux</a></p>
     <iNValID foo="bar">abc</invalid>
     <p class=empty></p>
+    <!-- comment node -->
 ]]
 
 local document = assert(gumbo.parse(input))
@@ -26,9 +27,14 @@ assert(body[3].tag == "iNValID")
 assert(body[3].attr.foo == "bar")
 assert(body[3][1] == "abc")
 assert(body[4].attr.class == "empty")
+assert(body[5].text == " comment node ")
 assert(#root == 2)
-assert(#body == 4)
+assert(#body == 5)
 assert(#body[4] == 0)
+assert(document.type == "document")
+assert(head.type == "element")
+assert(body[5].type == "comment")
+assert(type(body[1][1]) == "string")
 assert(gumbo.parse("<h1>Hello</h1>").root[2][1][1] == "Hello")
 assert(not gumbo.parse_file "non-existent-file")
 
