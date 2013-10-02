@@ -159,7 +159,6 @@ static const luaL_reg R[] = {
 };
 
 int luaopen_gumbo(lua_State *L) {
-    lua_createtable(L, 0, 2);
-    luaL_register(L, NULL, R);
+    luaL_newlib(L, R);
     return 1;
 }
