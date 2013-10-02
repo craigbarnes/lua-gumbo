@@ -15,8 +15,8 @@ Requirements
 * C99 compiler
 * GNU Make
 * pkg-config
-* Gumbo installation (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
 * Lua headers (`lua.h`, `lauxlib.h`)
+* An [installation of Gumbo] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
 
 Installation
 ------------
@@ -150,5 +150,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Gumbo]: https://github.com/google/gumbo-parser
+[installation of Gumbo]: https://github.com/google/gumbo-parser#installation
 [serpent]: https://github.com/pkulchenko/serpent
 [examples]: https://github.com/craigbarnes/lua-gumbo/tree/master/examples
