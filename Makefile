@@ -1,11 +1,9 @@
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
-GUMBO_LDLIBS  = $(shell pkg-config --libs-only-l gumbo)
-GUMBO_LDFLAGS = $(shell pkg-config --libs-only-L gumbo)
+GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
 
 CC      = gcc
 CFLAGS  = -O2 -Wall -Wextra -std=c99 -pedantic $(GUMBO_CFLAGS)
 LDFLAGS = -shared $(GUMBO_LDFLAGS)
-LDLIBS  = $(GUMBO_LDLIBS)
 PREFIX  = /usr/local
 LUAVER  = 5.1
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
@@ -15,7 +13,7 @@ ifeq ($(shell uname),Darwin)
 endif
 
 gumbo.so: gumbo.o
-	$(CC) $(LDFLAGS) $(LDLIBS) $< -o $@
+	$(CC) $(LDFLAGS) -o $@ $<
 
 gumbo.o: gumbo.c compat.h
 
