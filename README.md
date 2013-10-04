@@ -16,7 +16,7 @@ Requirements
 * GNU Make
 * pkg-config
 * Lua headers (`lua.h`, `lauxlib.h`)
-* An [installation of Gumbo][] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
+* [Gumbo][Gumbo installation] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
 
 Installation
 ------------
@@ -136,7 +136,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Gumbo]: https://github.com/google/gumbo-parser
-[installation of Gumbo]: https://github.com/google/gumbo-parser#installation
+[Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [example.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/example.lua
 [test.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/test.lua
 [doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
