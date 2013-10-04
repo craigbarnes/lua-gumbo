@@ -73,7 +73,7 @@ Text nodes are represented as tables with 2 fields:
 Example
 -------
 
-There are various, basic usage examples in the [examples] directory.
+See [example.lua] and [test.lua] for basic usage examples.
 
 As a visual example, the following usage:
 
@@ -93,7 +93,7 @@ local document = gumbo.parse [[
 ]]
 ```
 
-will produce the output structure:
+will produce this table as output:
 
 ![Table Graph](http://cra.igbarn.es/img/lua-gumbo-graph.png)
 
@@ -139,4 +139,5 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [Gumbo]: https://github.com/google/gumbo-parser
 [installation of Gumbo]: https://github.com/google/gumbo-parser#installation
 [serpent]: https://github.com/pkulchenko/serpent
-[examples]: https://github.com/craigbarnes/lua-gumbo/tree/master/examples
+[example.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/example.lua
+[test.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/test.lua
