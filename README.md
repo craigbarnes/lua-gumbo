@@ -46,11 +46,11 @@ and contains all other nodes as descendants. It contains the following
 fields:
 
 * `type`: The node type. Always has a value of `"document"` for document nodes.
-* `name`: The doctype name. Usually `"html"` or an empty string.
-* `public_identifier`: The doctype [public identifier].
-* `system_identifier`: The doctype [system identifier].
-* `has_doctype`: `true` if the document has an explicit doctype declaration,
-   otherwise `false`.
+* `has_doctype`: Whether or not a [doctype declaration] was found. If
+  `true`, the following fields describe the doctype:
+  * `name`: The [root element] name.
+  * `public_identifier`: The [public identifier].
+  * `system_identifier`: The [system identifier].
 * `root`: A convenient reference to the child `html` element.
 * `[1..n]`: Child nodes.
 
@@ -139,5 +139,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [installation of Gumbo]: https://github.com/google/gumbo-parser#installation
 [example.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/example.lua
 [test.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/test.lua
+[doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
+[root element]: http://en.wikipedia.org/wiki/Root_element
 [public identifier]: http://en.wikipedia.org/wiki/Public_identifier#Use_in_XML_and_SGML
 [system identifier]: http://en.wikipedia.org/wiki/System_identifier
