@@ -1,10 +1,7 @@
 project     = "lua-gumbo"
-title       = "lua-gumbo"
-description = "Lua bindings for the Gumbo HTML5 parsing library"
+title       = "lua-gumbo reference"
 no_summary  = true
-not_luadoc  = true
 format      = "discount"
-dir         = "docs"
 file        = "gumbo.c"
 readme      = "README.md"
 examples    = {"example.lua", "test.lua"}
