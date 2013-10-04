@@ -5,13 +5,13 @@ local depth = 1
 local document = gumbo.parse [[
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Test Document</title>
-</head>
-<body>
-    <h1 class=heading>Hello</h1>
-</body>
+    <head>
+        <meta charset="utf-8">
+        <title>Test</title>
+    </head>
+    <body>
+        <h1>Hello</h1>
+    </body>
 </html>
 ]]
 
