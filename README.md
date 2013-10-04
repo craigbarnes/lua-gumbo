@@ -51,7 +51,7 @@ fields:
   * `name`: The [root element] name.
   * `public_identifier`: The [public identifier].
   * `system_identifier`: The [system identifier].
-* `root`: A convenient reference to the child `html` element.
+* `root`: A convenient reference to the root `html` element.
 * `[1..n]`: Child nodes.
 
 ### Element Nodes
