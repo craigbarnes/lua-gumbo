@@ -74,13 +74,18 @@ Text nodes are represented as tables with 2 fields:
 
 ### Visual Example
 
-The following usage:
+Running the code:
 
 ```lua
 local gumbo = require "gumbo"
-local document = gumbo.parse [[
-    <!doctype html>
-    <html lang="en">
+local document = gumbo.parse_file "input.html"
+```
+
+where `input.html` contains:
+
+```html
+<!doctype html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <title>Test</title>
@@ -88,11 +93,10 @@ local document = gumbo.parse [[
     <body>
         <h1>Hello</h1>
     </body>
-    </html>
-]]
+</html>
 ```
 
-will produce this table as output:
+will produce the following output:
 
 ![Table Graph](http://cra.igbarn.es/img/lua-gumbo-graph.png)
 
