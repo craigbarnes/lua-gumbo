@@ -96,7 +96,7 @@ where `input.html` contains:
 </html>
 ```
 
-will produce the following output:
+will produce the following `document` structure:
 
 ![Table Graph](http://cra.igbarn.es/img/lua-gumbo-graph.png)
 
