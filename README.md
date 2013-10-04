@@ -32,8 +32,9 @@ The `gumbo` module provides 2 functions:
 * parse_file(filename)
 
 Both functions return a document tree in table form, or `nil` and an
-error message on failure. The nodes contained in the document tree are
-detailed below.
+error message on failure.
+
+See [example.lua] and [test.lua] for basic usage examples.
 
 Document Structure
 ------------------
@@ -71,12 +72,9 @@ Text nodes are represented as tables with 2 fields:
 * `type`: The node type. One of `"text"`, `"comment"` or `"cdata"`.
 * `text`: The text contents. Does not include comment/cdata delimiters.
 
-Example
--------
+### Visual Example
 
-See [example.lua] and [test.lua] for basic usage examples.
-
-As a visual example, the following usage:
+The following usage:
 
 ```lua
 local gumbo = require "gumbo"
