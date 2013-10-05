@@ -22,6 +22,7 @@ tags: gumbo.c compat.h $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 
 docs: config.ld gumbo.c README.md example.lua test.lua
 	@ldoc -c $< -d $@ .
+	@sed -ie 's|<a href="http://www.lua.org/manual/5.1/manual.html#pdf-type">type</a> :|<code>type</code>:|' docs/topics/README.md.html
 	@touch $@
 
 install: gumbo.so
