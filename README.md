@@ -45,7 +45,7 @@ The document node is the top-level table returned by the parse functions
 and contains all other nodes as descendants. It contains the following
 fields:
 
-* `type`: The node type. Always has a value of `"document"` for document nodes.
+* `type`: The node type. Always has a value of `document` for document nodes.
 * `has_doctype`: Whether or not a [doctype declaration] was found. If
   `true`, the following fields describe the doctype:
   * `name`: The [root element] name.
@@ -59,7 +59,7 @@ fields:
 Element nodes are represented as tables, with child nodes stored in numeric
 indices and the following named fields:
 
-* `type`: The node type. Always has a value of `"element"` for element nodes.
+* `type`: The node type. Always has a value of `element` for element nodes.
 * `tag`: The tag name. Normalized to lower case for valid tags,
   verbatim for unrecognized tags.
 * `attr`: A table of attributes associated with the element. Fields are
@@ -69,7 +69,7 @@ indices and the following named fields:
 
 Text nodes are represented as tables with 2 fields:
 
-* `type`: The node type. One of `"text"`, `"comment"` or `"cdata"`.
+* `type`: The node type. One of `text`, `whitespace`, `comment` or `cdata`.
 * `text`: The text contents. Does not include comment/cdata delimiters.
 
 ### Visual Example
