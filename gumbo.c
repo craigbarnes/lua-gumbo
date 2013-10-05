@@ -71,6 +71,8 @@ static const char *const node_type_to_string[] = {
 };
 
 static void build_node(lua_State *L, GumboNode* node) {
+    luaL_checkstack(L, 10, "element nesting too deep");
+
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT:
         build_document(L, &node->v.document);
