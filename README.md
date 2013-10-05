@@ -112,6 +112,7 @@ tree-to-tree translation, as recommended by the Gumbo documentation.
 Todo
 ----
 
+* Protect against Lua stack overflows with `luaL_checkstack`
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
 * Add an example of traversing a document and producing Graphviz output

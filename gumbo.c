@@ -14,14 +14,12 @@
 
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
 #define assert(cond) if (!(cond)) goto error
-static bool build_node(lua_State *L, GumboNode* node);
+static void build_node(lua_State *L, GumboNode* node);
 
 static inline void add_children(lua_State *L, GumboVector *children) {
-    unsigned int tl = 0;
-    for (unsigned int i = 0, cl = children->length; i < cl; i++) {
-        if (build_node(L, children->data[i])) {
-            lua_rawseti(L, -2, ++tl);
-        }
+    for (unsigned int i = 0, n = children->length; i < n; i++) {
+        build_node(L, children->data[i]);
+        lua_rawseti(L, -2, i + 1);
     }
 }
 
@@ -72,29 +70,27 @@ static const char *const node_type_to_string[] = {
     [GUMBO_NODE_WHITESPACE] = "whitespace"
 };
 
-static bool build_node(lua_State *L, GumboNode* node) {
+static void build_node(lua_State *L, GumboNode* node) {
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT:
         build_document(L, &node->v.document);
-        return true;
+        break;
 
     case GUMBO_NODE_ELEMENT:
         build_element(L, &node->v.element);
-        return true;
+        break;
 
     case GUMBO_NODE_TEXT:
     case GUMBO_NODE_COMMENT:
     case GUMBO_NODE_CDATA:
+    case GUMBO_NODE_WHITESPACE:
         lua_createtable(L, 0, 2);
         add_field(L, string, "type", node_type_to_string[node->type]);
         add_field(L, string, "text", node->v.text.text);
-        return true;
-
-    case GUMBO_NODE_WHITESPACE:
-        return false;
+        break;
 
     default:
-        return luaL_error(L, "Invalid node type");
+        luaL_error(L, "Invalid node type");
     }
 }
 
