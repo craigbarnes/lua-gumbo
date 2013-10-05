@@ -114,7 +114,7 @@ static int parse(lua_State *L, const char *input, size_t len) {
 
 /// Parse a string of HTML
 // @function parse
-// @param document String containing HTML
+// @param html String of HTML
 // @return Abstract syntax tree table
 // @see README.md
 static int parse_string(lua_State *L) {

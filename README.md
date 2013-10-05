@@ -28,7 +28,7 @@ Usage
 
 The `gumbo` module provides 2 functions:
 
-* parse(string_of_html)
+* parse(html)
 * parse_file(filename)
 
 Both functions return a document tree in table form, or `nil` and an
