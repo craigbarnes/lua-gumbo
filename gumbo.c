@@ -155,7 +155,7 @@ static int parse_file(lua_State *L) {
     return 2;
 }
 
-static const luaL_reg R[] = {
+static const luaL_Reg R[] = {
     {"parse", parse_string},
     {"parse_file", parse_file},
     {NULL, NULL}
