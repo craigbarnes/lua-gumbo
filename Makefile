@@ -15,9 +15,7 @@ endif
 gumbo.so: gumbo.o
 	$(CC) $(LDFLAGS) -o $@ $<
 
-gumbo.o: gumbo.c compat.h
-
-tags: gumbo.c compat.h $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
+tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
 docs: config.ld gumbo.c README.md example.lua test.lua

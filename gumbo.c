@@ -10,7 +10,6 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
-#include "compat.h"
 
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
 #define assert(cond) if (!(cond)) goto error
@@ -155,13 +154,9 @@ static int parse_file(lua_State *L) {
     return 2;
 }
 
-static const luaL_Reg R[] = {
-    {"parse", parse_string},
-    {"parse_file", parse_file},
-    {NULL, NULL}
-};
-
 int luaopen_gumbo(lua_State *L) {
-    luaL_newlib(L, R);
+    lua_createtable(L, 0, 2);
+    add_field(L, cfunction, "parse", parse_string);
+    add_field(L, cfunction, "parse_file", parse_file);
     return 1;
 }
