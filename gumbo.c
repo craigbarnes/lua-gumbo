@@ -26,7 +26,7 @@
 
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
 #define assert(cond) if (!(cond)) goto error
-static void build_node(lua_State *L, GumboNode* node);
+static void build_node(lua_State *L, const GumboNode* node);
 
 static const char *const node_type_to_string[] = {
     [GUMBO_NODE_DOCUMENT]   = "document",
@@ -37,25 +37,15 @@ static const char *const node_type_to_string[] = {
     [GUMBO_NODE_WHITESPACE] = "whitespace"
 };
 
-static inline void add_children(lua_State *L, GumboVector *children) {
+static inline void add_children(lua_State *L, const GumboVector *children) {
     for (unsigned int i = 0, n = children->length; i < n; i++) {
         build_node(L, children->data[i]);
         lua_rawseti(L, -2, i + 1);
     }
 }
 
-static void build_document(lua_State *L, GumboDocument *document) {
-    lua_createtable(L, document->children.length, 6);
-    add_field(L, string, "type", "document");
-    add_field(L, string, "name", document->name);
-    add_field(L, string, "public_identifier", document->public_identifier);
-    add_field(L, string, "system_identifier", document->system_identifier);
-    add_field(L, boolean, "has_doctype", document->has_doctype);
-    add_children(L, &document->children);
-}
-
-static void build_element(lua_State *L, GumboElement *element) {
-    unsigned int nattrs = element->attributes.length;
+static inline void build_element(lua_State *L, const GumboElement *element) {
+    const unsigned int nattrs = element->attributes.length;
     lua_createtable(L, element->children.length, nattrs ? 3 : 2);
     add_field(L, string, "type", "element");
 
@@ -73,7 +63,7 @@ static void build_element(lua_State *L, GumboElement *element) {
     if (nattrs) {
         lua_createtable(L, 0, nattrs);
         for (unsigned int i = 0; i < nattrs; ++i) {
-            GumboAttribute *attribute = element->attributes.data[i];
+            const GumboAttribute *attribute = element->attributes.data[i];
             add_field(L, string, attribute->name, attribute->value);
         }
         lua_setfield(L, -2, "attr");
@@ -82,13 +72,21 @@ static void build_element(lua_State *L, GumboElement *element) {
     add_children(L, &element->children);
 }
 
-static void build_node(lua_State *L, GumboNode* node) {
+static void build_node(lua_State *L, const GumboNode* node) {
     luaL_checkstack(L, 10, "element nesting too deep");
 
     switch (node->type) {
-    case GUMBO_NODE_DOCUMENT:
-        build_document(L, &node->v.document);
+    case GUMBO_NODE_DOCUMENT: {
+        const GumboDocument *document = &node->v.document;
+        lua_createtable(L, document->children.length, 6);
+        add_field(L, string, "type", "document");
+        add_field(L, string, "name", document->name);
+        add_field(L, string, "public_identifier", document->public_identifier);
+        add_field(L, string, "system_identifier", document->system_identifier);
+        add_field(L, boolean, "has_doctype", document->has_doctype);
+        add_children(L, &document->children);
         break;
+    }
 
     case GUMBO_NODE_ELEMENT:
         build_element(L, &node->v.element);
@@ -108,14 +106,14 @@ static void build_node(lua_State *L, GumboNode* node) {
     }
 }
 
-static int parse(lua_State *L, const char *input, size_t len) {
-    GumboOptions options = kGumboDefaultOptions;
-    GumboOutput *output = gumbo_parse_with_options(&options, input, len);
+static inline int parse(lua_State *L, const char *input, const size_t len) {
+    const GumboOptions *options = &kGumboDefaultOptions;
+    GumboOutput *output = gumbo_parse_with_options(options, input, len);
     if (output) {
         build_node(L, output->document);
         lua_rawgeti(L, -1, output->root->index_within_parent + 1);
         lua_setfield(L, -2, "root");
-        gumbo_destroy_output(&options, output);
+        gumbo_destroy_output(options, output);
         return 1;
     } else {
         lua_pushnil(L);
