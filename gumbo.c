@@ -15,6 +15,15 @@
 #define assert(cond) if (!(cond)) goto error
 static void build_node(lua_State *L, GumboNode* node);
 
+static const char *const node_type_to_string[] = {
+    [GUMBO_NODE_DOCUMENT]   = "document",
+    [GUMBO_NODE_ELEMENT]    = "element",
+    [GUMBO_NODE_TEXT]       = "text",
+    [GUMBO_NODE_CDATA]      = "cdata",
+    [GUMBO_NODE_COMMENT]    = "comment",
+    [GUMBO_NODE_WHITESPACE] = "whitespace"
+};
+
 static inline void add_children(lua_State *L, GumboVector *children) {
     for (unsigned int i = 0, n = children->length; i < n; i++) {
         build_node(L, children->data[i]);
@@ -59,15 +68,6 @@ static void build_element(lua_State *L, GumboElement *element) {
 
     add_children(L, &element->children);
 }
-
-static const char *const node_type_to_string[] = {
-    [GUMBO_NODE_DOCUMENT]   = "document",
-    [GUMBO_NODE_ELEMENT]    = "element",
-    [GUMBO_NODE_TEXT]       = "text",
-    [GUMBO_NODE_CDATA]      = "cdata",
-    [GUMBO_NODE_COMMENT]    = "comment",
-    [GUMBO_NODE_WHITESPACE] = "whitespace"
-};
 
 static void build_node(lua_State *L, GumboNode* node) {
     luaL_checkstack(L, 10, "element nesting too deep");
