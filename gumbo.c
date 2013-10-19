@@ -117,7 +117,7 @@ static inline int parse(lua_State *L, const char *input, const size_t len) {
         return 1;
     } else {
         lua_pushnil(L);
-        lua_pushstring(L, "Failed to parse");
+        lua_pushliteral(L, "Failed to parse");
         return 2;
     }
 }
