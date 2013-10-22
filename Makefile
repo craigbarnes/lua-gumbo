@@ -18,10 +18,6 @@ gumbo.so: gumbo.o
 tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
-docs: gumbo.c
-	ldoc -q -p lua-gumbo -t lua-gumbo -d $@ $<
-	@touch $@
-
 install: gumbo.so
 	mkdir -p $(DESTDIR)$(LUACDIR)
 	install -pm0755 gumbo.so $(DESTDIR)$(LUACDIR)
@@ -34,7 +30,6 @@ check: gumbo.so test.lua
 
 clean:
 	rm -f gumbo.so gumbo.o tags
-	rm -rf docs
 
 
 .PHONY: install uninstall check clean
