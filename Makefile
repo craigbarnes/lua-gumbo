@@ -1,8 +1,8 @@
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
 
-CC      = gcc
-CFLAGS  = -O2 -Wall -Wextra -std=c99 -pedantic $(GUMBO_CFLAGS)
+CC      = c99
+CFLAGS  = -O2 -Wall -Wextra -Wpedantic $(GUMBO_CFLAGS)
 LDFLAGS = -shared $(GUMBO_LDFLAGS)
 PREFIX  = /usr/local
 LUAVER  = 5.1
@@ -12,7 +12,7 @@ ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-gumbo.so: gumbo.o
+gumbo.so: gumbo.o Makefile
 	$(CC) $(LDFLAGS) -o $@ $<
 
 tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
