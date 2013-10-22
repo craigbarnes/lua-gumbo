@@ -18,9 +18,8 @@ gumbo.so: gumbo.o
 tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
-docs: config.ld gumbo.c README.md example.lua test.lua
-	@ldoc -c $< -d $@ .
-	@sed -ie 's|<a href="http://www.lua.org/manual/[^"]*">type</a> :|<code>type</code>:|' docs/topics/README.md.html
+docs: gumbo.c
+	ldoc -q -p lua-gumbo -t lua-gumbo -d $@ $<
 	@touch $@
 
 install: gumbo.so

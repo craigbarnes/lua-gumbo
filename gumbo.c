@@ -126,7 +126,6 @@ static inline int parse(lua_State *L, const char *input, const size_t len) {
 // @function parse
 // @param html String of HTML
 // @return Abstract syntax tree table
-// @see README.md
 static int parse_string(lua_State *L) {
     size_t len;
     const char *input = luaL_checklstring(L, 1, &len);
