@@ -2,7 +2,7 @@ GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
 
 CC      = c99
-CFLAGS  = -O2 -Wall -Wextra -Wpedantic $(GUMBO_CFLAGS)
+CFLAGS  = -O2 -Wall -Wextra -Wpedantic -Wc++-compat $(GUMBO_CFLAGS)
 LDFLAGS = -shared $(GUMBO_LDFLAGS)
 LUA     = lua
 PREFIX  = /usr/local

@@ -45,7 +45,7 @@ static const char *const qmode_map[] = {
 
 static inline void add_children(lua_State *L, const GumboVector *children) {
     for (unsigned int i = 0, n = children->length; i < n; i++) {
-        build_node(L, children->data[i]);
+        build_node(L, (const GumboNode *)children->data[i]);
         lua_rawseti(L, -2, i + 1);
     }
 }
@@ -67,10 +67,11 @@ static inline void build_element(lua_State *L, const GumboElement *element) {
 
     // Add attributes
     if (nattrs) {
+        const GumboVector *const attrs = &element->attributes;
         lua_createtable(L, 0, nattrs);
         for (unsigned int i = 0; i < nattrs; ++i) {
-            const GumboAttribute *attribute = element->attributes.data[i];
-            add_field(L, string, attribute->name, attribute->value);
+            const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
+            add_field(L, string, attr->name, attr->value);
         }
         lua_setfield(L, -2, "attr");
     }
@@ -156,7 +157,7 @@ static int parse_file(lua_State *L) {
     assert(fseek(file, 0, SEEK_END) != -1);
     assert((len = ftell(file)) != -1);
     rewind(file);
-    assert(input = malloc(len + 1));
+    assert(input = (char *)malloc(len + 1));
     assert(fread(input, 1, len, file) == (unsigned long)len);
     fclose(file);
     input[len] = '\0';
