@@ -28,7 +28,7 @@
 #define assert(cond) if (!(cond)) goto error
 static void build_node(lua_State *L, const GumboNode* node);
 
-static const char *const node_type_to_string[] = {
+static const char *const node_type_map[] = {
     [GUMBO_NODE_DOCUMENT]   = "document",
     [GUMBO_NODE_ELEMENT]    = "element",
     [GUMBO_NODE_TEXT]       = "text",
@@ -105,7 +105,7 @@ static void build_node(lua_State *L, const GumboNode* node) {
     case GUMBO_NODE_CDATA:
     case GUMBO_NODE_WHITESPACE:
         lua_createtable(L, 0, 2);
-        add_field(L, string, "type", node_type_to_string[node->type]);
+        add_field(L, string, "type", node_type_map[node->type]);
         add_field(L, string, "text", node->v.text.text);
         break;
 
