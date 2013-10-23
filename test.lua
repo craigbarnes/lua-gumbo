@@ -2,6 +2,7 @@ package.cpath = "./?.so"
 local gumbo = require "gumbo"
 
 local input = [[
+    <!doctype html>
     <TITLE>Test Document</TITLE>
     <h1>Test Heading</h1>
     <p><a href=foobar.html>Quux</a></p>
@@ -33,6 +34,11 @@ assert(#root == 2)
 assert(#body == 10)
 assert(#body[4] == 0)
 assert(document.type == "document")
+assert(document.name == "html")
+assert(document.has_doctype == true)
+assert(document.public_identifier == "")
+assert(document.system_identifier == "")
+assert(document.quirks_mode == "no-quirks")
 assert(head.type == "element")
 assert(body[8].type == "whitespace")
 assert(body[9].type == "comment")

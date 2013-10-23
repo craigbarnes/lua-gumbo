@@ -37,6 +37,12 @@ static const char *const node_type_to_string[] = {
     [GUMBO_NODE_WHITESPACE] = "whitespace"
 };
 
+static const char *const qmode_map[] = {
+    [GUMBO_DOCTYPE_NO_QUIRKS]      = "no-quirks",
+    [GUMBO_DOCTYPE_QUIRKS]         = "quirks",
+    [GUMBO_DOCTYPE_LIMITED_QUIRKS] = "limited-quirks"
+};
+
 static inline void add_children(lua_State *L, const GumboVector *children) {
     for (unsigned int i = 0, n = children->length; i < n; i++) {
         build_node(L, children->data[i]);
@@ -78,12 +84,14 @@ static void build_node(lua_State *L, const GumboNode* node) {
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
+        const char *quirks_mode = qmode_map[document->doc_type_quirks_mode];
         lua_createtable(L, document->children.length, 6);
         add_field(L, string, "type", "document");
         add_field(L, string, "name", document->name);
         add_field(L, string, "public_identifier", document->public_identifier);
         add_field(L, string, "system_identifier", document->system_identifier);
         add_field(L, boolean, "has_doctype", document->has_doctype);
+        add_field(L, string, "quirks_mode", quirks_mode);
         add_children(L, &document->children);
         break;
     }
