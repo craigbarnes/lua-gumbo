@@ -44,4 +44,4 @@ clean:
 	rm -f gumbo.so gumbo.o tags
 
 
-.PHONY: install uninstall check check-valgrind check-cc clean
+.PHONY: install uninstall check check-full clean

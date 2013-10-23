@@ -50,12 +50,19 @@ static inline void add_children(lua_State *L, const GumboVector *children) {
     }
 }
 
-static inline void build_element(lua_State *L, const GumboElement *element) {
-    const unsigned int nattrs = element->attributes.length;
-    lua_createtable(L, element->children.length, nattrs ? 3 : 2);
-    add_field(L, string, "type", "element");
+static inline void add_attributes(lua_State *L, const GumboVector *attrs) {
+    const unsigned int length = attrs->length;
+    if (length == 0)
+        return;
+    lua_createtable(L, 0, length);
+    for (unsigned int i = 0; i < length; ++i) {
+        const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
+        add_field(L, string, attr->name, attr->value);
+    }
+    lua_setfield(L, -2, "attr");
+}
 
-    // Add tag name
+static inline void add_tagname(lua_State *L, const GumboElement *element) {
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
@@ -64,19 +71,6 @@ static inline void build_element(lua_State *L, const GumboElement *element) {
         lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     }
     lua_setfield(L, -2, "tag");
-
-    // Add attributes
-    if (nattrs) {
-        const GumboVector *const attrs = &element->attributes;
-        lua_createtable(L, 0, nattrs);
-        for (unsigned int i = 0; i < nattrs; ++i) {
-            const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
-            add_field(L, string, attr->name, attr->value);
-        }
-        lua_setfield(L, -2, "attr");
-    }
-
-    add_children(L, &element->children);
 }
 
 static void build_node(lua_State *L, const GumboNode* node) {
@@ -97,9 +91,15 @@ static void build_node(lua_State *L, const GumboNode* node) {
         break;
     }
 
-    case GUMBO_NODE_ELEMENT:
-        build_element(L, &node->v.element);
+    case GUMBO_NODE_ELEMENT: {
+        const GumboElement *element = &node->v.element;
+        lua_createtable(L, element->children.length, 3);
+        add_field(L, string, "type", "element");
+        add_tagname(L, element);
+        add_attributes(L, &element->attributes);
+        add_children(L, &element->children);
         break;
+    }
 
     case GUMBO_NODE_TEXT:
     case GUMBO_NODE_COMMENT:
