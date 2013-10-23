@@ -85,7 +85,7 @@ static void build_node(lua_State *L, const GumboNode* node) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
         const char *quirks_mode = qmode_map[document->doc_type_quirks_mode];
-        lua_createtable(L, document->children.length, 6);
+        lua_createtable(L, document->children.length, 7);
         add_field(L, string, "type", "document");
         add_field(L, string, "name", document->name);
         add_field(L, string, "public_identifier", document->public_identifier);
