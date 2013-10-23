@@ -1,7 +1,7 @@
 lua-gumbo
 =========
 
-Lua bindings for the [Gumbo] HTML5 parsing library.
+[Lua] bindings for the [Gumbo] [HTML5] parsing library.
 
 Status
 ------
@@ -15,7 +15,7 @@ Requirements
 * C99 compiler
 * GNU Make
 * pkg-config
-* Lua headers (`lua.h`, `lauxlib.h`)
+* [Lua] headers (`lua.h`, `lauxlib.h`)
 * [Gumbo][Gumbo installation] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
 
 Installation
@@ -149,6 +149,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
+[Lua]: http://www.lua.org/
+[HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [example.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/example.lua
