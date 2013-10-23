@@ -28,8 +28,16 @@ uninstall:
 check: gumbo.so test.lua
 	@lua test.lua
 
+check-cc:
+	@printf 'GCC:   '
+	@$(MAKE) -s clean check CC='gcc -std=c99'
+	@printf 'Clang: '
+	@$(MAKE) -s clean check CC='clang -std=c99'
+	@printf 'TCC:   '
+	@$(MAKE) -s clean check CC=tcc
+
 clean:
 	rm -f gumbo.so gumbo.o tags
 
 
-.PHONY: install uninstall check clean
+.PHONY: install uninstall check check-cc clean
