@@ -21,7 +21,15 @@ Requirements
 Installation
 ------------
 
-    make && sudo make install
+With LuaRocks:
+
+*Available soon.*
+
+With Make:
+
+    make
+    make check
+    [sudo] make install
 
 Usage
 -----
