@@ -32,8 +32,8 @@ check: gumbo.so test.lua
 check-full:
 	@printf '\nCC=gcc RUNVIA=valgrind\n  '
 	@$(MAKE) -s clean check CC='gcc -std=c99' RUNVIA='valgrind -q'
-	@printf '\nCC=clang RUNVIA=valgrind\n  '
-	@$(MAKE) -s clean check CC='clang -std=c99' RUNVIA='valgrind -q'
+	@printf '\nCC=clang\n  '
+	@$(MAKE) -s clean check CC='clang -std=c99'
 	@printf '\nCC=tcc\n  '
 	@$(MAKE) -s clean check CC=tcc
 	@printf '\nLUA=luajit\n  '
