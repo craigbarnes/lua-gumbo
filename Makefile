@@ -28,11 +28,14 @@ uninstall:
 check: gumbo.so test.lua
 	@lua test.lua
 
+check-valgrind: gumbo.so test.lua
+	@valgrind -q lua test.lua
+
 check-cc:
 	@printf 'GCC:   '
-	@$(MAKE) -s clean check CC='gcc -std=c99'
+	@$(MAKE) -s clean check-valgrind CC='gcc -std=c99'
 	@printf 'Clang: '
-	@$(MAKE) -s clean check CC='clang -std=c99'
+	@$(MAKE) -s clean check-valgrind CC='clang -std=c99'
 	@printf 'TCC:   '
 	@$(MAKE) -s clean check CC=tcc
 
@@ -40,4 +43,4 @@ clean:
 	rm -f gumbo.so gumbo.o tags
 
 
-.PHONY: install uninstall check check-cc clean
+.PHONY: install uninstall check check-valgrind check-cc clean
