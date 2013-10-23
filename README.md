@@ -1,7 +1,7 @@
 lua-gumbo
 =========
 
-[Lua] bindings for the [Gumbo] [HTML5] parsing library.
+[Lua] bindings for the [Gumbo][] [HTML5] parsing library.
 
 Status
 ------
