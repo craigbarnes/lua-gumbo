@@ -51,6 +51,8 @@ fields:
   * `name`: The [root element] name.
   * `public_identifier`: The [public identifier].
   * `system_identifier`: The [system identifier].
+* `quirks_mode`: The [quirks mode] of the document. One of `quirks`,
+  `no-quirks` or `limited-quirks`.
 * `root`: A convenient reference to the root `html` element.
 * `[1..n]`: Child nodes.
 
@@ -145,5 +147,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [test.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/test.lua
 [doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
 [root element]: http://en.wikipedia.org/wiki/Root_element
-[public identifier]: http://en.wikipedia.org/wiki/Public_identifier#Use_in_XML_and_SGML
-[system identifier]: http://en.wikipedia.org/wiki/System_identifier
+[public identifier]: http://dom.spec.whatwg.org/#concept-doctype-publicid
+[system identifier]: http://dom.spec.whatwg.org/#concept-doctype-systemid
+[quirks mode]: http://dom.spec.whatwg.org/#concept-document-quirks
