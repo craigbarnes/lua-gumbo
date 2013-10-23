@@ -4,6 +4,7 @@ GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
 CC      = c99
 CFLAGS  = -O2 -Wall -Wextra -Wpedantic $(GUMBO_CFLAGS)
 LDFLAGS = -shared $(GUMBO_LDFLAGS)
+LUA     = lua
 PREFIX  = /usr/local
 LUAVER  = 5.1
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
@@ -26,18 +27,18 @@ uninstall:
 	rm -f $(DESTDIR)$(LUACDIR)/gumbo.so
 
 check: gumbo.so test.lua
-	@lua test.lua
+	@$(RUNVIA) $(LUA) test.lua
 
-check-valgrind: gumbo.so test.lua
-	@valgrind -q lua test.lua
-
-check-cc:
-	@printf 'GCC:   '
-	@$(MAKE) -s clean check-valgrind CC='gcc -std=c99'
-	@printf 'Clang: '
-	@$(MAKE) -s clean check-valgrind CC='clang -std=c99'
-	@printf 'TCC:   '
+check-full:
+	@printf '\nCC=gcc RUNVIA=valgrind\n  '
+	@$(MAKE) -s clean check CC='gcc -std=c99' RUNVIA='valgrind -q'
+	@printf '\nCC=clang RUNVIA=valgrind\n  '
+	@$(MAKE) -s clean check CC='clang -std=c99' RUNVIA='valgrind -q'
+	@printf '\nCC=tcc\n  '
 	@$(MAKE) -s clean check CC=tcc
+	@printf '\nLUA=luajit\n  '
+	@$(MAKE) -s clean check LUA=luajit
+	@echo
 
 clean:
 	rm -f gumbo.so gumbo.o tags
