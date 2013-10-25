@@ -1,5 +1,6 @@
 CC      = c99
-CFLAGS  = -O2 -Wall -Wextra -Wpedantic -Wc++-compat -Wshadow
+CFLAGS  = -O2 -Wall -Wextra -Wpedantic -Wc++-compat -Wshadow -Wswitch-enum \
+          -Wwrite-strings -Wcast-qual
 LDFLAGS = -shared
 LUA     = lua
 PREFIX  = /usr/local
@@ -13,6 +14,8 @@ ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
+all: gumbo.so
+
 gumbo.so: gumbo.o Makefile
 	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
 
@@ -22,14 +25,14 @@ gumbo.o: gumbo.c Makefile
 tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
-install: gumbo.so
+install: all
 	mkdir -p $(DESTDIR)$(LUACDIR)
 	install -pm0755 gumbo.so $(DESTDIR)$(LUACDIR)
 
 uninstall:
 	rm -f $(DESTDIR)$(LUACDIR)/gumbo.so
 
-check: gumbo.so test.lua
+check: all test.lua
 	@$(RUNVIA) $(LUA) test.lua
 
 check-full:
@@ -47,4 +50,4 @@ clean:
 	rm -f gumbo.so gumbo.o tags
 
 
-.PHONY: install uninstall check check-full clean
+.PHONY: all install uninstall check check-full clean
