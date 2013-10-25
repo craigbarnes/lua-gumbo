@@ -94,6 +94,14 @@ static inline void add_sourcepos (
     lua_setfield(L, -2, field_name);
 }
 
+static inline void add_parseflags (
+    lua_State *const L,
+    const GumboNode *const node
+){
+    if (node->parse_flags != GUMBO_INSERTION_NORMAL)
+        add_field(L, integer, "parse_flags", node->parse_flags);
+}
+
 static void build_node(lua_State *const L, const GumboNode *const node) {
     luaL_checkstack(L, 10, "element nesting too deep");
 
@@ -119,6 +127,7 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
         add_tagname(L, element);
         add_sourcepos(L, "start_pos", &element->start_pos);
         add_sourcepos(L, "end_pos", &element->end_pos);
+        add_parseflags(L, node);
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
         break;
