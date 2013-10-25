@@ -26,7 +26,7 @@
 
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
 #define assert(cond) if (!(cond)) goto error
-static void build_node(lua_State *L, const GumboNode* node);
+static void build_node(lua_State *const L, const GumboNode *const node);
 
 static const char *const node_type_map[] = {
     [GUMBO_NODE_DOCUMENT]   = "document",
@@ -43,14 +43,20 @@ static const char *const qmode_map[] = {
     [GUMBO_DOCTYPE_LIMITED_QUIRKS] = "limited-quirks"
 };
 
-static inline void add_children(lua_State *L, const GumboVector *children) {
+static inline void add_children (
+    lua_State *const L,
+    const GumboVector *const children
+){
     for (unsigned int i = 0, n = children->length; i < n; i++) {
         build_node(L, (const GumboNode *)children->data[i]);
         lua_rawseti(L, -2, i + 1);
     }
 }
 
-static inline void add_attributes(lua_State *L, const GumboVector *attrs) {
+static inline void add_attributes (
+    lua_State *const L,
+    const GumboVector *const attrs
+){
     const unsigned int length = attrs->length;
     if (length == 0)
         return;
@@ -62,7 +68,10 @@ static inline void add_attributes(lua_State *L, const GumboVector *attrs) {
     lua_setfield(L, -2, "attr");
 }
 
-static inline void add_tagname(lua_State *L, const GumboElement *element) {
+static inline void add_tagname (
+    lua_State *const L,
+    const GumboElement *const element
+){
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
@@ -85,7 +94,7 @@ static inline void add_sourcepos (
     lua_setfield(L, -2, field_name);
 }
 
-static void build_node(lua_State *L, const GumboNode* node) {
+static void build_node(lua_State *const L, const GumboNode *const node) {
     luaL_checkstack(L, 10, "element nesting too deep");
 
     switch (node->type) {
@@ -130,9 +139,13 @@ static void build_node(lua_State *L, const GumboNode* node) {
     }
 }
 
-static inline int parse(lua_State *L, const char *input, const size_t len) {
-    const GumboOptions *options = &kGumboDefaultOptions;
-    GumboOutput *output = gumbo_parse_with_options(options, input, len);
+static inline int parse (
+    lua_State *const L,
+    const char *const input,
+    const size_t len
+){
+    const GumboOptions *const options = &kGumboDefaultOptions;
+    GumboOutput *const output = gumbo_parse_with_options(options, input, len);
     if (output) {
         build_node(L, output->document);
         lua_rawgeti(L, -1, output->root->index_within_parent + 1);
@@ -150,9 +163,9 @@ static inline int parse(lua_State *L, const char *input, const size_t len) {
 // @function parse
 // @param html String of HTML
 // @return Abstract syntax tree table
-static int parse_string(lua_State *L) {
+static int parse_string(lua_State *const L) {
     size_t len;
-    const char *input = luaL_checklstring(L, 1, &len);
+    const char *const input = luaL_checklstring(L, 1, &len);
     return parse(L, input, len);
 }
 
@@ -161,12 +174,12 @@ static int parse_string(lua_State *L) {
 // @param filename Path to HTML file
 // @return Abstract syntax tree table
 // @return `nil, error_message` (if opening or reading file fails)
-static int parse_file(lua_State *L) {
+static int parse_file(lua_State *const L) {
     int ret;
     long len;
     FILE *file = NULL;
     char *input = NULL;
-    const char *filename = luaL_checkstring(L, 1);
+    const char *const filename = luaL_checkstring(L, 1);
 
     assert(file = fopen(filename, "rb"));
     assert(fseek(file, 0, SEEK_END) != -1);
@@ -188,7 +201,7 @@ static int parse_file(lua_State *L) {
     return 2;
 }
 
-int luaopen_gumbo(lua_State *L) {
+int luaopen_gumbo(lua_State *const L) {
     lua_createtable(L, 0, 2);
     add_field(L, cfunction, "parse", parse_string);
     add_field(L, cfunction, "parse_file", parse_file);

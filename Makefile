@@ -1,20 +1,23 @@
-GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
-GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
-
 CC      = c99
-CFLAGS  = -O2 -Wall -Wextra -Wpedantic -Wc++-compat $(GUMBO_CFLAGS)
-LDFLAGS = -shared $(GUMBO_LDFLAGS)
+CFLAGS  = -O2 -Wall -Wextra -Wpedantic -Wc++-compat -Wshadow
+LDFLAGS = -shared
 LUA     = lua
 PREFIX  = /usr/local
 LUAVER  = 5.1
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
+
+GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
+GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
 
 ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
 gumbo.so: gumbo.o Makefile
-	$(CC) $(LDFLAGS) -o $@ $<
+	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
+
+gumbo.o: gumbo.c Makefile
+	$(CC) $(CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
 
 tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
