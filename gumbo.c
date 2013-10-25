@@ -73,6 +73,18 @@ static inline void add_tagname(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "tag");
 }
 
+static inline void add_sourcepos (
+    lua_State *const L,
+    const char *const field_name,
+    const GumboSourcePosition *const position
+){
+    lua_createtable(L, 0, 3);
+    add_field(L, integer, "line", position->line);
+    add_field(L, integer, "column", position->column);
+    add_field(L, integer, "offset", position->offset);
+    lua_setfield(L, -2, field_name);
+}
+
 static void build_node(lua_State *L, const GumboNode* node) {
     luaL_checkstack(L, 10, "element nesting too deep");
 
@@ -96,6 +108,8 @@ static void build_node(lua_State *L, const GumboNode* node) {
         lua_createtable(L, element->children.length, 3);
         add_field(L, literal, "type", "element");
         add_tagname(L, element);
+        add_sourcepos(L, "start_pos", &element->start_pos);
+        add_sourcepos(L, "end_pos", &element->end_pos);
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
         break;
@@ -108,6 +122,7 @@ static void build_node(lua_State *L, const GumboNode* node) {
         lua_createtable(L, 0, 2);
         add_field(L, string, "type", node_type_map[node->type]);
         add_field(L, string, "text", node->v.text.text);
+        add_sourcepos(L, "start_pos", &node->v.text.start_pos);
         break;
 
     default:
