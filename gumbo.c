@@ -144,7 +144,7 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
         break;
 
     default:
-        luaL_error(L, "Invalid node type");
+        luaL_error(L, "Error: GumboNodeType (%d) out of range", node->type);
     }
 }
 
