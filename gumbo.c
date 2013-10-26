@@ -27,15 +27,6 @@
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
 static void build_node(lua_State *const L, const GumboNode *const node);
 
-static const char *const node_type_map[] = {
-    [GUMBO_NODE_DOCUMENT]   = "document",
-    [GUMBO_NODE_ELEMENT]    = "element",
-    [GUMBO_NODE_TEXT]       = "text",
-    [GUMBO_NODE_CDATA]      = "cdata",
-    [GUMBO_NODE_COMMENT]    = "comment",
-    [GUMBO_NODE_WHITESPACE] = "whitespace"
-};
-
 static const char *const qmode_map[] = {
     [GUMBO_DOCTYPE_NO_QUIRKS]      = "no-quirks",
     [GUMBO_DOCTYPE_QUIRKS]         = "quirks",
@@ -101,6 +92,17 @@ static inline void add_parseflags (
         add_field(L, integer, "parse_flags", node->parse_flags);
 }
 
+static inline void create_text_node (
+    lua_State *const L,
+    const GumboText *const text,
+    const char *const type_name
+){
+    lua_createtable(L, 0, 3);
+    add_field(L, string, "type", type_name);
+    add_field(L, string, "text", text->text);
+    add_sourcepos(L, "start_pos", &text->start_pos);
+}
+
 static void build_node(lua_State *const L, const GumboNode *const node) {
     luaL_checkstack(L, 10, "element nesting too deep");
 
@@ -116,7 +118,7 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
         add_field(L, boolean, "has_doctype", document->has_doctype);
         add_field(L, string, "quirks_mode", quirks_mode);
         add_children(L, &document->children);
-        break;
+        return;
     }
 
     case GUMBO_NODE_ELEMENT: {
@@ -129,18 +131,24 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
         add_parseflags(L, node);
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
-        break;
+        return;
     }
 
     case GUMBO_NODE_TEXT:
+        create_text_node(L, &node->v.text, "text");
+        return;
+
     case GUMBO_NODE_COMMENT:
+        create_text_node(L, &node->v.text, "comment");
+        return;
+
     case GUMBO_NODE_CDATA:
+        create_text_node(L, &node->v.text, "cdata");
+        return;
+
     case GUMBO_NODE_WHITESPACE:
-        lua_createtable(L, 0, 2);
-        add_field(L, string, "type", node_type_map[node->type]);
-        add_field(L, string, "text", node->v.text.text);
-        add_sourcepos(L, "start_pos", &node->v.text.start_pos);
-        break;
+        create_text_node(L, &node->v.text, "whitespace");
+        return;
 
     default:
         luaL_error(L, "Error: GumboNodeType (%d) out of range", node->type);
