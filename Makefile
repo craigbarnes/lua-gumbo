@@ -47,7 +47,7 @@ check-full:
 	@echo
 
 clean:
-	rm -f gumbo.so gumbo.o tags
+	rm -f gumbo.so gumbo.o
 
 
 .PHONY: all install uninstall check check-full clean
