@@ -34,12 +34,8 @@ With Make:
 Usage
 -----
 
-The `gumbo` module provides 2 functions:
-
-* parse(html)
-* parse_file(filename)
-
-Both functions return a document tree in table form, or `nil` and an
+The `gumbo` module provides a single `parse` function, which takes a string
+of HTML text and returns a document tree in table form, or `nil` and an
 error message on failure.
 
 See [example.lua] and [test.lua] for basic usage examples.
@@ -81,31 +77,6 @@ Text nodes are represented as tables with 2 fields:
 
 * `type`: The node type. One of `text`, `whitespace`, `comment` or `cdata`.
 * `text`: The text contents. Does not include comment/cdata delimiters.
-
-### Visual Example
-
-Running the code:
-
-    #!/usr/bin/env lua
-    local gumbo = require "gumbo"
-    local document = gumbo.parse_file "input.html"
-
-where `input.html` contains:
-
-    <!doctype html>
-    <html lang="en">
-        <head>
-            <meta charset="utf-8">
-            <title>Test</title>
-        </head>
-        <body>
-            <h1>Hello</h1>
-        </body>
-    </html>
-
-will produce the following `document` structure:
-
-![Table Graph](http://cra.igbarn.es/img/lua-gumbo-graph.png)
 
 Testing
 -------

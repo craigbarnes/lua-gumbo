@@ -52,6 +52,5 @@ assert(#body[4] == 0)
 
 assert(type(body[1][1].text) == "string")
 assert(gumbo.parse("<h1>Hello</h1>").root[2][1][1].text == "Hello")
-assert(not gumbo.parse_file "non-existent-file")
 
 print "All tests passed"

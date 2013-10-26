@@ -148,11 +148,9 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
     }
 }
 
-static inline int parse (
-    lua_State *const L,
-    const char *const input,
-    const size_t len
-){
+static int parse(lua_State *const L) {
+    size_t len;
+    const char *const input = luaL_checklstring(L, 1, &len);
     const GumboOptions *const options = &kGumboDefaultOptions;
     GumboOutput *const output = gumbo_parse_with_options(options, input, len);
     if (output) {
@@ -168,51 +166,8 @@ static inline int parse (
     }
 }
 
-/// Parse a string of HTML
-// @function parse
-// @param html String of HTML
-// @return Abstract syntax tree table
-static int parse_string(lua_State *const L) {
-    size_t len;
-    const char *const input = luaL_checklstring(L, 1, &len);
-    return parse(L, input, len);
-}
-
-/// Read and parse a HTML file
-// @function parse_file
-// @param filename Path to HTML file
-// @return Abstract syntax tree table
-// @return `nil, error_message` (if opening or reading file fails)
-static int parse_file(lua_State *const L) {
-    int ret;
-    long len;
-    FILE *file = NULL;
-    char *input = NULL;
-    const char *const filename = luaL_checkstring(L, 1);
-
-    assert(file = fopen(filename, "rb"));
-    assert(fseek(file, 0L, SEEK_END) == 0);
-    assert((len = ftell(file)) != -1L);
-    rewind(file);
-    assert(input = (char*)malloc(len + 1L));
-    assert(fread(input, 1, len, file) == (unsigned long)len);
-    fclose(file);
-    input[len] = '\0';
-    ret = parse(L, input, len);
-    free(input);
-    return ret;
-
-  error: // Return nil and an error message if an assertion fails
-    if (file) fclose(file);
-    if (input) free(input);
-    lua_pushnil(L);
-    lua_pushfstring(L, "Error in gumbo.parse_file: %s", strerror(errno));
-    return 2;
-}
-
 int luaopen_gumbo(lua_State *const L) {
-    lua_createtable(L, 0, 2);
-    add_field(L, cfunction, "parse", parse_string);
-    add_field(L, cfunction, "parse_file", parse_file);
+    lua_createtable(L, 0, 1);
+    add_field(L, cfunction, "parse", parse);
     return 1;
 }
