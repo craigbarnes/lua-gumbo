@@ -191,10 +191,10 @@ static int parse_file(lua_State *const L) {
     const char *const filename = luaL_checkstring(L, 1);
 
     assert(file = fopen(filename, "rb"));
-    assert(fseek(file, 0, SEEK_END) != -1);
-    assert((len = ftell(file)) != -1);
+    assert(fseek(file, 0L, SEEK_END) == 0);
+    assert((len = ftell(file)) != -1L);
     rewind(file);
-    assert(input = (char *)malloc(len + 1));
+    assert(input = (char*)malloc(len + 1L));
     assert(fread(input, 1, len, file) == (unsigned long)len);
     fclose(file);
     input[len] = '\0';
