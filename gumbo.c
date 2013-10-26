@@ -206,7 +206,7 @@ static int parse_file(lua_State *const L) {
     if (file) fclose(file);
     if (input) free(input);
     lua_pushnil(L);
-    lua_pushstring(L, strerror(errno));
+    lua_pushfstring(L, "Error in gumbo.parse_file: %s", strerror(errno));
     return 2;
 }
 
