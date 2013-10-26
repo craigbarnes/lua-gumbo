@@ -27,12 +27,6 @@
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
 static void build_node(lua_State *const L, const GumboNode *const node);
 
-static const char *const qmode_map[] = {
-    [GUMBO_DOCTYPE_NO_QUIRKS]      = "no-quirks",
-    [GUMBO_DOCTYPE_QUIRKS]         = "quirks",
-    [GUMBO_DOCTYPE_LIMITED_QUIRKS] = "limited-quirks"
-};
-
 static inline void add_children (
     lua_State *const L,
     const GumboVector *const children
@@ -103,20 +97,39 @@ static inline void create_text_node (
     add_sourcepos(L, "start_pos", &text->start_pos);
 }
 
+static inline void add_quirks_mode (
+    lua_State *const L,
+    const GumboQuirksModeEnum quirks_mode
+){
+    switch (quirks_mode) {
+    case GUMBO_DOCTYPE_NO_QUIRKS:
+        lua_pushliteral(L, "no-quirks");
+        break;
+    case GUMBO_DOCTYPE_QUIRKS:
+        lua_pushliteral(L, "quirks");
+        break;
+    case GUMBO_DOCTYPE_LIMITED_QUIRKS:
+        lua_pushliteral(L, "limited-quirks");
+        break;
+    default :
+        luaL_error(L, "Error: GumboQuirksModeEnum out of range");
+    }
+    lua_setfield(L, -2, "quirks_mode");
+}
+
 static void build_node(lua_State *const L, const GumboNode *const node) {
     luaL_checkstack(L, 10, "element nesting too deep");
 
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
-        const char *quirks_mode = qmode_map[document->doc_type_quirks_mode];
         lua_createtable(L, document->children.length, 7);
         add_field(L, literal, "type", "document");
         add_field(L, string, "name", document->name);
         add_field(L, string, "public_identifier", document->public_identifier);
         add_field(L, string, "system_identifier", document->system_identifier);
         add_field(L, boolean, "has_doctype", document->has_doctype);
-        add_field(L, string, "quirks_mode", quirks_mode);
+        add_quirks_mode(L, document->doc_type_quirks_mode);
         add_children(L, &document->children);
         return;
     }
