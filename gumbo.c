@@ -25,7 +25,6 @@
 #include <gumbo.h>
 
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
-#define assert(cond) if (!(cond)) goto error
 static void build_node(lua_State *const L, const GumboNode *const node);
 
 static const char *const node_type_map[] = {
