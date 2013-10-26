@@ -113,6 +113,7 @@ static inline void add_quirks_mode (
         break;
     default :
         luaL_error(L, "Error: GumboQuirksModeEnum out of range");
+        return;
     }
     lua_setfield(L, -2, "quirks_mode");
 }
