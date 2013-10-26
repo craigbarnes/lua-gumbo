@@ -86,25 +86,22 @@ Text nodes are represented as tables with 2 fields:
 
 Running the code:
 
-```lua
-local gumbo = require "gumbo"
-local document = gumbo.parse_file "input.html"
-```
+    #!/usr/bin/env lua
+    local gumbo = require "gumbo"
+    local document = gumbo.parse_file "input.html"
 
 where `input.html` contains:
 
-```html
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Test</title>
-    </head>
-    <body>
-        <h1>Hello</h1>
-    </body>
-</html>
-```
+    <!doctype html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <title>Test</title>
+        </head>
+        <body>
+            <h1>Hello</h1>
+        </body>
+    </html>
 
 will produce the following `document` structure:
 
