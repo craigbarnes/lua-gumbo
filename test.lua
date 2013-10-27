@@ -50,6 +50,16 @@ assert(#root == 2)
 assert(#body == 10)
 assert(#body[4] == 0)
 
+assert(body[1].start_pos.line == 3)
+assert(body[1].start_pos.column == 1)
+assert(body[1].start_pos.offset == 45)
+assert(body[1].end_pos.line == 3)
+assert(body[1].end_pos.column == 17)
+assert(body[1].end_pos.offset == 61)
+
+assert(head.parse_flags == 11)
+assert(body.parse_flags == 11)
+
 assert(type(body[1][1].text) == "string")
 assert(gumbo.parse("<h1>Hello</h1>").root[2][1][1].text == "Hello")
 
