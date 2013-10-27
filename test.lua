@@ -2,13 +2,13 @@ package.cpath = "./?.so"
 local gumbo = require "gumbo"
 
 local input = [[
-    <!doctype html>
-    <TITLE>Test Document</TITLE>
-    <h1>Test Heading</h1>
-    <p><a href=foobar.html>Quux</a></p>
-    <iNValID foo="bar">abc</invalid>
-    <p class=empty></p>
-    <!-- comment node -->
+<!doctype html>
+<TITLE>Test Document</TITLE>
+<h1>Test Heading</h1>
+<p><a href=foobar.html>Quux</a></p>
+<iNValID foo="bar">abc</invalid>
+<p class=empty></p>
+<!-- comment node -->
 ]]
 
 local document = assert(gumbo.parse(input))
@@ -43,7 +43,7 @@ assert(body[7].attr.class == "empty")
 assert(head[1][1].text == "Test Document")
 assert(body[1][1].text == "Test Heading")
 assert(body[5][1].text == "abc")
-assert(body[8].text == "\n    ")
+assert(body[8].text == "\n")
 assert(body[9].text == " comment node ")
 
 assert(#root == 2)
