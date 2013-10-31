@@ -60,7 +60,4 @@ assert(body[1].end_pos.offset == 61)
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
 
-assert(type(body[1][1].text) == "string")
-assert(gumbo.parse("<h1>Hello</h1>").root[2][1][1].text == "Hello")
-
 print "All tests passed"
