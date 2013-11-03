@@ -111,7 +111,7 @@ static inline void add_quirks_mode (
     case GUMBO_DOCTYPE_LIMITED_QUIRKS:
         lua_pushliteral(L, "limited-quirks");
         break;
-    default :
+    default:
         luaL_error(L, "Error: GumboQuirksModeEnum out of range");
         return;
     }
