@@ -112,7 +112,7 @@ static inline void add_quirks_mode (
         lua_pushliteral(L, "limited-quirks");
         break;
     default:
-        luaL_error(L, "Error: GumboQuirksModeEnum out of range");
+        luaL_error(L, "Error: invalid quirks mode");
         return;
     }
     lua_setfield(L, -2, "quirks_mode");
@@ -165,7 +165,7 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
         return;
 
     default:
-        luaL_error(L, "Error: GumboNodeType out of range");
+        luaL_error(L, "Error: invalid node type");
     }
 }
 
