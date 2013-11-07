@@ -34,11 +34,24 @@ With Make:
 Usage
 -----
 
-The `gumbo` module provides a single `parse` function, which takes a string
-of HTML text and returns a document tree in table form, or `nil` and an
-error message on failure.
+The `gumbo` module provides a single `parse` function:
 
-See [example.lua] and [test.lua] for basic usage examples.
+    gumbo.parse(html, tab_stop)
+
+**Parameters:**
+
+1. `html`: A string of UTF8-encoded HTML to be parsed.
+2. `tab_stop`: The size to use for tab characters when computing source
+   positions (optional, defaults to `8`).
+
+**Returns:**
+
+1. A document table, structured as described below.
+
+**Returns (on error):**
+
+1. `nil`.
+2. A string describing the error.
 
 Document Structure
 ------------------
