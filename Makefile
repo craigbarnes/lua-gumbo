@@ -1,6 +1,6 @@
-CC      = c99
-CFLAGS  = -O2 -Wall -Wextra -Wpedantic -Wc++-compat -Wshadow -Wswitch-enum \
-          -Wwrite-strings -Wcast-qual
+CC      = gcc
+CFLAGS  = -O2 -std=c99 -Wall -Wextra -Wpedantic \
+          -Wswitch-enum -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
 LDFLAGS = -shared
 LUA     = lua
 PREFIX  = /usr/local
@@ -41,7 +41,7 @@ check-full:
 	@printf '\nCC=clang\n  '
 	@$(MAKE) -s clean check CC='clang -std=c99'
 	@printf '\nCC=tcc\n  '
-	@$(MAKE) -s clean check CC=tcc
+	@$(MAKE) -s clean check CC=tcc CFLAGS='-Wall'
 	@printf '\nLUA=luajit\n  '
 	@$(MAKE) -s clean check LUA=luajit
 	@echo
