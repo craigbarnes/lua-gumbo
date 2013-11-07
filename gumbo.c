@@ -25,22 +25,16 @@
 #include <gumbo.h>
 
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
-static void build_node(lua_State *const L, const GumboNode *const node);
+static void build_node(lua_State *L, const GumboNode *node);
 
-static inline void add_children (
-    lua_State *const L,
-    const GumboVector *const children
-){
+static inline void add_children(lua_State *L, const GumboVector *children) {
     for (unsigned int i = 0, n = children->length; i < n; i++) {
         build_node(L, (const GumboNode *)children->data[i]);
         lua_rawseti(L, -2, i + 1);
     }
 }
 
-static inline void add_attributes (
-    lua_State *const L,
-    const GumboVector *const attrs
-){
+static inline void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length == 0)
         return;
@@ -52,10 +46,7 @@ static inline void add_attributes (
     lua_setfield(L, -2, "attr");
 }
 
-static inline void add_tagname (
-    lua_State *const L,
-    const GumboElement *const element
-){
+static inline void add_tagname(lua_State *L, const GumboElement *element) {
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
@@ -67,9 +58,9 @@ static inline void add_tagname (
 }
 
 static inline void add_sourcepos (
-    lua_State *const L,
-    const char *const field_name,
-    const GumboSourcePosition *const position
+    lua_State *L,
+    const char *field_name,
+    const GumboSourcePosition *position
 ){
     lua_createtable(L, 0, 3);
     add_field(L, integer, "line", position->line);
@@ -78,30 +69,19 @@ static inline void add_sourcepos (
     lua_setfield(L, -2, field_name);
 }
 
-static inline void add_parseflags (
-    lua_State *const L,
-    const GumboNode *const node
-){
+static inline void add_parseflags(lua_State *L, const GumboNode *node) {
     if (node->parse_flags != GUMBO_INSERTION_NORMAL)
         add_field(L, integer, "parse_flags", node->parse_flags);
 }
 
-static inline void create_text_node (
-    lua_State *const L,
-    const GumboText *const text,
-    const char *const type_name
-){
+static inline void create_text_node(lua_State *L, const GumboText *text) {
     lua_createtable(L, 0, 3);
-    add_field(L, string, "type", type_name);
     add_field(L, string, "text", text->text);
     add_sourcepos(L, "start_pos", &text->start_pos);
 }
 
-static inline void add_quirks_mode (
-    lua_State *const L,
-    const GumboQuirksModeEnum quirks_mode
-){
-    switch (quirks_mode) {
+static inline void add_quirks_mode(lua_State *L, const GumboQuirksModeEnum qm) {
+    switch (qm) {
     case GUMBO_DOCTYPE_NO_QUIRKS:
         lua_pushliteral(L, "no-quirks");
         break;
@@ -118,9 +98,8 @@ static inline void add_quirks_mode (
     lua_setfield(L, -2, "quirks_mode");
 }
 
-static void build_node(lua_State *const L, const GumboNode *const node) {
+static void build_node(lua_State *L, const GumboNode *node) {
     luaL_checkstack(L, 10, "element nesting too deep");
-
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
@@ -134,7 +113,6 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
         add_children(L, &document->children);
         return;
     }
-
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 3);
@@ -147,35 +125,33 @@ static void build_node(lua_State *const L, const GumboNode *const node) {
         add_children(L, &element->children);
         return;
     }
-
     case GUMBO_NODE_TEXT:
-        create_text_node(L, &node->v.text, "text");
+        create_text_node(L, &node->v.text);
+        add_field(L, literal, "type", "text");
         return;
-
     case GUMBO_NODE_COMMENT:
-        create_text_node(L, &node->v.text, "comment");
+        create_text_node(L, &node->v.text);
+        add_field(L, literal, "type", "comment");
         return;
-
     case GUMBO_NODE_CDATA:
-        create_text_node(L, &node->v.text, "cdata");
+        create_text_node(L, &node->v.text);
+        add_field(L, literal, "type", "cdata");
         return;
-
     case GUMBO_NODE_WHITESPACE:
-        create_text_node(L, &node->v.text, "whitespace");
+        create_text_node(L, &node->v.text);
+        add_field(L, literal, "type", "whitespace");
         return;
-
     default:
         luaL_error(L, "Error: invalid node type");
     }
 }
 
-static int parse(lua_State *const L) {
+static int parse(lua_State *L) {
     GumboOptions options = kGumboDefaultOptions;
     size_t len;
-    const char *const input = luaL_checklstring(L, 1, &len);
+    const char *input = luaL_checklstring(L, 1, &len);
     options.tab_stop = luaL_optint(L, 2, 8);
-    //options.max_errors = luaL_optint(L, 3, 1000);
-    GumboOutput *const output = gumbo_parse_with_options(&options, input, len);
+    GumboOutput *output = gumbo_parse_with_options(&options, input, len);
     if (output) {
         build_node(L, output->document);
         lua_rawgeti(L, -1, output->root->index_within_parent + 1);
@@ -189,7 +165,7 @@ static int parse(lua_State *const L) {
     }
 }
 
-int luaopen_gumbo(lua_State *const L) {
+int luaopen_gumbo(lua_State *L) {
     lua_createtable(L, 0, 1);
     add_field(L, cfunction, "parse", parse);
     return 1;
