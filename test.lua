@@ -8,7 +8,7 @@ local input = [[
 <p><a href=foobar.html>Quux</a></p>
 <iNValID foo="bar">abc</invalid>
 <p class=empty></p>
-<!-- comment node -->
+	<!-- comment node -->
 ]]
 
 local document = assert(gumbo.parse(input))
@@ -43,7 +43,7 @@ assert(body[7].attr.class == "empty")
 assert(head[1][1].text == "Test Document")
 assert(body[1][1].text == "Test Heading")
 assert(body[5][1].text == "abc")
-assert(body[8].text == "\n")
+assert(body[8].text == "\n\t")
 assert(body[9].text == " comment node ")
 
 assert(#root == 2)
@@ -56,6 +56,15 @@ assert(body[1].start_pos.offset == 45)
 assert(body[1].end_pos.line == 3)
 assert(body[1].end_pos.column == 17)
 assert(body[1].end_pos.offset == 61)
+
+local tab8 = body[9]
+local tab4 = assert(gumbo.parse(input, 4)).root[2][9]
+assert(tab8.start_pos.line == 7)
+assert(tab4.start_pos.line == 7)
+assert(tab8.start_pos.column == 8)
+assert(tab4.start_pos.column == 4)
+assert(tab8.start_pos.offset == 157)
+assert(tab4.start_pos.offset == 157)
 
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
