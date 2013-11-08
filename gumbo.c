@@ -25,11 +25,11 @@
 #include <gumbo.h>
 
 #define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
-static void build_node(lua_State *L, const GumboNode *node);
+static void push_node(lua_State *L, const GumboNode *node);
 
 static inline void add_children(lua_State *L, const GumboVector *children) {
     for (unsigned int i = 0, n = children->length; i < n; i++) {
-        build_node(L, (const GumboNode *)children->data[i]);
+        push_node(L, (const GumboNode *)children->data[i]);
         lua_rawseti(L, -2, i + 1);
     }
 }
@@ -98,7 +98,7 @@ static inline void add_quirks_mode(lua_State *L, const GumboQuirksModeEnum qm) {
     lua_setfield(L, -2, "quirks_mode");
 }
 
-static void build_node(lua_State *L, const GumboNode *node) {
+static void push_node(lua_State *L, const GumboNode *node) {
     luaL_checkstack(L, 10, "element nesting too deep");
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT: {
@@ -153,7 +153,7 @@ static int parse(lua_State *L) {
     options.tab_stop = luaL_optint(L, 2, 8);
     GumboOutput *output = gumbo_parse_with_options(&options, input, len);
     if (output) {
-        build_node(L, output->document);
+        push_node(L, output->document);
         lua_rawgeti(L, -1, output->root->index_within_parent + 1);
         lua_setfield(L, -2, "root");
         gumbo_destroy_output(&options, output);
