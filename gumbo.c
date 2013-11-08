@@ -36,14 +36,14 @@ static inline void add_children(lua_State *L, const GumboVector *children) {
 
 static inline void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
-    if (length == 0)
-        return;
-    lua_createtable(L, 0, length);
-    for (unsigned int i = 0; i < length; ++i) {
-        const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
-        add_field(L, string, attr->name, attr->value);
+    if (length != 0) {
+        lua_createtable(L, 0, length);
+        for (unsigned int i = 0; i < length; i++) {
+            const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
+            add_field(L, string, attr->name, attr->value);
+        }
+        lua_setfield(L, -2, "attr");
     }
-    lua_setfield(L, -2, "attr");
 }
 
 static inline void add_tagname(lua_State *L, const GumboElement *element) {
