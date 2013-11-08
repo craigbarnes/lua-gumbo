@@ -69,9 +69,9 @@ static inline void add_sourcepos (
     lua_setfield(L, -2, field_name);
 }
 
-static inline void add_parseflags(lua_State *L, const GumboNode *node) {
-    if (node->parse_flags != GUMBO_INSERTION_NORMAL)
-        add_field(L, integer, "parse_flags", node->parse_flags);
+static inline void add_parseflags(lua_State *L, const GumboParseFlags flags) {
+    if (flags != GUMBO_INSERTION_NORMAL)
+        add_field(L, integer, "parse_flags", flags);
 }
 
 static inline void create_text_node(lua_State *L, const GumboText *text) {
@@ -120,7 +120,7 @@ static void build_node(lua_State *L, const GumboNode *node) {
         add_tagname(L, element);
         add_sourcepos(L, "start_pos", &element->start_pos);
         add_sourcepos(L, "end_pos", &element->end_pos);
-        add_parseflags(L, node);
+        add_parseflags(L, node->parse_flags);
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
         return;
