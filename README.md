@@ -12,15 +12,18 @@ stabilized.
 Requirements
 ------------
 
-To build:
+Building the module requires, at a minimum:
 
 * C99 compiler
+* [Lua] headers (`lua.h`, `lauxlib.h`)
+* [Gumbo][Gumbo installation] (`libgumbo.so`, `gumbo.h`)
+
+To build using the included `Makefile`, the following are also required:
+
 * GNU Make
 * pkg-config
-* [Lua] headers (`lua.h`, `lauxlib.h`)
-* [Gumbo][Gumbo installation] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
 
-To run/test:
+Using the module or running the tests requires:
 
 * Lua 5.1/5.2 or LuaJIT 2
 
