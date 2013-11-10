@@ -3,6 +3,9 @@ CFLAGS  = -O2 -std=c99 -Wall -Wextra -Wpedantic \
           -Wswitch-enum -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
 LDFLAGS = -shared
 LUA     = lua
+MKDIR   = mkdir -p
+INSTALL = install -p -m 0755
+RM      = rm -f
 PREFIX  = /usr/local
 LUAVER  = 5.1
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
@@ -26,11 +29,11 @@ tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
 
 install: all
-	mkdir -p $(DESTDIR)$(LUACDIR)
-	install -pm0755 gumbo.so $(DESTDIR)$(LUACDIR)
+	$(MKDIR) $(DESTDIR)$(LUACDIR)
+	$(INSTALL) gumbo.so $(DESTDIR)$(LUACDIR)
 
 uninstall:
-	rm -f $(DESTDIR)$(LUACDIR)/gumbo.so
+	$(RM) $(DESTDIR)$(LUACDIR)/gumbo.so
 
 check: all test.lua
 	@$(RUNVIA) $(LUA) test.lua
@@ -47,7 +50,7 @@ check-full:
 	@echo
 
 clean:
-	rm -f gumbo.so gumbo.o
+	$(RM) gumbo.so gumbo.o
 
 
 .PHONY: all install uninstall check check-full clean
