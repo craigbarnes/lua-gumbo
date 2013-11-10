@@ -49,6 +49,7 @@ assert(body[5][1].text == "abc")
 assert(body[8].text == "\n\t")
 assert(body[9].text == " comment node ")
 
+assert(#document == 2)
 assert(#root == 2)
 assert(#body == 10)
 assert(#body[4] == 0)
