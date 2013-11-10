@@ -3,6 +3,7 @@ local gumbo = require "gumbo"
 
 local input = [[
 <!doctype html>
+<!-- document.root isn't always document[1] -->
 <TITLE>Test Document</TITLE>
 <h1>Test Heading</h1>
 <p><a href=foobar.html>Quux</a></p>
@@ -21,11 +22,13 @@ assert(document.has_doctype == true)
 assert(document.public_identifier == "")
 assert(document.system_identifier == "")
 assert(document.quirks_mode == "no-quirks")
+assert(document.root == document[2])
 
 assert(head.type == "element")
 assert(body.type == "element")
 assert(body[1][1].type == "text")
 assert(body[8].type == "whitespace")
+assert(document[1].type == "comment")
 assert(body[9].type == "comment")
 
 assert(root.tag == "html")
@@ -52,21 +55,21 @@ assert(#body == 10)
 assert(#body[4] == 0)
 assert(#body[7] == 0)
 
-assert(body[1].start_pos.line == 3)
+assert(body[1].start_pos.line == 4)
 assert(body[1].start_pos.column == 1)
-assert(body[1].start_pos.offset == 45)
-assert(body[1].end_pos.line == 3)
+assert(body[1].start_pos.offset == 93)
+assert(body[1].end_pos.line == 4)
 assert(body[1].end_pos.column == 17)
-assert(body[1].end_pos.offset == 61)
+assert(body[1].end_pos.offset == 109)
 
 local tab8 = body[9]
 local tab4 = assert(gumbo.parse(input, 4)).root[2][9]
-assert(tab8.start_pos.line == 7)
-assert(tab4.start_pos.line == 7)
+assert(tab8.start_pos.line == 8)
+assert(tab4.start_pos.line == 8)
 assert(tab8.start_pos.column == 8)
 assert(tab4.start_pos.column == 4)
-assert(tab8.start_pos.offset == 157)
-assert(tab4.start_pos.offset == 157)
+assert(tab8.start_pos.offset == 205)
+assert(tab4.start_pos.offset == 205)
 
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
