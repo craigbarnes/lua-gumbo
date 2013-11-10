@@ -12,11 +12,17 @@ stabilized.
 Requirements
 ------------
 
+To build:
+
 * C99 compiler
 * GNU Make
 * pkg-config
 * [Lua] headers (`lua.h`, `lauxlib.h`)
 * [Gumbo][Gumbo installation] (`libgumbo.so`, `gumbo.h`, `gumbo.pc`)
+
+To run/test:
+
+* Lua 5.1/5.2 or LuaJIT 2
 
 Installation
 ------------
