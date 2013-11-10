@@ -7,8 +7,8 @@ local input = [[
 <h1>Test Heading</h1>
 <p><a href=foobar.html>Quux</a></p>
 <iNValID foo="bar">abc</invalid>
-<p class=empty></p>
-	<!-- comment node -->
+	<p class=empty></p>
+<!-- comment node -->
 ]]
 
 local document = assert(gumbo.parse(input))
@@ -46,7 +46,8 @@ assert(body[1].attr == nil)
 assert(head[1][1].text == "Test Document")
 assert(body[1][1].text == "Test Heading")
 assert(body[5][1].text == "abc")
-assert(body[8].text == "\n\t")
+assert(body[6].text == "\n\t")
+assert(body[8].text == "\n")
 assert(body[9].text == " comment node ")
 
 assert(#document == 2)
@@ -55,15 +56,22 @@ assert(#body == 10)
 assert(#body[4] == 0)
 assert(#body[7] == 0)
 
-local tab8 = body[9]
-local tab4 = assert(gumbo.parse(input, 4)).root[2][9]
-local offset = input:find("<!-- comment node -->", 1, true) - 1
-assert(tab8.start_pos.line == 8)
-assert(tab4.start_pos.line == 8)
+local tab8 = body[7]
+local tab4 = assert(gumbo.parse(input, 4)).root[2][7]
+local offset_start = input:find("<p class=empty>", 1, true) - 1
+local offset_end = input:find("</p>", offset_start, true) - 1
+assert(tab8.start_pos.line == 7)
+assert(tab4.start_pos.line == 7)
+assert(tab8.end_pos.line == 7)
+assert(tab4.end_pos.line == 7)
 assert(tab8.start_pos.column == 8)
 assert(tab4.start_pos.column == 4)
-assert(tab8.start_pos.offset == offset)
-assert(tab4.start_pos.offset == offset)
+assert(tab8.end_pos.column == 8 + offset_end - offset_start)
+assert(tab4.end_pos.column == 4 + offset_end - offset_start)
+assert(tab8.start_pos.offset == offset_start)
+assert(tab4.start_pos.offset == offset_start)
+assert(tab8.end_pos.offset == offset_end)
+assert(tab4.end_pos.offset == offset_end)
 
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
