@@ -57,12 +57,13 @@ assert(#body[7] == 0)
 
 local tab8 = body[9]
 local tab4 = assert(gumbo.parse(input, 4)).root[2][9]
+local offset = input:find("<!-- comment node -->", 1, true) - 1
 assert(tab8.start_pos.line == 8)
 assert(tab4.start_pos.line == 8)
 assert(tab8.start_pos.column == 8)
 assert(tab4.start_pos.column == 4)
-assert(tab8.start_pos.offset == 205)
-assert(tab4.start_pos.offset == 205)
+assert(tab8.start_pos.offset == offset)
+assert(tab4.start_pos.offset == offset)
 
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
