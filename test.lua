@@ -55,13 +55,6 @@ assert(#body == 10)
 assert(#body[4] == 0)
 assert(#body[7] == 0)
 
-assert(body[1].start_pos.line == 4)
-assert(body[1].start_pos.column == 1)
-assert(body[1].start_pos.offset == 93)
-assert(body[1].end_pos.line == 4)
-assert(body[1].end_pos.column == 17)
-assert(body[1].end_pos.offset == 109)
-
 local tab8 = body[9]
 local tab4 = assert(gumbo.parse(input, 4)).root[2][9]
 assert(tab8.start_pos.line == 8)
