@@ -67,7 +67,7 @@ Document Structure
 
 ### Document Node
 
-The document node is the top-level table returned by the parse functions
+The document node is the top-level table returned by the `parse` function
 and contains all other nodes as descendants. It contains the following
 fields:
 
