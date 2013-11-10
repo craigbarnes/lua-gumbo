@@ -1,5 +1,4 @@
-package.cpath = "./?.so"
-local gumbo = require "gumbo"
+local gumbo = assert(package.loadlib("./gumbo.so", "luaopen_gumbo"))()
 
 local input = [[
 <!doctype html>
