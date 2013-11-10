@@ -40,9 +40,9 @@ check: all test.lua
 
 check-full:
 	@printf '\nCC=gcc RUNVIA=valgrind\n  '
-	@$(MAKE) -s clean check CC='gcc -std=c99' RUNVIA='valgrind -q'
+	@$(MAKE) -s clean check CC='gcc' RUNVIA='valgrind -q'
 	@printf '\nCC=clang\n  '
-	@$(MAKE) -s clean check CC='clang -std=c99'
+	@$(MAKE) -s clean check CC='clang'
 	@printf '\nCC=tcc\n  '
 	@$(MAKE) -s clean check CC=tcc CFLAGS='-Wall'
 	@printf '\nLUA=luajit\n  '
