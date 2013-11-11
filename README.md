@@ -14,7 +14,7 @@ Requirements
 
 Building the module requires, at a minimum:
 
-* C99 compiler
+* C89 compiler
 * [Lua] headers (`lua.h`, `lauxlib.h`)
 * [Gumbo][Gumbo installation] (`libgumbo.so`, `gumbo.h`)
 

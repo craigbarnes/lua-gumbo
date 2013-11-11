@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -O2 -std=c99 -Wall -Wextra -Wpedantic \
+CFLAGS  = -O2 -std=c89 -Wall -Wextra -Wpedantic \
           -Wswitch-enum -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
 LDFLAGS = -shared
 LUA     = lua
