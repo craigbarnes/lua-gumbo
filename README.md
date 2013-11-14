@@ -93,12 +93,13 @@ indices and the following named fields:
 * `attr`: A table of attributes associated with the element. Fields are
   `name="value"` pairs.
 
-### Text/Comment Nodes
+### Text Nodes
 
 Text nodes are represented as tables with 2 fields:
 
 * `type`: The node type. One of `text`, `whitespace`, `comment` or `cdata`.
-* `text`: The text contents. Does not include comment/cdata delimiters.
+* `text`: The text contents. Does not include delimiters for `comment` or
+  `cdata` types.
 
 Testing
 -------
@@ -118,7 +119,8 @@ Todo
 * Provide metamethods for nodes
   * `__tostring` on elements could return a serialised subtree
   * `__tostring` on comments could include `<!--` and `-->` delimiters
-* Return an array of errors as a second return value (requires upstream API)
+* Return an array of parse errors as a second return value (requires
+  upstream API)
 
 [License]
 ---------
