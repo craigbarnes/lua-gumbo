@@ -15,10 +15,6 @@ GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
 GUMBO_HEADER  = $(shell pkg-config --variable=includedir gumbo)/gumbo.h
 
-ifeq ($(shell uname),Darwin)
-  LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
-endif
-
 all: gumbo.so
 
 gumbo.so: gumbo.o Makefile
@@ -67,6 +63,9 @@ check-all:
 clean:
 	$(RM) gumbo.so gumbo.o
 
+ifeq ($(shell uname),Darwin)
+  LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
+endif
 
 .PHONY: all install uninstall check check-ffi check-valgrind check-all clean
 .DELETE_ON_ERROR:
