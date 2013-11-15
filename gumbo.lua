@@ -70,7 +70,7 @@ local function get_tag_name(element)
     end
 end
 
-local function create_document(node, root_index)
+local function create_document(node)
     local document = node.v.document
     local ret = {
         type = "document",
@@ -81,7 +81,6 @@ local function create_document(node, root_index)
         quirks_mode = quirksmap[tonumber(document.doc_type_quirks_mode)]
     }
     add_children(ret, document.children)
-    ret.root = ret[root_index]
     return ret
 end
 
@@ -138,8 +137,8 @@ local function parse(input, tab_stop)
 
     options.tab_stop = tab_stop or 8
     local output = gumbo.gumbo_parse_with_options(options, input, #input)
-    local root_index = output.root.index_within_parent + 1
-    local document = create_document(output.document, root_index)
+    local document = create_document(output.document)
+    document.root = document[output.root.index_within_parent + 1]
     gumbo.gumbo_destroy_output(options, output)
     return document
 end
