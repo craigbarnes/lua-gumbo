@@ -12,6 +12,7 @@ LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
 
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
+GUMBO_HEADER  = $(shell pkg-config --variable=includedir gumbo)/gumbo.h
 
 ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
@@ -24,6 +25,12 @@ gumbo.so: gumbo.o Makefile
 
 gumbo.o: gumbo.c Makefile
 	$(CC) $(CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
+
+gumbo-cdef.lua: $(GUMBO_HEADER) clean-header.sed
+	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
+	@sed -f clean-header.sed $(GUMBO_HEADER) | sed '/^$$/N;/^\n$$/D' >> $@
+	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
+	@echo 'Generated: $@'
 
 tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 	ctags --c-kinds=+p $^
@@ -54,3 +61,4 @@ clean:
 
 
 .PHONY: all install uninstall check check-full clean
+.DELETE_ON_ERROR:

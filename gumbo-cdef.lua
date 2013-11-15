@@ -16,6 +16,12 @@ typedef struct {
 
 extern const GumboStringPiece kGumboEmptyString;
 
+bool gumbo_string_equals(
+    const GumboStringPiece* str1, const GumboStringPiece* str2);
+
+bool gumbo_string_equals_ignore_case(
+    const GumboStringPiece* str1, const GumboStringPiece* str2);
+
 typedef struct {
   void** data;
   unsigned int length;
@@ -23,6 +29,8 @@ typedef struct {
 } GumboVector;
 
 extern const GumboVector kGumboEmptyVector;
+
+int gumbo_vector_index_of(GumboVector* vector, void* element);
 
 typedef enum {
   GUMBO_TAG_HTML,
@@ -178,9 +186,13 @@ typedef enum {
   GUMBO_TAG_LAST,
 } GumboTag;
 
-
 const char* gumbo_normalized_tagname(GumboTag tag);
+
 void gumbo_tag_from_original_text(GumboStringPiece* text);
+
+const char* gumbo_normalize_svg_tagname(const GumboStringPiece* tagname);
+
+GumboTag gumbo_tag_enum(const char* tagname);
 
 typedef enum {
   GUMBO_ATTR_NAMESPACE_NONE,
@@ -241,7 +253,7 @@ typedef enum {
 } GumboParseFlags;
 
 typedef struct {
-  GumboVector children;
+  GumboVector /* GumboNode* */ children;
   bool has_doctype;
   const char* name;
   const char* public_identifier;
@@ -256,14 +268,14 @@ typedef struct {
 } GumboText;
 
 typedef struct {
-  GumboVector children;
+  GumboVector /* GumboNode* */ children;
   GumboTag tag;
   GumboNamespaceEnum tag_namespace;
   GumboStringPiece original_tag;
   GumboStringPiece original_end_tag;
   GumboSourcePosition start_pos;
   GumboSourcePosition end_pos;
-  GumboVector attributes;
+  GumboVector /* GumboAttribute* */ attributes;
 } GumboElement;
 
 struct GumboInternalNode {
@@ -279,6 +291,7 @@ struct GumboInternalNode {
 };
 
 typedef void* (*GumboAllocatorFunction)(void* userdata, size_t size);
+
 typedef void (*GumboDeallocatorFunction)(void* userdata, void* ptr);
 
 typedef struct GumboInternalOptions {
@@ -295,7 +308,7 @@ extern const GumboOptions kGumboDefaultOptions;
 typedef struct GumboInternalOutput {
   GumboNode* document;
   GumboNode* root;
-  GumboVector errors;
+  GumboVector /* GumboError */ errors;
 } GumboOutput;
 
 GumboOutput* gumbo_parse(const char* buffer);
@@ -303,7 +316,9 @@ GumboOutput* gumbo_parse(const char* buffer);
 GumboOutput* gumbo_parse_with_options(
     const GumboOptions* options, const char* buffer, size_t buffer_length);
 
-void gumbo_destroy_output(const GumboOptions* options, GumboOutput* output);
+void gumbo_destroy_output(
+    const GumboOptions* options, GumboOutput* output);
+
 ]=]
 
 return ffi.load "gumbo"
