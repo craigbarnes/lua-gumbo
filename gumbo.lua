@@ -114,6 +114,11 @@ end
 local function parse(input, tab_stop)
     local options = ffi.new("GumboOptions")
     ffi.copy(options, gumbo.kGumboDefaultOptions, ffi.sizeof("GumboOptions"))
+    -- The above is for the benefit of LuaFFI support. LuaJIT allows
+    -- using a copy constructor with ffi.new, as in:
+    --   local options = ffi.new("GumboOptions", gumbo.kGumboDefaultOptions)
+    -- TODO: use the cleaner syntax if/when LuaFFI supports it
+
     options.tab_stop = tab_stop or 8
     local output = gumbo.gumbo_parse_with_options(options, input, #input)
     local root_index = output.root.index_within_parent + 1
