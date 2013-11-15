@@ -17,6 +17,17 @@ local function add_children(t, children)
     end
 end
 
+local function get_attributes(attrs)
+    if attrs.length ~= 0 then
+        local t = {}
+        for i = 0, attrs.length-1 do
+            local attr = ffi.cast("GumboAttribute*", attrs.data[i])
+            t[ffi.string(attr.name)] = ffi.string(attr.value)
+        end
+        return t
+    end
+end
+
 local quirksmap = {
     [tonumber(gumbo.GUMBO_DOCTYPE_NO_QUIRKS)] = "no-quirks",
     [tonumber(gumbo.GUMBO_DOCTYPE_QUIRKS)] = "quirks",
@@ -48,7 +59,6 @@ local function get_tag_name(element)
     end
 end
 
-
 local function create_element(node)
     local element = node.v.element
     local ret = {
@@ -57,7 +67,7 @@ local function create_element(node)
         start_pos = nil, -- TODO: fix these
         end_pos = nil,
         parse_flags = nil,
-        attr = nil
+        attr = get_attributes(element.attributes)
     }
     add_children(ret, element.children)
     return ret
