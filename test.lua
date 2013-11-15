@@ -1,5 +1,3 @@
-package.path = "./?.lua"
-package.cpath = "./?.so"
 local gumbo = require "gumbo"
 
 local input = [[

@@ -43,7 +43,10 @@ uninstall:
 	$(RM) $(DESTDIR)$(LUACDIR)/gumbo.so
 
 check: all test.lua
-	@$(RUNVIA) $(LUA) test.lua
+	@LUA_PATH='' LUA_CPATH='./?.so' $(RUNVIA) $(LUA) test.lua
+
+check-ffi: clean test.lua
+	@LUA_PATH='./?.lua' $(RUNVIA) $(LUA) test.lua
 
 check-full:
 	@printf '\nCC=gcc RUNVIA=valgrind\n  '
@@ -60,5 +63,5 @@ clean:
 	$(RM) gumbo.so gumbo.o
 
 
-.PHONY: all install uninstall check check-full clean
+.PHONY: all install uninstall check check-ffi check-full clean
 .DELETE_ON_ERROR:
