@@ -48,9 +48,10 @@ check: all test.lua
 check-ffi: clean test.lua
 	@LUA_PATH='./?.lua' $(RUNVIA) $(LUA) test.lua
 
+check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
+check-valgrind: check
+
 check-full:
-	@printf '\nCC=gcc RUNVIA=valgrind\n  '
-	@$(MAKE) -s clean check CC='gcc' RUNVIA='valgrind -q'
 	@printf '\nCC=clang\n  '
 	@$(MAKE) -s clean check CC='clang'
 	@printf '\nCC=tcc\n  '
@@ -63,5 +64,5 @@ clean:
 	$(RM) gumbo.so gumbo.o
 
 
-.PHONY: all install uninstall check check-ffi check-full clean
+.PHONY: all install uninstall check check-ffi check-valgrind check-full clean
 .DELETE_ON_ERROR:
