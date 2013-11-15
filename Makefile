@@ -56,9 +56,9 @@ check-all:
 	@$(MAKE) -s clean check CC=clang $(V)
 	@$(MAKE) -s clean check CC=tcc CFLAGS=-Wall $(V)
 	@$(MAKE) -s clean check LUA=luajit $(V)
-	@$(MAKE) -s check-ffi LUA=lua $(V)
-	@$(MAKE) -s check-ffi LUA=lua5.1 $(V)
 	@$(MAKE) -s check-ffi LUA=luajit $(V)
+	@# Uses LuaFFI:
+	@$(MAKE) -s check-ffi LUA=lua $(V)
 
 clean:
 	$(RM) gumbo.so gumbo.o
