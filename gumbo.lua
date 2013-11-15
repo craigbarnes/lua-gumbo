@@ -26,7 +26,7 @@ if not have_ffi then -- load the C module instead
 end
 
 local gumbo = require "gumbo-cdef"
-local build
+local create_node
 
 local typemap = {
     [tonumber(gumbo.GUMBO_NODE_DOCUMENT)] = "document",
@@ -45,7 +45,7 @@ local quirksmap = {
 
 local function add_children(t, children)
     for i = 0, children.length - 1 do
-        t[i+1] = build(ffi.cast("GumboNode*", children.data[i]))
+        t[i+1] = create_node(ffi.cast("GumboNode*", children.data[i]))
     end
 end
 
@@ -119,7 +119,7 @@ local function create_text(node)
     }
 end
 
-build = function(node)
+create_node = function(node)
     if tonumber(node.type) == tonumber(gumbo.GUMBO_NODE_ELEMENT) then
         return create_element(node)
     else
