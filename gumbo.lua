@@ -25,22 +25,22 @@ if not have_ffi then -- load the C module instead
     return gumbo_c_module
 end
 
-local gumbo = require "gumbo-cdef"
+local C = require "gumbo-cdef"
 local create_node
 
 local typemap = {
-    [tonumber(gumbo.GUMBO_NODE_DOCUMENT)] = "document",
-    [tonumber(gumbo.GUMBO_NODE_ELEMENT)] = "element",
-    [tonumber(gumbo.GUMBO_NODE_TEXT)] = "text",
-    [tonumber(gumbo.GUMBO_NODE_CDATA)] = "cdata",
-    [tonumber(gumbo.GUMBO_NODE_COMMENT)] = "comment",
-    [tonumber(gumbo.GUMBO_NODE_WHITESPACE)] = "whitespace"
+    [tonumber(C.GUMBO_NODE_DOCUMENT)] = "document",
+    [tonumber(C.GUMBO_NODE_ELEMENT)] = "element",
+    [tonumber(C.GUMBO_NODE_TEXT)] = "text",
+    [tonumber(C.GUMBO_NODE_CDATA)] = "cdata",
+    [tonumber(C.GUMBO_NODE_COMMENT)] = "comment",
+    [tonumber(C.GUMBO_NODE_WHITESPACE)] = "whitespace"
 }
 
 local quirksmap = {
-    [tonumber(gumbo.GUMBO_DOCTYPE_NO_QUIRKS)] = "no-quirks",
-    [tonumber(gumbo.GUMBO_DOCTYPE_QUIRKS)] = "quirks",
-    [tonumber(gumbo.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks"
+    [tonumber(C.GUMBO_DOCTYPE_NO_QUIRKS)] = "no-quirks",
+    [tonumber(C.GUMBO_DOCTYPE_QUIRKS)] = "quirks",
+    [tonumber(C.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks"
 }
 
 local function add_children(t, children)
@@ -61,12 +61,12 @@ local function get_attributes(attrs)
 end
 
 local function get_tag_name(element)
-    if element.tag == gumbo.GUMBO_TAG_UNKNOWN then
+    if element.tag == C.GUMBO_TAG_UNKNOWN then
         local original_tag = element.original_tag
-        gumbo.gumbo_tag_from_original_text(original_tag)
+        C.gumbo_tag_from_original_text(original_tag)
         return ffi.string(original_tag.data, original_tag.length)
     else
-        return ffi.string(gumbo.gumbo_normalized_tagname(element.tag))
+        return ffi.string(C.gumbo_normalized_tagname(element.tag))
     end
 end
 
@@ -120,7 +120,7 @@ local function create_text(node)
 end
 
 create_node = function(node)
-    if tonumber(node.type) == tonumber(gumbo.GUMBO_NODE_ELEMENT) then
+    if tonumber(node.type) == tonumber(C.GUMBO_NODE_ELEMENT) then
         return create_element(node)
     else
         return create_text(node)
@@ -129,17 +129,17 @@ end
 
 local function parse(input, tab_stop)
     local options = ffi.new("GumboOptions")
-    ffi.copy(options, gumbo.kGumboDefaultOptions, ffi.sizeof("GumboOptions"))
+    ffi.copy(options, C.kGumboDefaultOptions, ffi.sizeof("GumboOptions"))
     -- The above is for the benefit of LuaFFI support. LuaJIT allows
     -- using a copy constructor with ffi.new, as in:
-    --   local options = ffi.new("GumboOptions", gumbo.kGumboDefaultOptions)
+    --   local options = ffi.new("GumboOptions", C.kGumboDefaultOptions)
     -- TODO: use the cleaner syntax if/when LuaFFI supports it
 
     options.tab_stop = tab_stop or 8
-    local output = gumbo.gumbo_parse_with_options(options, input, #input)
+    local output = C.gumbo_parse_with_options(options, input, #input)
     local document = create_document(output.document)
     document.root = document[output.root.index_within_parent + 1]
-    gumbo.gumbo_destroy_output(options, output)
+    C.gumbo_destroy_output(options, output)
     return document
 end
 
