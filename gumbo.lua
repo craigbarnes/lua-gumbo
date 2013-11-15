@@ -51,7 +51,7 @@ end
 
 local function get_tag_name(element)
     if element.tag == gumbo.GUMBO_TAG_UNKNOWN then
-        local original_tag = element.original_tag -- TODO: copy before mutate?
+        local original_tag = element.original_tag
         gumbo.gumbo_tag_from_original_text(original_tag)
         return ffi.string(original_tag.data, original_tag.length)
     else
@@ -64,9 +64,17 @@ local function create_element(node)
     local ret = {
         type = "element",
         tag = get_tag_name(element),
-        start_pos = nil, -- TODO: fix these
-        end_pos = nil,
-        parse_flags = nil,
+        parse_flags = tonumber(node.parse_flags),
+        start_pos = {
+            line = element.start_pos.line,
+            column = element.start_pos.column,
+            offset = element.start_pos.offset
+        },
+        end_pos = {
+            line = element.end_pos.line,
+            column = element.end_pos.column,
+            offset = element.end_pos.offset
+        },
         attr = get_attributes(element.attributes)
     }
     add_children(ret, element.children)
@@ -83,9 +91,15 @@ local typemap = {
 }
 
 local function create_text(node)
+    local text = node.v.text
     return {
         type = typemap[tonumber(node.type)],
-        text = ffi.string(node.v.text.text)
+        text = ffi.string(text.text),
+        start_pos = {
+            line = text.start_pos.line,
+            column = text.start_pos.column,
+            offset = text.start_pos.offset
+        }
     }
 end
 
@@ -103,7 +117,9 @@ build = function(node)
 end
 
 local function parse(input, tab_stop)
-    local options = gumbo.kGumboDefaultOptions -- TODO: copy and set tab_stop
+    local options = ffi.new("GumboOptions")
+    ffi.copy(options, gumbo.kGumboDefaultOptions, ffi.sizeof("GumboOptions"))
+    options.tab_stop = tab_stop or 8
     local output = gumbo.gumbo_parse_with_options(options, input, #input)
     local tree = build(output.document)
     gumbo.gumbo_destroy_output(options, output)

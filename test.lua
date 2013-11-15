@@ -75,6 +75,8 @@ assert(tab4.start_pos.offset == offset_start)
 assert(tab8.end_pos.offset == offset_end)
 assert(tab4.end_pos.offset == offset_end)
 
+-- TODO: test `start_pos` for text nodes
+
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
 
