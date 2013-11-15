@@ -9,15 +9,16 @@ RM      = rm -f
 PREFIX  = /usr/local
 LUAVER  = 5.1
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
+DYNLIB  = cgumbo.so
 PRINTF  = :
 
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
 GUMBO_HEADER  = $(shell pkg-config --variable=includedir gumbo)/gumbo.h
 
-all: gumbo.so
+all: $(DYNLIB)
 
-gumbo.so: gumbo.o Makefile
+$(DYNLIB): gumbo.o Makefile
 	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
 
 gumbo.o: gumbo.c Makefile
@@ -34,14 +35,15 @@ tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
 
 install: all
 	$(MKDIR) $(DESTDIR)$(LUACDIR)
-	$(INSTALL) gumbo.so $(DESTDIR)$(LUACDIR)
+	$(INSTALL) $(DYNLIB) $(DESTDIR)$(LUACDIR)
 
 uninstall:
-	$(RM) $(DESTDIR)$(LUACDIR)/gumbo.so
+	$(RM) $(DESTDIR)$(LUACDIR)/$(DYNLIB)
 
+check: export LGUMBO_NOFFI=1
 check: all test.lua
 	@$(PRINTF) '$@' 'LUA=$(LUA)  CC=$(CC)'
-	@LUA_PATH='' LUA_CPATH='./?.so' $(RUNVIA) $(LUA) test.lua
+	@LUA_PATH='./?.lua' LUA_CPATH='./?.so;;' $(RUNVIA) $(LUA) test.lua
 
 check-ffi: clean test.lua
 	@$(PRINTF) '$@' 'LUA=$(LUA) '
@@ -50,6 +52,7 @@ check-ffi: clean test.lua
 check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
 check-valgrind: check
 
+check-all: export LGUMBO_DEBUG=1
 check-all: V = PRINTF="printf '%-10s %-25s'"
 check-all:
 	@$(MAKE) -s clean check CC=gcc $(V)
@@ -61,7 +64,7 @@ check-all:
 	@$(MAKE) -s check-ffi LUA=lua $(V)
 
 clean:
-	$(RM) gumbo.so gumbo.o
+	$(RM) $(DYNLIB) gumbo.o
 
 ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)

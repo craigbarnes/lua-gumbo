@@ -172,7 +172,7 @@ static int parse(lua_State *L) {
     }
 }
 
-int luaopen_gumbo(lua_State *L) {
+int luaopen_cgumbo(lua_State *L) {
     lua_createtable(L, 0, 1);
     add_field(L, cfunction, "parse", parse);
     return 1;
