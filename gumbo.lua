@@ -38,11 +38,22 @@ local function create_document(node)
     return ret
 end
 
+local function get_tag_name(element)
+    if element.tag == gumbo.GUMBO_TAG_UNKNOWN then
+        local original_tag = element.original_tag -- TODO: copy before mutate?
+        gumbo.gumbo_tag_from_original_text(original_tag)
+        return ffi.string(original_tag.data, original_tag.length)
+    else
+        return ffi.string(gumbo.gumbo_normalized_tagname(element.tag))
+    end
+end
+
+
 local function create_element(node)
     local element = node.v.element
     local ret = {
         type = "element",
-        tag = ffi.string(gumbo.gumbo_normalized_tagname(element.tag)),
+        tag = get_tag_name(element),
         start_pos = nil, -- TODO: fix these
         end_pos = nil,
         parse_flags = nil,
