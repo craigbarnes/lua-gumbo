@@ -27,7 +27,7 @@ local quirksmap = {
 }
 
 local function add_children(t, children)
-    for i = 0, children.length-1 do
+    for i = 0, children.length - 1 do
         t[i+1] = build(ffi.cast("GumboNode*", children.data[i]))
     end
 end
@@ -35,11 +35,21 @@ end
 local function get_attributes(attrs)
     if attrs.length ~= 0 then
         local t = {}
-        for i = 0, attrs.length-1 do
+        for i = 0, attrs.length - 1 do
             local attr = ffi.cast("GumboAttribute*", attrs.data[i])
             t[ffi.string(attr.name)] = ffi.string(attr.value)
         end
         return t
+    end
+end
+
+local function get_tag_name(element)
+    if element.tag == gumbo.GUMBO_TAG_UNKNOWN then
+        local original_tag = element.original_tag
+        gumbo.gumbo_tag_from_original_text(original_tag)
+        return ffi.string(original_tag.data, original_tag.length)
+    else
+        return ffi.string(gumbo.gumbo_normalized_tagname(element.tag))
     end
 end
 
@@ -56,16 +66,6 @@ local function create_document(node, root_index)
     add_children(ret, document.children)
     ret.root = ret[root_index]
     return ret
-end
-
-local function get_tag_name(element)
-    if element.tag == gumbo.GUMBO_TAG_UNKNOWN then
-        local original_tag = element.original_tag
-        gumbo.gumbo_tag_from_original_text(original_tag)
-        return ffi.string(original_tag.data, original_tag.length)
-    else
-        return ffi.string(gumbo.gumbo_normalized_tagname(element.tag))
-    end
 end
 
 local function create_element(node)
