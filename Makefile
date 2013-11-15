@@ -9,6 +9,7 @@ RM      = rm -f
 PREFIX  = /usr/local
 LUAVER  = 5.1
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
+PRINTF  = :
 
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
@@ -43,26 +44,29 @@ uninstall:
 	$(RM) $(DESTDIR)$(LUACDIR)/gumbo.so
 
 check: all test.lua
+	@$(PRINTF) '$@' 'LUA=$(LUA)  CC=$(CC)'
 	@LUA_PATH='' LUA_CPATH='./?.so' $(RUNVIA) $(LUA) test.lua
 
 check-ffi: clean test.lua
+	@$(PRINTF) '$@' 'LUA=$(LUA) '
 	@LUA_PATH='./?.lua' $(RUNVIA) $(LUA) test.lua
 
 check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
 check-valgrind: check
 
-check-full:
-	@printf '\nCC=clang\n  '
-	@$(MAKE) -s clean check CC='clang'
-	@printf '\nCC=tcc\n  '
-	@$(MAKE) -s clean check CC=tcc CFLAGS='-Wall'
-	@printf '\nLUA=luajit\n  '
-	@$(MAKE) -s clean check LUA=luajit
-	@echo
+check-all: V = PRINTF="printf '%-10s %-25s'"
+check-all:
+	@$(MAKE) -s clean check CC=gcc $(V)
+	@$(MAKE) -s clean check CC=clang $(V)
+	@$(MAKE) -s clean check CC=tcc CFLAGS=-Wall $(V)
+	@$(MAKE) -s clean check LUA=luajit $(V)
+	@$(MAKE) -s check-ffi LUA=lua $(V)
+	@$(MAKE) -s check-ffi LUA=lua5.1 $(V)
+	@$(MAKE) -s check-ffi LUA=luajit $(V)
 
 clean:
 	$(RM) gumbo.so gumbo.o
 
 
-.PHONY: all install uninstall check check-ffi check-valgrind check-full clean
+.PHONY: all install uninstall check check-ffi check-valgrind check-all clean
 .DELETE_ON_ERROR:
