@@ -11,6 +11,21 @@ end
 local gumbo = require "gumbo-cdef"
 local build
 
+local typemap = {
+    [tonumber(gumbo.GUMBO_NODE_DOCUMENT)] = "document",
+    [tonumber(gumbo.GUMBO_NODE_ELEMENT)] = "element",
+    [tonumber(gumbo.GUMBO_NODE_TEXT)] = "text",
+    [tonumber(gumbo.GUMBO_NODE_CDATA)] = "cdata",
+    [tonumber(gumbo.GUMBO_NODE_COMMENT)] = "comment",
+    [tonumber(gumbo.GUMBO_NODE_WHITESPACE)] = "whitespace"
+}
+
+local quirksmap = {
+    [tonumber(gumbo.GUMBO_DOCTYPE_NO_QUIRKS)] = "no-quirks",
+    [tonumber(gumbo.GUMBO_DOCTYPE_QUIRKS)] = "quirks",
+    [tonumber(gumbo.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks"
+}
+
 local function add_children(t, children)
     for i = 0, children.length-1 do
         t[i+1] = build(ffi.cast("GumboNode*", children.data[i]))
@@ -27,12 +42,6 @@ local function get_attributes(attrs)
         return t
     end
 end
-
-local quirksmap = {
-    [tonumber(gumbo.GUMBO_DOCTYPE_NO_QUIRKS)] = "no-quirks",
-    [tonumber(gumbo.GUMBO_DOCTYPE_QUIRKS)] = "quirks",
-    [tonumber(gumbo.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks"
-}
 
 local function create_document(node, root_index)
     local document = node.v.document
@@ -81,15 +90,6 @@ local function create_element(node)
     return ret
 end
 
-local typemap = {
-    [tonumber(gumbo.GUMBO_NODE_DOCUMENT)] = "document",
-    [tonumber(gumbo.GUMBO_NODE_ELEMENT)] = "element",
-    [tonumber(gumbo.GUMBO_NODE_TEXT)] = "text",
-    [tonumber(gumbo.GUMBO_NODE_CDATA)] = "cdata",
-    [tonumber(gumbo.GUMBO_NODE_COMMENT)] = "comment",
-    [tonumber(gumbo.GUMBO_NODE_WHITESPACE)] = "whitespace"
-}
-
 local function create_text(node)
     local text = node.v.text
     return {
@@ -103,17 +103,12 @@ local function create_text(node)
     }
 end
 
-local handlers = {
-    [tonumber(gumbo.GUMBO_NODE_DOCUMENT)] = function() error() end,
-    [tonumber(gumbo.GUMBO_NODE_ELEMENT)] = create_element,
-    [tonumber(gumbo.GUMBO_NODE_TEXT)] = create_text,
-    [tonumber(gumbo.GUMBO_NODE_CDATA)] = create_text,
-    [tonumber(gumbo.GUMBO_NODE_COMMENT)] = create_text,
-    [tonumber(gumbo.GUMBO_NODE_WHITESPACE)] = create_text
-}
-
 build = function(node)
-    return handlers[tonumber(node.type)](node)
+    if tonumber(node.type) == tonumber(gumbo.GUMBO_NODE_ELEMENT) then
+        return create_element(node)
+    else
+        return create_text(node)
+    end
 end
 
 local function parse(input, tab_stop)
