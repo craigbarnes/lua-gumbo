@@ -34,7 +34,7 @@ local quirksmap = {
     [tonumber(gumbo.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks"
 }
 
-local function create_document(node)
+local function create_document(node, root_index)
     local document = node.v.document
     local ret = {
         type = "document",
@@ -45,7 +45,7 @@ local function create_document(node)
         quirks_mode = quirksmap[tonumber(document.doc_type_quirks_mode)]
     }
     add_children(ret, document.children)
-    ret.root = ret[2] -- FIXME should be ret[output.root.index_within_parent+1]
+    ret.root = ret[root_index]
     return ret
 end
 
@@ -104,7 +104,7 @@ local function create_text(node)
 end
 
 local handlers = {
-    [tonumber(gumbo.GUMBO_NODE_DOCUMENT)] = create_document,
+    [tonumber(gumbo.GUMBO_NODE_DOCUMENT)] = function() error() end,
     [tonumber(gumbo.GUMBO_NODE_ELEMENT)] = create_element,
     [tonumber(gumbo.GUMBO_NODE_TEXT)] = create_text,
     [tonumber(gumbo.GUMBO_NODE_CDATA)] = create_text,
@@ -121,9 +121,10 @@ local function parse(input, tab_stop)
     ffi.copy(options, gumbo.kGumboDefaultOptions, ffi.sizeof("GumboOptions"))
     options.tab_stop = tab_stop or 8
     local output = gumbo.gumbo_parse_with_options(options, input, #input)
-    local tree = build(output.document)
+    local root_index = output.root.index_within_parent + 1
+    local document = create_document(output.document, root_index)
     gumbo.gumbo_destroy_output(options, output)
-    return tree
+    return document
 end
 
 return {parse = parse}
