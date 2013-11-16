@@ -44,11 +44,12 @@ uninstall:
 	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
-check: export LGUMBO_NOFFI=1
+check: export LGUMBO_USE_FFI=0
 check: all test.lua
 	@$(PRINTF) '$@' 'LUA=$(LUA)  CC=$(CC)'
 	@LUA_PATH='./?.lua' LUA_CPATH='./?.so;;' $(RUNVIA) $(LUA) test.lua
 
+check-ffi: export LGUMBO_USE_FFI=1
 check-ffi: clean test.lua
 	@$(PRINTF) '$@' 'LUA=$(LUA) '
 	@LUA_PATH='./?.lua' $(RUNVIA) $(LUA) test.lua

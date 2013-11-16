@@ -1,5 +1,21 @@
 local have_ffi, ffi = pcall(require, "ffi")
+local want_ffi = os.getenv "LGUMBO_USE_FFI"
+local use_ffi
 local gumbo
+
+if have_ffi == true then
+    if want_ffi == "1" then
+        use_ffi = true
+    elseif want_ffi == "0" then
+        use_ffi = false
+    else
+        if jit then -- prefer FFI for LuaJIT
+            use_ffi = true
+        else -- prefer C module over (slow) luaffi
+            use_ffi = false
+        end
+    end
+end
 
 local function debug_print(msg)
     if os.getenv "LGUMBO_DEBUG" then
@@ -7,7 +23,7 @@ local function debug_print(msg)
     end
 end
 
-if have_ffi == true and not os.getenv "LGUMBO_NOFFI" then
+if use_ffi == true then
     gumbo = require "gumbo.ffi"
     debug_print "Using FFI  "
 else -- load the C module instead
