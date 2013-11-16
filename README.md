@@ -116,12 +116,8 @@ Todo
 * Update readme:
   * Mention FFI bindings (and that luaffi is supported)
   * Mention the various Makefile `check-*` targets
-* Rename `gumbo.lua` to `gumbo/ffi.lua`
-* Rename `gumbo-cdef.lua` to `gumbo/cdef.lua`
-* Use `gumbo.lua` just for conditional selection between C/FFI bindings
-  * Add an environment variable to allow setting a preference on which to use
-  * Add an environment variable to enable printing which gets loaded
 * Update `Makefile` to install FFI bindings
+* Use the C module by default for standard Lua -- LuaFFI is considerably slower
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
 * Add an example of traversing a document and producing Graphviz output

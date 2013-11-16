@@ -78,4 +78,6 @@ assert(tab4.end_pos.offset == offset_end)
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
 
+assert(type(gumbo.parse_file) == "function")
+
 print "All tests passed"
