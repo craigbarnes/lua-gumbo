@@ -116,7 +116,6 @@ Todo
 * Update readme:
   * Mention FFI bindings (and that luaffi is supported)
   * Mention the various Makefile `check-*` targets
-* Update `Makefile` to install FFI bindings
 * Use the C module by default for standard Lua -- LuaFFI is considerably slower
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.

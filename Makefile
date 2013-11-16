@@ -4,10 +4,12 @@ CFLAGS  = -O2 -std=c89 -Wall -Wextra -Wpedantic \
 LDFLAGS = -shared
 LUA     = lua
 MKDIR   = mkdir -p
-INSTALL = install -p -m 0755
+INSTALL = install -p -m 0644
+INSTALLX= install -p -m 0755
 RM      = rm -f
 PREFIX  = /usr/local
 LUAVER  = 5.1
+LUADIR  = $(PREFIX)/share/lua/$(LUAVER)
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
 DYNLIB  = cgumbo.so
 PRINTF  = :
@@ -30,15 +32,17 @@ gumbo-cdef.lua: $(GUMBO_HEADER) clean-header.sed
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
 
-tags: gumbo.c $(shell gcc -M gumbo.c | grep -o '[^ ]*/gumbo.h')
+tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
-install: all
-	$(MKDIR) $(DESTDIR)$(LUACDIR)
-	$(INSTALL) $(DYNLIB) $(DESTDIR)$(LUACDIR)
+install: all | gumbo/cdef.lua gumbo/ffi.lua gumbo/init.lua
+	$(MKDIR) '$(DESTDIR)$(LUACDIR)' '$(DESTDIR)$(LUADIR)/gumbo'
+	$(INSTALLX) $(DYNLIB) '$(DESTDIR)$(LUACDIR)'
+	$(INSTALL) $| '$(DESTDIR)$(LUADIR)/gumbo'
 
 uninstall:
-	$(RM) $(DESTDIR)$(LUACDIR)/$(DYNLIB)
+	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
+	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
 check: export LGUMBO_NOFFI=1
 check: all test.lua
