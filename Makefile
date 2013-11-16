@@ -26,7 +26,7 @@ $(DYNLIB): gumbo.o Makefile
 gumbo.o: gumbo.c Makefile
 	$(CC) $(CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
 
-gumbo-cdef.lua: $(GUMBO_HEADER) clean-header.sed
+gumbo/cdef.lua: $(GUMBO_HEADER) clean-header.sed
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
 	@sed -f clean-header.sed $(GUMBO_HEADER) | sed '/^$$/N;/^\n$$/D' >> $@
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
