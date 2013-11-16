@@ -57,7 +57,6 @@ check-ffi: clean test.lua
 check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
 check-valgrind: check
 
-check-all: export LGUMBO_DEBUG=1
 check-all: V = PRINTF="printf '%-10s %-25s'"
 check-all:
 	@$(MAKE) -s clean check CC=gcc $(V)

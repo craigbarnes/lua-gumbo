@@ -1,34 +1,25 @@
 local have_ffi, ffi = pcall(require, "ffi")
 local want_ffi = os.getenv "LGUMBO_USE_FFI"
-local use_ffi
 local gumbo
 
 if have_ffi == true then
     if want_ffi == "1" then
-        use_ffi = true
+        gumbo = require "gumbo.ffi"
     elseif want_ffi == "0" then
-        use_ffi = false
-    else
+        gumbo = require "cgumbo"
+    else -- use default
         if jit then -- prefer FFI for LuaJIT
-            use_ffi = true
+            gumbo = require "gumbo.ffi"
         else -- prefer C module over (slow) luaffi
-            use_ffi = false
+            gumbo = require "cgumbo"
         end
     end
-end
-
-local function debug_print(msg)
-    if os.getenv "LGUMBO_DEBUG" then
-        io.stderr:write(msg)
+else
+    if want_ffi == "1" then
+        error "Explicitly requested FFI module but FFI not available"
+    else
+        gumbo = require "cgumbo"
     end
-end
-
-if use_ffi == true then
-    gumbo = require "gumbo.ffi"
-    debug_print "Using FFI  "
-else -- load the C module instead
-    gumbo = require "cgumbo"
-    debug_print "Using C module  "
 end
 
 function gumbo.parse_file(filename, tab_stop)
