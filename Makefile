@@ -2,16 +2,16 @@ CC      = gcc
 CFLAGS  = -O2 -std=c89 -Wall -Wextra -Wpedantic \
           -Wswitch-enum -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
 LDFLAGS = -shared
+DYNLIB  = cgumbo.so
+PREFIX  = /usr/local
+LUAVER  = 5.1
+LUADIR  = $(PREFIX)/share/lua/$(LUAVER)
+LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
 LUA     = lua
 MKDIR   = mkdir -p
 INSTALL = install -p -m 0644
 INSTALLX= install -p -m 0755
 RM      = rm -f
-PREFIX  = /usr/local
-LUAVER  = 5.1
-LUADIR  = $(PREFIX)/share/lua/$(LUAVER)
-LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
-DYNLIB  = cgumbo.so
 PRINTF  = :
 
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
