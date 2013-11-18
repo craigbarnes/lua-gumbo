@@ -113,6 +113,10 @@ tree-to-tree translation, as recommended by the Gumbo documentation.
 Todo
 ----
 
+* Fix representation of attributes. Using a key-value table loses
+  duplicate keys and the original order of keys and also omits source
+  positions. A better representation would be storing ordered attribute
+  tables in array indices and using hash keys as an index.
 * Update readme:
   * Mention FFI bindings (and that luaffi is supported)
   * Mention the various Makefile `check-*` targets
