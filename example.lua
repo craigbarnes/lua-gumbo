@@ -1,19 +1,11 @@
-package.cpath = "./?.so"
 local gumbo = require "gumbo"
-local indent = ""
 
-local document = gumbo.parse [[
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Test</title>
-    </head>
-    <body>
-        <h1>Hello</h1>
-    </body>
-</html>
-]]
+local filename = assert(..., "Missing filename argument")
+local file = assert(io.open(filename))
+local text = file:read("*a")
+file:close()
+local document = assert(gumbo.parse(text))
+local indent = ""
 
 local void = {
     area = true, base = true, br = true, col = true, command = true,
