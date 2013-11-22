@@ -24,7 +24,10 @@
 #include <lauxlib.h>
 #include <gumbo.h>
 
-#define add_field(L, T, K, V) (lua_push##T(L, V), lua_setfield(L, -2, K))
+#define add_string(L, K, V) (lua_pushstring(L, V), lua_setfield(L, -2, K))
+#define add_literal(L, K, V) (lua_pushliteral(L, V), lua_setfield(L, -2, K))
+#define add_integer(L, K, V) (lua_pushinteger(L, V), lua_setfield(L, -2, K))
+#define add_boolean(L, K, V) (lua_pushboolean(L, V), lua_setfield(L, -2, K))
 static void push_node(lua_State *L, const GumboNode *node);
 
 static void add_children(lua_State *L, const GumboVector *children) {
@@ -43,7 +46,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
         lua_createtable(L, 0, length);
         for (i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
-            add_field(L, string, attr->name, attr->value);
+            add_string(L, attr->name, attr->value);
         }
         lua_setfield(L, -2, "attr");
     }
@@ -66,20 +69,20 @@ static void add_sourcepos (
     const GumboSourcePosition *position
 ){
     lua_createtable(L, 0, 3);
-    add_field(L, integer, "line", position->line);
-    add_field(L, integer, "column", position->column);
-    add_field(L, integer, "offset", position->offset);
+    add_integer(L, "line", position->line);
+    add_integer(L, "column", position->column);
+    add_integer(L, "offset", position->offset);
     lua_setfield(L, -2, field_name);
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
     if (flags != GUMBO_INSERTION_NORMAL)
-        add_field(L, integer, "parse_flags", flags);
+        add_integer(L, "parse_flags", flags);
 }
 
 static void create_text_node(lua_State *L, const GumboText *text) {
     lua_createtable(L, 0, 3);
-    add_field(L, string, "text", text->text);
+    add_string(L, "text", text->text);
     add_sourcepos(L, "start_pos", &text->start_pos);
 }
 
@@ -107,11 +110,11 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
         lua_createtable(L, document->children.length, 7);
-        add_field(L, literal, "type", "document");
-        add_field(L, string, "name", document->name);
-        add_field(L, string, "public_identifier", document->public_identifier);
-        add_field(L, string, "system_identifier", document->system_identifier);
-        add_field(L, boolean, "has_doctype", document->has_doctype);
+        add_literal(L, "type", "document");
+        add_string(L, "name", document->name);
+        add_string(L, "public_identifier", document->public_identifier);
+        add_string(L, "system_identifier", document->system_identifier);
+        add_boolean(L, "has_doctype", document->has_doctype);
         add_quirks_mode(L, document->doc_type_quirks_mode);
         add_children(L, &document->children);
         return;
@@ -119,7 +122,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 3);
-        add_field(L, literal, "type", "element");
+        add_literal(L, "type", "element");
         add_tagname(L, element);
         add_sourcepos(L, "start_pos", &element->start_pos);
         add_sourcepos(L, "end_pos", &element->end_pos);
@@ -130,19 +133,19 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
     case GUMBO_NODE_TEXT:
         create_text_node(L, &node->v.text);
-        add_field(L, literal, "type", "text");
+        add_literal(L, "type", "text");
         return;
     case GUMBO_NODE_COMMENT:
         create_text_node(L, &node->v.text);
-        add_field(L, literal, "type", "comment");
+        add_literal(L, "type", "comment");
         return;
     case GUMBO_NODE_CDATA:
         create_text_node(L, &node->v.text);
-        add_field(L, literal, "type", "cdata");
+        add_literal(L, "type", "cdata");
         return;
     case GUMBO_NODE_WHITESPACE:
         create_text_node(L, &node->v.text);
-        add_field(L, literal, "type", "whitespace");
+        add_literal(L, "type", "whitespace");
         return;
     default:
         luaL_error(L, "Error: invalid node type");
@@ -174,6 +177,7 @@ static int parse(lua_State *L) {
 
 int luaopen_cgumbo(lua_State *L) {
     lua_createtable(L, 0, 1);
-    add_field(L, cfunction, "parse", parse);
+    lua_pushcfunction(L, parse);
+    lua_setfield(L, -2, "parse");
     return 1;
 }
