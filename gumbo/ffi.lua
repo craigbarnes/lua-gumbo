@@ -17,6 +17,9 @@
 
 local ffi = require "ffi"
 local C = require "gumbo.cdef"
+local ffi_string = ffi.string
+local ffi_cast = ffi.cast
+local tonumber = tonumber
 local create_node
 
 local typemap = {
@@ -36,7 +39,7 @@ local quirksmap = {
 
 local function add_children(t, children)
     for i = 0, children.length - 1 do
-        t[i+1] = create_node(ffi.cast("GumboNode*", children.data[i]))
+        t[i+1] = create_node(ffi_cast("GumboNode*", children.data[i]))
     end
 end
 
@@ -44,8 +47,8 @@ local function get_attributes(attrs)
     if attrs.length ~= 0 then
         local t = {}
         for i = 0, attrs.length - 1 do
-            local attr = ffi.cast("GumboAttribute*", attrs.data[i])
-            t[ffi.string(attr.name)] = ffi.string(attr.value)
+            local attr = ffi_cast("GumboAttribute*", attrs.data[i])
+            t[ffi_string(attr.name)] = ffi_string(attr.value)
         end
         return t
     end
@@ -55,9 +58,9 @@ local function get_tag_name(element)
     if element.tag == C.GUMBO_TAG_UNKNOWN then
         local original_tag = element.original_tag
         C.gumbo_tag_from_original_text(original_tag)
-        return ffi.string(original_tag.data, original_tag.length)
+        return ffi_string(original_tag.data, original_tag.length)
     else
-        return ffi.string(C.gumbo_normalized_tagname(element.tag))
+        return ffi_string(C.gumbo_normalized_tagname(element.tag))
     end
 end
 
@@ -73,9 +76,9 @@ local function create_document(node)
     local document = node.v.document
     local ret = {
         type = "document",
-        name = ffi.string(document.name),
-        public_identifier = ffi.string(document.public_identifier),
-        system_identifier = ffi.string(document.system_identifier),
+        name = ffi_string(document.name),
+        public_identifier = ffi_string(document.public_identifier),
+        system_identifier = ffi_string(document.system_identifier),
         has_doctype = document.has_doctype,
         quirks_mode = quirksmap[tonumber(document.doc_type_quirks_mode)]
     }
@@ -101,7 +104,7 @@ local function create_text(node)
     local text = node.v.text
     return {
         type = typemap[tonumber(node.type)],
-        text = ffi.string(text.text),
+        text = ffi_string(text.text),
         start_pos = get_sourcepos(text.start_pos)
     }
 end
