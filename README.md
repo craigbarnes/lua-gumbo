@@ -94,12 +94,12 @@ indices and the following named fields:
   `name="value"` pairs.
 * `start_pos`: A table representing the source position of the opening tag.
   It contains the fields:
-    * `line`: The line number, starting from `1`.
-    * `column`: The column number, starting from `1` (may be affected by the
+    * `line`: The line number, starting from 1.
+    * `column`: The column number, starting from 1 (may be affected by the
       `tab_stop` value passed to `gumbo.parse`).
-    * `offset`: The offset position in bytes, starting from `0`.
-* `end_pos`: A table with the same structure as `start_pos` but representing
-  the closing tag.
+    * `offset`: The offset position in bytes, starting from 0.
+* `end_pos`: A table representing the source position of the closing tag.
+  It contains the same fields as described for `start_pos`.
 
 ### Text Nodes
 
