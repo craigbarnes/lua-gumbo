@@ -121,7 +121,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
-        lua_createtable(L, element->children.length, 3);
+        lua_createtable(L, element->children.length, 6);
         add_literal(L, "type", "element");
         add_tagname(L, element);
         add_sourcepos(L, "start_pos", &element->start_pos);
