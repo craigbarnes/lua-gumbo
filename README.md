@@ -92,14 +92,24 @@ indices and the following named fields:
   verbatim for unrecognized tags.
 * `attr`: A table of attributes associated with the element. Fields are
   `name="value"` pairs.
+* `start_pos`: A table representing the source position of the opening tag.
+  It contains the fields:
+    * `line`: The line number, starting from `1`.
+    * `column`: The column number, starting from `1` (may be affected by the
+      `tab_stop` value passed to `gumbo.parse`).
+    * `offset`: The offset position in bytes, starting from `0`.
+* `end_pos`: A table with the same structure as `start_pos` but representing
+  the closing tag.
 
 ### Text Nodes
 
-Text nodes are represented as tables with 2 fields:
+Text nodes are represented as tables with 3 fields:
 
 * `type`: The node type. One of `text`, `whitespace`, `comment` or `cdata`.
 * `text`: The text contents. Does not include delimiters for `comment` or
   `cdata` types.
+* `start_pos`: A table representing the source position of the start of the
+  text. The structure is the same as described for element nodes above.
 
 Testing
 -------
