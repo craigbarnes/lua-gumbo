@@ -1,3 +1,5 @@
 *.o
 *.so
 tags
+README.html
+large.html

@@ -32,6 +32,13 @@ gumbo/cdef.lua: $(GUMBO_HEADER) cdef.sed
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
 
+README.html: README.md
+	markdown $< > $@
+
+large.html: README.html
+	cat $< > $@
+	for i in `seq 1 800`; do cat $< >> $@; done
+
 tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
@@ -68,7 +75,7 @@ check-all:
 	@$(MAKE) -s check-ffi LUA=lua $(V)
 
 clean:
-	$(RM) $(DYNLIB) gumbo.o
+	$(RM) $(DYNLIB) gumbo.o README.html large.html
 
 ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)

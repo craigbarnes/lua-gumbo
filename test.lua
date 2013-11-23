@@ -1,10 +1,6 @@
 local gumbo = require "gumbo"
 
-if gumbo._FFI == true then
-    io.stderr:write "Using FFI\n"
-else
-    io.stderr:write "Using C module\n"
-end
+io.stderr:write(gumbo._FFI == true and "Using FFI\n" or "Using C module\n")
 
 local input = [[
 <!doctype html>
