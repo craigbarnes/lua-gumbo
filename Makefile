@@ -66,10 +66,10 @@ check-valgrind: check
 
 check-all: V = PRINTF="printf '%-12s %-12s %-12s'"
 check-all:
-	@$(MAKE) -s clean check CC=gcc $(V)
-	@$(MAKE) -s clean check CC=clang $(V)
-	@$(MAKE) -s clean check CC=tcc CFLAGS=-Wall $(V)
-	@$(MAKE) -s clean check LUA=luajit $(V)
+	@$(MAKE) -sB check LUA=lua CC=gcc $(V)
+	@$(MAKE) -sB check LUA=lua CC=clang $(V)
+	@$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall $(V)
+	@$(MAKE) -sB check LUA=luajit $(V)
 	@$(MAKE) -s check-ffi LUA=luajit $(V)
 	@# Uses LuaFFI:
 	@$(MAKE) -s check-ffi LUA=lua $(V)
