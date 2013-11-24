@@ -115,9 +115,10 @@ FFI Bindings
 ------------
 
 In addition to a C module, lua-gumbo also provides an FFI module,
-compatible with both the [LuaJIT FFI] and [luaffi]. Both modules are
-installed by default and the decision of which to use when calling
-`require "gumbo"` is made by [gumbo/init.lua].
+compatible with the [LuaJIT FFI] and [luaffi]. By default, both modules
+are installed, and a call to `require "gumbo"` is resolved via
+[gumbo/init.lua]. The FFI is preferred only when using LuaJIT, but any
+combination of Lua 5.1/Lua 5.2/LuaJIT and FFI module/C module is supported.
 
 Testing
 -------
