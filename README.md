@@ -25,7 +25,7 @@ To build using the included `Makefile`, the following are also required:
 
 Using the module or running the tests requires:
 
-* Lua 5.1/5.2 or LuaJIT 2
+* Lua 5.1/5.2 or [LuaJIT] 2
 
 Installation
 ------------
@@ -111,14 +111,30 @@ Text nodes are represented as tables with 3 fields:
 * `start_pos`: A table representing the source position of the start of the
   text. The structure is the same as described for element nodes above.
 
+FFI Bindings
+------------
+
+In addition to classic C API bindings, lua-gumbo also provides FFI
+bindings, compatible with both the [LuaJIT FFI] and [luaffi]. Both
+bindings are installed by default and the decision of which to use when
+calling `require "gumbo"` is made by [gumbo/init.lua].
+
 Testing
 -------
 
-Some basic tests can be run via `make check`.
+The Makefile provides some targets for running [test.lua] in various
+configurations:
 
-Note: the Gumbo library handles tree-building itself, so the testing
-requirements and scope of lua-gumbo are minimal. It just does a
-tree-to-tree translation, as recommended by the Gumbo documentation.
+* `make check`: checks the C module
+* `make check-ffi`: checks the FFI module
+* `make check-valgrind`: checks the C module, running via [Valgrind]
+* `make check-all`: checks against the following configurations:
+  * C module, compiled with GCC, run with `lua`
+  * C module, compiled with Clang, run with `lua`
+  * C module, compiled with TCC, run with `lua`
+  * C module, compiled with GCC, run with `luajit`
+  * FFI module, run with `luajit`, using the built-in FFI
+  * FFI module, run with `lua`, using luaffi
 
 Todo
 ----
@@ -127,9 +143,6 @@ Todo
   duplicate keys and the original order of keys and also omits source
   positions. A better representation would be storing ordered attribute
   tables in array indices and using hash keys as an index.
-* Update readme:
-  * Mention FFI bindings (and that luaffi is supported)
-  * Mention the various Makefile `check-*` targets
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
 * Add an example of traversing a document and producing Graphviz output
@@ -159,11 +172,16 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Lua]: http://www.lua.org/
+[LuaJIT]: http://luajit.org/
+[LuaJIT FFI]: http://luajit.org/ext_ffi.html
+[luaffi]: https://github.com/jmckaskill/luaffi "Standalone FFI library for Lua"
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
+[Valgrind]: http://valgrind.org/
 [example.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/example.lua
 [test.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/test.lua
+[gumbo/init.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/gumbo/init.lua#L5-L23
 [doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
 [root element]: http://en.wikipedia.org/wiki/Root_element
 [public identifier]: http://dom.spec.whatwg.org/#concept-doctype-publicid
