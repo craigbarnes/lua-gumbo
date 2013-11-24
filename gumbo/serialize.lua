@@ -81,6 +81,13 @@ return function(node)
             end
         elseif node.type == "text" then
             rope:appendf('%s%s\n', indent[level], node.text)
+        elseif node.type == "document" then
+            if node.has_doctype == true then
+                rope:appendf("<!doctype %s>\n", node.name)
+            end
+            for i = 1, #node do
+                serialize(node[i])
+            end
         end
     end
 
