@@ -35,31 +35,55 @@ local indent = setmetatable({[0] = "", [1] = "    "}, {
     end
 })
 
-level = 0
-
-local function serialize(node)
-    if node.type == "element" then
-        -- Add start tag and attributes
-        printf('%s<%s', indent[level], node.tag)
-        for name, value in pairs(node.attr or {}) do
-            printf(' %s="%s"', name, value)
+local function new_rope()
+    local methods = {
+        append = function(self, str)
+            self.n = self.n + 1
+            self[self.n] = str
+        end,
+        appendf = function(self, fmt, ...)
+            self.n = self.n + 1
+            self[self.n] = string.format(fmt, ...)
+        end,
+        concat = function(self)
+            return table.concat(self)
+        end,
+        __length = function(self)
+            return self.n
         end
-        printf(">\n")
-
-        -- Recurse into child nodes
-        level = level + 1
-        for i = 1, #node do
-            serialize(node[i])
-        end
-        level = level - 1
-
-        -- Add end tag if not a void element
-        if not void[node.tag] then
-            printf("%s</%s>\n", indent[level], node.tag)
-        end
-    elseif node.type == "text" then
-        printf('%s%s\n', indent[level], node.text)
-    end
+    }
+    return setmetatable({n = 0}, {__index = methods})
 end
 
-return serialize
+return function(node)
+    local rope = new_rope()
+    local level = 0
+
+    local function serialize(node)
+        if node.type == "element" then
+            -- Add start tag and attributes
+            rope:appendf('%s<%s', indent[level], node.tag)
+            for name, value in pairs(node.attr or {}) do
+                rope:appendf(' %s="%s"', name, value)
+            end
+            rope:append(">\n")
+
+            -- Recurse into child nodes
+            level = level + 1
+            for i = 1, #node do
+                serialize(node[i])
+            end
+            level = level - 1
+
+            -- Add end tag if not a void element
+            if not void[node.tag] then
+                rope:appendf("%s</%s>\n", indent[level], node.tag)
+            end
+        elseif node.type == "text" then
+            rope:appendf('%s%s\n', indent[level], node.text)
+        end
+    end
+
+    serialize(node)
+    return rope:concat()
+end

@@ -7,4 +7,4 @@ local text = file:read("*a")
 file:close()
 local document = assert(gumbo.parse(text))
 
-serialize(document.root)
+io.stdout:write(serialize(document.root))
