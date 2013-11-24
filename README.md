@@ -114,10 +114,10 @@ Text nodes are represented as tables with 3 fields:
 FFI Bindings
 ------------
 
-In addition to classic C API bindings, lua-gumbo also provides FFI
-bindings, compatible with both the [LuaJIT FFI] and [luaffi]. Both
-bindings are installed by default and the decision of which to use when
-calling `require "gumbo"` is made by [gumbo/init.lua].
+In addition to a C module, lua-gumbo also provides an FFI module,
+compatible with both the [LuaJIT FFI] and [luaffi]. Both modules are
+installed by default and the decision of which to use when calling
+`require "gumbo"` is made by [gumbo/init.lua].
 
 Testing
 -------
