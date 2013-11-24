@@ -75,7 +75,9 @@ assert(tab4.start_pos.offset == offset_start)
 assert(tab8.end_pos.offset == offset_end)
 assert(tab4.end_pos.offset == offset_end)
 
--- TODO: test `start_pos` for text nodes
+assert(body[1][1].start_pos.line == 4)
+assert(body[1][1].start_pos.column == 5)
+assert(body[1][1].start_pos.offset == input:find("Test Heading", 1, true) - 1)
 
 assert(head.parse_flags == 11)
 assert(body.parse_flags == 11)
