@@ -37,12 +37,6 @@ local quirksmap = {
     [tonumber(C.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks"
 }
 
-local function add_children(t, children)
-    for i = 0, children.length - 1 do
-        t[i+1] = create_node(ffi_cast("GumboNode*", children.data[i]))
-    end
-end
-
 local function get_attributes(attrs)
     if attrs.length ~= 0 then
         local t = {}
@@ -82,7 +76,9 @@ local function create_document(node)
         has_doctype = document.has_doctype,
         quirks_mode = quirksmap[tonumber(document.doc_type_quirks_mode)]
     }
-    add_children(ret, document.children)
+    for i = 0, document.children.length - 1 do
+        ret[i+1] = create_node(ffi_cast("GumboNode*", document.children.data[i]))
+    end
     return ret
 end
 
@@ -96,7 +92,9 @@ local function create_element(node)
         end_pos = get_sourcepos(element.end_pos),
         attr = get_attributes(element.attributes)
     }
-    add_children(ret, element.children)
+    for i = 0, element.children.length - 1 do
+        ret[i+1] = create_node(ffi_cast("GumboNode*", element.children.data[i]))
+    end
     return ret
 end
 
