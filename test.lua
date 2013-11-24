@@ -1,7 +1,5 @@
 local gumbo = require "gumbo"
 
-io.stderr:write(gumbo._FFI == true and "Using FFI\n" or "Using C module\n")
-
 local input = [[
 <!doctype html>
 <!-- document.root isn't always document[1] -->

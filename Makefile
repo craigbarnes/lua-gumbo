@@ -53,7 +53,7 @@ uninstall:
 
 check: export LGUMBO_USE_FFI=0
 check: all test.lua
-	@$(PRINTF) '$@' 'LUA=$(LUA)  CC=$(CC)'
+	@$(PRINTF) '$@' 'LUA=$(LUA)' 'CC=$(CC)'
 	@LUA_PATH='./?.lua' LUA_CPATH='./?.so;;' $(RUNVIA) $(LUA) test.lua
 
 check-ffi: export LGUMBO_USE_FFI=1
@@ -64,7 +64,7 @@ check-ffi: clean test.lua
 check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
 check-valgrind: check
 
-check-all: V = PRINTF="printf '%-10s %-25s'"
+check-all: V = PRINTF="printf '%-12s %-12s %-12s'"
 check-all:
 	@$(MAKE) -s clean check CC=gcc $(V)
 	@$(MAKE) -s clean check CC=clang $(V)
