@@ -126,16 +126,11 @@ Testing
 The Makefile provides some targets for running [test.lua] in various
 configurations:
 
-* `make check`: checks the C module
-* `make check-ffi`: checks the FFI module
-* `make check-valgrind`: checks the C module, running via [Valgrind]
-* `make check-all`: checks against the following configurations:
-  * C module, compiled with GCC, run with `lua`
-  * C module, compiled with Clang, run with `lua`
-  * C module, compiled with TCC, run with `lua`
-  * C module, compiled with GCC, run with `luajit`
-  * FFI module, run with `luajit`, using the built-in FFI
-  * FFI module, run with `lua`, using luaffi
+* `make check`: Checks the C module
+* `make check-ffi`: Checks the FFI module
+* `make check-valgrind`: Checks the C module, running via [Valgrind]
+* `make check-all`: Checks both modules with various
+  compiler/interpretter/API permutations
 
 Todo
 ----
