@@ -12,11 +12,11 @@ stabilized.
 Requirements
 ------------
 
-Building the module requires, at a minimum:
+Building the C module requires, at a minimum:
 
 * C89 compiler
-* [Lua] headers (`lua.h`, `lauxlib.h`)
-* [Gumbo][Gumbo installation] (`libgumbo.so`, `gumbo.h`)
+* Lua headers
+* [Gumbo][Gumbo installation]
 
 To build using the included `Makefile`, the following are also required:
 
