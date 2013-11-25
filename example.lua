@@ -7,8 +7,8 @@ Usage: %s COMMAND FILENAME
 
 Commands:
 
-   html     Parse and serialize back to HTML using gumbo.serialize
-   table    Parse and serialize to Lua table syntax using Serpent library
+   html     Parse and serialize back to HTML
+   table    Parse and serialize to Lua table constructor syntax
    bench    Parse and exit (for timing the parser via another utility)
    help     Print usage information and exit
 
@@ -38,14 +38,14 @@ local action = {
         io.stdout:write(string.format(usage, arg[0]))
     end,
     html = function(filename)
-        local serialize = require "gumbo.serialize"
+        local serialize = require("gumbo.serialize").to_html
         local document = parse_file(filename)
         io.stdout:write(serialize(document))
     end,
     table = function(filename)
-        local serpent = require "serpent"
+        local serialize = require("gumbo.serialize").to_table
         local document = parse_file(filename)
-        io.stdout:write(serpent.block(document, {comment = false}))
+        io.stdout:write(serialize(document))
     end,
     bench = function(filename)
         parse_file(filename)
