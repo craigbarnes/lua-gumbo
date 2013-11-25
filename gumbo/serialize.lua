@@ -70,23 +70,29 @@ local function to_html(node)
 
     local function serialize(node)
         if node.type == "element" then
+            local length = #node
             -- Add start tag and attributes
             rope:appendf('%s<%s', indent[level], node.tag)
             for name, value in pairs(node.attr or {}) do
                 rope:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
             end
-            rope:append(">\n")
 
             -- Recurse into child nodes
-            level = level + 1
-            for i = 1, #node do
-                serialize(node[i])
+            if length > 0 then
+                rope:append(">\n")
+                level = level + 1
+                for i = 1, length do
+                    serialize(node[i])
+                end
+                level = level - 1
+            else
+                rope:append(">")
             end
-            level = level - 1
 
             -- Add end tag if not a void element
             if not void[node.tag] then
-                rope:appendf("%s</%s>\n", indent[level], node.tag)
+                local i = length > 0 and indent[level] or ""
+                rope:appendf("%s</%s>\n", i, node.tag)
             end
         elseif node.type == "text" then
             rope:appendf('%s%s\n', indent[level], escape(node.text))
