@@ -21,8 +21,17 @@ local void = {
     wbr = true
 }
 
-local function printf(...)
-    io.write(string.format(...))
+local entity_map = {
+    ["&"] = "&amp;",
+    ["<"] = "&lt;",
+    [">"] = "&gt;",
+    ['"'] = "&quot;",
+    ["'"] = "&#x27;",
+    ["/"] = "&#x2F;"
+}
+
+local function escape(s)
+    return string.gsub(s, "[&<>\"'/]", entity_map)
 end
 
 -- Generates a string of spaces for a given level of indentation.
@@ -64,7 +73,7 @@ return function(node)
             -- Add start tag and attributes
             rope:appendf('%s<%s', indent[level], node.tag)
             for name, value in pairs(node.attr or {}) do
-                rope:appendf(' %s="%s"', name, value)
+                rope:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
             end
             rope:append(">\n")
 
@@ -80,7 +89,7 @@ return function(node)
                 rope:appendf("%s</%s>\n", indent[level], node.tag)
             end
         elseif node.type == "text" then
-            rope:appendf('%s%s\n', indent[level], node.text)
+            rope:appendf('%s%s\n', indent[level], escape(node.text))
         elseif node.type == "comment" then
             rope:appendf('%s<!--%s-->\n', indent[level], node.text)
         elseif node.type == "document" then
