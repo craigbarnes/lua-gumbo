@@ -81,6 +81,8 @@ return function(node)
             end
         elseif node.type == "text" then
             rope:appendf('%s%s\n', indent[level], node.text)
+        elseif node.type == "comment" then
+            rope:appendf('%s<!--%s-->\n', indent[level], node.text)
         elseif node.type == "document" then
             if node.has_doctype == true then
                 rope:appendf("<!doctype %s>\n", node.name)
