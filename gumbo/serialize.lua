@@ -87,10 +87,12 @@ local function to_html(node)
                 if not void[node.tag] then
                     rope:appendf("%s</%s>\n", indent[level], node.tag)
                 end
-            else -- put the end tag on the same line
+            else
                 rope:append(">")
                 if not void[node.tag] then
                     rope:appendf("</%s>\n", node.tag)
+                else
+                    rope:append("\n")
                 end
             end
         elseif node.type == "text" then
