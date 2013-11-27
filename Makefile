@@ -1,6 +1,6 @@
 CC      = gcc
-CFLAGS  = -O2 -std=c89 -Wall -Wextra -Wpedantic \
-          -Wswitch-enum -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
+CFLAGS  = -O2 -std=c89 -pedantic -Wall -Wextra -Wswitch-enum \
+          -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
 LDFLAGS = -shared
 DYNLIB  = cgumbo.so
 PREFIX  = /usr/local
