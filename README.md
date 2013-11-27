@@ -130,7 +130,8 @@ configurations:
 * `make check-ffi`: tests the FFI module
 * `make check-valgrind`: tests the C module, running via [Valgrind]
 * `make check-all`: tests both modules, using various
-  compiler/interpretter permutations
+  compiler/interpretter permutations (requires GCC, Clang, TCC, Lua,
+  LuaJIT and luaffi).
 
 Todo
 ----
