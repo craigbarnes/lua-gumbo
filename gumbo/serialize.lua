@@ -77,22 +77,21 @@ local function to_html(node)
                 rope:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
             end
 
-            -- Recurse into child nodes
-            if length > 0 then
+            if length > 0 then -- recurse into child nodes
                 rope:append(">\n")
                 level = level + 1
                 for i = 1, length do
                     serialize(node[i])
                 end
                 level = level - 1
-            else
+                if not void[node.tag] then
+                    rope:appendf("%s</%s>\n", indent[level], node.tag)
+                end
+            else -- put the end tag on the same line
                 rope:append(">")
-            end
-
-            -- Add end tag if not a void element
-            if not void[node.tag] then
-                local i = length > 0 and indent[level] or ""
-                rope:appendf("%s</%s>\n", i, node.tag)
+                if not void[node.tag] then
+                    rope:appendf("</%s>\n", node.tag)
+                end
             end
         elseif node.type == "text" then
             rope:appendf('%s%s\n', indent[level], escape(node.text))
