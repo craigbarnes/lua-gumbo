@@ -137,12 +137,11 @@ configurations:
 Todo
 ----
 
-* Fix representation of attributes. Using a key-value table loses
-  duplicate keys and the original order of keys and also omits source
-  positions. A better representation would be storing ordered attribute
-  tables in array indices and using hash keys as an index.
+* Fix representation of attributes. Using a key-value table makes the order
+  unpredictable and omits source positions. A better structure would be
+  to store ordered attribute tables in array indices and use hash keys
+  as an index.
 * Finish implementing HTML/table serialization.
-* Add tests for serialization.
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
 * Return an array of parse errors as a second return value (requires
