@@ -82,4 +82,8 @@ assert(body.parse_flags == 11)
 
 assert(type(gumbo.parse_file) == "function")
 
+-- Check that stack doesn't overflow when pushing very deeply nested elements.
+-- Correct use of luaL_checkstack() should prevent this for the C module.
+assert(gumbo.parse(string.rep("<div>", 500)))
+
 print "All tests passed"
