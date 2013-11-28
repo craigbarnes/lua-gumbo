@@ -34,9 +34,8 @@ local function escape(s)
     return string.gsub(s, "[&<>\"'/]", entity_map)
 end
 
--- Generates a string of spaces for a given level of indentation.
--- The generated strings are memoized in a table, since once a level is
--- reached, indents at that level are almost certain to be used again.
+-- Generates a string of spaces for a given level of indentation and
+-- memoizes it to avoid creating excess garbage.
 local indent = setmetatable({[0] = "", [1] = "    "}, {
     __index = function(self, i)
         self[i] = string.rep(self[1], i)
