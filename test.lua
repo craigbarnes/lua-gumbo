@@ -1,4 +1,5 @@
 local gumbo = require "gumbo"
+local to_table = require "gumbo.serialize".to_table
 
 local input = [[
 <!doctype html>
@@ -85,5 +86,12 @@ assert(type(gumbo.parse_file) == "function")
 -- Check that stack doesn't overflow when pushing very deeply nested elements.
 -- Correct use of luaL_checkstack() should prevent this for the C module.
 assert(gumbo.parse(string.rep("<div>", 500)))
+
+do -- Check that serialized tables are loadable
+    local s = assert(to_table(document))
+    local f = assert(load("return " .. s, nil, "t"))
+    local t = assert(f())
+    assert(t.has_doctype == true)
+end
 
 print "All tests passed"
