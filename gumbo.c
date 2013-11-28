@@ -81,9 +81,11 @@ static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
 }
 
 static void create_text_node(lua_State *L, const GumboText *text) {
-    lua_createtable(L, 0, 3);
+    lua_createtable(L, 0, 5);
     add_string(L, "text", text->text);
-    add_sourcepos(L, "start_pos", &text->start_pos);
+    add_integer(L, "line", text->start_pos.line);
+    add_integer(L, "column", text->start_pos.column);
+    add_integer(L, "offset", text->start_pos.offset);
 }
 
 static void add_quirks_mode(lua_State *L, const GumboQuirksModeEnum qm) {

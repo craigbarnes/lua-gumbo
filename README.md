@@ -108,8 +108,9 @@ Text nodes are represented as tables with 3 fields:
 * `type`: The node type. One of `text`, `whitespace`, `comment` or `cdata`.
 * `text`: The text contents. Does not include delimiters for `comment` or
   `cdata` types.
-* `start_pos`: A table representing the source position of the start of the
-  text. The structure is the same as described for element nodes above.
+* `line`: The line number on which the text begins (counting from 1).
+* `column`: The column number at which the text begins (counting from 1).
+* `offset`: The byte offset of the first byte of the text (counting from 0).
 
 FFI Bindings
 ------------

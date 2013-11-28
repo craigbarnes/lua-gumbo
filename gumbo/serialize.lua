@@ -137,10 +137,14 @@ local function to_table(node)
             level = level - 1
             rope:appendf("%s},\n", indent[level])
         elseif node.text then
-            rope:appendf("%s{\n", indent[level])
-            rope:append_qpair(indent[level+1], "type", node.type)
-            rope:append_qpair(indent[level+1], "text", node.text)
-            rope:appendf("%s},\n", indent[level])
+            local i1, i2 = indent[level], indent[level+1]
+            rope:appendf("%s{\n", i1)
+            rope:append_qpair(i2, "type", node.type)
+            rope:append_qpair(i2, "text", node.text)
+            rope:appendf("%s%s = %d\n", i2, "line", node.line)
+            rope:appendf("%s%s = %d\n", i2, "column", node.column)
+            rope:appendf("%s%s = %d\n", i2, "offset", node.offset)
+            rope:appendf("%s},\n", i1)
         elseif node.type == "document" then
             rope:append("{\n")
             level = level + 1

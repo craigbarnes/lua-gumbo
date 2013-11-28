@@ -103,7 +103,9 @@ local function create_text(node)
     return {
         type = typemap[tonumber(node.type)],
         text = ffi_string(text.text),
-        start_pos = get_sourcepos(text.start_pos)
+        line = text.start_pos.line,
+        column = text.start_pos.column,
+        offset = text.start_pos.offset
     }
 end
 
