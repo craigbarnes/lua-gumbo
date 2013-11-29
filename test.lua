@@ -54,6 +54,7 @@ assert(body[9].text == " comment node ")
 assert(#document == 2)
 assert(#root == 2)
 assert(#body == 10)
+assert(#body[1] == 1)
 assert(#body[4] == 0)
 assert(#body[7] == 0)
 
