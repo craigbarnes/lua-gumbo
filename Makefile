@@ -35,7 +35,7 @@ README.html: README.md
 	markdown $< > $@
 
 large.html: README.html
-	cat $< > $@
+	$(RM) $@
 	for i in `seq 1 800`; do cat $< >> $@; done
 
 tags: gumbo.c $(GUMBO_HEADER)
@@ -67,8 +67,7 @@ check-all:
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
 	$(MAKE) -sB check LUA=luajit
 	$(MAKE) -s check-ffi LUA=luajit
-	@# Uses LuaFFI:
-	$(MAKE) -s check-ffi LUA=lua
+	$(MAKE) -s check-ffi LUA=lua #FFI=luaffi
 
 clean:
 	$(RM) $(DYNLIB) gumbo.o README.html large.html
