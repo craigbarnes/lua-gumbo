@@ -43,7 +43,7 @@ local indent = setmetatable({[0] = "", [1] = "    "}, {
     end
 })
 
-local function new_rope()
+local function Rope()
     local methods = {
         append = function(self, str)
             self.n = self.n + 1
@@ -64,7 +64,7 @@ local function new_rope()
 end
 
 local function to_html(node)
-    local rope = new_rope()
+    local rope = Rope()
     local level = 0
 
     local function serialize(node)
@@ -113,7 +113,7 @@ local function to_html(node)
 end
 
 local function to_table(node)
-    local rope = new_rope()
+    local rope = Rope()
     local level = 0
 
     function rope:append_qpair(indent, name, value)
