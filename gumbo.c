@@ -24,10 +24,16 @@
 #include <lauxlib.h>
 #include <gumbo.h>
 
-#define add_string(L, K, V) (lua_pushstring(L, V), lua_setfield(L, -2, K))
-#define add_literal(L, K, V) (lua_pushliteral(L, V), lua_setfield(L, -2, K))
-#define add_integer(L, K, V) (lua_pushinteger(L, V), lua_setfield(L, -2, K))
-#define add_boolean(L, K, V) (lua_pushboolean(L, V), lua_setfield(L, -2, K))
+#define add_field(L, name, value, type) ( \
+    lua_push##type(L, value), \
+    lua_setfield(L, -2, name) \
+)
+
+#define add_string(L, name, value)  add_field(L, name, value, string)
+#define add_literal(L, name, value) add_field(L, name, value, literal)
+#define add_integer(L, name, value) add_field(L, name, value, integer)
+#define add_boolean(L, name, value) add_field(L, name, value, boolean)
+
 static void push_node(lua_State *L, const GumboNode *node);
 
 static void add_children(lua_State *L, const GumboVector *children) {
