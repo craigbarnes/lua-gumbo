@@ -1,18 +1,18 @@
-CC      = gcc
-CFLAGS  = -O2 -fPIC -std=c89 -pedantic -Wall -Wextra -Wswitch-enum \
-          -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
-LDFLAGS = -shared
-DYNLIB  = cgumbo.so
-PREFIX  = /usr/local
-LUAVER  = 5.1
-LUADIR  = $(PREFIX)/share/lua/$(LUAVER)
-LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
-LUA     = lua
-LUA_PATH= ./?.lua;./?/init.lua
-MKDIR   = mkdir -p
-INSTALL = install -p -m 0644
-INSTALLX= install -p -m 0755
-RM      = rm -f
+CC       = gcc
+CFLAGS   = -O2 -fPIC -std=c89 -pedantic -Wall -Wextra -Wswitch-enum \
+           -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
+LDFLAGS  = -shared
+DYNLIB   = cgumbo.so
+PREFIX   = /usr/local
+LUAVER   = 5.1
+LUADIR   = $(PREFIX)/share/lua/$(LUAVER)
+LUACDIR  = $(PREFIX)/lib/lua/$(LUAVER)
+LUA      = lua
+LUA_PATH = ./?.lua;./?/init.lua
+MKDIR    = mkdir -p
+INSTALL  = install -p -m 0644
+INSTALLX = install -p -m 0755
+RM       = rm -f
 
 # Ensure unit tests can only run using modules in current directory
 export LUA_PATH
