@@ -1,5 +1,5 @@
 CC       = gcc
-CFLAGS   = -O2 -fPIC -std=c89 -pedantic -Wall -Wextra -Wswitch-enum \
+CFLAGS   = -g -O2 -fPIC -std=c89 -pedantic -Wall -Wextra -Wswitch-enum \
            -Wwrite-strings -Wcast-qual -Wc++-compat -Wshadow
 LDFLAGS  = -shared
 DYNLIB   = cgumbo.so
