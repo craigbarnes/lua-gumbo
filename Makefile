@@ -8,10 +8,14 @@ LUAVER  = 5.1
 LUADIR  = $(PREFIX)/share/lua/$(LUAVER)
 LUACDIR = $(PREFIX)/lib/lua/$(LUAVER)
 LUA     = lua
+LUA_PATH= ./?.lua;./?/init.lua
 MKDIR   = mkdir -p
 INSTALL = install -p -m 0644
 INSTALLX= install -p -m 0755
 RM      = rm -f
+
+# Ensure unit tests can only run using modules in current directory
+export LUA_PATH
 
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
@@ -50,13 +54,12 @@ uninstall:
 	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
-check: export LGUMBO_USE_FFI=0
 check: all test.lua
-	@LUA_PATH='./?.lua' LUA_CPATH='./?.so;;' $(RUNVIA) $(LUA) test.lua
+	@LGUMBO_USE_FFI=0 LUA_CPATH='./?.so' $(RUNVIA) $(LUA) test.lua
 
-check-ffi: export LGUMBO_USE_FFI=1
+check-ffi: LUA = luajit
 check-ffi: clean test.lua
-	@LUA_PATH='./?.lua' $(RUNVIA) $(LUA) test.lua
+	@LGUMBO_USE_FFI=1 $(RUNVIA) $(LUA) test.lua
 
 check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
 check-valgrind: check
