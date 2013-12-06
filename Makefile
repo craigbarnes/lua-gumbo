@@ -58,7 +58,7 @@ check: all test.lua
 	@LGUMBO_USE_FFI=0 LUA_CPATH='./?.so' $(RUNVIA) $(LUA) test.lua
 
 check-ffi: LUA = luajit
-check-ffi: clean test.lua
+check-ffi: test.lua
 	@LGUMBO_USE_FFI=1 $(RUNVIA) $(LUA) test.lua
 
 check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
