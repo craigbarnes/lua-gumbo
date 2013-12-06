@@ -63,6 +63,21 @@ local function Rope()
     return setmetatable({n = 0}, {__index = methods})
 end
 
+local function wrap(text, indent)
+    local limit = 78
+    local indent_width = #indent
+    local pos = 1 - indent_width
+    local str = text:gsub("(%s+)()(%S+)()", function(_, start, word, stop)
+        if stop - pos > limit then
+            pos = start - indent_width
+            return "\n" .. indent .. word
+        else
+            return " " .. word
+        end
+    end)
+    return indent .. str .. "\n"
+end
+
 local function to_html(node)
     local rope = Rope()
     local level = 0
@@ -95,7 +110,7 @@ local function to_html(node)
                 end
             end
         elseif node.type == "text" then
-            rope:appendf('%s%s\n', indent[level], escape(node.text))
+            rope:append(wrap(escape(node.text), indent[level]))
         elseif node.type == "comment" then
             rope:appendf('%s<!--%s-->\n', indent[level], node.text)
         elseif node.type == "document" then

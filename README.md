@@ -142,8 +142,6 @@ Todo
   to store ordered attribute tables in array indices and use hash keys
   as an index.
 * Finish implementing HTML/table serialization.
-  * Implement paragraph wrapping for long text blocks.
-  * Fold long runs of whitespace within text nodes into a single space.
   * Collapse newlines around tags of inline elements and short block elements.
   * Implement a "minified" mode for HTML serialization
   * Handle `<style>` and `<script>` elements properly.
