@@ -24,7 +24,7 @@ local function check(cond, msg)
     end
 end
 
-local action = {
+local actions = {
     help = function()
         io.stdout:write(string.format(usage, arg[0]))
     end,
@@ -44,7 +44,6 @@ local action = {
 }
 
 local command = check(arg[1], "no command specified")
-local filename = arg[2]
-check(action[command], "invalid command")
-check(filename or command == "help", "no filename specified")
-action[command](filename)
+local action = check(actions[command], "invalid command")
+local filename = check(command == "help" and "" or arg[2], "missing filename")
+action(filename)
