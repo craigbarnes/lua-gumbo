@@ -24,17 +24,15 @@ local void = {
     wbr = true
 }
 
-local entity_map = {
-    ["&"] = "&amp;",
-    ["<"] = "&lt;",
-    [">"] = "&gt;",
-    ['"'] = "&quot;",
-    ["'"] = "&#x27;",
-    ["/"] = "&#x2F;"
-}
-
 local function escape(s)
-    return string.gsub(s, "[&<>\"'/]", entity_map)
+    return s:gsub("[&<>\"'/]", {
+        ["&"] = "&amp;",
+        ["<"] = "&lt;",
+        [">"] = "&gt;",
+        ['"'] = "&quot;",
+        ["'"] = "&#x27;",
+        ["/"] = "&#x2F;"
+    })
 end
 
 local function to_html(node)

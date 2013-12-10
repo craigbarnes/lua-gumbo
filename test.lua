@@ -1,5 +1,5 @@
 local gumbo = require "gumbo"
-local to_table = require "gumbo.serialize".to_table
+local to_table = require "gumbo.serialize.table"
 
 local input = [[
 <!doctype html>
