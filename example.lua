@@ -29,12 +29,12 @@ local actions = {
         io.stdout:write(string.format(usage, arg[0]))
     end,
     html = function(filename)
-        local serialize = require("gumbo.serialize").to_html
+        local serialize = require("gumbo.serialize.html")
         local document = check(gumbo.parse_file(filename))
         io.stdout:write(serialize(document))
     end,
     table = function(filename)
-        local serialize = require("gumbo.serialize").to_table
+        local serialize = require("gumbo.serialize.table")
         local document = check(gumbo.parse_file(filename))
         io.stdout:write(serialize(document))
     end,
