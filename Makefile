@@ -8,14 +8,13 @@ LUAVER   = 5.1
 LUADIR   = $(PREFIX)/share/lua/$(LUAVER)
 LUACDIR  = $(PREFIX)/lib/lua/$(LUAVER)
 LUA      = lua
-LUA_PATH = ./?.lua;./?/init.lua
 MKDIR    = mkdir -p
 INSTALL  = install -p -m 0644
 INSTALLX = install -p -m 0755
 RM       = rm -f
 
 # Ensure unit tests can only run using modules in current directory
-export LUA_PATH
+export LUA_PATH = ./?.lua;./?/init.lua
 
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
