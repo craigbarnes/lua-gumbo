@@ -38,8 +38,7 @@ static void push_node(lua_State *L, const GumboNode *node);
 
 static void add_children(lua_State *L, const GumboVector *children) {
     const unsigned int length = children->length;
-    unsigned int i;
-    for (i = 0; i < length; i++) {
+    for (unsigned int i = 0; i < length; i++) {
         push_node(L, (const GumboNode *)children->data[i]);
         lua_rawseti(L, -2, i + 1);
     }
@@ -48,9 +47,8 @@ static void add_children(lua_State *L, const GumboVector *children) {
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length != 0) {
-        unsigned int i;
         lua_createtable(L, 0, length);
-        for (i = 0; i < length; i++) {
+        for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
             add_string(L, attr->name, attr->value);
         }
