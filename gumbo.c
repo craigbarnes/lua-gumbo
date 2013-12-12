@@ -15,11 +15,7 @@
  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
+#include <stddef.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
