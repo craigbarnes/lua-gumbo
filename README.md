@@ -145,6 +145,7 @@ Todo
   * Collapse newlines around tags of inline elements and short block elements.
   * Implement a "minified" mode for HTML serialization
   * Handle `<style>` and `<script>` elements properly.
+  * Don't wrap text inside `<pre>` elements.
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
 * Return an array of parse errors as a second return value (requires
