@@ -16,20 +16,32 @@
 */
 
 #include <stddef.h>
+#include <stdbool.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
 
-#define add_field(L, name, value, type) ( \
-    lua_push##type(L, value), \
-    lua_setfield(L, -2, name) \
+#define add_literal(L, k, v) ( \
+    lua_pushliteral(L, v), \
+    lua_setfield(L, -2, k) \
 )
 
-#define add_string(L, name, value)  add_field(L, name, value, string)
-#define add_literal(L, name, value) add_field(L, name, value, literal)
-#define add_integer(L, name, value) add_field(L, name, value, integer)
-#define add_boolean(L, name, value) add_field(L, name, value, boolean)
+static inline void add_string(lua_State *L, const char *k, const char *v) {
+    lua_pushstring(L, v);
+    lua_setfield(L, -2, k);
+}
 
+static inline void add_integer(lua_State *L, const char *k, const int v) {
+    lua_pushinteger(L, v);
+    lua_setfield(L, -2, k);
+}
+
+static inline void add_boolean(lua_State *L, const char *k, const bool v) {
+    lua_pushboolean(L, v);
+    lua_setfield(L, -2, k);
+}
+
+// Forward declaration -- to allow mutual recursion with add_children()
 static void push_node(lua_State *L, const GumboNode *node);
 
 static void add_children(lua_State *L, const GumboVector *children) {
