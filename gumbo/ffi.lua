@@ -22,20 +22,28 @@ local ffi_cast = ffi.cast
 local tonumber = tonumber
 local create_node
 
-local typemap = {
+local typemap = setmetatable({
     [tonumber(C.GUMBO_NODE_DOCUMENT)] = "document",
     [tonumber(C.GUMBO_NODE_ELEMENT)] = "element",
     [tonumber(C.GUMBO_NODE_TEXT)] = "text",
     [tonumber(C.GUMBO_NODE_CDATA)] = "cdata",
     [tonumber(C.GUMBO_NODE_COMMENT)] = "comment",
     [tonumber(C.GUMBO_NODE_WHITESPACE)] = "whitespace"
-}
+}, {
+    __index = function(self, i)
+        error "Error: invalid node type"
+    end
+})
 
-local quirksmap = {
+local quirksmap = setmetatable({
     [tonumber(C.GUMBO_DOCTYPE_NO_QUIRKS)] = "no-quirks",
     [tonumber(C.GUMBO_DOCTYPE_QUIRKS)] = "quirks",
     [tonumber(C.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks"
-}
+}, {
+    __index = function(self, i)
+        error "Error: invalid quirks mode"
+    end
+})
 
 local function get_attributes(attrs)
     if attrs.length ~= 0 then
