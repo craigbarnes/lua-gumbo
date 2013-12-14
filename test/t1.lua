@@ -15,12 +15,21 @@ return {
     {
         type = "element",
         tag = "html",
+        line = 3,
+        column = 1,
+        offset = 64,
         {
             type = "element",
             tag = "head",
+            line = 3,
+            column = 1,
+            offset = 64,
             {
                 type = "element",
                 tag = "title",
+                line = 3,
+                column = 1,
+                offset = 64,
                 {
                     type = "text",
                     text = "Test Document",
@@ -40,9 +49,15 @@ return {
         {
             type = "element",
             tag = "body",
+            line = 4,
+            column = 1,
+            offset = 93,
             {
                 type = "element",
                 tag = "h1",
+                line = 4,
+                column = 1,
+                offset = 93,
                 {
                     type = "text",
                     text = "Test Heading",
@@ -61,9 +76,15 @@ return {
             {
                 type = "element",
                 tag = "p",
+                line = 5,
+                column = 1,
+                offset = 115,
                 {
                     type = "element",
                     tag = "a",
+                    line = 5,
+                    column = 4,
+                    offset = 118,
                     attr = {
                         href = "foobar.html",
                     },
@@ -86,6 +107,9 @@ return {
             {
                 type = "element",
                 tag = "iNValID",
+                line = 6,
+                column = 1,
+                offset = 151,
                 attr = {
                     foo = "bar",
                 },
@@ -107,6 +131,9 @@ return {
             {
                 type = "element",
                 tag = "p",
+                line = 7,
+                column = 8,
+                offset = 185,
                 attr = {
                     class = "empty",
                 },

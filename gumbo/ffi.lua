@@ -58,14 +58,6 @@ local function get_tag_name(element)
     end
 end
 
-local function get_sourcepos(pos)
-    return {
-        line = pos.line,
-        column = pos.column,
-        offset = pos.offset
-    }
-end
-
 local function create_document(node)
     local document = node.v.document
     local ret = {
@@ -87,9 +79,10 @@ local function create_element(node)
     local ret = {
         type = "element",
         tag = get_tag_name(element),
+        line = element.start_pos.line,
+        column = element.start_pos.column,
+        offset = element.start_pos.offset,
         parse_flags = tonumber(node.parse_flags),
-        start_pos = get_sourcepos(element.start_pos),
-        end_pos = get_sourcepos(element.end_pos),
         attr = get_attributes(element.attributes)
     }
     for i = 0, element.children.length - 1 do

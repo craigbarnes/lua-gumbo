@@ -63,18 +63,6 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "tag");
 }
 
-static void add_sourcepos (
-    lua_State *L,
-    const char *field_name,
-    const GumboSourcePosition *position
-){
-    lua_createtable(L, 0, 3);
-    add_integer(L, "line", position->line);
-    add_integer(L, "column", position->column);
-    add_integer(L, "offset", position->offset);
-    lua_setfield(L, -2, field_name);
-}
-
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
     if (flags != GUMBO_INSERTION_NORMAL)
         add_integer(L, "parse_flags", flags);
@@ -123,11 +111,12 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
-        lua_createtable(L, element->children.length, 6);
+        lua_createtable(L, element->children.length, 7);
         add_literal(L, "type", "element");
         add_tagname(L, element);
-        add_sourcepos(L, "start_pos", &element->start_pos);
-        add_sourcepos(L, "end_pos", &element->end_pos);
+        add_integer(L, "line", element->start_pos.line);
+        add_integer(L, "column", element->start_pos.column);
+        add_integer(L, "offset", element->start_pos.offset);
         add_parseflags(L, node->parse_flags);
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);

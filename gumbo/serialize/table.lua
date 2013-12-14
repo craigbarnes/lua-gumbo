@@ -20,15 +20,19 @@ local function to_table(node)
         if node.type == "element" then
             rope:appendf("%s{\n", indent[level])
             level = level + 1
-            rope:append_qpair(indent[level], "type", "element")
-            rope:append_qpair(indent[level], "tag", node.tag)
+            local i1 = indent[level]
+            rope:append_qpair(i1, "type", "element")
+            rope:append_qpair(i1, "tag", node.tag)
+            rope:appendf("%s%s = %d,\n", i1, "line", node.line)
+            rope:appendf("%s%s = %d,\n", i1, "column", node.column)
+            rope:appendf("%s%s = %d,\n", i1, "offset", node.offset)
             if node.attr then -- add attributes
-                local indent1, indent2 = indent[level], indent[level+1]
-                rope:appendf("%sattr = {\n", indent1)
+                local i2 = indent[level+1]
+                rope:appendf("%sattr = {\n", i1)
                 for name, value in pairs(node.attr) do
-                    rope:append_qpair(indent2, name, value)
+                    rope:append_qpair(i2, name, value)
                 end
-                rope:appendf("%s},\n", indent1)
+                rope:appendf("%s},\n", i1)
             end
             for i = 1, #node do -- add children
                 serialize(node[i], i)
