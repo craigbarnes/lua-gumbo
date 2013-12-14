@@ -18,12 +18,22 @@ return {
         line = 3,
         column = 1,
         offset = 64,
+        parse_flags = {
+            implicit_end_tag = true,
+            insertion_implied = true,
+            insertion_by_parser = true,
+        },
         {
             type = "element",
             tag = "head",
             line = 3,
             column = 1,
             offset = 64,
+            parse_flags = {
+                implicit_end_tag = true,
+                insertion_implied = true,
+                insertion_by_parser = true,
+            },
             {
                 type = "element",
                 tag = "title",
@@ -52,6 +62,11 @@ return {
             line = 4,
             column = 1,
             offset = 93,
+            parse_flags = {
+                implicit_end_tag = true,
+                insertion_implied = true,
+                insertion_by_parser = true,
+            },
             {
                 type = "element",
                 tag = "h1",

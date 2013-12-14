@@ -144,7 +144,6 @@ Todo
   * Implement a "minified" mode for HTML serialization
   * Handle `<style>` and `<script>` elements properly.
   * Don't wrap text inside `<pre>` elements.
-* Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
 * Test with the [html5lib-tests](https://github.com/html5lib/html5lib-tests)
   `tree-construction` units.

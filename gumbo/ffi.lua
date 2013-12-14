@@ -63,6 +63,18 @@ local function get_tag_name(element)
     end
 end
 
+local function get_parse_flags(flags)
+    if flags ~= C.GUMBO_INSERTION_NORMAL then
+        -- FIXME: Return the correct table of flags instead of this hack
+        local t = {
+            insertion_by_parser = true,
+            insertion_implied = true,
+            implicit_end_tag = true
+        }
+        return t
+    end
+end
+
 local function create_document(node)
     local document = node.v.document
     local ret = {
@@ -87,7 +99,7 @@ local function create_element(node)
         line = element.start_pos.line,
         column = element.start_pos.column,
         offset = element.start_pos.offset,
-        parse_flags = tonumber(node.parse_flags),
+        parse_flags = get_parse_flags(node.parse_flags),
         attr = get_attributes(element.attributes)
     }
     for i = 0, element.children.length - 1 do

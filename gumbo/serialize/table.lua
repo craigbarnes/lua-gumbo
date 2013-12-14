@@ -16,21 +16,30 @@ local function to_table(node)
     end
 
     -- TODO: This code is ugly as sin. Refactor it.
+    -- TODO: Use '%q' format specifier instead of manual escaping/append_qpair?
+    -- TODO: Refactor attr/parse_flags serialization into a common function?
     local function serialize(node)
         if node.type == "element" then
             rope:appendf("%s{\n", indent[level])
             level = level + 1
             local i1 = indent[level]
+            local i2 = indent[level+1]
             rope:append_qpair(i1, "type", "element")
             rope:append_qpair(i1, "tag", node.tag)
             rope:appendf("%s%s = %d,\n", i1, "line", node.line)
             rope:appendf("%s%s = %d,\n", i1, "column", node.column)
             rope:appendf("%s%s = %d,\n", i1, "offset", node.offset)
             if node.attr then -- add attributes
-                local i2 = indent[level+1]
                 rope:appendf("%sattr = {\n", i1)
                 for name, value in pairs(node.attr) do
                     rope:append_qpair(i2, name, value)
+                end
+                rope:appendf("%s},\n", i1)
+            end
+            if node.parse_flags then -- add parse flags
+                rope:appendf("%sparse_flags = {\n", i1)
+                for name, value in pairs(node.parse_flags) do
+                    rope:appendf("%s%s = %s,\n", i2, name, value)
                 end
                 rope:appendf("%s},\n", i1)
             end
