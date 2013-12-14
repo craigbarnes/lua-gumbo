@@ -22,6 +22,11 @@ local ffi_cast = ffi.cast
 local tonumber = tonumber
 local create_node
 
+local have_tnew, tnew = pcall(require, "table.new")
+if not have_tnew then
+    tnew = function(narr, nrec) return {} end
+end
+
 local typemap = {
     [tonumber(C.GUMBO_NODE_DOCUMENT)] = "document",
     [tonumber(C.GUMBO_NODE_ELEMENT)] = "element",
@@ -77,35 +82,35 @@ end
 
 local function create_document(node)
     local document = node.v.document
-    local ret = {
-        type = "document",
-        name = ffi_string(document.name),
-        public_identifier = ffi_string(document.public_identifier),
-        system_identifier = ffi_string(document.system_identifier),
-        has_doctype = document.has_doctype,
-        quirks_mode = quirksmap[tonumber(document.doc_type_quirks_mode)]
-    }
-    for i = 0, document.children.length - 1 do
-        ret[i+1] = create_node(ffi_cast("GumboNode*", document.children.data[i]))
+    local length = document.children.length
+    local t = tnew(length, 7)
+    t.type = "document"
+    t.name = ffi_string(document.name)
+    t.public_identifier = ffi_string(document.public_identifier)
+    t.system_identifier = ffi_string(document.system_identifier)
+    t.has_doctype = document.has_doctype
+    t.quirks_mode = quirksmap[tonumber(document.doc_type_quirks_mode)]
+    for i = 0, length - 1 do
+        t[i+1] = create_node(ffi_cast("GumboNode*", document.children.data[i]))
     end
-    return ret
+    return t
 end
 
 local function create_element(node)
     local element = node.v.element
-    local ret = {
-        type = "element",
-        tag = get_tag_name(element),
-        line = element.start_pos.line,
-        column = element.start_pos.column,
-        offset = element.start_pos.offset,
-        parse_flags = get_parse_flags(node.parse_flags),
-        attr = get_attributes(element.attributes)
-    }
-    for i = 0, element.children.length - 1 do
-        ret[i+1] = create_node(ffi_cast("GumboNode*", element.children.data[i]))
+    local length = element.children.length
+    local t = tnew(length, 7)
+    t.type = "element"
+    t.tag = get_tag_name(element)
+    t.line = element.start_pos.line
+    t.column = element.start_pos.column
+    t.offset = element.start_pos.offset
+    t.parse_flags = get_parse_flags(node.parse_flags)
+    t.attr = get_attributes(element.attributes)
+    for i = 0, length - 1 do
+        t[i+1] = create_node(ffi_cast("GumboNode*", element.children.data[i]))
     end
-    return ret
+    return t
 end
 
 local function create_text(node)
@@ -120,7 +125,7 @@ local function create_text(node)
 end
 
 create_node = function(node)
-    if tonumber(node.type) == tonumber(C.GUMBO_NODE_ELEMENT) then
+    if node.type == C.GUMBO_NODE_ELEMENT then
         return create_element(node)
     else
         return create_text(node)
