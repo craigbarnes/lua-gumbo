@@ -53,23 +53,22 @@ uninstall:
 	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
-check: all test.lua
-	@LGUMBO_USE_FFI=0 LUA_CPATH='./?.so' $(RUNVIA) $(LUA) test.lua
+check: all
+	@$(LUA) test/compare.lua test/t1.html test/t1.lua
 
+check-ffi: export LGUMBO_USE_FFI = 1
 check-ffi: LUA = luajit
-check-ffi: test.lua
-	@LGUMBO_USE_FFI=1 $(RUNVIA) $(LUA) test.lua
+check-ffi: check
 
-check-valgrind: RUNVIA = valgrind -q --leak-check=full --error-exitcode=1
+check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
 check-valgrind: check
 
 check-all:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
-	$(MAKE) -sB check LUA=luajit
-	$(MAKE) -s check-ffi LUA=luajit
-	$(MAKE) -s check-ffi LUA=lua #FFI=luaffi
+	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=0
+	$(MAKE) -s  check LUA=luajit LGUMBO_USE_FFI=1
 
 clean:
 	$(RM) $(DYNLIB) gumbo.o README.html large.html

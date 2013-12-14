@@ -1,0 +1,137 @@
+return {
+    type = "document",
+    has_doctype = true,
+    name = "html",
+    system_identifier = "",
+    public_identifier = "",
+    quirks_mode = "no-quirks",
+    {
+        type = "comment",
+        text = " document.root isn't always document[1] ",
+        line = 2,
+        column = 1,
+        offset = 16,
+    },
+    {
+        type = "element",
+        tag = "html",
+        {
+            type = "element",
+            tag = "head",
+            {
+                type = "element",
+                tag = "title",
+                {
+                    type = "text",
+                    text = "Test Document",
+                    line = 3,
+                    column = 8,
+                    offset = 71,
+                },
+            },
+            {
+                type = "whitespace",
+                text = "\n",
+                line = 3,
+                column = 29,
+                offset = 92,
+            },
+        },
+        {
+            type = "element",
+            tag = "body",
+            {
+                type = "element",
+                tag = "h1",
+                {
+                    type = "text",
+                    text = "Test Heading",
+                    line = 4,
+                    column = 5,
+                    offset = 97,
+                },
+            },
+            {
+                type = "whitespace",
+                text = "\n",
+                line = 4,
+                column = 22,
+                offset = 114,
+            },
+            {
+                type = "element",
+                tag = "p",
+                {
+                    type = "element",
+                    tag = "a",
+                    attr = {
+                        href = "foobar.html",
+                    },
+                    {
+                        type = "text",
+                        text = "Quux",
+                        line = 5,
+                        column = 24,
+                        offset = 138,
+                    },
+                },
+            },
+            {
+                type = "whitespace",
+                text = "\n",
+                line = 5,
+                column = 36,
+                offset = 150,
+            },
+            {
+                type = "element",
+                tag = "iNValID",
+                attr = {
+                    foo = "bar",
+                },
+                {
+                    type = "text",
+                    text = "abc",
+                    line = 6,
+                    column = 20,
+                    offset = 170,
+                },
+            },
+            {
+                type = "whitespace",
+                text = "\n\t",
+                line = 6,
+                column = 33,
+                offset = 183,
+            },
+            {
+                type = "element",
+                tag = "p",
+                attr = {
+                    class = "empty",
+                },
+            },
+            {
+                type = "whitespace",
+                text = "\n",
+                line = 7,
+                column = 27,
+                offset = 204,
+            },
+            {
+                type = "comment",
+                text = " comment node ",
+                line = 8,
+                column = 1,
+                offset = 205,
+            },
+            {
+                type = "whitespace",
+                text = "\n",
+                line = 8,
+                column = 22,
+                offset = 226,
+            },
+        },
+    },
+}
