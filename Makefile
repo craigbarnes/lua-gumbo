@@ -13,8 +13,9 @@ INSTALL  = install -p -m 0644
 INSTALLX = install -p -m 0755
 RM       = rm -f
 
-# Ensure unit tests can only run using modules in current directory
+# Ensure the tests only load modules from within the current directory
 export LUA_PATH = ./?.lua;./?/init.lua
+export LUA_CPATH = ./?.so
 
 GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
 GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
