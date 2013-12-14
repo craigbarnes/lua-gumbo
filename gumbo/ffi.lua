@@ -23,8 +23,18 @@ local tonumber = tonumber
 local create_node
 
 local have_tnew, tnew = pcall(require, "table.new")
-if not have_tnew then
-    tnew = function(narr, nrec) return {} end
+tnew = have_tnew and tnew or function(narr, nrec) return {} end
+
+local have_bit, bit = pcall(require, "bit")
+local testflag
+if have_bit == true then
+    testflag = function(set, flag)
+        return bit.band(set, flag) ~= 0
+    end
+else
+    testflag = function(set, flag)
+        return set % (2 * flag) >= flag
+    end
 end
 
 local typemap = {
@@ -42,6 +52,19 @@ local quirksmap = {
     [tonumber(C.GUMBO_DOCTYPE_QUIRKS)] = "quirks",
     [tonumber(C.GUMBO_DOCTYPE_LIMITED_QUIRKS)] = "limited-quirks",
     __index = function() error "Error: invalid quirks mode" end
+}
+
+local flagsmap = {
+    insertion_by_parser = C.GUMBO_INSERTION_BY_PARSER,
+    implicit_end_tag = C.GUMBO_INSERTION_IMPLICIT_END_TAG,
+    insertion_implied = C.GUMBO_INSERTION_IMPLIED,
+    converted_from_end_tag = C.GUMBO_INSERTION_CONVERTED_FROM_END_TAG,
+    insertion_from_isindex = C.GUMBO_INSERTION_FROM_ISINDEX,
+    insertion_from_image = C.GUMBO_INSERTION_FROM_IMAGE,
+    reconstructed_formatting_element = C.GUMBO_INSERTION_RECONSTRUCTED_FORMATTING_ELEMENT,
+    adoption_agency_cloned = C.GUMBO_INSERTION_ADOPTION_AGENCY_CLONED,
+    adoption_agency_moved = C.GUMBO_INSERTION_ADOPTION_AGENCY_MOVED,
+    foster_parented = C.GUMBO_INSERTION_FOSTER_PARENTED
 }
 
 setmetatable(typemap, typemap)
@@ -68,14 +91,15 @@ local function get_tag_name(element)
     end
 end
 
-local function get_parse_flags(flags)
-    if flags ~= C.GUMBO_INSERTION_NORMAL then
-        -- FIXME: Return the correct table of flags instead of this hack
-        local t = {
-            insertion_by_parser = true,
-            insertion_implied = true,
-            implicit_end_tag = true
-        }
+local function get_parse_flags(parse_flags)
+    if parse_flags ~= C.GUMBO_INSERTION_NORMAL then
+        parse_flags = tonumber(parse_flags)
+        local t = tnew(0, 1)
+        for field, flag in pairs(flagsmap) do
+            if testflag(parse_flags, flag) then
+                t[field] = true
+            end
+        end
         return t
     end
 end
