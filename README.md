@@ -146,6 +146,8 @@ Todo
   * Don't wrap text inside `<pre>` elements.
 * Add a Lua-friendly interface for the `parse_flags` bit vector
 * Handle SVG and MathML namespaces properly.
+* Test with the [html5lib-tests](https://github.com/html5lib/html5lib-tests)
+  `tree-construction` units.
 * Return an array of parse errors as a second return value (requires
   upstream API)
 
