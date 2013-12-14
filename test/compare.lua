@@ -89,4 +89,3 @@ local function compare(node1, node2)
 end
 
 compare(t1, t2)
-io.stderr:write(fmt("%s == %s\n", arg1, arg2))

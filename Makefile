@@ -55,8 +55,8 @@ uninstall:
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
 check: all
-	@$(LUA) test/compare.lua test/t1.html test/t1.lua
-	@$(LUA) test/misc.lua
+	$(LUA) test/compare.lua test/t1.html test/t1.lua
+	$(LUA) test/misc.lua
 
 check-ffi: export LGUMBO_USE_FFI = 1
 check-ffi: LUA = luajit

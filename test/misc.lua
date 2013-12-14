@@ -10,5 +10,3 @@ assert(document[1].offset == 2)
 
 document = assert(gumbo.parse(string.rep("<div>", 500)), "stack check failed")
 assert(document.root[2][1][1][1][1][1][1][1][1][1][1][1].tag == "div")
-
-io.stderr:write "Misc. tests passed\n"
