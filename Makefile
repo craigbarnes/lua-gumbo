@@ -70,6 +70,7 @@ check-all:
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
 	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=0
 	$(MAKE) -s  check LUA=luajit LGUMBO_USE_FFI=1
+	$(MAKE) -s  check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
 clean:
 	$(RM) $(DYNLIB) gumbo.o README.html large.html
