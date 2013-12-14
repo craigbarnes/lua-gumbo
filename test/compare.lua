@@ -4,18 +4,6 @@ local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.table"
 local fmt = string.format
 
-local arg1 = assert(arg[1], "Arg 1 missing")
-local arg2 = assert(arg[2], "Arg 2 missing")
-local file1 = assert(io.open(arg1))
-local file2 = assert(io.open(arg2))
-local html = assert(file1:read("*a"))
-local ast = assert(file2:read("*a"))
-file1:close()
-file2:close()
-local t1 = assert(gumbo.parse(html))
-local f = assert(load(ast, nil, "t"), "Invalid syntax")
-local t2 = assert(f())
-
 local text_fields = {
     type = true,
     text = true,
@@ -42,8 +30,7 @@ local node_fields = {
         tag = true,
         line = true,
         column = true,
-        offset = true,
---        parse_flags = false
+        offset = true
     }
 }
 
@@ -88,4 +75,9 @@ local function compare(node1, node2)
     end
 end
 
-compare(t1, t2)
+local arg1 = assert(arg[1], "Arg 1 missing")
+local arg2 = assert(arg[2], "Arg 2 missing")
+local fn = assert(loadfile(arg2, nil, "t"))
+local parsed = assert(gumbo.parse_file(arg1))
+local loaded = assert(fn())
+compare(parsed, loaded)
