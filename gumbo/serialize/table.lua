@@ -38,6 +38,7 @@ local function to_table(node)
             end
             if node.parse_flags then -- add parse flags
                 rope:appendf("%sparse_flags = {\n", i1)
+                -- TODO: Make iteration order stable for predictable diffs
                 for name, value in pairs(node.parse_flags) do
                     rope:appendf("%s%s = %s,\n", i2, name, value)
                 end
