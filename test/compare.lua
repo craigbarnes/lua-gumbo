@@ -40,6 +40,9 @@ local node_fields = {
     element = {
         type = true,
         tag = true,
+        line = true,
+        column = true,
+        offset = true,
 --        parse_flags = false
     }
 }
