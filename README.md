@@ -124,15 +124,13 @@ combination of Lua 5.1/Lua 5.2/LuaJIT and FFI module/C module is supported.
 Testing
 -------
 
-The Makefile provides some targets for running [test.lua] in various
-configurations:
+The Makefile has targets for running the tests in various configurations:
 
 * `make check`: tests the C module
 * `make check-ffi`: tests the FFI module
-* `make check-valgrind`: tests the C module, running via [Valgrind]
-* `make check-all`: tests both modules, using various
-  compiler/interpretter permutations (requires GCC, Clang, TCC, Lua,
-  LuaJIT and luaffi).
+* `make check-valgrind`: tests the C module, running via Valgrind
+* `make check-all`: tests both modules, using various compiler/interpretter
+  permutations (requires GCC, Clang, TCC, Lua and LuaJIT)
 
 Todo
 ----
@@ -177,9 +175,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
-[Valgrind]: http://valgrind.org/
-[example.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/example.lua
-[test.lua]: https://raw.github.com/craigbarnes/lua-gumbo/master/test.lua
 [gumbo/init.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/gumbo/init.lua#L5-L23
 [doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
 [root element]: http://en.wikipedia.org/wiki/Root_element
