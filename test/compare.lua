@@ -79,7 +79,6 @@ local function compare(node1, node2)
     end
     if type == "document" or type == "element" then
         -- TODO: compare attribute tables for element nodes
-        -- TODO: compare line/column/offset values for element nodes
         -- TODO: assert #document >= 2
         local length = #node1
         assert(#node2 == length)
