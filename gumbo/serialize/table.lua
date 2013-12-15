@@ -2,6 +2,20 @@ local util = require "gumbo.serialize.util"
 local Rope = util.Rope
 local indent = util.indent
 
+local parse_flags_fields = {
+    -- Serialized in this order:
+    "insertion_by_parser",
+    "implicit_end_tag",
+    "insertion_implied",
+    "converted_from_end_tag",
+    "insertion_from_isindex",
+    "insertion_from_image",
+    "reconstructed_formatting_element",
+    "adoption_agency_cloned",
+    "adoption_agency_moved",
+    "foster_parented"
+}
+
 local function to_table(node)
     local rope = Rope()
     local level = 0
@@ -38,9 +52,12 @@ local function to_table(node)
             end
             if node.parse_flags then -- add parse flags
                 rope:appendf("%sparse_flags = {\n", i1)
-                -- TODO: Make iteration order stable for predictable diffs
-                for name, value in pairs(node.parse_flags) do
-                    rope:appendf("%s%s = %s,\n", i2, name, value)
+                for i = 1, #parse_flags_fields do
+                    local field = parse_flags_fields[i]
+                    local value = node.parse_flags[field]
+                    if value then
+                        rope:appendf("%s%s = %s,\n", i2, field, value)
+                    end
                 end
                 rope:appendf("%s},\n", i1)
             end

@@ -1,4 +1,4 @@
-return {
+{
     type = "document",
     has_doctype = true,
     name = "html",
@@ -19,9 +19,9 @@ return {
         column = 1,
         offset = 64,
         parse_flags = {
+            insertion_by_parser = true,
             implicit_end_tag = true,
             insertion_implied = true,
-            insertion_by_parser = true,
         },
         {
             type = "element",
@@ -30,9 +30,9 @@ return {
             column = 1,
             offset = 64,
             parse_flags = {
+                insertion_by_parser = true,
                 implicit_end_tag = true,
                 insertion_implied = true,
-                insertion_by_parser = true,
             },
             {
                 type = "element",
@@ -63,9 +63,9 @@ return {
             column = 1,
             offset = 93,
             parse_flags = {
+                insertion_by_parser = true,
                 implicit_end_tag = true,
                 insertion_implied = true,
-                insertion_by_parser = true,
             },
             {
                 type = "element",
