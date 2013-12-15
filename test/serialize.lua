@@ -42,7 +42,8 @@ local actions = {
     serpent = function(filename)
         local serpent = require "serpent"
         local document = check(gumbo.parse_file(filename))
-        io.stdout:write(serpent.block(document, {comment = false}), '\n')
+        local options = {comment = false, indent = "    "}
+        io.stdout:write(serpent.block(document, options), '\n')
     end,
     bench = function(filename)
         check(gumbo.parse_file(filename))
