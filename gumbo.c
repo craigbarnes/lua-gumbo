@@ -75,16 +75,15 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "tag");
 
     switch (element->tag_namespace) {
-    case GUMBO_NAMESPACE_HTML:
-        break;
     case GUMBO_NAMESPACE_SVG:
         add_literal(L, "tag_namespace", "svg");
         break;
     case GUMBO_NAMESPACE_MATHML:
         add_literal(L, "tag_namespace", "math");
         break;
+    case GUMBO_NAMESPACE_HTML:
     default:
-        luaL_error(L, "Error: invalid tag namespace");
+        break;
     }
 }
 
