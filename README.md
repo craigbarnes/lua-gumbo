@@ -129,6 +129,8 @@ The Makefile has targets for running the tests in various configurations:
 * `make check`: tests the C module
 * `make check-ffi`: tests the FFI module
 * `make check-valgrind`: tests the C module, running via Valgrind
+* `make check-html5lib`: runs the html5lib `tree-construction` test suite
+  (requires LPeg -- for parsing the test data)
 * `make check-all`: tests both modules, using various compiler/interpretter
   permutations (requires GCC, Clang, TCC, Lua and LuaJIT)
 
