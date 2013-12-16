@@ -15,6 +15,7 @@ return function(node)
             end
             local attr = node.attr
             if attr then
+                table.sort(attr, function(x, y) return x.name < y.name end)
                 for i = 1, #attr do
                     local a = attr[i]
                     if a.namespace then
