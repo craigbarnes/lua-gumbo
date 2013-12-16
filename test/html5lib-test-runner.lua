@@ -2,19 +2,15 @@
 local re = require "re"
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
+local verbose = os.getenv "VERBOSE"
 local total_pass = 0
 local total_fail = 0
 
--- TODO:
--- * Strip final newline from the end of parsed #data string
--- * Fix PEG grammar
---   * Lines below "#document" don't always start with "|"
--- * Add command-line option to enable printing full details of failed tests
-
+-- TODO: Make `data` accept multiple lines
 local grammar = re.compile [[
     blocks   <- {| block* |} eof
     block    <- {| data errors document nl* |}
-    data     <- '#data' nl {:data: nothash line :}
+    data     <- '#data' nl {:data: nothash [^%nl]* :} nl
     errors   <- '#errors' nl (nothash line)+
     document <- '#document' nl {:document: ("|" line)+ :}
     nl       <- %nl
@@ -24,13 +20,11 @@ local grammar = re.compile [[
 ]]
 
 local function basename(str)
-    local name = string.gsub(str, "(.*/)(.*)", "%2")
-    return name
+    return str:gsub("(.*/)(.*)", "%2")
 end
 
-local function warn(err, filename)
-    local fmt = "\27[31m%s: %s\27[0m\n"
-    io.stderr:write(string.format(fmt, filename, err))
+local function warn(...)
+    io.stderr:write(string.format(...))
 end
 
 local function runtests(filename, tests)
@@ -44,7 +38,14 @@ local function runtests(filename, tests)
             pass = pass + 1
         else
             fail = fail + 1
-            --print(string.format("\n%s\n\n\n%s", serialized, test.document))
+            if verbose then
+                warn("\n===========================================\n")
+                warn("Test #%d in %s failed:\n\n", i, filename)
+                warn("Input:\n%s\n\n", test.data)
+                warn("Expected:\n%s\n", test.document)
+                warn("Got:\n%s\n", serialized)
+                warn("===========================================\n\n")
+            end
         end
     end
     local fmt = "%s: %d tests passed, %d tests failed\n"
@@ -64,7 +65,7 @@ for i = 1, #arg do
     if tests then
         runtests(filename, tests)
     else
-        warn("failed to parsed data", basename(filename))
+        warn("\27[31m%s: failed to parse data\27[0m\n", basename(filename))
     end
 end
 
