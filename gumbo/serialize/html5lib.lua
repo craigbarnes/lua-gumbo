@@ -22,6 +22,9 @@ return function(node)
         elseif node.type == "comment" then
             rope:appendf('| %s<!-- %s -->\n', indent:rep(level), node.text)
         elseif node.type == "document" then
+            if node.has_doctype == true then
+                rope:appendf('| <!DOCTYPE %s>\n', node.name)
+            end
             serialize(node.root)
         end
     end
