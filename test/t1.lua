@@ -102,6 +102,13 @@
                     offset = 118,
                     attr = {
                         href = "foobar.html",
+                        {
+                            name = "href",
+                            value = "foobar.html",
+                            line = 5,
+                            column = 7,
+                            offset = 121
+                        },
                     },
                     {
                         type = "text",
@@ -127,6 +134,13 @@
                 offset = 151,
                 attr = {
                     foo = "bar",
+                    {
+                        name = "foo",
+                        value = "bar",
+                        line = 6,
+                        column = 10,
+                        offset = 160
+                    },
                 },
                 {
                     type = "text",
@@ -151,6 +165,13 @@
                 offset = 185,
                 attr = {
                     class = "empty",
+                    {
+                        name = "class",
+                        value = "empty",
+                        line = 7,
+                        column = 11,
+                        offset = 188
+                    },
                 },
             },
             {

@@ -36,8 +36,7 @@ local function to_table(node)
         if node.type == "element" then
             rope:appendf("%s{\n", indent[level])
             level = level + 1
-            local i1 = indent[level]
-            local i2 = indent[level+1]
+            local i1, i2, i3 = indent[level], indent[level+1], indent[level+2]
             rope:append_qpair(i1, "type", "element")
             rope:append_qpair(i1, "tag", node.tag)
             rope:appendf("%s%s = %d,\n", i1, "line", node.line)
@@ -45,8 +44,23 @@ local function to_table(node)
             rope:appendf("%s%s = %d,\n", i1, "offset", node.offset)
             if node.attr then -- add attributes
                 rope:appendf("%sattr = {\n", i1)
-                for name, value in pairs(node.attr) do
-                    rope:append_qpair(i2, name, value)
+                for i = 1, #node.attr do
+                    local a = node.attr[i]
+                    -- TODO: wrap table key, e.g. ["xml:v"]
+                    rope:append_qpair(i2, a.name, a.value)
+                end
+                for i = 1, #node.attr do
+                    local a = node.attr[i]
+                    rope:appendf("%s{\n", i2)
+                    rope:append_qpair(i3, "name", a.name)
+                    rope:append_qpair(i3, "value", a.value)
+                    if a.namespace then
+                        rope:append_qpair(i3, "namespace", a.namespace)
+                    end
+                    rope:appendf("%s%s = %d,\n", i3, "line", a.line)
+                    rope:appendf("%s%s = %d,\n", i3, "column", a.column)
+                    rope:appendf("%s%s = %d\n", i3, "offset", a.offset)
+                    rope:appendf("%s},\n", i2)
                 end
                 rope:appendf("%s},\n", i1)
             end
