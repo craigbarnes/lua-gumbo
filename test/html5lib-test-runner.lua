@@ -48,12 +48,11 @@ local function runtests(filename, tests)
         else
             result.fail = result.fail + 1
             if verbose then
-                printf("\n===========================================\n")
                 printf("Test #%d in %s failed:\n\n", i, filename)
                 printf("Input:\n%s\n\n", test.data)
                 printf("Expected:\n%s\n", test.document)
                 printf("Got:\n%s\n", serialized)
-                printf("===========================================\n\n")
+                printf("%s\n\n", string.rep("=", 76))
             end
         end
     end
