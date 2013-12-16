@@ -1,0 +1,72 @@
+#!/usr/bin/lua
+local re = require "re"
+local gumbo = require "gumbo"
+local serialize = require "gumbo.serialize.html5lib"
+local total_pass = 0
+local total_fail = 0
+
+-- TODO:
+-- * Strip final newline from the end of parsed #data string
+-- * Fix PEG grammar
+--   * Lines below "#document" don't always start with "|"
+-- * Add command-line option to enable printing full details of failed tests
+
+local grammar = re.compile [[
+    blocks   <- {| block* |} eof
+    block    <- {| data errors document nl* |}
+    data     <- '#data' nl {:data: nothash line :}
+    errors   <- '#errors' nl (nothash line)+
+    document <- '#document' nl {:document: ("|" line)+ :}
+    nl       <- %nl
+    line     <- [^%nl]* %nl
+    nothash  <- [^#]
+    eof      <- !.
+]]
+
+local function basename(str)
+    local name = string.gsub(str, "(.*/)(.*)", "%2")
+    return name
+end
+
+local function warn(err, filename)
+    local fmt = "\27[31m%s: %s\27[0m\n"
+    io.stderr:write(string.format(fmt, filename, err))
+end
+
+local function runtests(filename, tests)
+    local pass = 0
+    local fail = 0
+    for i = 1, #tests do
+        local test = tests[i]
+        local document = assert(gumbo.parse(test.data))
+        local serialized = serialize(document)
+        if serialized == test.document then
+            pass = pass + 1
+        else
+            fail = fail + 1
+            --print(string.format("\n%s\n\n\n%s", serialized, test.document))
+        end
+    end
+    local fmt = "%s: %d tests passed, %d tests failed\n"
+    io.stdout:write(string.format(fmt, basename(filename), pass, fail))
+    total_pass = total_pass + pass
+    total_fail = total_fail + fail
+end
+
+assert(arg[1], "No test files specified")
+
+for i = 1, #arg do
+    local filename = arg[i]
+    local file = assert(io.open(filename))
+    local text = assert(file:read("*a"))
+    file:close()
+    local tests = grammar:match(text)
+    if tests then
+        runtests(filename, tests)
+    else
+        warn("failed to parsed data", basename(filename))
+    end
+end
+
+local fmt = "\nTOTAL: %d tests passed, %d tests failed\n\n"
+io.stdout:write(string.format(fmt, total_pass, total_fail))
