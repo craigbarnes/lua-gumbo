@@ -16,9 +16,8 @@ local grammar = re.compile [[
     block    <- {| data errors document nl* |}
     data     <- '#data' nl {:data: lines :} nl
     errors   <- '#errors' nl (lines nl)?
-    document <- '#document' nl {:document: ("|" line)+ :}
+    document <- '#document' nl {:document: ([^%nl] [^%nl]* %nl)+ :}
     lines    <- [^#] [^%nl]* (%nl [^#] [^%nl]*)*
-    line     <- [^%nl]* %nl
     nl       <- %nl
     eof      <- !.
 ]]
