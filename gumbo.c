@@ -73,6 +73,19 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
         lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     }
     lua_setfield(L, -2, "tag");
+
+    switch (element->tag_namespace) {
+    case GUMBO_NAMESPACE_HTML:
+        break;
+    case GUMBO_NAMESPACE_SVG:
+        add_literal(L, "tag_namespace", "svg");
+        break;
+    case GUMBO_NAMESPACE_MATHML:
+        add_literal(L, "tag_namespace", "math");
+        break;
+    default:
+        luaL_error(L, "Error: invalid tag namespace");
+    }
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {

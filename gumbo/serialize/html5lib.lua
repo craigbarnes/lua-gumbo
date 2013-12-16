@@ -7,13 +7,17 @@ return function(node)
     local level = 0
     local function serialize(node)
         if node.type == "element" then
-            local length = #node
-            rope:appendf('| %s<%s>\n', indent:rep(level), node.tag)
+            local i1, i2 = indent:rep(level), indent:rep(level+1)
+            if node.tag_namespace then
+                rope:appendf('| %s<%s %s>\n', i1, node.tag_namespace, node.tag)
+            else
+                rope:appendf('| %s<%s>\n', i1, node.tag)
+            end
             for name, value in pairs(node.attr or {}) do
-                rope:appendf('| %s%s="%s"\n', indent:rep(level+1), name, value)
+                rope:appendf('| %s%s="%s"\n', i2, name, value)
             end
             level = level + 1
-            for i = 1, length do
+            for i = 1, #node do
                 serialize(node[i])
             end
             level = level - 1
@@ -25,7 +29,9 @@ return function(node)
             if node.has_doctype == true then
                 rope:appendf('| <!DOCTYPE %s>\n', node.name)
             end
-            serialize(node.root)
+            for i = 1, #node do
+                serialize(node[i])
+            end
         end
     end
     serialize(node)

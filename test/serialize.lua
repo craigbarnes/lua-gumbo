@@ -45,6 +45,11 @@ local actions = {
         local options = {comment = false, indent = "    "}
         io.stdout:write(serpent.block(document, options), '\n')
     end,
+    html5lib = function(filename)
+        local serialize = require "gumbo.serialize.html5lib"
+        local document = check(gumbo.parse_file(filename))
+        io.stdout:write(serialize(document))
+    end,
     bench = function(filename)
         check(gumbo.parse_file(filename))
     end

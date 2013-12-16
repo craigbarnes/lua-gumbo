@@ -54,6 +54,11 @@ local quirksmap = {
     __index = function() error "Error: invalid quirks mode" end
 }
 
+local tagnsmap = {
+    [C.GUMBO_NAMESPACE_SVG] = "svg",
+    [C.GUMBO_NAMESPACE_MATHML] = "math"
+}
+
 local flagsmap = {
     insertion_by_parser = C.GUMBO_INSERTION_BY_PARSER,
     implicit_end_tag = C.GUMBO_INSERTION_IMPLICIT_END_TAG,
@@ -126,6 +131,7 @@ local function create_element(node)
     local t = tnew(length, 7)
     t.type = "element"
     t.tag = get_tag_name(element)
+    t.tag_namespace = tagnsmap[tonumber(element.tag_namespace)]
     t.line = element.start_pos.line
     t.column = element.start_pos.column
     t.offset = element.start_pos.offset
