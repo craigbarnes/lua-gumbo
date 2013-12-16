@@ -54,6 +54,13 @@ uninstall:
 	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
+test/html5lib-tests/tree-construction/:
+	git submodule init
+	git submodule update
+
+check-html5lib: all | test/html5lib-tests/tree-construction/
+	@LUA_PATH=';;' LUA_CPATH=';;' $(LUA) test/html5lib-test-runner.lua $|*.dat
+
 check: all
 	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.lua -
 	$(LUA) test/misc.lua
@@ -80,5 +87,6 @@ ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-.PHONY: all install uninstall check check-ffi check-valgrind check-all clean
+.PHONY: all install uninstall clean
+.PHONY: check check-ffi check-valgrind check-all check-html5lib
 .DELETE_ON_ERROR:
