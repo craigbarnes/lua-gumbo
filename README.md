@@ -135,16 +135,12 @@ The Makefile has targets for running the tests in various configurations:
 Todo
 ----
 
-* Fix representation of attributes. Using a key-value table makes the order
-  unpredictable and omits source positions. A better structure would be
-  to store ordered attribute tables in array indices and use hash keys
-  as an index.
 * Finish implementing HTML/table serialization.
   * Collapse newlines around tags of inline elements and short block elements.
   * Implement a "minified" mode for HTML serialization
   * Handle `<style>` and `<script>` elements properly.
   * Don't wrap text inside `<pre>` elements.
-* Handle SVG and MathML namespaces properly.
+* Normalize SVG element tags with `gumbo_normalize_svg_tagname()` function
 * Test with the [html5lib-tests](https://github.com/html5lib/html5lib-tests)
   `tree-construction` units.
 * Return an array of parse errors as a second return value (requires

@@ -55,10 +55,31 @@ static void add_children(lua_State *L, const GumboVector *children) {
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length != 0) {
-        lua_createtable(L, 0, length);
+        lua_createtable(L, length, length);
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
             add_string(L, attr->name, attr->value);
+            lua_createtable(L, 0, 5);
+            add_string(L, "name", attr->name);
+            add_string(L, "value", attr->value);
+            add_integer(L, "line", attr->name_start.line);
+            add_integer(L, "column", attr->name_start.column);
+            add_integer(L, "offset", attr->name_start.offset);
+            switch (attr->attr_namespace) {
+            case GUMBO_ATTR_NAMESPACE_XLINK:
+                add_literal(L, "namespace", "xlink");
+                break;
+            case GUMBO_ATTR_NAMESPACE_XML:
+                add_literal(L, "namespace", "xml");
+                break;
+            case GUMBO_ATTR_NAMESPACE_XMLNS:
+                add_literal(L, "namespace", "xmlns");
+                break;
+            case GUMBO_ATTR_NAMESPACE_NONE:
+            default:
+                break;
+            }
+            lua_rawseti(L, -2, i+1);
         }
         lua_setfield(L, -2, "attr");
     }

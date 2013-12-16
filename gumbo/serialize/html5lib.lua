@@ -13,8 +13,16 @@ return function(node)
             else
                 rope:appendf('| %s<%s>\n', i1, node.tag)
             end
-            for name, value in pairs(node.attr or {}) do
-                rope:appendf('| %s%s="%s"\n', i2, name, value)
+            local attr = node.attr
+            if attr then
+                for i = 1, #attr do
+                    local a = attr[i]
+                    if a.namespace then
+                        rope:appendf('| %s%s %s="%s"\n', i2, a.namespace, a.name, a.value)
+                    else
+                        rope:appendf('| %s%s="%s"\n', i2, a.name, a.value)
+                    end
+                end
             end
             level = level + 1
             for i = 1, #node do

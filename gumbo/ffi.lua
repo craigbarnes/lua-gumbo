@@ -59,6 +59,12 @@ local tagnsmap = {
     [C.GUMBO_NAMESPACE_MATHML] = "math"
 }
 
+local attrnsmap = {
+    [C.GUMBO_ATTR_NAMESPACE_XLINK] = "xlink",
+    [C.GUMBO_ATTR_NAMESPACE_XML] = "xml",
+    [C.GUMBO_ATTR_NAMESPACE_XMLNS] = "xmlns"
+}
+
 local flagsmap = {
     insertion_by_parser = C.GUMBO_INSERTION_BY_PARSER,
     implicit_end_tag = C.GUMBO_INSERTION_IMPLICIT_END_TAG,
@@ -80,6 +86,14 @@ local function get_attributes(attrs)
         local t = {}
         for i = 0, attrs.length - 1 do
             local attr = ffi_cast("GumboAttribute*", attrs.data[i])
+            t[i+1] = {
+                name = ffi_string(attr.name),
+                value = ffi_string(attr.value),
+                line = attr.name_start.line,
+                column = attr.name_start.column,
+                offset = attr.name_start.offset,
+                namespace = attrnsmap[tonumber(attr.attr_namespace)]
+            }
             t[ffi_string(attr.name)] = ffi_string(attr.value)
         end
         return t
