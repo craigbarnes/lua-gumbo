@@ -36,7 +36,12 @@ return function(node)
             rope:appendf('| %s<!-- %s -->\n', indent:rep(level), node.text)
         elseif node.type == "document" then
             if node.has_doctype == true then
-                rope:appendf('| <!DOCTYPE %s>\n', node.name)
+                local pubid = node.public_identifier
+                local sysid = node.system_identifier
+                rope:appendf('| <!DOCTYPE %s%s>\n', node.name,
+                    (pubid ~= "" or sysid ~= "") and
+                    string.format(' "%s" "%s"', pubid, sysid) or ""
+                )
             end
             for i = 1, #node do
                 serialize(node[i])
