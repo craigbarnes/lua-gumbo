@@ -1,13 +1,12 @@
 local util = require "gumbo.serialize.util"
-local Buffer = util.Buffer
 
 return function(node)
-    local buf = Buffer()
-    local indent = "  "
+    local buf = util.Buffer()
+    local indent = util.IndentGenerator("  ")
     local level = 0
     local function serialize(node)
         if node.type == "element" then
-            local i1, i2 = indent:rep(level), indent:rep(level+1)
+            local i1, i2 = indent[level], indent[level+1]
             if node.tag_namespace then
                 buf:appendf('| %s<%s %s>\n', i1, node.tag_namespace, node.tag)
             else
@@ -31,9 +30,9 @@ return function(node)
             end
             level = level - 1
         elseif node.type == "text" then
-            buf:appendf('| %s"%s"\n', indent:rep(level), node.text)
+            buf:appendf('| %s"%s"\n', indent[level], node.text)
         elseif node.type == "comment" then
-            buf:appendf('| %s<!-- %s -->\n', indent:rep(level), node.text)
+            buf:appendf('| %s<!-- %s -->\n', indent[level], node.text)
         elseif node.type == "document" then
             if node.has_doctype == true then
                 local pubid = node.public_identifier

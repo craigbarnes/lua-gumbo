@@ -1,7 +1,4 @@
 local util = require "gumbo.serialize.util"
-local Buffer = util.Buffer
-local indent = util.indent
-local wrap = util.wrap
 
 -- Set of void elements
 -- whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
@@ -36,18 +33,24 @@ local function escape(s)
 end
 
 local function to_html(node)
-    local buf = Buffer()
+    local buf = util.Buffer()
+    local indent = util.IndentGenerator()
+    local wrap = util.wrap
     local level = 0
 
     local function serialize(node)
         if node.type == "element" then
-            local length = #node
-            -- Add start tag and attributes
             buf:appendf('%s<%s', indent[level], node.tag)
-            for name, value in pairs(node.attr or {}) do
-                buf:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
+            local attributes = node.attr
+            if attributes then
+                for i = 1, #attributes do
+                    local attr = attributes[i]
+                    local escaped_value = attr.value:gsub("'", "&quot;")
+                    buf:appendf(' %s="%s"', attr.name, escaped_value)
+                end
             end
 
+            local length = #node
             if length > 0 then -- recurse into child nodes
                 buf:append(">\n")
                 level = level + 1

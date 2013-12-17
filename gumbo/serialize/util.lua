@@ -1,11 +1,11 @@
--- Generates a string of spaces for a given level of indentation and
--- memoizes it to avoid creating excess garbage.
-local indent = setmetatable({[0] = "", [1] = "    "}, {
-    __index = function(self, i)
-        self[i] = string.rep(self[1], i)
-        return self[i]
-    end
-})
+local function IndentGenerator(indent)
+    return setmetatable({[0] = "", [1] = indent or "    "}, {
+        __index = function(self, i)
+            self[i] = self[1]:rep(i)
+            return self[i]
+        end
+    })
+end
 
 local function Buffer()
     local methods = {
@@ -43,7 +43,7 @@ local function wrap(text, indent)
 end
 
 return {
-    indent = indent,
+    IndentGenerator = IndentGenerator,
     Buffer = Buffer,
     wrap = wrap
 }

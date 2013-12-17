@@ -1,6 +1,4 @@
 local util = require "gumbo.serialize.util"
-local Buffer = util.Buffer
-local indent = util.indent
 
 local parse_flags_fields = {
     -- Serialized in this order:
@@ -17,7 +15,8 @@ local parse_flags_fields = {
 }
 
 local function to_table(node)
-    local buf = Buffer()
+    local buf = util.Buffer()
+    local indent = util.IndentGenerator()
     local level = 0
 
     function buf:append_qpair(indent, name, value)
