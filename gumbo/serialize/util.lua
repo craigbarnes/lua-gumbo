@@ -17,8 +17,8 @@ local function Rope()
             self.n = self.n + 1
             self[self.n] = string.format(fmt, ...)
         end,
-        concat = function(self)
-            return table.concat(self)
+        concat = function(self, sep)
+            return table.concat(self, sep)
         end,
         __length = function(self)
             return self.n

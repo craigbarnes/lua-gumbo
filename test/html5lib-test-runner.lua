@@ -1,7 +1,8 @@
 #!/usr/bin/lua
-local re = require "re"
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
+local util = require "gumbo.serialize.util"
+local Rope = util.Rope
 local verbose = os.getenv "VERBOSE"
 
 local results = {
@@ -11,16 +12,25 @@ local results = {
     not_parsed = 0
 }
 
-local grammar = re.compile [[
-    blocks   <- {| block* |} eof
-    block    <- {| data errors document nl* |}
-    data     <- '#data' nl {:data: lines :} nl
-    errors   <- '#errors' nl (lines nl)?
-    document <- '#document' nl {:document: ([^%nl] [^%nl]* %nl)+ :}
-    lines    <- [^#] [^%nl]* (%nl [^#] [^%nl]*)*
-    nl       <- %nl
-    eof      <- !.
-]]
+local function parse_testdata(filename)
+    local n = 0
+    local field = "null"
+    local buffer = Rope()
+    local tests = {}
+    for line in io.lines(filename) do
+        if line == "#data" or line == "#errors" or line == "#document" then
+            tests[n] = tests[n] or {}
+            tests[n][field] = buffer:concat("\n")
+            buffer = Rope()
+            field = line:sub(2, -1)
+            if line == "#data" then n = n + 1 end
+        else
+            buffer:append(line)
+        end
+    end
+    tests[n][field] = buffer:concat("\n") .. "\n"
+    return tests
+end
 
 local function basename(str)
     return str:gsub("(.*/)(.*)", "%2")
@@ -64,10 +74,7 @@ assert(arg[1], "No test files specified")
 
 for i = 1, #arg do
     local filename = arg[i]
-    local file = assert(io.open(filename))
-    local text = assert(file:read("*a"))
-    file:close()
-    local tests = grammar:match(text)
+    local tests = parse_testdata(filename)
     if tests then
         runtests(filename, tests)
         results.parsed = results.parsed + 1
