@@ -130,7 +130,7 @@ static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
     if (flags != GUMBO_INSERTION_NORMAL) {
         lua_createtable(L, 0, 1);
         for (unsigned int i = 0; i < nflags; i++) {
-            if (flags & flag_map[i].flag) {
+            if ((flags & flag_map[i].flag) != 0) {
                 add_boolean(L, flag_map[i].name, true);
             }
         }
