@@ -107,3 +107,5 @@ Totals:
    Tests failed: %d
 
 ]], results.parsed, results.not_parsed, results.pass, results.fail)
+
+os.exit(results.not_parsed == 0 and results.fail == 0)
