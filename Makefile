@@ -54,7 +54,7 @@ uninstall:
 	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
-test/html5lib-tests/tree-construction/:
+test/html5lib-tests/%:
 	git submodule init
 	git submodule update
 
@@ -80,6 +80,15 @@ check-all:
 	$(MAKE) -s  check LUA=luajit LGUMBO_USE_FFI=1
 	$(MAKE) -s  check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
+bench: all test/serialize.lua | test/html5lib-tests/sites/web-apps.htm
+	@time -f '%es, %MKB peak mem.' $(LUA) test/serialize.lua bench $|
+
+bench-all:
+	$(MAKE) -sB bench LUA=lua
+	$(MAKE) -s bench LUA=luajit LGUMBO_USE_FFI=0
+	$(MAKE) -s bench LUA=luajit LGUMBO_USE_FFI=1
+	$(MAKE) -s bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
+
 clean:
 	$(RM) $(DYNLIB) gumbo.o README.html large.html
 
@@ -87,6 +96,6 @@ ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-.PHONY: all install uninstall clean
+.PHONY: all install uninstall clean bench bench-all
 .PHONY: check check-ffi check-valgrind check-all check-html5lib
 .DELETE_ON_ERROR:
