@@ -1,5 +1,5 @@
 local util = require "gumbo.serialize.util"
-local Rope = util.Rope
+local Buffer = util.Buffer
 local indent = util.indent
 local wrap = util.wrap
 
@@ -36,43 +36,43 @@ local function escape(s)
 end
 
 local function to_html(node)
-    local rope = Rope()
+    local buf = Buffer()
     local level = 0
 
     local function serialize(node)
         if node.type == "element" then
             local length = #node
             -- Add start tag and attributes
-            rope:appendf('%s<%s', indent[level], node.tag)
+            buf:appendf('%s<%s', indent[level], node.tag)
             for name, value in pairs(node.attr or {}) do
-                rope:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
+                buf:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
             end
 
             if length > 0 then -- recurse into child nodes
-                rope:append(">\n")
+                buf:append(">\n")
                 level = level + 1
                 for i = 1, length do
                     serialize(node[i])
                 end
                 level = level - 1
                 if not void[node.tag] then
-                    rope:appendf("%s</%s>\n", indent[level], node.tag)
+                    buf:appendf("%s</%s>\n", indent[level], node.tag)
                 end
             else
-                rope:append(">")
+                buf:append(">")
                 if not void[node.tag] then
-                    rope:appendf("</%s>\n", node.tag)
+                    buf:appendf("</%s>\n", node.tag)
                 else
-                    rope:append("\n")
+                    buf:append("\n")
                 end
             end
         elseif node.type == "text" then
-            rope:append(wrap(escape(node.text), indent[level]))
+            buf:append(wrap(escape(node.text), indent[level]))
         elseif node.type == "comment" then
-            rope:appendf('%s<!--%s-->\n', indent[level], node.text)
+            buf:appendf('%s<!--%s-->\n', indent[level], node.text)
         elseif node.type == "document" then
             if node.has_doctype == true then
-                rope:appendf("<!doctype %s>\n", node.name)
+                buf:appendf("<!doctype %s>\n", node.name)
             end
             for i = 1, #node do
                 serialize(node[i])
@@ -81,7 +81,7 @@ local function to_html(node)
     end
 
     serialize(node)
-    return rope:concat()
+    return buf:concat()
 end
 
 return to_html

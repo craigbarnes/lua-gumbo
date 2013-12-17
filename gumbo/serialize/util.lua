@@ -7,7 +7,7 @@ local indent = setmetatable({[0] = "", [1] = "    "}, {
     end
 })
 
-local function Rope()
+local function Buffer()
     local methods = {
         append = function(self, str)
             self.n = self.n + 1
@@ -44,6 +44,6 @@ end
 
 return {
     indent = indent,
-    Rope = Rope,
+    Buffer = Buffer,
     wrap = wrap
 }

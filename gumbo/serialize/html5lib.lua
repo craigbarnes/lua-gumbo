@@ -1,17 +1,17 @@
 local util = require "gumbo.serialize.util"
-local Rope = util.Rope
+local Buffer = util.Buffer
 
 return function(node)
-    local rope = Rope()
+    local buf = Buffer()
     local indent = "  "
     local level = 0
     local function serialize(node)
         if node.type == "element" then
             local i1, i2 = indent:rep(level), indent:rep(level+1)
             if node.tag_namespace then
-                rope:appendf('| %s<%s %s>\n', i1, node.tag_namespace, node.tag)
+                buf:appendf('| %s<%s %s>\n', i1, node.tag_namespace, node.tag)
             else
-                rope:appendf('| %s<%s>\n', i1, node.tag)
+                buf:appendf('| %s<%s>\n', i1, node.tag)
             end
             local attr = node.attr
             if attr then
@@ -19,9 +19,9 @@ return function(node)
                 for i = 1, #attr do
                     local a = attr[i]
                     if a.namespace then
-                        rope:appendf('| %s%s %s="%s"\n', i2, a.namespace, a.name, a.value)
+                        buf:appendf('| %s%s %s="%s"\n', i2, a.namespace, a.name, a.value)
                     else
-                        rope:appendf('| %s%s="%s"\n', i2, a.name, a.value)
+                        buf:appendf('| %s%s="%s"\n', i2, a.name, a.value)
                     end
                 end
             end
@@ -31,14 +31,14 @@ return function(node)
             end
             level = level - 1
         elseif node.type == "text" then
-            rope:appendf('| %s"%s"\n', indent:rep(level), node.text)
+            buf:appendf('| %s"%s"\n', indent:rep(level), node.text)
         elseif node.type == "comment" then
-            rope:appendf('| %s<!-- %s -->\n', indent:rep(level), node.text)
+            buf:appendf('| %s<!-- %s -->\n', indent:rep(level), node.text)
         elseif node.type == "document" then
             if node.has_doctype == true then
                 local pubid = node.public_identifier
                 local sysid = node.system_identifier
-                rope:appendf('| <!DOCTYPE %s%s>\n', node.name,
+                buf:appendf('| <!DOCTYPE %s%s>\n', node.name,
                     (pubid ~= "" or sysid ~= "") and
                     string.format(' "%s" "%s"', pubid, sysid) or ""
                 )
@@ -49,5 +49,5 @@ return function(node)
         end
     end
     serialize(node)
-    return rope:concat()
+    return buf:concat()
 end

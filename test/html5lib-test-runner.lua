@@ -2,7 +2,7 @@
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
 local util = require "gumbo.serialize.util"
-local Rope = util.Rope
+local Buffer = util.Buffer
 local verbose = os.getenv "VERBOSE"
 
 local results = {
@@ -15,20 +15,20 @@ local results = {
 local function parse_testdata(filename)
     local n = 0
     local field = "null"
-    local buffer = Rope()
+    local buf = Buffer()
     local tests = {}
     for line in io.lines(filename) do
         if line == "#data" or line == "#errors" or line == "#document" then
             tests[n] = tests[n] or {}
-            tests[n][field] = buffer:concat("\n")
-            buffer = Rope()
+            tests[n][field] = buf:concat("\n")
+            buf = Buffer()
             field = line:sub(2, -1)
             if line == "#data" then n = n + 1 end
         else
-            buffer:append(line)
+            buf:append(line)
         end
     end
-    tests[n][field] = buffer:concat("\n") .. "\n"
+    tests[n][field] = buf:concat("\n") .. "\n"
     return tests
 end
 
