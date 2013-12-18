@@ -71,15 +71,13 @@ The document node is the top-level table returned by the `parse` function
 and contains all other nodes as descendants. It contains the following
 fields:
 
-* `type`: The node type. Always has a value of `document` for document nodes.
-* `has_doctype`: Whether or not a [doctype declaration] was found. If
-  `true`, the following fields describe the doctype:
-  * `name`: The [root element] name.
-  * `public_identifier`: The [public identifier].
-  * `system_identifier`: The [system identifier].
-* `quirks_mode`: The [quirks mode] of the document. One of `quirks`,
-  `no-quirks` or `limited-quirks`.
-* `root`: A convenient reference to the root `html` element.
+* `type`: Always has a value of `"document"` for document nodes.
+* `has_doctype`: Whether or not a [doctype declaration] was found (boolean).
+* `name`: The doctype [root element] name.
+* `public_identifier`: The doctype [public identifier].
+* `system_identifier`: The doctype [system identifier].
+* `quirks_mode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
+* `root`: A convenient reference to the child `<html>` element.
 * `[1..n]`: Child nodes.
 
 ### Element Nodes
@@ -87,7 +85,7 @@ fields:
 Element nodes are represented as tables, with child nodes stored in
 numeric indices and the following named fields:
 
-* `type`: Always has a value of `element` for element nodes.
+* `type`: Always has a value of `"element"` for element nodes.
 * `tag`: The tag name. Normalized to lower case for recognized tags.
 * `attr`: A table of attributes or `nil`. See below for details.
 * `parse_flags`
@@ -98,7 +96,7 @@ numeric indices and the following named fields:
 #### Attribute Tables
 
 The `attr` field of element nodes is represented as a table, containing
-sub-tables in numeric indices and a convenient `name=value` index in
+sub-tables in numeric indices and a convenient `name="value"` index in
 named fields. The sub-tables each represent a single attribute and
 contain the following fields:
 
