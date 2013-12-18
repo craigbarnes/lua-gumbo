@@ -143,8 +143,6 @@ Todo
   * Handle `<style>` and `<script>` elements properly.
   * Don't wrap text inside `<pre>` elements.
 * Normalize SVG element tags with `gumbo_normalize_svg_tagname()` function
-* Test with the [html5lib-tests](https://github.com/html5lib/html5lib-tests)
-  `tree-construction` units.
 * Return an array of parse errors as a second return value (requires
   upstream API)
 
