@@ -43,13 +43,14 @@ local function to_table(node)
     local function serialize(node)
         if node.type == "element" then
             buf:appendf("%s{\n", indent[level])
-            local i1, i2, i3 = indent[level+1], indent[level+2], indent[level+3]
+            local i1, i2 = indent[level+1], indent[level+2]
             buf:appendf(sfmt, i1, "type", "element")
             buf:appendf(sfmt, i1, "tag", node.tag)
             buf:appendf(nfmt, i1, "line", node.line)
             buf:appendf(nfmt, i1, "column", node.column)
             buf:appendf(nfmt, i1, "offset", node.offset)
             if node.attr then
+                local i3 = indent[level+3]
                 buf:appendf("%sattr = {\n", i1)
                 for i = 1, #node.attr do
                     local a = node.attr[i]
@@ -97,15 +98,16 @@ local function to_table(node)
             buf:appendf(nfmt, i2, "offset", node.offset)
             buf:appendf("%s},\n", i1)
         elseif node.type == "document" then
+            assert(level == 0, "document nodes cannot be nested")
             buf:append("{\n")
+            local i1 = indent[level+1]
+            buf:appendf(sfmt, i1, "type", "document")
+            buf:appendf(bfmt, i1, "has_doctype", node.has_doctype)
+            buf:appendf(sfmt, i1, "name", node.name)
+            buf:appendf(sfmt, i1, "system_identifier", node.system_identifier)
+            buf:appendf(sfmt, i1, "public_identifier", node.public_identifier)
+            buf:appendf(sfmt, i1, "quirks_mode", node.quirks_mode)
             level = level + 1
-            local i = indent[level]
-            buf:appendf(sfmt, i, "type", "document")
-            buf:appendf(bfmt, i, "has_doctype", node.has_doctype)
-            buf:appendf(sfmt, i, "name", node.name)
-            buf:appendf(sfmt, i, "system_identifier", node.system_identifier)
-            buf:appendf(sfmt, i, "public_identifier", node.public_identifier)
-            buf:appendf(sfmt, i, "quirks_mode", node.quirks_mode)
             for i = 1, #node do
                 serialize(node[i])
             end
