@@ -57,6 +57,12 @@ static inline void add_boolean(lua_State *L, const char *k, const bool v) {
     lua_setfield(L, -2, k);
 }
 
+static void add_position(lua_State *L, const GumboSourcePosition *pos) {
+    add_integer(L, "line", pos->line);
+    add_integer(L, "column", pos->column);
+    add_integer(L, "offset", pos->offset);
+}
+
 // Forward declaration -- to allow mutual recursion with add_children()
 static void push_node(lua_State *L, const GumboNode *node);
 
@@ -78,9 +84,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             lua_createtable(L, 0, 5);
             add_string(L, "name", attr->name);
             add_string(L, "value", attr->value);
-            add_integer(L, "line", attr->name_start.line);
-            add_integer(L, "column", attr->name_start.column);
-            add_integer(L, "offset", attr->name_start.offset);
+            add_position(L, &attr->name_start);
             switch (attr->attr_namespace) {
             case GUMBO_ATTR_NAMESPACE_XLINK:
                 add_literal(L, "namespace", "xlink");
@@ -140,9 +144,7 @@ static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
 static void create_text_node(lua_State *L, const GumboText *text) {
     lua_createtable(L, 0, 5);
     add_string(L, "text", text->text);
-    add_integer(L, "line", text->start_pos.line);
-    add_integer(L, "column", text->start_pos.column);
-    add_integer(L, "offset", text->start_pos.offset);
+    add_position(L, &text->start_pos);
 }
 
 static void add_quirks_mode(lua_State *L, const GumboQuirksModeEnum qm) {
@@ -183,9 +185,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
         lua_createtable(L, element->children.length, 7);
         add_literal(L, "type", "element");
         add_tagname(L, element);
-        add_integer(L, "line", element->start_pos.line);
-        add_integer(L, "column", element->start_pos.column);
-        add_integer(L, "offset", element->start_pos.offset);
+        add_position(L, &element->start_pos);
         add_parseflags(L, node->parse_flags);
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
