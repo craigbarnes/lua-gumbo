@@ -28,12 +28,12 @@ tnew = have_tnew and tnew or function(narr, nrec) return {} end
 local have_bit, bit = pcall(require, "bit")
 local testflag
 if have_bit == true then
-    testflag = function(set, flag)
-        return bit.band(set, flag) ~= 0
+    testflag = function(value, flag)
+        return bit.band(value, flag) ~= 0
     end
 else
-    testflag = function(set, flag)
-        return set % (2 * flag) >= flag
+    testflag = function(value, flag)
+        return value % (2 * flag) >= flag
     end
 end
 
