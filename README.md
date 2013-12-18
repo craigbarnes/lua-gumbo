@@ -84,33 +84,40 @@ fields:
 
 ### Element Nodes
 
-Element nodes are represented as tables, with child nodes stored in numeric
-indices and the following named fields:
+Element nodes are represented as tables, with child nodes stored in
+numeric indices and the following named fields:
 
-* `type`: The node type. Always has a value of `element` for element nodes.
-* `tag`: The tag name. Normalized to lower case for valid tags,
-  verbatim for unrecognized tags.
-* `attr`: A table of attributes associated with the element. Fields are
-  `name="value"` pairs.
-* `start_pos`: A table representing the source position of the opening tag.
-  It contains the fields:
-    * `line`: The line number, starting from 1.
-    * `column`: The column number, starting from 1 (may be affected by the
-      `tab_stop` value passed to `gumbo.parse`).
-    * `offset`: The offset position in bytes, starting from 0.
-* `end_pos`: A table representing the source position of the closing tag.
-  It contains the same fields as described for `start_pos`.
+* `type`: Always has a value of `element` for element nodes.
+* `tag`: The tag name. Normalized to lower case for recognized tags.
+* `attr`: A table of attributes or `nil`. See below for details.
+* `parse_flags`
+* `line`
+* `column`
+* `offset`
+
+#### Attribute Tables
+
+The `attr` field of element nodes is represented as a table, containing
+sub-tables in numeric indices and a convenient `name=value` index in
+named fields. The sub-tables each represent a single attribute and
+contain the following fields:
+
+* `name`
+* `value`
+* `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
+* `line`
+* `column`
+* `offset`
 
 ### Text Nodes
 
-Text nodes are represented as tables with 3 fields:
+Text nodes are represented as tables with the fields:
 
-* `type`: The node type. One of `text`, `whitespace`, `comment` or `cdata`.
-* `text`: The text contents. Does not include delimiters for `comment` or
-  `cdata` types.
-* `line`: The line number on which the text begins (counting from 1).
-* `column`: The column number at which the text begins (counting from 1).
-* `offset`: The byte offset of the first byte of the text (counting from 0).
+* `type`: One of `"text"`, `"whitespace"`, `"comment"` or `"cdata"`.
+* `text`: The text contents. Does not include comment/cdata delimiters.
+* `line`
+* `column`
+* `offset`
 
 FFI Bindings
 ------------
