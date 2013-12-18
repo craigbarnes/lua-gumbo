@@ -37,10 +37,12 @@ return function(node)
             if node.has_doctype == true then
                 local pubid = node.public_identifier
                 local sysid = node.system_identifier
-                buf:appendf('| <!DOCTYPE %s%s>\n', node.name,
-                    (pubid ~= "" or sysid ~= "") and
-                    string.format(' "%s" "%s"', pubid, sysid) or ""
-                )
+                if pubid ~= "" or sysid ~= "" then
+                    local fmt = '| <!DOCTYPE %s "%s" "%s">\n'
+                    buf:appendf(fmt, node.name, pubid, sysid)
+                else
+                    buf:appendf("| <!DOCTYPE %s>\n", node.name)
+                end
             end
             for i = 1, #node do
                 serialize(node[i])
