@@ -21,15 +21,17 @@ local void = {
     wbr = true
 }
 
-local function escape(s)
-    return s:gsub("[&<>\"'/]", {
-        ["&"] = "&amp;",
-        ["<"] = "&lt;",
-        [">"] = "&gt;",
-        ['"'] = "&quot;",
-        ["'"] = "&#x27;",
-        ["/"] = "&#x2F;"
-    })
+local escmap = {
+    ["&"] = "&amp;",
+    ["<"] = "&lt;",
+    [">"] = "&gt;",
+    ['"'] = "&quot;",
+    ["'"] = "&#x27;",
+    ["/"] = "&#x2F;"
+}
+
+local function escape(text)
+    return text:gsub("[&<>\"'/]", escmap)
 end
 
 local function to_html(node)
@@ -45,7 +47,7 @@ local function to_html(node)
             if attributes then
                 for i = 1, #attributes do
                     local attr = attributes[i]
-                    local escaped_value = attr.value:gsub("'", "&quot;")
+                    local escaped_value = attr.value:gsub('"', "&quot;")
                     buf:appendf(' %s="%s"', attr.name, escaped_value)
                 end
             end
