@@ -233,15 +233,11 @@ static void push_node(lua_State *L, const GumboNode *node) {
 }
 
 static int parse(lua_State *L) {
-    size_t len;
-    const char *input;
+    size_t length;
+    const char *input = luaL_checklstring(L, 1, &length);
     GumboOptions options = kGumboDefaultOptions;
-    GumboOutput *output;
-
-    input = luaL_checklstring(L, 1, &len);
     options.tab_stop = luaL_optint(L, 2, 8);
-    output = gumbo_parse_with_options(&options, input, len);
-
+    GumboOutput *output = gumbo_parse_with_options(&options, input, length);
     if (output) {
         push_node(L, output->document);
         lua_rawgeti(L, -1, output->root->index_within_parent + 1);
