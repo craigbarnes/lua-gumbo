@@ -118,7 +118,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
 
 static void add_tagname(lua_State *L, const GumboElement *element) {
     switch (element->tag_namespace) {
-    case GUMBO_NAMESPACE_SVG:
+    case GUMBO_NAMESPACE_SVG: {
         add_literal(L, "tag_namespace", "svg");
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
@@ -128,25 +128,25 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
         else
             lua_pushlstring(L, original_tag.data, original_tag.length);
         lua_setfield(L, -2, "tag");
-        return;
+        break;
+    }
     case GUMBO_NAMESPACE_MATHML:
         add_literal(L, "tag_namespace", "math");
-        break;
+        // Fall-through
     case GUMBO_NAMESPACE_HTML:
     default:
+        if (element->tag == GUMBO_TAG_UNKNOWN) {
+            GumboStringPiece original_tag = element->original_tag;
+            gumbo_tag_from_original_text(&original_tag);
+            char *lower = string_piece_to_lowercase_string(&original_tag);
+            lua_pushlstring(L, lower, original_tag.length);
+            free(lower);
+        } else {
+            lua_pushstring(L, gumbo_normalized_tagname(element->tag));
+        }
+        lua_setfield(L, -2, "tag");
         break;
     }
-
-    if (element->tag == GUMBO_TAG_UNKNOWN) {
-        GumboStringPiece original_tag = element->original_tag;
-        gumbo_tag_from_original_text(&original_tag);
-        char *lower = string_piece_to_lowercase_string(&original_tag);
-        lua_pushlstring(L, lower, original_tag.length);
-        free(lower);
-    } else {
-        lua_pushstring(L, gumbo_normalized_tagname(element->tag));
-    }
-    lua_setfield(L, -2, "tag");
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
