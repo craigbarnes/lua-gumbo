@@ -1,16 +1,15 @@
 #!/usr/bin/lua
+assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
 local util = require "gumbo.serialize.util"
 local Buffer = util.Buffer
 local verbose = os.getenv "VERBOSE"
+local results = {pass = 0, fail = 0, n = 0}
 
-local results = {
-    pass = 0,
-    fail = 0,
-    parsed = 0,
-    not_parsed = 0
-}
+local function printf(...)
+    io.stdout:write(string.format(...))
+end
 
 local function parse_testdata(filename)
     local tests = {[0] = {}, n = 0}
@@ -31,22 +30,19 @@ local function parse_testdata(filename)
         end
     end
     tests[tests.n][field] = buffer:concat("\n") .. "\n"
-    return tests
+    if tests.n > 0 then
+        return tests
+    else
+        return nil, "No test data found in " .. filename
+    end
 end
 
-local function basename(str)
-    return str:gsub("(.*/)(.*)", "%2")
-end
-
-local function printf(...)
-    io.stdout:write(string.format(...))
-end
-
-local function runtests(filename, tests)
+for i = 1, #arg do
+    local filename = arg[i]
+    local tests = assert(parse_testdata(filename))
     local result = {
         filename = filename,
-        basename = basename(filename),
-        parsed = true,
+        basename = filename:gsub("(.*/)(.*)", "%2"),
         pass = 0,
         fail = 0
     }
@@ -71,47 +67,16 @@ local function runtests(filename, tests)
             end
         end
     end
-    table.insert(results, result)
+    results.n = results.n + 1
+    results[results.n] = result
     results.pass = results.pass + result.pass
     results.fail = results.fail + result.fail
 end
 
-assert(arg[1], "No test files specified")
-
-for i = 1, #arg do
-    local filename = arg[i]
-    local tests = parse_testdata(filename)
-    if tests then
-        runtests(filename, tests)
-        results.parsed = results.parsed + 1
-    else
-        table.insert(results, {
-            filename = filename,
-            basename = basename(filename),
-            parsed = false
-        })
-        results.not_parsed = results.not_parsed + 1
-    end
+for i = 1, results.n do
+    local r = results[i]
+    printf("%s: %d passed, %d failed\n", r.basename, r.pass, r.fail)
 end
 
-for i = 1, #results do
-    local result = results[i]
-    if result.parsed then
-        printf("%s: %d passed, %d failed\n", result.basename, result.pass, result.fail)
-    else
-        printf("%s: \27[31mfailed to parse data\27[0m\n", result.basename)
-    end
-end
-
-printf([[
-
-Totals:
-
-   Files loaded: %d
-   Files failed: %d
-   Tests passed: %d
-   Tests failed: %d
-
-]], results.parsed, results.not_parsed, results.pass, results.fail)
-
-os.exit(results.not_parsed == 0 and results.fail == 0)
+printf("\nTotal passed: %d\nTotal failed: %d\n\n", results.pass, results.fail)
+os.exit(results.fail == 0)
