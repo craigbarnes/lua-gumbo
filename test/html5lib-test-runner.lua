@@ -5,7 +5,8 @@ local serialize = require "gumbo.serialize.html5lib"
 local util = require "gumbo.serialize.util"
 local Buffer = util.Buffer
 local verbose = os.getenv "VERBOSE"
-local results = {pass = 0, fail = 0, n = 0}
+local results = {pass = 0, fail = 0, skip = 0, n = 0}
+local start = os.clock()
 
 local function printf(...)
     io.stdout:write(string.format(...))
@@ -52,6 +53,7 @@ for i = 1, #arg do
         local test = tests[i]
         if test["document-fragment"] then
             -- TODO: handle fragment tests
+            results.skip = results.skip + 1
         else
             local document = assert(gumbo.parse(test.data))
             local serialized = serialize(document)
@@ -81,5 +83,8 @@ for i = 1, results.n do
     printf("%s: %d passed, %d failed\n", r.basename, r.pass, r.fail)
 end
 
-printf("\nTotal passed: %d\nTotal failed: %d\n\n", results.pass, results.fail)
+local total = results.pass + results.fail + results.skip
+printf("\nRan %d tests in %.2fs\n\n", total, os.clock() - start)
+printf("Passed: %d\nFailed: %d\n", results.pass, results.fail)
+printf("Skipped: %d\n\n", results.skip)
 os.exit(results.fail == 0)
