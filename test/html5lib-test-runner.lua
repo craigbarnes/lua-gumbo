@@ -16,14 +16,17 @@ local function parse_testdata(filename)
     local n = 0
     local field = "null"
     local buf = Buffer()
-    local tests = {}
+    local tests = {[0] = {}}
     for line in io.lines(filename) do
-        if line == "#data" or line == "#errors" or line == "#document" then
-            tests[n] = tests[n] or {}
+        local match = line:match("^#(.*)$")
+        if match then
             tests[n][field] = buf:concat("\n")
             buf = Buffer()
-            field = line:sub(2, -1)
-            if line == "#data" then n = n + 1 end
+            field = match
+            if match == "data" then
+                n = n + 1
+                tests[n] = {}
+            end
         else
             buf:append(line)
         end
