@@ -86,7 +86,7 @@ Element nodes are represented as tables, with child nodes stored in
 numeric indices and the following named fields:
 
 * `type`: Always has a value of `"element"` for element nodes.
-* `tag`: The tag name. Normalized to lower case for recognized tags.
+* `tag`: The tag name, normalized to lower case.
 * `attr`: A table of attributes or `nil`. See below for details.
 * `parse_flags`
 * `line`

@@ -17,6 +17,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
@@ -55,6 +56,16 @@ static inline void add_integer(lua_State *L, const char *k, const int v) {
 static inline void add_boolean(lua_State *L, const char *k, const bool v) {
     lua_pushboolean(L, v);
     lua_setfield(L, -2, k);
+}
+
+static char *string_piece_to_lowercase_string(const GumboStringPiece *piece) {
+    const size_t length = piece->length;
+    char *lower = malloc(length + 1);
+    for (size_t i = 0; i < length; i++) {
+        lower[i] = (unsigned char)piece->data[i] | ('A' ^ 'a');
+    }
+    lower[length] = '\0';
+    return lower;
 }
 
 static void add_position(lua_State *L, const GumboSourcePosition *pos) {
@@ -109,7 +120,9 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
-        lua_pushlstring(L, original_tag.data, original_tag.length);
+        char *lower = string_piece_to_lowercase_string(&original_tag);
+        lua_pushlstring(L, lower, original_tag.length);
+        free(lower);
     } else {
         lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     }
