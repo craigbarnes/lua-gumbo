@@ -15,7 +15,9 @@ local function parse_testdata(filename)
     local tests = {[0] = {}, n = 0}
     local buffer = Buffer()
     local field = false
+    local linenumber = 0
     for line in io.lines(filename) do
+        linenumber = linenumber + 1
         local section = line:match("^#(.*)$")
         if section then
             tests[tests.n][field] = buffer:concat("\n")
@@ -23,7 +25,7 @@ local function parse_testdata(filename)
             field = section
             if section == "data" then
                 tests.n = tests.n + 1
-                tests[tests.n] = {}
+                tests[tests.n] = {line = linenumber}
             end
         else
             buffer:append(line)
@@ -58,11 +60,12 @@ for i = 1, #arg do
             else
                 result.fail = result.fail + 1
                 if verbose then
-                    printf("Test #%d in %s failed:\n\n", i, filename)
+                    printf("%s\n", string.rep("=", 76))
+                    printf("%s:%d: Test %d failed\n", filename, test.line, i)
+                    printf("%s\n\n", string.rep("=", 76))
                     printf("Input:\n%s\n\n", test.data)
                     printf("Expected:\n%s\n", test.document)
-                    printf("Got:\n%s\n", serialized)
-                    printf("%s\n\n", string.rep("=", 76))
+                    printf("Received:\n%s\n", serialized)
                 end
             end
         end
