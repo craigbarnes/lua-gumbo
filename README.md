@@ -147,7 +147,6 @@ Todo
   * Implement a "minified" mode for HTML serialization
   * Handle `<style>` and `<script>` elements properly.
   * Don't wrap text inside `<pre>` elements.
-* Normalize SVG element tags with `gumbo_normalize_svg_tagname()` function
 * Return an array of parse errors as a second return value (requires
   upstream API)
 

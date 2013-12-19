@@ -101,6 +101,17 @@ local function get_attributes(attrs)
 end
 
 local function get_tag_name(element)
+    if element.tag_namespace == C.GUMBO_NAMESPACE_SVG then
+        local original_tag = element.original_tag
+        C.gumbo_tag_from_original_text(original_tag)
+        local normalized = C.gumbo_normalize_svg_tagname(original_tag)
+        if normalized ~= nil then
+            return ffi_string(normalized)
+        else
+            return ffi_string(original_tag.data, original_tag.length)
+        end
+    end
+
     if element.tag == C.GUMBO_TAG_UNKNOWN then
         local original_tag = element.original_tag
         C.gumbo_tag_from_original_text(original_tag)
