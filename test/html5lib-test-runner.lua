@@ -52,18 +52,22 @@ local function runtests(filename, tests)
     }
     for i = 1, tests.n do
         local test = tests[i]
-        local document = assert(gumbo.parse(test.data))
-        local serialized = serialize(document)
-        if serialized == test.document then
-            result.pass = result.pass + 1
+        if test["document-fragment"] then
+            -- TODO: handle fragment tests
         else
-            result.fail = result.fail + 1
-            if verbose then
-                printf("Test #%d in %s failed:\n\n", i, filename)
-                printf("Input:\n%s\n\n", test.data)
-                printf("Expected:\n%s\n", test.document)
-                printf("Got:\n%s\n", serialized)
-                printf("%s\n\n", string.rep("=", 76))
+            local document = assert(gumbo.parse(test.data))
+            local serialized = serialize(document)
+            if serialized == test.document then
+                result.pass = result.pass + 1
+            else
+                result.fail = result.fail + 1
+                if verbose then
+                    printf("Test #%d in %s failed:\n\n", i, filename)
+                    printf("Input:\n%s\n\n", test.data)
+                    printf("Expected:\n%s\n", test.document)
+                    printf("Got:\n%s\n", serialized)
+                    printf("%s\n\n", string.rep("=", 76))
+                end
             end
         end
     end
