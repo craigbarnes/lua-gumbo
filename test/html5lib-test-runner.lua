@@ -13,25 +13,24 @@ local results = {
 }
 
 local function parse_testdata(filename)
-    local n = 0
-    local field = "null"
-    local buf = Buffer()
-    local tests = {[0] = {}}
+    local tests = {[0] = {}, n = 0}
+    local buffer = Buffer()
+    local field = false
     for line in io.lines(filename) do
-        local match = line:match("^#(.*)$")
-        if match then
-            tests[n][field] = buf:concat("\n")
-            buf = Buffer()
-            field = match
-            if match == "data" then
-                n = n + 1
-                tests[n] = {}
+        local section = line:match("^#(.*)$")
+        if section then
+            tests[tests.n][field] = buffer:concat("\n")
+            buffer = Buffer()
+            field = section
+            if section == "data" then
+                tests.n = tests.n + 1
+                tests[tests.n] = {}
             end
         else
-            buf:append(line)
+            buffer:append(line)
         end
     end
-    tests[n][field] = buf:concat("\n") .. "\n"
+    tests[tests.n][field] = buffer:concat("\n") .. "\n"
     return tests
 end
 
@@ -51,7 +50,7 @@ local function runtests(filename, tests)
         pass = 0,
         fail = 0
     }
-    for i = 1, #tests do
+    for i = 1, tests.n do
         local test = tests[i]
         local document = assert(gumbo.parse(test.data))
         local serialized = serialize(document)
