@@ -29,7 +29,7 @@ return function(node)
                 serialize(node[i])
             end
             level = level - 1
-        elseif node.type == "text" then
+        elseif node.type == "text" or node.type == "whitespace" then
             buf:appendf('| %s"%s"\n', indent[level], node.text)
         elseif node.type == "comment" then
             buf:appendf('| %s<!-- %s -->\n', indent[level], node.text)
