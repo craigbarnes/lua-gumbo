@@ -130,9 +130,8 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
         lua_setfield(L, -2, "tag");
         break;
     }
-    case GUMBO_NAMESPACE_MATHML:
+    case GUMBO_NAMESPACE_MATHML: // Fall-through
         add_literal(L, "tag_namespace", "math");
-        // Fall-through
     case GUMBO_NAMESPACE_HTML:
     default:
         if (element->tag == GUMBO_TAG_UNKNOWN) {
