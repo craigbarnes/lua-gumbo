@@ -123,16 +123,16 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
         const char *normalized = gumbo_normalize_svg_tagname(&original_tag);
-        if (normalized)
-            lua_pushstring(L, normalized);
-        else
-            lua_pushlstring(L, original_tag.data, original_tag.length);
-        lua_setfield(L, -2, "tag");
-        break;
+        if (normalized) {
+            add_string(L, "tag", normalized);
+            return;
+        }
+        goto svgjump;
     }
     case GUMBO_NAMESPACE_MATHML: // Fall-through
         add_literal(L, "tag_namespace", "math");
     case GUMBO_NAMESPACE_HTML:
+    svgjump:
     default:
         if (element->tag == GUMBO_TAG_UNKNOWN) {
             GumboStringPiece original_tag = element->original_tag;
