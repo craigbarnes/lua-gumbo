@@ -26,7 +26,18 @@ return function(node)
             end
             level = level + 1
             for i = 1, #node do
-                serialize(node[i])
+                if node[i].type == "text" and node[i+1]
+                   and node[i+1].type == "text"
+                then
+                    -- Merge adjacent text nodes, as expected by the
+                    -- spec and the html5lib tests
+                    -- TODO: Why doesn't Gumbo do this during parsing?
+                    local text = node[i+1].text
+                    node[i+1] = node[i]
+                    node[i+1].text = node[i+1].text .. text
+                else
+                    serialize(node[i])
+                end
             end
             level = level - 1
         elseif node.type == "text" or node.type == "whitespace" then
