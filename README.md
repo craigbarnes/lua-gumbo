@@ -14,7 +14,7 @@ Requirements
 
 Building the C module requires, at a minimum:
 
-* C89 compiler
+* C99 compiler
 * Lua headers
 * [Gumbo][Gumbo installation]
 
