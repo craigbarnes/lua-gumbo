@@ -13,11 +13,14 @@ local function printf(...)
 end
 
 local function parse_testdata(filename)
+    local file = assert(io.open(filename))
+    local text = assert(file:read("*a"))
+    file:close()
     local tests = {[0] = {}, n = 0}
     local buffer = Buffer()
     local field = false
     local linenumber = 0
-    for line in io.lines(filename) do
+    for line in text:gmatch "([^\n]*)\n" do
         linenumber = linenumber + 1
         local section = line:match("^#(.*)$")
         if section then
@@ -87,4 +90,4 @@ local total = results.pass + results.fail + results.skip
 printf("\nRan %d tests in %.2fs\n\n", total, os.clock() - start)
 printf("Passed: %d\nFailed: %d\n", results.pass, results.fail)
 printf("Skipped: %d\n\n", results.skip)
-os.exit(results.fail == 0)
+os.exit(results.fail)
