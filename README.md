@@ -134,7 +134,7 @@ The Makefile has targets for running the tests in various configurations:
 * `make check`: tests the C module
 * `make check-ffi`: tests the FFI module
 * `make check-valgrind`: tests the C module, running via Valgrind
-* `make check-html5lib`: runs the html5lib `tree-construction` test suite
+* `make check-html5lib`: runs the [html5lib tree-construction tests]
 * `make check-all`: tests both modules, using various compiler/interpretter
   permutations (requires GCC, Clang, TCC, Lua and LuaJIT)
 
@@ -181,3 +181,4 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [public identifier]: http://dom.spec.whatwg.org/#concept-doctype-publicid
 [system identifier]: http://dom.spec.whatwg.org/#concept-doctype-systemid
 [quirks mode]: http://dom.spec.whatwg.org/#concept-document-quirks
+[html5lib tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
