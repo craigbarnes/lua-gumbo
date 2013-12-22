@@ -23,13 +23,17 @@ else
 end
 
 function gumbo.parse_file(filename, tab_stop)
-    local file, err = io.open(filename)
+    local file, openerr = io.open(filename)
     if file then
-        local text = file:read("*a")
+        local text, readerr = file:read("*a")
         file:close()
-        return gumbo.parse(text, tab_stop)
+        if text then
+            return gumbo.parse(text, tab_stop)
+        else
+            return nil, readerr
+        end
     else
-        return nil, err
+        return nil, openerr
     end
 end
 
