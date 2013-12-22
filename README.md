@@ -138,17 +138,6 @@ The Makefile has targets for running the tests in various configurations:
 * `make check-compat`: tests both modules, using various compiler/interpretter
   permutations (requires GCC, Clang, TCC, Lua, LuaJIT and luaffi)
 
-Todo
-----
-
-* Finish implementing HTML/table serialization.
-  * Collapse newlines around tags of inline elements and short block elements.
-  * Implement a "minified" mode for HTML serialization
-  * Handle `<style>` and `<script>` elements properly.
-  * Don't wrap text inside `<pre>` elements.
-* Return an array of parse errors as a second return value (requires
-  upstream API)
-
 [License]
 ---------
 

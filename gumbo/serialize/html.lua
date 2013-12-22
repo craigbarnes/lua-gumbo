@@ -1,5 +1,10 @@
 local util = require "gumbo.serialize.util"
 
+-- TODO:
+-- * Collapse newlines around inline elements and short block elements.
+-- * Handle <style>, <script> and <pre> elements properly.
+-- * Implement a "minified" mode.
+
 -- Set of void elements
 -- whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
 local void = {
