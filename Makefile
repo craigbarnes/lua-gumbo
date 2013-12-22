@@ -72,7 +72,7 @@ check-ffi: check
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
 check-valgrind: check
 
-check-all:
+check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
@@ -97,5 +97,5 @@ ifeq ($(shell uname),Darwin)
 endif
 
 .PHONY: all install uninstall clean bench bench-all
-.PHONY: check check-ffi check-valgrind check-all check-html5lib
+.PHONY: check check-ffi check-valgrind check-compat check-html5lib
 .DELETE_ON_ERROR:
