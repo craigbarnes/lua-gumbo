@@ -58,16 +58,6 @@ static inline void add_boolean(lua_State *L, const char *k, const bool v) {
     lua_setfield(L, -2, k);
 }
 
-static char *string_piece_to_lowercase_string(const GumboStringPiece *piece) {
-    const size_t length = piece->length;
-    char *lower = malloc(length + 1);
-    for (size_t i = 0; i < length; i++) {
-        lower[i] = (unsigned char)piece->data[i] | ('A' ^ 'a');
-    }
-    lower[length] = '\0';
-    return lower;
-}
-
 static void add_position(lua_State *L, const GumboSourcePosition *pos) {
     add_integer(L, "line", pos->line);
     add_integer(L, "column", pos->column);
@@ -137,8 +127,13 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
         if (element->tag == GUMBO_TAG_UNKNOWN) {
             GumboStringPiece original_tag = element->original_tag;
             gumbo_tag_from_original_text(&original_tag);
-            char *lower = string_piece_to_lowercase_string(&original_tag);
-            lua_pushlstring(L, lower, original_tag.length);
+            const size_t length = original_tag.length;
+            char *lower = malloc(length + 1);
+            for (size_t i = 0; i < length; i++) {
+                lower[i] = (unsigned char)original_tag.data[i] | ('A' ^ 'a');
+            }
+            lower[length] = '\0';
+            lua_pushlstring(L, lower, length);
             free(lower);
         } else {
             lua_pushstring(L, gumbo_normalized_tagname(element->tag));
