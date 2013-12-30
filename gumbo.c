@@ -18,6 +18,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
@@ -130,7 +131,11 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
             const size_t length = original_tag.length;
             char *lower = malloc(length + 1);
             for (size_t i = 0; i < length; i++) {
-                lower[i] = (unsigned char)original_tag.data[i] | ('A' ^ 'a');
+                const int c = original_tag.data[i];
+                if (c <= 'Z' && c >= 'A')
+                    lower[i] = tolower(c);
+                else
+                    lower[i] = c;
             }
             lower[length] = '\0';
             lua_pushlstring(L, lower, length);
