@@ -23,7 +23,7 @@
 #include <gumbo.h>
 
 static const struct {
-    const int flag;
+    const unsigned int flag;
     const char *name;
 } flag_map[] = {
     {GUMBO_INSERTION_BY_PARSER, "insertion_by_parser"},
@@ -130,7 +130,7 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
             const size_t length = original_tag.length;
             char *lower = malloc(length + 1);
             for (size_t i = 0; i < length; i++) {
-                const int c = original_tag.data[i];
+                const char c = original_tag.data[i];
                 if (c <= 'Z' && c >= 'A')
                     lower[i] = c + 32;
                 else
@@ -147,7 +147,7 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
     }
 }
 
-static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
+static void add_parseflags(lua_State *L, const unsigned int flags) {
     static const unsigned int nflags = sizeof(flag_map) / sizeof(flag_map[0]);
     if (flags != GUMBO_INSERTION_NORMAL) {
         lua_createtable(L, 0, 1);
