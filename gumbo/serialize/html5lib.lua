@@ -6,7 +6,7 @@ return function(node)
     local level = 0
     local function serialize(node)
         if node.type == "element" then
-            local i1, i2 = indent[level], indent[level+1]
+            local i1 = indent[level]
             if node.tag_namespace then
                 buf:appendf('| %s<%s %s>\n', i1, node.tag_namespace, node.tag)
             else
@@ -14,11 +14,13 @@ return function(node)
             end
             local attr = node.attr
             if attr then
+                local i2 = indent[level+1]
                 table.sort(attr, function(x, y) return x.name < y.name end)
                 for i = 1, #attr do
                     local a = attr[i]
                     if a.namespace then
-                        buf:appendf('| %s%s %s="%s"\n', i2, a.namespace, a.name, a.value)
+                        local fmt = '| %s%s %s="%s"\n'
+                        buf:appendf(fmt, i2, a.namespace, a.name, a.value)
                     else
                         buf:appendf('| %s%s="%s"\n', i2, a.name, a.value)
                     end

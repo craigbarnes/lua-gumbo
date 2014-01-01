@@ -5,7 +5,7 @@ local serialize = require "gumbo.serialize.html5lib"
 local util = require "gumbo.serialize.util"
 local Buffer = util.Buffer
 local verbose = os.getenv "VERBOSE"
-local results = {pass = 0, fail = 0, skip = 0, n = 0}
+local results = {passed = 0, failed = 0, skipped = 0, n = 0}
 local start = os.clock()
 
 local function printf(...)
@@ -49,21 +49,23 @@ for i = 1, #arg do
     local result = {
         filename = filename,
         basename = filename:gsub("(.*/)(.*)", "%2"),
-        pass = 0,
-        fail = 0
+        passed = 0,
+        failed = 0,
+        skipped = 0,
+        total = tests.n
     }
     for i = 1, tests.n do
         local test = tests[i]
         if test["document-fragment"] then
             -- TODO: handle fragment tests
-            results.skip = results.skip + 1
+            result.skipped = result.skipped + 1
         else
             local document = assert(gumbo.parse(test.data))
             local serialized = serialize(document)
             if serialized == test.document then
-                result.pass = result.pass + 1
+                result.passed = result.passed + 1
             else
-                result.fail = result.fail + 1
+                result.failed = result.failed + 1
                 if verbose then
                     printf("%s\n", string.rep("=", 76))
                     printf("%s:%d: Test %d failed\n", filename, test.line, i)
@@ -77,17 +79,25 @@ for i = 1, #arg do
     end
     results.n = results.n + 1
     results[results.n] = result
-    results.pass = results.pass + result.pass
-    results.fail = results.fail + result.fail
+    results.passed = results.passed + result.passed
+    results.failed = results.failed + result.failed
+    results.skipped = results.skipped + result.skipped
 end
 
 for i = 1, results.n do
     local r = results[i]
-    printf("%s: %d passed, %d failed\n", r.basename, r.pass, r.fail)
+    if r.failed > 0 and r.skipped > 0 then
+        local fmt = "%s: %d of %d tests failed, %d of %d tests skipped\n"
+        printf(fmt, r.basename, r.failed, r.total, r.skipped, r.total)
+    elseif r.failed > 0 then
+        printf("%s: %d of %d tests failed\n", r.basename, r.failed, r.total)
+    elseif r.skipped > 0 then
+        printf("%s: %d of %d tests skipped\n", r.basename, r.skipped, r.total)
+    end
 end
 
-local total = results.pass + results.fail + results.skip
+local total = results.passed + results.failed + results.skipped
 printf("\nRan %d tests in %.2fs\n\n", total, os.clock() - start)
-printf("Passed: %d\nFailed: %d\n", results.pass, results.fail)
-printf("Skipped: %d\n\n", results.skip)
-os.exit(results.fail)
+printf("Passed: %d\nFailed: %d\n", results.passed, results.failed)
+printf("Skipped: %d\n\n", results.skipped)
+os.exit(results.failed == 0 and 0 or 1)
