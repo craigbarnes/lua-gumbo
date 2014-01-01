@@ -46,26 +46,19 @@ end
 for i = 1, #arg do
     local filename = arg[i]
     local tests = assert(parse_testdata(filename))
-    local result = {
-        filename = filename,
-        basename = filename:gsub("(.*/)(.*)", "%2"),
-        passed = 0,
-        failed = 0,
-        skipped = 0,
-        total = tests.n
-    }
+    local passed, failed, skipped = 0, 0, 0
     for i = 1, tests.n do
         local test = tests[i]
         if test["document-fragment"] then
             -- TODO: handle fragment tests
-            result.skipped = result.skipped + 1
+            skipped = skipped + 1
         else
             local document = assert(gumbo.parse(test.data))
             local serialized = serialize(document)
             if serialized == test.document then
-                result.passed = result.passed + 1
+                passed = passed + 1
             else
-                result.failed = result.failed + 1
+                failed = failed + 1
                 if verbose then
                     printf("%s\n", string.rep("=", 76))
                     printf("%s:%d: Test %d failed\n", filename, test.line, i)
@@ -77,14 +70,20 @@ for i = 1, #arg do
             end
         end
     end
-    results.n = results.n + 1
-    results[results.n] = result
-    results.passed = results.passed + result.passed
-    results.failed = results.failed + result.failed
-    results.skipped = results.skipped + result.skipped
+    results[i] = {
+        filename = filename,
+        basename = filename:gsub("(.*/)(.*)", "%2"),
+        passed = passed,
+        failed = failed,
+        skipped = skipped,
+        total = tests.n
+    }
+    results.passed = results.passed + passed
+    results.failed = results.failed + failed
+    results.skipped = results.skipped + skipped
 end
 
-for i = 1, results.n do
+for i = 1, #results do
     local r = results[i]
     if r.failed > 0 and r.skipped > 0 then
         local fmt = "%s: %d of %d tests failed, %d of %d tests skipped\n"
@@ -98,6 +97,7 @@ end
 
 local total = results.passed + results.failed + results.skipped
 printf("\nRan %d tests in %.2fs\n\n", total, os.clock() - start)
-printf("Passed: %d\nFailed: %d\n", results.passed, results.failed)
+printf("Passed: %d\n", results.passed)
+printf("Failed: %d\n", results.failed)
 printf("Skipped: %d\n\n", results.skipped)
 os.exit(results.failed == 0 and 0 or 1)
