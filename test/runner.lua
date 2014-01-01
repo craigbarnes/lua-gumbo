@@ -5,7 +5,7 @@ local serialize = require "gumbo.serialize.html5lib"
 local util = require "gumbo.serialize.util"
 local Buffer = util.Buffer
 local verbose = os.getenv "VERBOSE"
-local results = {passed = 0, failed = 0, skipped = 0, n = 0}
+local results = {passed = 0, failed = 0, skipped = 0}
 local start = os.clock()
 
 local function printf(...)
@@ -83,6 +83,8 @@ for i = 1, #arg do
     results.skipped = results.skipped + skipped
 end
 
+results.total = results.passed + results.failed + results.skipped
+
 for i = 1, #results do
     local r = results[i]
     if r.failed > 0 and r.skipped > 0 then
@@ -95,8 +97,7 @@ for i = 1, #results do
     end
 end
 
-local total = results.passed + results.failed + results.skipped
-printf("\nRan %d tests in %.2fs\n\n", total, os.clock() - start)
+printf("\nRan %d tests in %.2fs\n\n", results.total, os.clock() - start)
 printf("Passed: %d\n", results.passed)
 printf("Failed: %d\n", results.failed)
 printf("Skipped: %d\n\n", results.skipped)
