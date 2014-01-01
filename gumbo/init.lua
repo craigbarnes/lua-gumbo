@@ -22,18 +22,22 @@ else
     end
 end
 
-function gumbo.parse_file(filename, tab_stop)
-    local file, openerr = io.open(filename)
-    if file then
-        local text, readerr = file:read("*a")
-        file:close()
-        if text then
-            return gumbo.parse(text, tab_stop)
-        else
-            return nil, readerr
-        end
+function gumbo.parse_file(path_or_file, tab_stop)
+    local file, openerr
+    if type(path_or_file) == "string" then
+        file, openerr = io.open(path_or_file)
+        if not file then return nil, openerr end
+    elseif io.type(path_or_file) == "file" then
+        file = path_or_file
     else
-        return nil, openerr
+        return nil, "Invalid argument #1: not a file handle or filename string"
+    end
+    local text, readerr = file:read("*a")
+    file:close()
+    if text then
+        return gumbo.parse(text, tab_stop)
+    else
+        return nil, readerr
     end
 end
 

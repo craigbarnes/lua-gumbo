@@ -29,33 +29,32 @@ local actions = {
     help = function()
         io.stdout:write(string.format(usage, arg[0]))
     end,
-    html = function(filename)
+    html = function(file)
         local serialize = require "gumbo.serialize.html"
-        local document = check(gumbo.parse_file(filename))
+        local document = check(gumbo.parse_file(file))
         io.stdout:write(serialize(document))
     end,
-    table = function(filename)
+    table = function(file)
         local serialize = require "gumbo.serialize.table"
-        local document = check(gumbo.parse_file(filename))
+        local document = check(gumbo.parse_file(file))
         io.stdout:write(serialize(document))
     end,
-    serpent = function(filename)
+    serpent = function(file)
         local serpent = require "serpent"
-        local document = check(gumbo.parse_file(filename))
+        local document = check(gumbo.parse_file(file))
         local options = {comment = false, indent = "    "}
         io.stdout:write(serpent.block(document, options), '\n')
     end,
-    html5lib = function(filename)
+    html5lib = function(file)
         local serialize = require "gumbo.serialize.html5lib"
-        local document = check(gumbo.parse_file(filename))
+        local document = check(gumbo.parse_file(file))
         io.stdout:write(serialize(document))
     end,
-    bench = function(filename)
-        check(gumbo.parse_file(filename))
+    bench = function(file)
+        check(gumbo.parse_file(file))
     end
 }
 
 local command = check(arg[1], "no command specified")
 local action = check(actions[command], "invalid command")
-local filename = check(command == "help" and "" or arg[2], "missing filename")
-action(filename)
+action(arg[2] or io.stdin)

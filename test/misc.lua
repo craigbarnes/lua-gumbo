@@ -10,3 +10,7 @@ assert(document[1].offset == 2)
 
 document = assert(gumbo.parse(string.rep("<div>", 500)), "stack check failed")
 assert(document.root[2][1][1][1][1][1][1][1][1][1][1][1].tag == "div")
+
+assert(not gumbo.parse_file(0), "Passing invalid argument type should fail")
+assert(not gumbo.parse_file".", "Passing a directory name should fail")
+assert(not gumbo.parse_file"_", "Passing a non-existant filename should fail")
