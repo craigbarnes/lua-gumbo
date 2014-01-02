@@ -58,8 +58,8 @@ test/html5lib-tests/%:
 	git submodule init
 	git submodule update
 
-check-html5lib: all | test/html5lib-tests/tree-construction/
-	@LUA_PATH=';;' LUA_CPATH=';;' $(LUA) test/runner.lua $|*.dat
+check-html5lib: all | test/html5lib-tests/tree-construction/*.dat
+	@$(LUA) test/runner.lua $|
 
 check: all
 	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.lua -
