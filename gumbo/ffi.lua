@@ -196,7 +196,7 @@ local function parse(input, tab_stop)
     options.tab_stop = tab_stop or 8
     local output = C.gumbo_parse_with_options(options, input, #input)
     local document = create_document(output.document)
-    document.root = document[output.root.index_within_parent + 1]
+    document.root = document[tonumber(output.root.index_within_parent) + 1]
     C.gumbo_destroy_output(options, output)
     return document
 end
