@@ -62,7 +62,7 @@ check-html5lib: all | test/html5lib-tests/tree-construction/*.dat
 	@$(LUA) test/runner.lua $|
 
 check: all
-	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.lua -
+	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.table -
 	$(LUA) test/misc.lua
 
 check-ffi: export LGUMBO_USE_FFI = 1
