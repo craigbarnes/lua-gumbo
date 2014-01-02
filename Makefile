@@ -55,8 +55,16 @@ uninstall:
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
 
 test/html5lib-tests/%:
+# If running from a release tarball, fetch with curl
+ifeq ($(shell test -f test/.H5LT_HEAD && echo 1),1)
+	cd test \
+	 && curl -L https://github.com/html5lib/html5lib-tests/archive/$$(cat .H5LT_HEAD)/html5lib-tests.tar.gz > html5lib-tests.tar.gz \
+	 && tar xzf html5lib-tests.tar.gz \
+	 && mv html5lib-tests-$$(cat .H5LT_HEAD) html5lib-tests
+else
 	git submodule init
 	git submodule update
+endif
 
 check-html5lib: all | test/html5lib-tests/tree-construction/*.dat
 	@$(LUA) test/runner.lua $|
@@ -89,13 +97,23 @@ bench-all:
 	$(MAKE) -s bench LUA=luajit LGUMBO_USE_FFI=1
 	$(MAKE) -s bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
+dist: lua-gumbo-0.1.tar.gz
+
+lua-gumbo-%.tar.gz: gumbo/ gumbo.c gumbo.lua Makefile README.md cdef.sed
+	mkdir -p lua-gumbo-$* lua-gumbo-$*/test
+	cp -r $^ lua-gumbo-$*
+	cp test/*.* lua-gumbo-$*/test
+	cp .git/modules/test/html5lib-tests/HEAD lua-gumbo-$*/test/.H5LT_HEAD
+	tar -czf $@ lua-gumbo-$*
+	$(RM) -r lua-gumbo-$*
+
 clean:
-	$(RM) $(DYNLIB) gumbo.o README.html large.html
+	$(RM) $(DYNLIB) lua-gumbo-*.tar.gz gumbo.o README.html large.html
 
 ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-.PHONY: all install uninstall clean bench bench-all
+.PHONY: all install uninstall clean bench bench-all dist
 .PHONY: check check-ffi check-valgrind check-compat check-html5lib
 .DELETE_ON_ERROR:

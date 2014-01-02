@@ -1,5 +1,6 @@
 *.o
 *.so
+*.tar.gz
 tags
 README.html
 large.html
