@@ -1,4 +1,6 @@
 #!/usr/bin/env lua
+-- Script for serializing a lua-gumbo parse tree into various formats.
+-- Can be used with the diff utility for testing against expected output.
 
 local gumbo = require "gumbo"
 
