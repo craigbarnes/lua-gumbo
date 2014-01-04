@@ -1,4 +1,7 @@
-#!/usr/bin/lua
+#!/usr/bin/env lua
+-- Test runner for the html5lib tree-construction test suite.
+-- Don't run directly, use `make check-html5lib` in the top-level directory.
+
 assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
