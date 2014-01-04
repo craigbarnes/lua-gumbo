@@ -18,16 +18,16 @@ function Buffer.new()
     return setmetatable({n = 0}, Buffer)
 end
 
-local function IndentGenerator(indent)
-    if type(indent) == "number" then
-        indent = string.rep(" ", indent)
-    end
-    return setmetatable({[0] = "", [1] = indent or "    "}, {
-        __index = function(self, i)
-            self[i] = self[1]:rep(i)
-            return self[i]
-        end
-    })
+local IndentGenerator = {}
+
+function IndentGenerator:__index(i)
+    self[i] = self[1]:rep(i)
+    return self[i]
+end
+
+function IndentGenerator.new(indent)
+    if type(indent) == "number" then indent = string.rep(" ", indent) end
+    return setmetatable({[0] = "", [1] = indent or "    "}, IndentGenerator)
 end
 
 local function wrap(text, indent)
@@ -47,6 +47,6 @@ end
 
 return {
     Buffer = Buffer.new,
-    IndentGenerator = IndentGenerator,
+    IndentGenerator = IndentGenerator.new,
     wrap = wrap
 }
