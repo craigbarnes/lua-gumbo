@@ -2,7 +2,7 @@ local util = require "gumbo.serialize.util"
 
 return function(node)
     local buf = util.Buffer()
-    local indent = util.IndentGenerator("  ")
+    local indent = util.IndentGenerator(2)
     local level = 0
     local function serialize(node)
         if node.type == "element" then

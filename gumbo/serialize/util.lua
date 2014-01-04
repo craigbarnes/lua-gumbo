@@ -19,6 +19,9 @@ function Buffer.new()
 end
 
 local function IndentGenerator(indent)
+    if type(indent) == "number" then
+        indent = string.rep(" ", indent)
+    end
     return setmetatable({[0] = "", [1] = indent or "    "}, {
         __index = function(self, i)
             self[i] = self[1]:rep(i)
