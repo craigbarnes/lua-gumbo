@@ -7,7 +7,7 @@ return function(node)
     local function serialize(node)
         if node.type == "element" then
             local i1 = indent[level]
-            if node.tag_namespace then
+            if node.tag_namespace ~= "html" then
                 buf:appendf('| %s<%s %s>\n', i1, node.tag_namespace, node.tag)
             else
                 buf:appendf('| %s<%s>\n', i1, node.tag)

@@ -38,6 +38,19 @@ else
     end
 end
 
+local flagsmap = {
+    insertion_by_parser = C.GUMBO_INSERTION_BY_PARSER,
+    implicit_end_tag = C.GUMBO_INSERTION_IMPLICIT_END_TAG,
+    insertion_implied = C.GUMBO_INSERTION_IMPLIED,
+    converted_from_end_tag = C.GUMBO_INSERTION_CONVERTED_FROM_END_TAG,
+    insertion_from_isindex = C.GUMBO_INSERTION_FROM_ISINDEX,
+    insertion_from_image = C.GUMBO_INSERTION_FROM_IMAGE,
+    reconstructed_formatting_element = C.GUMBO_INSERTION_RECONSTRUCTED_FORMATTING_ELEMENT,
+    adoption_agency_cloned = C.GUMBO_INSERTION_ADOPTION_AGENCY_CLONED,
+    adoption_agency_moved = C.GUMBO_INSERTION_ADOPTION_AGENCY_MOVED,
+    foster_parented = C.GUMBO_INSERTION_FOSTER_PARENTED
+}
+
 local typemap = {
     [tonumber(C.GUMBO_NODE_DOCUMENT)] = "document",
     [tonumber(C.GUMBO_NODE_ELEMENT)] = "element",
@@ -56,31 +69,24 @@ local quirksmap = {
 }
 
 local tagnsmap = {
+    [C.GUMBO_NAMESPACE_HTML] = "html",
     [C.GUMBO_NAMESPACE_SVG] = "svg",
-    [C.GUMBO_NAMESPACE_MATHML] = "math"
+    [C.GUMBO_NAMESPACE_MATHML] = "math",
+    __index = function() error "Error: invalid tag namespace" end
 }
 
 local attrnsmap = {
+    [C.GUMBO_ATTR_NAMESPACE_NONE] = false,
     [C.GUMBO_ATTR_NAMESPACE_XLINK] = "xlink",
     [C.GUMBO_ATTR_NAMESPACE_XML] = "xml",
-    [C.GUMBO_ATTR_NAMESPACE_XMLNS] = "xmlns"
-}
-
-local flagsmap = {
-    insertion_by_parser = C.GUMBO_INSERTION_BY_PARSER,
-    implicit_end_tag = C.GUMBO_INSERTION_IMPLICIT_END_TAG,
-    insertion_implied = C.GUMBO_INSERTION_IMPLIED,
-    converted_from_end_tag = C.GUMBO_INSERTION_CONVERTED_FROM_END_TAG,
-    insertion_from_isindex = C.GUMBO_INSERTION_FROM_ISINDEX,
-    insertion_from_image = C.GUMBO_INSERTION_FROM_IMAGE,
-    reconstructed_formatting_element = C.GUMBO_INSERTION_RECONSTRUCTED_FORMATTING_ELEMENT,
-    adoption_agency_cloned = C.GUMBO_INSERTION_ADOPTION_AGENCY_CLONED,
-    adoption_agency_moved = C.GUMBO_INSERTION_ADOPTION_AGENCY_MOVED,
-    foster_parented = C.GUMBO_INSERTION_FOSTER_PARENTED
+    [C.GUMBO_ATTR_NAMESPACE_XMLNS] = "xmlns",
+    __index = function() error "Error: invalid attribute namespace" end
 }
 
 setmetatable(typemap, typemap)
 setmetatable(quirksmap, quirksmap)
+setmetatable(tagnsmap, tagnsmap)
+setmetatable(attrnsmap, attrnsmap)
 
 local function get_attributes(attrs)
     if attrs.length ~= 0 then
@@ -153,8 +159,8 @@ local function create_element(node)
     local length = element.children.length
     local t = tnew(length, 7)
     t.type = "element"
-    t.tag = get_tag_name(element)
     t.tag_namespace = tagnsmap[tonumber(element.tag_namespace)]
+    t.tag = get_tag_name(element)
     t.line = element.start_pos.line
     t.column = element.start_pos.column
     t.offset = element.start_pos.offset

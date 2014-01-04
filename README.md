@@ -87,6 +87,7 @@ numeric indices and the following named fields:
 
 * `type`: Always has a value of `"element"` for element nodes.
 * `tag`: The tag name, normalized to lower case.
+* `tag_namespace`: Either `"html"`, `"svg"` or `"math"`.
 * `attr`: A table of attributes or `nil`. See below for details.
 * `parse_flags`
 * `line`
@@ -102,7 +103,7 @@ contain the following fields:
 
 * `name`
 * `value`
-* `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
+* `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `false`.
 * `line`
 * `column`
 * `offset`

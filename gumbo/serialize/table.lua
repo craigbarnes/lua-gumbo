@@ -46,6 +46,7 @@ local function to_table(node)
             local i1, i2 = indent[level+1], indent[level+2]
             buf:appendf(sfmt, i1, "type", "element")
             buf:appendf(sfmt, i1, "tag", node.tag)
+            buf:appendf(sfmt, i1, "tag_namespace", node.tag_namespace)
             buf:appendf(nfmt, i1, "line", node.line)
             buf:appendf(nfmt, i1, "column", node.column)
             buf:appendf(nfmt, i1, "offset", node.offset)

@@ -82,11 +82,14 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
             add_string(L, attr->name, attr->value);
-            lua_createtable(L, 0, 5);
+            lua_createtable(L, 0, 6);
             add_string(L, "name", attr->name);
             add_string(L, "value", attr->value);
             add_position(L, &attr->name_start);
             switch (attr->attr_namespace) {
+            case GUMBO_ATTR_NAMESPACE_NONE:
+                add_boolean(L, "namespace", false);
+                break;
             case GUMBO_ATTR_NAMESPACE_XLINK:
                 add_literal(L, "namespace", "xlink");
                 break;
@@ -96,9 +99,8 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             case GUMBO_ATTR_NAMESPACE_XMLNS:
                 add_literal(L, "namespace", "xmlns");
                 break;
-            case GUMBO_ATTR_NAMESPACE_NONE:
             default:
-                break;
+                luaL_error(L, "Error: invalid attribute namespace");
             }
             lua_rawseti(L, -2, i+1);
         }
@@ -108,6 +110,12 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
 
 static void add_tagname(lua_State *L, const GumboElement *element) {
     switch (element->tag_namespace) {
+    case GUMBO_NAMESPACE_HTML:
+        add_literal(L, "tag_namespace", "html");
+        break;
+    case GUMBO_NAMESPACE_MATHML:
+        add_literal(L, "tag_namespace", "math");
+        break;
     case GUMBO_NAMESPACE_SVG: {
         add_literal(L, "tag_namespace", "svg");
         GumboStringPiece original_tag = element->original_tag;
@@ -117,34 +125,31 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
             add_string(L, "tag", normalized);
             return;
         }
-        goto svgjump;
-    }
-    case GUMBO_NAMESPACE_MATHML: // Fall-through
-        add_literal(L, "tag_namespace", "math");
-    case GUMBO_NAMESPACE_HTML:
-    svgjump:
-    default:
-        if (element->tag == GUMBO_TAG_UNKNOWN) {
-            GumboStringPiece original_tag = element->original_tag;
-            gumbo_tag_from_original_text(&original_tag);
-            const size_t length = original_tag.length;
-            char *lower = malloc(length + 1);
-            for (size_t i = 0; i < length; i++) {
-                const char c = original_tag.data[i];
-                if (c <= 'Z' && c >= 'A')
-                    lower[i] = c + 32;
-                else
-                    lower[i] = c;
-            }
-            lower[length] = '\0';
-            lua_pushlstring(L, lower, length);
-            free(lower);
-        } else {
-            lua_pushstring(L, gumbo_normalized_tagname(element->tag));
-        }
-        lua_setfield(L, -2, "tag");
         break;
     }
+    default:
+        luaL_error(L, "Error: invalid tag namespace");
+    }
+
+    if (element->tag == GUMBO_TAG_UNKNOWN) {
+        GumboStringPiece original_tag = element->original_tag;
+        gumbo_tag_from_original_text(&original_tag);
+        const size_t length = original_tag.length;
+        char *lower = malloc(length + 1);
+        for (size_t i = 0; i < length; i++) {
+            const char c = original_tag.data[i];
+            if (c <= 'Z' && c >= 'A')
+                lower[i] = c + 32;
+            else
+                lower[i] = c;
+        }
+        lower[length] = '\0';
+        lua_pushlstring(L, lower, length);
+        free(lower);
+    } else {
+        lua_pushstring(L, gumbo_normalized_tagname(element->tag));
+    }
+    lua_setfield(L, -2, "tag");
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
