@@ -1,12 +1,3 @@
-local function IndentGenerator(indent)
-    return setmetatable({[0] = "", [1] = indent or "    "}, {
-        __index = function(self, i)
-            self[i] = self[1]:rep(i)
-            return self[i]
-        end
-    })
-end
-
 local Buffer = {}
 Buffer.__index = Buffer
 
@@ -15,9 +6,8 @@ function Buffer:append(str)
     self[self.n] = str
 end
 
-function Buffer:appendf(fmt, ...)
-    self.n = self.n + 1
-    self[self.n] = string.format(fmt, ...)
+function Buffer:appendf(...)
+    self:append(string.format(...))
 end
 
 function Buffer:concat(sep)
@@ -26,6 +16,15 @@ end
 
 function Buffer.new()
     return setmetatable({n = 0}, Buffer)
+end
+
+local function IndentGenerator(indent)
+    return setmetatable({[0] = "", [1] = indent or "    "}, {
+        __index = function(self, i)
+            self[i] = self[1]:rep(i)
+            return self[i]
+        end
+    })
 end
 
 local function wrap(text, indent)
@@ -44,7 +43,7 @@ local function wrap(text, indent)
 end
 
 return {
-    IndentGenerator = IndentGenerator,
     Buffer = Buffer.new,
+    IndentGenerator = IndentGenerator,
     wrap = wrap
 }
