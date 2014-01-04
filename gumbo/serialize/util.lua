@@ -7,8 +7,8 @@ local function IndentGenerator(indent)
     })
 end
 
-local function Buffer()
-    local methods = {
+local buffer_mt = {
+    __index = {
         append = function(self, str)
             self.n = self.n + 1
             self[self.n] = str
@@ -24,7 +24,10 @@ local function Buffer()
             return self.n
         end
     }
-    return setmetatable({n = 0}, {__index = methods})
+}
+
+local function Buffer()
+    return setmetatable({n = 0}, buffer_mt)
 end
 
 local function wrap(text, indent)
