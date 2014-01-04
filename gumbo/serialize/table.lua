@@ -59,12 +59,11 @@ local function to_table(node)
                 end
                 for i = 1, #node.attr do
                     local a = node.attr[i]
+                    local ns = a.namespace
                     buf:appendf("%s{\n", i2)
                     buf:appendf(sfmt, i3, "name", escape(a.name))
                     buf:appendf(sfmt, i3, "value", escape(a.value))
-                    if a.namespace then
-                        buf:appendf(sfmt, i3, "namespace", a.namespace)
-                    end
+                    buf:appendf(ns and sfmt or bfmt, i3, "namespace", ns)
                     buf:appendf(nfmt, i3, "line", a.line)
                     buf:appendf(nfmt, i3, "column", a.column)
                     buf:appendf("%s%s = %d\n", i3, "offset", a.offset)
