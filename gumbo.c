@@ -147,7 +147,7 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
     }
 }
 
-static void add_parseflags(lua_State *L, const unsigned int flags) {
+static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
     static const unsigned int nflags = sizeof(flag_map) / sizeof(flag_map[0]);
     if (flags != GUMBO_INSERTION_NORMAL) {
         lua_createtable(L, 0, 1);
