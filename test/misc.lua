@@ -5,6 +5,7 @@ local gumbo = require "gumbo"
 local document = assert(gumbo.parse("\t\t<!--one--><!--two--><h1>Hi</h1>", 16))
 
 -- Check that document.root is set correctly
+assert(#document == 3)
 assert(document.root and document.root == document[3])
 assert(document[1].text == "one")
 assert(document[2].text == "two")
