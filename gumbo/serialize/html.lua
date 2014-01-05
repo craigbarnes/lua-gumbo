@@ -1,9 +1,13 @@
 local util = require "gumbo.serialize.util"
 
+-- This has had much less attention than the other two serializers and is
+-- inherently much harder to do properly. Consider it experimental for now.
+
 -- TODO:
 -- * Collapse newlines around inline elements and short block elements.
 -- * Handle <style>, <script> and <pre> elements properly.
 -- * Implement a "minified" mode.
+-- * Implement escaping for special characters in tag names (e.g. '=')?
 
 -- Set of void elements
 -- whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
