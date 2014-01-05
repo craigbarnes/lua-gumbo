@@ -89,9 +89,10 @@ setmetatable(tagnsmap, tagnsmap)
 setmetatable(attrnsmap, attrnsmap)
 
 local function get_attributes(attrs)
-    if attrs.length ~= 0 then
-        local t = {}
-        for i = 0, attrs.length - 1 do
+    local length = attrs.length
+    if length > 0 then
+        local t = tnew(length, length)
+        for i = 0, length - 1 do
             local attr = ffi_cast("GumboAttribute*", attrs.data[i])
             t[i+1] = {
                 name = ffi_string(attr.name),
