@@ -66,7 +66,7 @@ static void add_position(lua_State *L, const GumboSourcePosition *pos) {
 
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
-    if (length != 0) {
+    if (length > 0) {
         lua_createtable(L, length, length);
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
@@ -102,10 +102,11 @@ static char *strnlower(const char *string, const size_t length) {
     if (!lower) return NULL;
     for (size_t i = 0; i < length; i++) {
         const char c = string[i];
-        if (c <= 'Z' && c >= 'A')
+        if (c <= 'Z' && c >= 'A') {
             lower[i] = c + 32;
-        else
+        } else {
             lower[i] = c;
+        }
     }
     lower[length] = '\0';
     return lower;
