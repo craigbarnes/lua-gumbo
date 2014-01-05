@@ -97,16 +97,8 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
     }
 }
 
-static void add_tagname(lua_State *L, const GumboElement *element) {
-    switch (element->tag_namespace) {
-    case GUMBO_NAMESPACE_HTML:
-        add_literal(L, "tag_namespace", "html");
-        break;
-    case GUMBO_NAMESPACE_MATHML:
-        add_literal(L, "tag_namespace", "math");
-        break;
-    case GUMBO_NAMESPACE_SVG: {
-        add_literal(L, "tag_namespace", "svg");
+static void add_tag(lua_State *L, const GumboElement *element) {
+    if (element->tag_namespace == GUMBO_NAMESPACE_SVG) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
         const char *normalized = gumbo_normalize_svg_tagname(&original_tag);
@@ -114,12 +106,7 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
             add_string(L, "tag", normalized);
             return;
         }
-        break;
     }
-    default:
-        luaL_error(L, "Error: invalid tag namespace");
-    }
-
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
@@ -139,6 +126,22 @@ static void add_tagname(lua_State *L, const GumboElement *element) {
         lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     }
     lua_setfield(L, -2, "tag");
+}
+
+static void add_tag_namespace(lua_State *L, const GumboNamespaceEnum ns) {
+    switch (ns) {
+    case GUMBO_NAMESPACE_HTML:
+        add_literal(L, "tag_namespace", "html");
+        break;
+    case GUMBO_NAMESPACE_MATHML:
+        add_literal(L, "tag_namespace", "math");
+        break;
+    case GUMBO_NAMESPACE_SVG:
+        add_literal(L, "tag_namespace", "svg");
+        break;
+    default:
+        luaL_error(L, "Error: invalid tag namespace");
+    }
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
@@ -208,7 +211,8 @@ static void push_node(lua_State *L, const GumboNode *node) {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 7);
         add_literal(L, "type", "element");
-        add_tagname(L, element);
+        add_tag(L, element);
+        add_tag_namespace(L, element->tag_namespace);
         add_position(L, &element->start_pos);
         add_parseflags(L, node->parse_flags);
         add_attributes(L, &element->attributes);
