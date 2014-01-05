@@ -1,18 +1,16 @@
 local util = require "gumbo.serialize.util"
 
-local function attr_iter(t, i)
+local function attr_iter(attrs, i)
     i = i + 1
-    local v = t[i]
-    if v then
-        return i, v.name, v.value, v.namespace
-    else
-        return nil
+    local attr = attrs[i]
+    if attr then
+        return i, attr.name, attr.value, attr.namespace
     end
 end
 
---- Iterate through an attribute table in lexicographic order
+--- Iterate through attributes in lexicographic order
 local function ordered_attrs(attrs)
-    -- Create a copy of the table, to avoid mutating the original
+    -- Create a copy, rather than mutating the original
     local copy = {}
     for i = 1, #attrs do
         local attr = attrs[i]
@@ -22,7 +20,9 @@ local function ordered_attrs(attrs)
             namespace = attr.namespace
         }
     end
-    table.sort(copy, function(a, b) return a.name < b.name end)
+    table.sort(copy, function(a, b)
+        return a.name < b.name
+    end)
     return attr_iter, copy, 0
 end
 
