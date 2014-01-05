@@ -1,5 +1,31 @@
 local util = require "gumbo.serialize.util"
 
+local function attr_iter(t, i)
+    i = i + 1
+    local v = t[i]
+    if v then
+        return i, v.name, v.value, v.namespace
+    else
+        return nil
+    end
+end
+
+--- Iterate through an attribute table in lexicographic order
+local function ordered_attrs(attrs)
+    -- Create a copy of the table, to avoid mutating the original
+    local copy = {}
+    for i = 1, #attrs do
+        local attr = attrs[i]
+        copy[i] = {
+            name = attr.name,
+            value = attr.value,
+            namespace = attr.namespace
+        }
+    end
+    table.sort(copy, function(a, b) return a.name < b.name end)
+    return attr_iter, copy, 0
+end
+
 return function(node)
     local buf = util.Buffer()
     local indent = util.IndentGenerator(2)
@@ -12,17 +38,13 @@ return function(node)
             else
                 buf:appendf('| %s<%s>\n', i1, node.tag)
             end
-            local attr = node.attr
-            if attr then
+            if node.attr then
                 local i2 = indent[level+1]
-                table.sort(attr, function(x, y) return x.name < y.name end)
-                for i = 1, #attr do
-                    local a = attr[i]
-                    if a.namespace then
-                        local fmt = '| %s%s %s="%s"\n'
-                        buf:appendf(fmt, i2, a.namespace, a.name, a.value)
+                for i, name, value, ns in ordered_attrs(node.attr) do
+                    if ns then
+                        buf:appendf('| %s%s %s="%s"\n', i2, ns, name, value)
                     else
-                        buf:appendf('| %s%s="%s"\n', i2, a.name, a.value)
+                        buf:appendf('| %s%s="%s"\n', i2, name, value)
                     end
                 end
             end
