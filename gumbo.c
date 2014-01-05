@@ -64,17 +64,6 @@ static void add_position(lua_State *L, const GumboSourcePosition *pos) {
     add_integer(L, "offset", pos->offset);
 }
 
-// Forward declaration -- to allow mutual recursion with add_children()
-static void push_node(lua_State *L, const GumboNode *node);
-
-static void add_children(lua_State *L, const GumboVector *children) {
-    const unsigned int length = children->length;
-    for (unsigned int i = 0; i < length; i++) {
-        push_node(L, (const GumboNode *)children->data[i]);
-        lua_rawseti(L, -2, i + 1);
-    }
-}
-
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length != 0) {
@@ -187,6 +176,17 @@ static void add_quirks_mode(lua_State *L, const GumboQuirksModeEnum qm) {
         return;
     }
     lua_setfield(L, -2, "quirks_mode");
+}
+
+// Forward declaration, to allow mutual recursion
+static void push_node(lua_State *L, const GumboNode *node);
+
+static void add_children(lua_State *L, const GumboVector *children) {
+    const unsigned int length = children->length;
+    for (unsigned int i = 0; i < length; i++) {
+        push_node(L, (const GumboNode *)children->data[i]);
+        lua_rawseti(L, -2, i + 1);
+    }
 }
 
 static void push_node(lua_State *L, const GumboNode *node) {
