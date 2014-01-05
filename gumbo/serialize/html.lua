@@ -29,14 +29,11 @@ local void = {
 local escmap = {
     ["&"] = "&amp;",
     ["<"] = "&lt;",
-    [">"] = "&gt;",
-    ['"'] = "&quot;",
-    ["'"] = "&#x27;",
-    ["/"] = "&#x2F;"
+    [">"] = "&gt;"
 }
 
 local function escape(text)
-    return text:gsub("[&<>\"'/]", escmap)
+    return text:gsub("[&<>]", escmap)
 end
 
 local function to_html(node)
