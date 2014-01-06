@@ -40,10 +40,24 @@ local function escape(text)
     return text:gsub("[&<>]", escmap)
 end
 
+local function wrap(text, indent)
+    local limit = 78
+    local indent_width = #indent
+    local pos = 1 - indent_width
+    local str = text:gsub("(%s+)()(%S+)()", function(_, start, word, stop)
+        if stop - pos > limit then
+            pos = start - indent_width
+            return "\n" .. indent .. word
+        else
+            return " " .. word
+        end
+    end)
+    return indent .. str .. "\n"
+end
+
 local function to_html(node)
     local buf = util.Buffer()
     local indent = util.IndentGenerator()
-    local wrap = util.wrap
     local level = 0
 
     local function serialize(node)

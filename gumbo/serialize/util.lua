@@ -30,23 +30,7 @@ function IndentGenerator.new(indent)
     return setmetatable({[0] = "", [1] = indent or "    "}, IndentGenerator)
 end
 
-local function wrap(text, indent)
-    local limit = 78
-    local indent_width = #indent
-    local pos = 1 - indent_width
-    local str = text:gsub("(%s+)()(%S+)()", function(_, start, word, stop)
-        if stop - pos > limit then
-            pos = start - indent_width
-            return "\n" .. indent .. word
-        else
-            return " " .. word
-        end
-    end)
-    return indent .. str .. "\n"
-end
-
 return {
     Buffer = Buffer.new,
     IndentGenerator = IndentGenerator.new,
-    wrap = wrap
 }
