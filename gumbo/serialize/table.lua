@@ -40,6 +40,7 @@ local function to_table(node)
     local nfmt = "%s%s = %d,\n"
     local bfmt = '%s%s = %s,\n'
 
+    -- TODO: omit trailing commas where not required
     local function serialize(node)
         if node.type == "element" then
             buf:appendf("%s{\n", indent[level])
