@@ -58,12 +58,6 @@ static inline void add_boolean(lua_State *L, const char *k, const bool v) {
     lua_setfield(L, -2, k);
 }
 
-static void add_position(lua_State *L, const GumboSourcePosition *pos) {
-    add_integer(L, "line", pos->line);
-    add_integer(L, "column", pos->column);
-    add_integer(L, "offset", pos->offset);
-}
-
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length > 0) {
@@ -74,7 +68,9 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             lua_createtable(L, 0, 6);
             add_string(L, "name", attr->name);
             add_string(L, "value", attr->value);
-            add_position(L, &attr->name_start);
+            add_integer(L, "line", attr->name_start.line);
+            add_integer(L, "column", attr->name_start.column);
+            add_integer(L, "offset", attr->name_start.offset);
             switch (attr->attr_namespace) {
             case GUMBO_ATTR_NAMESPACE_NONE:
                 add_boolean(L, "namespace", false);
@@ -170,7 +166,9 @@ static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
 static void create_text_node(lua_State *L, const GumboText *text) {
     lua_createtable(L, 0, 5);
     add_string(L, "text", text->text);
-    add_position(L, &text->start_pos);
+    add_integer(L, "line", text->start_pos.line);
+    add_integer(L, "column", text->start_pos.column);
+    add_integer(L, "offset", text->start_pos.offset);
 }
 
 static void add_quirks_mode(lua_State *L, const GumboQuirksModeEnum qm) {
@@ -223,7 +221,9 @@ static void push_node(lua_State *L, const GumboNode *node) {
         add_literal(L, "type", "element");
         add_tag(L, element);
         add_tag_namespace(L, element->tag_namespace);
-        add_position(L, &element->start_pos);
+        add_integer(L, "line", element->start_pos.line);
+        add_integer(L, "column", element->start_pos.column);
+        add_integer(L, "offset", element->start_pos.offset);
         add_parseflags(L, node->parse_flags);
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
