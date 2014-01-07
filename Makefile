@@ -3,10 +3,12 @@ CFLAGS   = -g -O2 -fPIC -std=c99 -pedantic -Wall -Wextra -Wswitch-enum \
            -Wwrite-strings -Wcast-qual -Wshadow
 LDFLAGS  = -shared
 DYNLIB   = cgumbo.so
-PREFIX   = /usr/local
-LUAVER   = 5.1
+PKGCONFIG= pkg-config --silence-errors
+PREFIX   = $(shell $(PKGCONFIG) --variable=prefix lua)
+LIBDIR   = $(shell $(PKGCONFIG) --variable=libdir lua)
+LUAVER   = $(shell $(PKGCONFIG) --variable=V lua)
 LUADIR   = $(PREFIX)/share/lua/$(LUAVER)
-LUACDIR  = $(PREFIX)/lib/lua/$(LUAVER)
+LUACDIR  = $(LIBDIR)/lua/$(LUAVER)
 LUA      = lua
 MKDIR    = mkdir -p
 INSTALL  = install -p -m 0644
@@ -17,9 +19,9 @@ RM       = rm -f
 export LUA_PATH = ./?.lua;./?/init.lua
 export LUA_CPATH = ./?.so
 
-GUMBO_CFLAGS  = $(shell pkg-config --cflags gumbo)
-GUMBO_LDFLAGS = $(shell pkg-config --libs gumbo)
-GUMBO_HEADER  = $(shell pkg-config --variable=includedir gumbo)/gumbo.h
+GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags gumbo)
+GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs gumbo)
+GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir gumbo)/gumbo.h
 
 all: $(DYNLIB)
 
@@ -45,14 +47,17 @@ large.html: README.html
 tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
-install: all | gumbo/cdef.lua gumbo/ffi.lua gumbo/init.lua
+install: check-pkgconfig all | gumbo/cdef.lua gumbo/ffi.lua gumbo/init.lua
 	$(MKDIR) '$(DESTDIR)$(LUACDIR)' '$(DESTDIR)$(LUADIR)/gumbo'
 	$(INSTALLX) $(DYNLIB) '$(DESTDIR)$(LUACDIR)'
 	$(INSTALL) $| '$(DESTDIR)$(LUADIR)/gumbo'
 
-uninstall:
+uninstall: check-pkgconfig
 	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
 	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
+
+check-pkgconfig:
+	@$(PKGCONFIG) --print-errors --exists 'lua >= 5.1 gumbo >= 1' || exit 1
 
 test/html5lib-tests/%:
 # If running from a release tarball, fetch with curl
@@ -110,10 +115,12 @@ lua-gumbo-%.tar.gz: gumbo/ gumbo.c gumbo.lua Makefile README.md cdef.sed
 clean:
 	$(RM) $(DYNLIB) lua-gumbo-*.tar.gz gumbo.o README.html large.html
 
+
 ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-.PHONY: all install uninstall clean bench bench-all dist
-.PHONY: check check-ffi check-valgrind check-compat check-html5lib
+.PHONY: all install uninstall check check-ffi check-html5lib check-valgrind \
+        check-compat check-pkgconfig bench bench-all dist clean
+
 .DELETE_ON_ERROR:
