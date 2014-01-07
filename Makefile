@@ -86,7 +86,7 @@ uninstall: check-pkgconfig
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
 check-pkgconfig:
-	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1' || false
+	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1'
 
 test/html5lib-tests/%:
 # If running from a release tarball, fetch with curl
