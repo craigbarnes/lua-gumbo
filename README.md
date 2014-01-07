@@ -58,8 +58,8 @@ document table as described below:
 encountering out-of-memory conditions. The `parse_file` function may
 also fail on I/O errors, for example if passed a non-existent filename.
 
-Document Structure
-------------------
+Output
+------
 
 ### Document Node
 
