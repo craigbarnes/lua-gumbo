@@ -45,7 +45,7 @@ The `gumbo` module provides two functions:
 
 #### `parse_file(path_or_file, tab_stop)`
 
-  1. `path_or_file`: Either a filename string or a file object.
+  1. `path_or_file`: Either a filename string or a [file handle].
   2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
 ### Output
@@ -153,6 +153,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
+[file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
 [gumbo/init.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/gumbo/init.lua#L5-L23
 [doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
 [root element]: http://en.wikipedia.org/wiki/Root_element
