@@ -37,10 +37,12 @@ LUA_CFLAGS    = $(shell $(PKGCONFIG) --cflags $(LUA_PC))
 LUA_PC_LMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_LMOD $(LUA_PC))
 LUA_PC_CMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_CMOD $(LUA_PC))
 
-# Most other distros force you to manually piece together the equivalent
+# Most other distros force you to piece together prefix/libdir/version
 LUA_PREFIX    = $(shell $(PKGCONFIG) --variable=prefix $(LUA_PC))
 LUA_LIBDIR    = $(shell $(PKGCONFIG) --variable=libdir $(LUA_PC))
 LUA_VERSION   = $(shell $(PKGCONFIG) --modversion $(LUA_PC) | grep -o '^5\..')
+
+# If you need to specify module paths manually, override just these two
 LUA_LMOD_DIR  = $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
                 $(LUA_PREFIX)/share/lua/$(LUA_VERSION)))
 LUA_CMOD_DIR  = $(strip $(if $(LUA_PC_CMOD), $(LUA_PC_CMOD), \
