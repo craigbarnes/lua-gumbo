@@ -27,12 +27,6 @@ Using the module or running the tests requires:
 Installation
 ------------
 
-With LuaRocks:
-
-*Available soon.*
-
-With Make:
-
     make
     make check
     [sudo] make install
