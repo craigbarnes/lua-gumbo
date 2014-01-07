@@ -34,23 +34,26 @@ Installation
 Usage
 -----
 
+### Input
+
 The `gumbo` module provides two functions:
 
-* `gumbo.parse(html, tab_stop)`
-  * `html`: A string of UTF8-encoded HTML to be parsed.
-  * `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+#### `parse(html, tab_stop)`
 
-* `gumbo.parse_file(path_or_file, tab_stop)`
-  * `path_or_file`: Either a filename string or a file object.
-  * `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+  1. `html`: A string of UTF8-encoded HTML to be parsed.
+  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+
+#### `parse_file(path_or_file, tab_stop)`
+
+  1. `path_or_file`: Either a filename string or a file object.
+  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+
+### Output
 
 Both functions return a document table (as described below) or `nil`
 and an error message on failure (e.g. out of memory, invalid filename etc.)
 
-Output
-------
-
-### Document Node
+#### Document Node
 
 The document node is the top-level table returned by the parse functions
 and contains all other nodes as descendants. It contains the following
@@ -65,7 +68,7 @@ fields:
 * `root`: A convenient reference to the child `<html>` element.
 * `[1..n]`: Child nodes.
 
-### Element Nodes
+#### Element Nodes
 
 Element nodes are represented as tables, with child nodes stored in
 numeric indices and the following named fields:
@@ -79,7 +82,7 @@ numeric indices and the following named fields:
 * `column`
 * `offset`
 
-#### Attributes
+##### Attributes
 
 The `attr` field of element nodes is represented as a table, containing
 sub-tables in numeric indices and a convenient `name="value"` index in
@@ -93,7 +96,7 @@ contain the following fields:
 * `column`
 * `offset`
 
-### Text Nodes
+#### Text Nodes
 
 Text nodes are represented as tables with the fields:
 
