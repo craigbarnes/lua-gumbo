@@ -12,14 +12,11 @@ stabilized.
 Requirements
 ------------
 
-Building the C module requires, at a minimum:
+Building the C module requires:
 
-* C99 compiler
+* A C99 compiler
 * Lua headers
 * [Gumbo][Gumbo installation]
-
-To build using the included `Makefile`, the following are also required:
-
 * GNU Make
 * pkg-config
 
