@@ -43,8 +43,7 @@ With Make:
 Usage
 -----
 
-The `gumbo` module provides two functions, both of which return a
-document table as described below:
+The `gumbo` module provides two functions:
 
 * `gumbo.parse(html, tab_stop)`
   * `html`: A string of UTF8-encoded HTML to be parsed.
@@ -54,9 +53,8 @@ document table as described below:
   * `path_or_file`: Either a filename string or a file object.
   * `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
-**Note:** either function may return `nil` and a error message if
-encountering out-of-memory conditions. The `parse_file` function may
-also fail on I/O errors, for example if passed a non-existent filename.
+Both functions return a document table (as described below) or `nil`
+and an error message on failure (e.g. out of memory, invalid filename etc.)
 
 Output
 ------
