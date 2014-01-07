@@ -26,6 +26,7 @@ LUA_PC        = $(if $(shell $(PC_CHECK) lua), lua, \
 GUMBO_PC      = $(if $(shell $(PC_CHECK) gumbo), gumbo, \
                 $(error No pkg-config file found for Gumbo))
 
+LUA_CFLAGS    = $(shell $(PKGCONFIG) --cflags $(LUA_PC))
 LUA_PREFIX    = $(shell $(PKGCONFIG) --variable=prefix $(LUA_PC))
 LUA_LIBDIR    = $(shell $(PKGCONFIG) --variable=libdir $(LUA_PC))
 LUA_VERSION   = $(shell $(PKGCONFIG) --modversion $(LUA_PC) | grep -o '^5\..')
@@ -45,7 +46,7 @@ $(DYNLIB): gumbo.o Makefile
 	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
 
 gumbo.o: gumbo.c Makefile
-	$(CC) $(CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
 
 gumbo/cdef.lua: $(GUMBO_HEADER) cdef.sed
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
