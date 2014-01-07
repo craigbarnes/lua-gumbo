@@ -11,6 +11,12 @@ RM            = rm -f
 PKGCONFIG     = pkg-config --silence-errors
 PC_CHECK      = $(PKGCONFIG) --variable=libdir
 
+GUMBO_PC      = $(if $(shell $(PC_CHECK) gumbo), gumbo, \
+                $(error No pkg-config file found for Gumbo))
+GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags $(GUMBO_PC))
+GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs $(GUMBO_PC))
+GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir $(GUMBO_PC))/gumbo.h
+
 # The naming of Lua pkg-config files across distributions is a total mess
 # Fedora and Arch use lua.pc
 # Debian uses lua5.2.pc and lua5.1.pc
@@ -23,18 +29,22 @@ LUA_PC        = $(if $(shell $(PC_CHECK) lua), lua, \
                 $(if $(shell $(PC_CHECK) lua51), lua51, \
                 $(error No pkg-config file found for Lua))))))
 
-GUMBO_PC      = $(if $(shell $(PC_CHECK) gumbo), gumbo, \
-                $(error No pkg-config file found for Gumbo))
-
+# Some distributions put the Lua headers in versioned sub-directories, which
+# aren't in the default paths and hence must be included manually
 LUA_CFLAGS    = $(shell $(PKGCONFIG) --cflags $(LUA_PC))
+
+# Debian has convenient INSTALL_LMOD/INSTALL_CMOD variables available
+LUA_PC_LMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_LMOD $(LUA_PC))
+LUA_PC_CMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_CMOD $(LUA_PC))
+
+# Most other distros force you to manually piece together the equivalent
 LUA_PREFIX    = $(shell $(PKGCONFIG) --variable=prefix $(LUA_PC))
 LUA_LIBDIR    = $(shell $(PKGCONFIG) --variable=libdir $(LUA_PC))
 LUA_VERSION   = $(shell $(PKGCONFIG) --modversion $(LUA_PC) | grep -o '^5\..')
-LUA_LMOD_DIR  = $(LUA_PREFIX)/share/lua/$(LUA_VERSION)
-LUA_CMOD_DIR  = $(LUA_LIBDIR)/lua/$(LUA_VERSION)
-GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags $(GUMBO_PC))
-GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs $(GUMBO_PC))
-GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir $(GUMBO_PC))/gumbo.h
+LUA_LMOD_DIR  = $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
+                $(LUA_PREFIX)/share/lua/$(LUA_VERSION)))
+LUA_CMOD_DIR  = $(strip $(if $(LUA_PC_CMOD), $(LUA_PC_CMOD), \
+                $(LUA_LIBDIR)/lua/$(LUA_VERSION)))
 
 # Ensure the tests only load modules from within the current directory
 export LUA_PATH = ./?.lua;./?/init.lua
