@@ -43,31 +43,29 @@ With Make:
 Usage
 -----
 
-The `gumbo` module provides a single `parse` function:
+The `gumbo` module provides two functions, both of which return a
+document table as described below:
 
-    gumbo.parse(html, tab_stop)
+### `gumbo.parse(html, tab_stop)`
 
-**Parameters:**
+* `html`: A string of UTF8-encoded HTML to be parsed.
+* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
-1. `html`: A string of UTF8-encoded HTML to be parsed.
-2. `tab_stop`: The size to use for tab characters when computing source
-   positions (optional, defaults to `8`).
+### `gumbo.parse_file(path_or_file, tab_stop)`
 
-**Returns:**
+* `path_or_file`: Either a filename string or a file object.
+* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
-1. A document table, structured as described below.
-
-**Returns (on error):**
-
-1. `nil`.
-2. A string describing the error.
+**Note:** either function may return `nil` and a error message if
+encountering out-of-memory conditions. The `parse_file` function may
+also fail on I/O errors, for example if passed a non-existant filename.
 
 Document Structure
 ------------------
 
 ### Document Node
 
-The document node is the top-level table returned by the `parse` function
+The document node is the top-level table returned by the parse functions
 and contains all other nodes as descendants. It contains the following
 fields:
 
