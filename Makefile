@@ -28,7 +28,7 @@ GUMBO_PC      = $(if $(shell $(PC_CHECK) gumbo), gumbo, \
 
 LUA_PREFIX    = $(shell $(PKGCONFIG) --variable=prefix $(LUA_PC))
 LUA_LIBDIR    = $(shell $(PKGCONFIG) --variable=libdir $(LUA_PC))
-LUA_VERSION   = $(shell $(PKGCONFIG) --variable=V $(LUA_PC))
+LUA_VERSION   = $(shell $(PKGCONFIG) --modversion $(LUA_PC) | grep -o '^5\..')
 LUA_LMOD_DIR  = $(LUA_PREFIX)/share/lua/$(LUA_VERSION)
 LUA_CMOD_DIR  = $(LUA_LIBDIR)/lua/$(LUA_VERSION)
 GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags $(GUMBO_PC))
