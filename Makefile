@@ -76,17 +76,13 @@ large.html: README.html
 tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
-install: check-pkgconfig all | gumbo/cdef.lua gumbo/ffi.lua gumbo/init.lua
-	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)' '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
-	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)'
-	$(INSTALL_DATA) $| '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
-
-uninstall: check-pkgconfig
-	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/$(DYNLIB)'
-	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
-
-check-pkgconfig:
-	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1'
+lua-gumbo-%.tar.gz: gumbo/ gumbo.c gumbo.lua Makefile README.md cdef.sed
+	mkdir -p lua-gumbo-$* lua-gumbo-$*/test
+	cp -r $^ lua-gumbo-$*
+	cp test/*.* lua-gumbo-$*/test
+	cp .git/modules/test/html5lib-tests/HEAD lua-gumbo-$*/test/.H5LT_HEAD
+	tar -czf $@ lua-gumbo-$*
+	$(RM) -r lua-gumbo-$*
 
 test/html5lib-tests/%:
 # If running from a release tarball, fetch with curl
@@ -100,8 +96,14 @@ else
 	git submodule update
 endif
 
-check-html5lib: all | test/html5lib-tests/tree-construction/*.dat
-	@$(LUA) test/runner.lua $|
+install: check-pkgconfig all | gumbo/cdef.lua gumbo/ffi.lua gumbo/init.lua
+	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)' '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
+	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)'
+	$(INSTALL_DATA) $| '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
+
+uninstall: check-pkgconfig
+	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/$(DYNLIB)'
+	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
 check: all
 	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.table -
@@ -110,6 +112,9 @@ check: all
 check-ffi: export LGUMBO_USE_FFI = 1
 check-ffi: LUA = luajit
 check-ffi: check
+
+check-html5lib: all | test/html5lib-tests/tree-construction/*.dat
+	@$(LUA) test/runner.lua $|
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
 check-valgrind: check
@@ -122,6 +127,9 @@ check-compat:
 	$(MAKE) -s  check LUA=luajit LGUMBO_USE_FFI=1
 	$(MAKE) -s  check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
+check-pkgconfig:
+	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1'
+
 bench: all test/serialize.lua | test/html5lib-tests/sites/web-apps.htm
 	@time -f '%es, %MKB peak mem.' $(LUA) test/serialize.lua bench $|
 
@@ -132,14 +140,6 @@ bench-all:
 	$(MAKE) -s bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
 dist: lua-gumbo-0.1.tar.gz
-
-lua-gumbo-%.tar.gz: gumbo/ gumbo.c gumbo.lua Makefile README.md cdef.sed
-	mkdir -p lua-gumbo-$* lua-gumbo-$*/test
-	cp -r $^ lua-gumbo-$*
-	cp test/*.* lua-gumbo-$*/test
-	cp .git/modules/test/html5lib-tests/HEAD lua-gumbo-$*/test/.H5LT_HEAD
-	tar -czf $@ lua-gumbo-$*
-	$(RM) -r lua-gumbo-$*
 
 clean:
 	$(RM) $(DYNLIB) lua-gumbo-*.tar.gz gumbo.o README.html large.html
