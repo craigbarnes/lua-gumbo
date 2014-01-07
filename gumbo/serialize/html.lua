@@ -67,8 +67,12 @@ local function to_html(node)
             if attributes then
                 for i = 1, #attributes do
                     local attr = attributes[i]
-                    local escaped_value = attr.value:gsub('"', "&quot;")
-                    buf:appendf(' %s="%s"', attr.name, escaped_value)
+                    if attr.value == "" then
+                        buf:appendf(' %s', attr.name)
+                    else
+                        local escaped_value = attr.value:gsub('"', "&quot;")
+                        buf:appendf(' %s="%s"', attr.name, escaped_value)
+                    end
                 end
             end
 
