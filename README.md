@@ -47,12 +47,12 @@ The `gumbo` module provides two functions, both of which return a
 document table as described below:
 
 * `gumbo.parse(html, tab_stop)`
-  1. `html`: A string of UTF8-encoded HTML to be parsed.
-  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+  * `html`: A string of UTF8-encoded HTML to be parsed.
+  * `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
 * `gumbo.parse_file(path_or_file, tab_stop)`
-  1. `path_or_file`: Either a filename string or a file object.
-  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+  * `path_or_file`: Either a filename string or a file object.
+  * `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
 **Note:** either function may return `nil` and a error message if
 encountering out-of-memory conditions. The `parse_file` function may
