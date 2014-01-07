@@ -46,19 +46,17 @@ Usage
 The `gumbo` module provides two functions, both of which return a
 document table as described below:
 
-### `gumbo.parse(html, tab_stop)`
+* `gumbo.parse(html, tab_stop)`
+  1. `html`: A string of UTF8-encoded HTML to be parsed.
+  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
-* `html`: A string of UTF8-encoded HTML to be parsed.
-* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
-
-### `gumbo.parse_file(path_or_file, tab_stop)`
-
-* `path_or_file`: Either a filename string or a file object.
-* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+* `gumbo.parse_file(path_or_file, tab_stop)`
+  1. `path_or_file`: Either a filename string or a file object.
+  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
 **Note:** either function may return `nil` and a error message if
 encountering out-of-memory conditions. The `parse_file` function may
-also fail on I/O errors, for example if passed a non-existant filename.
+also fail on I/O errors, for example if passed a non-existent filename.
 
 Document Structure
 ------------------
@@ -92,7 +90,7 @@ numeric indices and the following named fields:
 * `column`
 * `offset`
 
-#### Attribute Tables
+#### Attributes
 
 The `attr` field of element nodes is represented as a table, containing
 sub-tables in numeric indices and a convenient `name="value"` index in
