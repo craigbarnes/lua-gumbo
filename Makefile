@@ -1,27 +1,43 @@
-CC       = gcc
-CFLAGS   = -g -O2 -fPIC -std=c99 -pedantic -Wall -Wextra -Wswitch-enum \
-           -Wwrite-strings -Wcast-qual -Wshadow
-LDFLAGS  = -shared
-DYNLIB   = cgumbo.so
-PKGCONFIG= pkg-config --silence-errors
-PREFIX   = $(shell $(PKGCONFIG) --variable=prefix lua)
-LIBDIR   = $(shell $(PKGCONFIG) --variable=libdir lua)
-LUAVER   = $(shell $(PKGCONFIG) --variable=V lua)
-LUADIR   = $(PREFIX)/share/lua/$(LUAVER)
-LUACDIR  = $(LIBDIR)/lua/$(LUAVER)
-LUA      = lua
-MKDIR    = mkdir -p
-INSTALL  = install -p -m 0644
-INSTALLX = install -p -m 0755
-RM       = rm -f
+CC            = gcc
+CFLAGS        = -g -O2 -fPIC -std=c99 -pedantic -Wall -Wextra -Wswitch-enum \
+                -Wwrite-strings -Wcast-qual -Wshadow
+LDFLAGS       = -shared
+DYNLIB        = cgumbo.so
+LUA           = lua
+MKDIR         = mkdir -p
+INSTALL_DATA  = install -p -m 0644
+INSTALL_EXEC  = install -p -m 0755
+RM            = rm -f
+PKGCONFIG     = pkg-config --silence-errors
+PC_CHECK      = $(PKGCONFIG) --variable=libdir
+
+# The naming of Lua pkg-config files across distributions is a total mess
+# Fedora and Arch use lua.pc
+# Debian uses lua5.2.pc and lua5.1.pc
+# OpenBSD ports uses lua52.pc and lua51.pc
+# I wonder if anyone uses lua-5.2.pc, just to be difficult...
+LUA_PC        = $(if $(shell $(PC_CHECK) lua), lua, \
+                $(if $(shell $(PC_CHECK) lua5.2), lua5.2, \
+                $(if $(shell $(PC_CHECK) lua5.1), lua5.1, \
+                $(if $(shell $(PC_CHECK) lua52), lua52, \
+                $(if $(shell $(PC_CHECK) lua51), lua51, \
+                $(error No pkg-config file found for Lua))))))
+
+GUMBO_PC      = $(if $(shell $(PC_CHECK) gumbo), gumbo, \
+                $(error No pkg-config file found for Gumbo))
+
+LUA_PREFIX    = $(shell $(PKGCONFIG) --variable=prefix $(LUA_PC))
+LUA_LIBDIR    = $(shell $(PKGCONFIG) --variable=libdir $(LUA_PC))
+LUA_VERSION   = $(shell $(PKGCONFIG) --variable=V $(LUA_PC))
+LUA_LMOD_DIR  = $(LUA_PREFIX)/share/lua/$(LUA_VERSION)
+LUA_CMOD_DIR  = $(LUA_LIBDIR)/lua/$(LUA_VERSION)
+GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags $(GUMBO_PC))
+GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs $(GUMBO_PC))
+GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir $(GUMBO_PC))/gumbo.h
 
 # Ensure the tests only load modules from within the current directory
 export LUA_PATH = ./?.lua;./?/init.lua
 export LUA_CPATH = ./?.so
-
-GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags gumbo)
-GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs gumbo)
-GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir gumbo)/gumbo.h
 
 all: $(DYNLIB)
 
@@ -48,16 +64,16 @@ tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
 install: check-pkgconfig all | gumbo/cdef.lua gumbo/ffi.lua gumbo/init.lua
-	$(MKDIR) '$(DESTDIR)$(LUACDIR)' '$(DESTDIR)$(LUADIR)/gumbo'
-	$(INSTALLX) $(DYNLIB) '$(DESTDIR)$(LUACDIR)'
-	$(INSTALL) $| '$(DESTDIR)$(LUADIR)/gumbo'
+	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)' '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
+	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)'
+	$(INSTALL_DATA) $| '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
 uninstall: check-pkgconfig
-	$(RM) '$(DESTDIR)$(LUACDIR)/$(DYNLIB)'
-	$(RM) -r '$(DESTDIR)$(LUADIR)/gumbo'
+	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/$(DYNLIB)'
+	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
 check-pkgconfig:
-	@$(PKGCONFIG) --print-errors --exists 'lua >= 5.1 gumbo >= 1' || exit 1
+	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1' || false
 
 test/html5lib-tests/%:
 # If running from a release tarball, fetch with curl
