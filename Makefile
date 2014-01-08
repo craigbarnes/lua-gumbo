@@ -18,16 +18,19 @@ GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs $(GUMBO_PC))
 GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir $(GUMBO_PC))/gumbo.h
 
 # The naming of Lua pkg-config files across distributions is a total mess
-# Fedora and Arch use lua.pc
-# Debian uses lua5.2.pc and lua5.1.pc
-# OpenBSD ports uses lua52.pc and lua51.pc
-# I wonder if anyone uses lua-5.2.pc, just to be difficult...
-LUA_PC        = $(if $(shell $(PC_CHECK) lua), lua, \
-                $(if $(shell $(PC_CHECK) lua5.2), lua5.2, \
-                $(if $(shell $(PC_CHECK) lua5.1), lua5.1, \
-                $(if $(shell $(PC_CHECK) lua52), lua52, \
-                $(if $(shell $(PC_CHECK) lua51), lua51, \
-                $(error No pkg-config file found for Lua))))))
+# - Fedora and Arch use lua.pc
+# - Debian uses lua5.2.pc and lua5.1.pc
+# - OpenBSD ports uses lua52.pc and lua51.pc
+# - FreeBSD and some others seem to be considering lua-5.2 and lua-5.1
+LUA_PC_NAMES  = lua lua5.2 lua5.1 lua52 lua51 lua-5.2 lua-5.1
+
+LUA_PC_FOUND  = $(strip $(foreach file, $(LUA_PC_NAMES), \
+                $(if $(shell $(PC_CHECK) $(file)),$(file),)))
+
+LUA_PC_FIRST  = $(firstword $(LUA_PC_FOUND))
+
+LUA_PC        = $(if $(LUA_PC_FIRST),$(LUA_PC_FIRST), \
+                $(error No pkg-config file found for Lua))
 
 # Some distributions put the Lua headers in versioned sub-directories, which
 # aren't in the default paths and hence must be included manually
