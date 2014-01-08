@@ -1,4 +1,5 @@
 local util = require "gumbo.serialize.util"
+local Buffer = util.Buffer
 
 local parse_flags_fields = {
     -- Serialized in this order:
@@ -33,7 +34,7 @@ local function escape_key(key)
 end
 
 local function to_table(node)
-    local buf = util.Buffer()
+    local buf = Buffer()
     local indent = util.IndentGenerator()
     local level = 0
     local sfmt = '%s%s = "%s",\n'
@@ -51,27 +52,26 @@ local function to_table(node)
             buf:appendf(nfmt, i1, "line", node.line)
             buf:appendf(nfmt, i1, "column", node.column)
             buf:appendf(nfmt, i1, "offset", node.offset)
+
             if node.attr then
                 local i3 = indent[level+3]
+                local tmp = Buffer()
                 buf:appendf("%sattr = {\n", i1)
-                for i = 1, #node.attr do
-                    local a = node.attr[i]
-                    buf:appendf(sfmt, i2, escape_key(a.name), escape(a.value))
+                for i, name, val, ns, line, col, offset in node:attr_iter() do
+                    buf:appendf(sfmt, i2, escape_key(name), escape(val))
+                    tmp:appendf("%s{\n", i2)
+                    tmp:appendf(sfmt, i3, "name", escape(name))
+                    tmp:appendf(sfmt, i3, "value", escape(val))
+                    tmp:appendf(ns and sfmt or bfmt, i3, "namespace", ns)
+                    tmp:appendf(nfmt, i3, "line", line)
+                    tmp:appendf(nfmt, i3, "column", col)
+                    tmp:appendf("%s%s = %d\n", i3, "offset", offset)
+                    tmp:appendf("%s},\n", i2)
                 end
-                for i = 1, #node.attr do
-                    local a = node.attr[i]
-                    local ns = a.namespace
-                    buf:appendf("%s{\n", i2)
-                    buf:appendf(sfmt, i3, "name", escape(a.name))
-                    buf:appendf(sfmt, i3, "value", escape(a.value))
-                    buf:appendf(ns and sfmt or bfmt, i3, "namespace", ns)
-                    buf:appendf(nfmt, i3, "line", a.line)
-                    buf:appendf(nfmt, i3, "column", a.column)
-                    buf:appendf("%s%s = %d\n", i3, "offset", a.offset)
-                    buf:appendf("%s},\n", i2)
-                end
+                buf:append(tmp:concat())
                 buf:appendf("%s},\n", i1)
             end
+
             if node.parse_flags then
                 buf:appendf("%sparse_flags = {\n", i1)
                 for i = 1, #parse_flags_fields do

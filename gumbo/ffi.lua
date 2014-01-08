@@ -17,6 +17,7 @@
 
 local ffi = require "ffi"
 local C = require "gumbo.cdef"
+local element_mt = require "gumbo.element"
 local GumboStringPiece = ffi.typeof "GumboStringPiece"
 local ffi_string = ffi.string
 local ffi_cast = ffi.cast
@@ -120,7 +121,8 @@ local function get_tag_name(element)
     if element.tag == C.GUMBO_TAG_UNKNOWN then
         local original_tag = GumboStringPiece(element.original_tag)
         C.gumbo_tag_from_original_text(original_tag)
-        return ffi_string(original_tag.data, original_tag.length):lower()
+        local tag = ffi_string(original_tag.data, tonumber(original_tag.length))
+        return tag:lower()
     else
         return ffi_string(C.gumbo_normalized_tagname(element.tag))
     end
@@ -158,7 +160,7 @@ end
 local function create_element(node)
     local element = node.v.element
     local length = element.children.length
-    local t = tnew(length, 7)
+    local t = setmetatable(tnew(length, 7), element_mt)
     t.type = "element"
     t.tag_namespace = tagnsmap[tonumber(element.tag_namespace)]
     t.tag = get_tag_name(element)

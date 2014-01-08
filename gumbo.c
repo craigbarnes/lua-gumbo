@@ -218,6 +218,8 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 7);
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.element");
+        lua_setmetatable(L, -2);
         add_literal(L, "type", "element");
         add_tag(L, element);
         add_tag_namespace(L, element->tag_namespace);
@@ -270,6 +272,13 @@ static int parse(lua_State *L) {
 }
 
 int luaopen_cgumbo(lua_State *L) {
+    // Load element metatable and store it in the registry
+    lua_getglobal(L, "require");
+    lua_pushliteral(L, "gumbo.element");
+    lua_call(L, 1, 1);
+    lua_setfield(L, LUA_REGISTRYINDEX, "gumbo.element");
+
+    // Create and return the gumbo module table
     lua_createtable(L, 0, 1);
     lua_pushcfunction(L, parse);
     lua_setfield(L, -2, "parse");

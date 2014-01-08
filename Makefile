@@ -126,9 +126,9 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
-	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=0
-	$(MAKE) -s  check LUA=luajit LGUMBO_USE_FFI=1
-	$(MAKE) -s  check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
+	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
+	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=1
+	$(MAKE) -sB check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
 check-pkgconfig:
 	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1'
