@@ -21,7 +21,7 @@ GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir $(GUMBO_PC))/gumbo.h
 # - Fedora and Arch use lua.pc
 # - Debian uses lua5.2.pc and lua5.1.pc
 # - OpenBSD ports uses lua52.pc and lua51.pc
-# - FreeBSD and some others seem to be considering lua-5.2 and lua-5.1
+# - FreeBSD and some others seem to be considering lua-5.2.pc and lua-5.1.pc
 LUA_PC_NAMES  = lua lua5.2 lua5.1 lua52 lua51 lua-5.2 lua-5.1
 
 LUA_PC_FOUND  = $(strip $(foreach file, $(LUA_PC_NAMES), \
