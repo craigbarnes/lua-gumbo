@@ -2,7 +2,6 @@ CC            = gcc
 CFLAGS        = -g -O2 -fPIC -std=c99 -pedantic -Wall -Wextra -Wswitch-enum \
                 -Wwrite-strings -Wcast-qual -Wshadow
 LDFLAGS       = -shared
-DYNLIB        = cgumbo.so
 LUA           = lua
 MKDIR         = mkdir -p
 INSTALL_DATA  = install -p -m 0644
@@ -10,6 +9,11 @@ INSTALL_EXEC  = install -p -m 0755
 RM            = rm -f
 PKGCONFIG     = pkg-config --silence-errors
 PC_CHECK      = $(PKGCONFIG) --variable=libdir
+
+DYNLIB        = cgumbo.so
+MODULES_G     = gumbo/init.lua gumbo/element.lua gumbo/ffi.lua gumbo/cdef.lua
+MODULES_S     = gumbo/serialize/util.lua gumbo/serialize/table.lua \
+                gumbo/serialize/html.lua gumbo/serialize/html5lib.lua
 
 GUMBO_PC      = $(if $(shell $(PC_CHECK) gumbo), gumbo, \
                 $(error No pkg-config file found for Gumbo))
@@ -99,10 +103,12 @@ else
 	git submodule update
 endif
 
-install: check-pkgconfig all | gumbo/cdef.lua gumbo/ffi.lua gumbo/init.lua
-	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)' '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
-	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)'
-	$(INSTALL_DATA) $| '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
+install: check-pkgconfig all
+	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)'
+	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
+	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)/'
+	$(INSTALL_DATA) $(MODULES_G) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL_DATA) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall: check-pkgconfig
 	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/$(DYNLIB)'
