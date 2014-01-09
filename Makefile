@@ -144,9 +144,9 @@ bench: all test/serialize.lua | test/html5lib-tests/sites/web-apps.htm
 
 bench-all:
 	$(MAKE) -sB bench LUA=lua
-	$(MAKE) -s bench LUA=luajit LGUMBO_USE_FFI=0
-	$(MAKE) -s bench LUA=luajit LGUMBO_USE_FFI=1
-	$(MAKE) -s bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
+	$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
+	$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=1
+	$(MAKE) -sB bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
 dist: lua-gumbo-0.1.tar.gz
 
