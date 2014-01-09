@@ -63,17 +63,12 @@ local function to_html(node)
     local function serialize(node)
         if node.type == "element" then
             local tag = node.tag
-            local attributes = node.attr
             buf:appendf('%s<%s', indent[level], tag)
-            if attributes then
-                for i = 1, #attributes do
-                    local attr = attributes[i]
-                    if attr.value == "" then
-                        buf:appendf(' %s', attr.name)
-                    else
-                        local escaped_value = attr.value:gsub('"', "&quot;")
-                        buf:appendf(' %s="%s"', attr.name, escaped_value)
-                    end
+            for i, name, value in node:attr_iter() do
+                if value == "" then
+                    buf:appendf(' %s', name)
+                else
+                    buf:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
                 end
             end
             local length = #node
