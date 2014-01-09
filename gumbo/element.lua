@@ -1,16 +1,19 @@
+local yield = coroutine.yield
+local wrap = coroutine.wrap
+local sort = table.sort
+
 local Element = {}
 Element.__index = Element
 
-local function attr_next(attrs, i)
-    local j = i + 1
-    local a = attrs[j]
-    if a then
-        return j, a.name, a.value, a.namespace, a.line, a.column, a.offset
+local function attr_yield(attrs)
+    for i = 1, #attrs do
+        local a = attrs[i]
+        yield(i, a.name, a.value, a.namespace, a.line, a.column, a.offset)
     end
 end
 
 function Element:attr_iter()
-    return attr_next, self.attr or {}, 0
+    return wrap(function() attr_yield(self.attr) end)
 end
 
 function Element:attr_iter_sorted()
@@ -25,10 +28,10 @@ function Element:attr_iter_sorted()
             namespace = attr.namespace
         }
     end
-    table.sort(copy, function(a, b)
+    sort(copy, function(a, b)
         return a.name < b.name
     end)
-    return attr_next, copy, 0
+    return wrap(function() attr_yield(copy) end)
 end
 
 return Element
