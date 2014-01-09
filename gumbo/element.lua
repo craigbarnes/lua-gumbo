@@ -12,26 +12,34 @@ local function attr_yield(attrs)
     end
 end
 
+function Element:attr_copy()
+    local attrs = self.attr
+    if attrs then
+        local copy = {}
+        for i = 1, #attrs do
+            local attr = attrs[i]
+            copy[i] = {
+                name = attr.name,
+                value = attr.value,
+                namespace = attr.namespace
+            }
+        end
+        return copy
+    end
+end
+
 function Element:attr_iter()
     return wrap(function() attr_yield(self.attr) end)
 end
 
 function Element:attr_iter_sorted()
-    local attrs = self.attr
-    if not attrs then return function() return nil end end
-    local copy = {}
-    for i = 1, #attrs do
-        local attr = attrs[i]
-        copy[i] = {
-            name = attr.name,
-            value = attr.value,
-            namespace = attr.namespace
-        }
+    if self.attr then
+        local copy = self:attr_copy()
+        sort(copy, function(a, b) return a.name < b.name end)
+        return wrap(function() attr_yield(copy) end)
+    else
+        return function() return nil end
     end
-    sort(copy, function(a, b)
-        return a.name < b.name
-    end)
-    return wrap(function() attr_yield(copy) end)
 end
 
 return Element
