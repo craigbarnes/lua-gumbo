@@ -71,9 +71,10 @@ local function to_html(node)
                     buf:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
                 end
             end
+            buf:append(">")
             local length = #node
             if length > 0 then -- recurse into child nodes
-                buf:append(">\n")
+                buf:append("\n")
                 level = level + 1
                 for i = 1, length do
                     serialize(node[i])
@@ -83,7 +84,6 @@ local function to_html(node)
                     buf:appendf("%s</%s>\n", indent[level], tag)
                 end
             else
-                buf:append(">")
                 if not void[tag] then
                     buf:appendf("</%s>\n", tag)
                 else
