@@ -12,8 +12,9 @@ PC_CHECK      = $(PKGCONFIG) --variable=libdir
 
 DYNLIB        = cgumbo.so
 MODULES_G     = gumbo/init.lua gumbo/element.lua gumbo/ffi.lua gumbo/cdef.lua
-MODULES_S     = gumbo/serialize/util.lua gumbo/serialize/table.lua \
-                gumbo/serialize/html.lua gumbo/serialize/html5lib.lua
+MODULES_U     = gumbo/util/buffer.lua gumbo/util/indent.lua
+MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
+                gumbo/serialize/html5lib.lua
 
 GUMBO_PC      = $(if $(shell $(PC_CHECK) gumbo), gumbo, \
                 $(error No pkg-config file found for Gumbo))
@@ -105,9 +106,11 @@ endif
 
 install: check-pkgconfig all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)'
+	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/util'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
 	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)/'
 	$(INSTALL_DATA) $(MODULES_G) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL_DATA) $(MODULES_U) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/util'
 	$(INSTALL_DATA) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall: check-pkgconfig

@@ -1,5 +1,5 @@
-local util = require "gumbo.serialize.util"
-local Buffer = util.Buffer
+local Buffer = require "gumbo.util.buffer"
+local Indent = require "gumbo.util.indent"
 
 local parse_flags_fields = {
     -- Serialized in this order:
@@ -35,7 +35,7 @@ end
 
 local function to_table(node)
     local buf = Buffer()
-    local indent = util.IndentGenerator()
+    local indent = Indent()
     local level = 0
     local sfmt = '%s%s = "%s",\n'
     local nfmt = "%s%s = %d,\n"

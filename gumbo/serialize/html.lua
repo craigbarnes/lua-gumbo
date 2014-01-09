@@ -1,4 +1,5 @@
-local util = require "gumbo.serialize.util"
+local Buffer = require "gumbo.util.buffer"
+local Indent = require "gumbo.util.indent"
 
 -- This has had much less attention than the other two serializers and is
 -- inherently much harder to do properly. Consider it experimental for now.
@@ -57,8 +58,8 @@ local function wrap(text, indent)
 end
 
 local function to_html(node)
-    local buf = util.Buffer()
-    local indent = util.IndentGenerator()
+    local buf = Buffer()
+    local indent = Indent()
     local level = 0
     local function serialize(node)
         if node.type == "element" then
