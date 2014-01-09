@@ -47,7 +47,7 @@ LUA_PC_CMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_CMOD $(LUA_PC))
 # Most other distros force you to piece together prefix/libdir/version
 LUA_PREFIX    = $(shell $(PKGCONFIG) --variable=prefix $(LUA_PC))
 LUA_LIBDIR    = $(shell $(PKGCONFIG) --variable=libdir $(LUA_PC))
-LUA_VERSION   = $(shell $(PKGCONFIG) --modversion $(LUA_PC) | grep -o '^5\..')
+LUA_VERSION   = $(shell $(PKGCONFIG) --modversion $(LUA_PC) | grep -o '^.\..')
 
 # If you need to specify module paths manually, override just these two
 LUA_LMOD_DIR  = $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
@@ -140,13 +140,15 @@ check-pkgconfig:
 	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1'
 
 bench: all test/serialize.lua | test/html5lib-tests/sites/web-apps.htm
+	@printf '%-20s' '$(LUA) $(LUA_VERSION)$(if $(E), + $(E),):'
 	@time -f '%es, %MKB peak mem.' $(LUA) test/serialize.lua bench $|
 
 bench-all:
-	$(MAKE) -sB bench LUA=lua
-	$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
-	$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=1
-	$(MAKE) -sB bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
+	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 luajit >= 2.0'
+	@$(MAKE) -sB bench LUA=lua
+	@$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
+	@$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=1 LUA_PC=luajit E='FFI'
+	@$(MAKE) -sB bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;' E='luaffi'
 
 dist: lua-gumbo-0.1.tar.gz
 
