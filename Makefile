@@ -78,7 +78,7 @@ README.html: README.md
 
 5MB.html: test/bench.html
 	$(RM) $@
-	for i in `seq 1 1280`; do cat $< >> $@; done
+	for i in `seq 1 1250`; do cat $< >> $@; done
 
 tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
