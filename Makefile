@@ -76,9 +76,9 @@ gumbo/cdef.lua: $(GUMBO_HEADER) cdef.sed
 README.html: README.md
 	markdown $< > $@
 
-large.html: README.html
+5MB.html: test/bench.html
 	$(RM) $@
-	for i in `seq 1 800`; do cat $< >> $@; done
+	for i in `seq 1 1280`; do cat $< >> $@; done
 
 tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
@@ -139,9 +139,9 @@ check-compat:
 check-pkgconfig:
 	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1'
 
-bench: all test/serialize.lua | test/html5lib-tests/sites/web-apps.htm
+bench: 5MB.html all test/serialize.lua
 	@printf '%-20s' '$(LUA) $(LUA_VERSION)$(if $(E), + $(E),):'
-	@time -f '%es, %MKB peak mem.' $(LUA) test/serialize.lua bench $|
+	@time -f '%es, %MKB peak mem.' $(LUA) test/serialize.lua bench $<
 
 bench-all:
 	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 luajit >= 2.0'
@@ -153,7 +153,7 @@ bench-all:
 dist: lua-gumbo-0.1.tar.gz
 
 clean:
-	$(RM) $(DYNLIB) lua-gumbo-*.tar.gz gumbo.o README.html large.html
+	$(RM) $(DYNLIB) lua-gumbo-*.tar.gz gumbo.o README.html 5MB.html
 
 
 ifeq ($(shell uname),Darwin)
