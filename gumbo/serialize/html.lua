@@ -44,14 +44,15 @@ local function wrap(text, indent)
     local limit = 78
     local indent_width = #indent
     local pos = 1 - indent_width
-    local str = text:gsub("(%s+)()(%S+)()", function(_, start, word, stop)
+    local function reflow(sep, start, word, stop)
         if stop - pos > limit then
             pos = start - indent_width
             return "\n" .. indent .. word
         else
             return " " .. word
         end
-    end)
+    end
+    local str = text:gsub("(%s+)()(%S+)()", reflow)
     return indent .. str .. "\n"
 end
 
@@ -59,11 +60,11 @@ local function to_html(node)
     local buf = util.Buffer()
     local indent = util.IndentGenerator()
     local level = 0
-
     local function serialize(node)
         if node.type == "element" then
-            buf:appendf('%s<%s', indent[level], node.tag)
+            local tag = node.tag
             local attributes = node.attr
+            buf:appendf('%s<%s', indent[level], tag)
             if attributes then
                 for i = 1, #attributes do
                     local attr = attributes[i]
@@ -75,7 +76,6 @@ local function to_html(node)
                     end
                 end
             end
-
             local length = #node
             if length > 0 then -- recurse into child nodes
                 buf:append(">\n")
@@ -84,13 +84,13 @@ local function to_html(node)
                     serialize(node[i])
                 end
                 level = level - 1
-                if not void[node.tag] then
-                    buf:appendf("%s</%s>\n", indent[level], node.tag)
+                if not void[tag] then
+                    buf:appendf("%s</%s>\n", indent[level], tag)
                 end
             else
                 buf:append(">")
-                if not void[node.tag] then
-                    buf:appendf("</%s>\n", node.tag)
+                if not void[tag] then
+                    buf:appendf("</%s>\n", tag)
                 else
                     buf:append("\n")
                 end
@@ -108,7 +108,6 @@ local function to_html(node)
             end
         end
     end
-
     serialize(node)
     return buf:concat()
 end
