@@ -9,6 +9,13 @@ Status
 *Work in progress*. A versioned release will be made when the API has
 stabilized.
 
+Running the [html5lib tree-construction tests] currently produces the
+following stats:
+
+    Passed: 1217
+    Failed: 3
+    Skipped: 115
+
 Requirements
 ------------
 
