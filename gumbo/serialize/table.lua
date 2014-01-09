@@ -57,7 +57,7 @@ local function to_table(node)
                 local i3 = indent[level+3]
                 local tmp = Buffer()
                 buf:appendf("%sattr = {\n", i1)
-                for i, name, val, ns, line, col, offset in node:attr_iter() do
+                for name, val, ns, i, line, col, offset in node:attr_iter() do
                     buf:appendf(sfmt, i2, escape_key(name), escape(val))
                     tmp:appendf("%s{\n", i2)
                     tmp:appendf(sfmt, i3, "name", escape(name))

@@ -8,7 +8,7 @@ Element.__index = Element
 local function attr_yield(attrs)
     for i = 1, #attrs do
         local a = attrs[i]
-        yield(i, a.name, a.value, a.namespace, a.line, a.column, a.offset)
+        yield(a.name, a.value, a.namespace, i, a.line, a.column, a.offset)
     end
 end
 
@@ -29,7 +29,11 @@ function Element:attr_copy()
 end
 
 function Element:attr_iter()
-    return wrap(function() attr_yield(self.attr) end)
+    if self.attr then
+        return wrap(function() attr_yield(self.attr) end)
+    else
+        return function() return nil end
+    end
 end
 
 function Element:attr_iter_sorted()

@@ -65,7 +65,7 @@ local function to_html(node)
         if node.type == "element" then
             local tag = node.tag
             buf:appendf('%s<%s', indent[level], tag)
-            for i, name, value in node:attr_iter() do
+            for name, value in node:attr_iter() do
                 if value == "" then
                     buf:appendf(' %s', name)
                 else
