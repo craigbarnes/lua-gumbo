@@ -19,27 +19,29 @@ local function parse_testdata(filename)
     local file = assert(io.open(filename))
     local text = assert(file:read("*a"))
     file:close()
-    local tests = {[0] = {}, n = 0}
+    local tests = {[0] = {}}
     local buffer = Buffer()
     local field = false
+    local i = 0
     local linenumber = 0
     for line in text:gmatch "([^\n]*)\n" do
         linenumber = linenumber + 1
         local section = line:match("^#(.*)$")
         if section then
-            tests[tests.n][field] = buffer:concat("\n")
+            tests[i][field] = buffer:concat("\n")
             buffer = Buffer()
             field = section
             if section == "data" then
-                tests.n = tests.n + 1
-                tests[tests.n] = {line = linenumber}
+                i = i + 1
+                tests[i] = {line = linenumber}
             end
         else
             buffer:append(line)
         end
     end
-    tests[tests.n][field] = buffer:concat("\n") .. "\n"
-    if tests.n > 0 then
+    tests[i][field] = buffer:concat("\n") .. "\n"
+    if i > 0 then
+        tests.n = i
         return tests
     else
         return nil, "No test data found in " .. filename
