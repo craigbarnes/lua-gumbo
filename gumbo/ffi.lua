@@ -40,16 +40,16 @@ else
 end
 
 local flagsmap = {
-    insertion_by_parser = C.GUMBO_INSERTION_BY_PARSER,
-    implicit_end_tag = C.GUMBO_INSERTION_IMPLICIT_END_TAG,
-    insertion_implied = C.GUMBO_INSERTION_IMPLIED,
-    converted_from_end_tag = C.GUMBO_INSERTION_CONVERTED_FROM_END_TAG,
-    insertion_from_isindex = C.GUMBO_INSERTION_FROM_ISINDEX,
-    insertion_from_image = C.GUMBO_INSERTION_FROM_IMAGE,
-    reconstructed_formatting_element = C.GUMBO_INSERTION_RECONSTRUCTED_FORMATTING_ELEMENT,
-    adoption_agency_cloned = C.GUMBO_INSERTION_ADOPTION_AGENCY_CLONED,
-    adoption_agency_moved = C.GUMBO_INSERTION_ADOPTION_AGENCY_MOVED,
-    foster_parented = C.GUMBO_INSERTION_FOSTER_PARENTED
+    {"insertion_by_parser", C.GUMBO_INSERTION_BY_PARSER},
+    {"implicit_end_tag", C.GUMBO_INSERTION_IMPLICIT_END_TAG},
+    {"insertion_implied", C.GUMBO_INSERTION_IMPLIED},
+    {"converted_from_end_tag", C.GUMBO_INSERTION_CONVERTED_FROM_END_TAG},
+    {"insertion_from_isindex", C.GUMBO_INSERTION_FROM_ISINDEX},
+    {"insertion_from_image", C.GUMBO_INSERTION_FROM_IMAGE},
+    {"reconstructed_formatting_element", C.GUMBO_INSERTION_RECONSTRUCTED_FORMATTING_ELEMENT},
+    {"adoption_agency_cloned", C.GUMBO_INSERTION_ADOPTION_AGENCY_CLONED},
+    {"adoption_agency_moved", C.GUMBO_INSERTION_ADOPTION_AGENCY_MOVED},
+    {"foster_parented", C.GUMBO_INSERTION_FOSTER_PARENTED}
 }
 
 local typemap = {
@@ -84,6 +84,7 @@ local attrnsmap = {
     __index = function() error "Error: invalid attribute namespace" end
 }
 
+flagsmap.n = #flagsmap
 setmetatable(typemap, typemap)
 setmetatable(quirksmap, quirksmap)
 setmetatable(tagnsmap, tagnsmap)
@@ -132,9 +133,10 @@ local function get_parse_flags(parse_flags)
     if parse_flags ~= C.GUMBO_INSERTION_NORMAL then
         parse_flags = tonumber(parse_flags)
         local t = tnew(0, 1)
-        for field, flag in pairs(flagsmap) do
-            if testflag(parse_flags, flag) then
-                t[field] = true
+        for i = 1, flagsmap.n do
+            local pair = flagsmap[i]
+            if testflag(parse_flags, pair[2]) then
+                t[pair[1]] = true
             end
         end
         return t
