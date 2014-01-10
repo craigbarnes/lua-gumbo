@@ -1,14 +1,12 @@
-local yield = coroutine.yield
-local wrap = coroutine.wrap
 local sort = table.sort
-
 local Element = {}
 Element.__index = Element
 
-local function attr_yield(attrs)
-    for i = 1, #attrs do
-        local a = attrs[i]
-        yield(a.name, a.value, a.namespace, i, a.line, a.column, a.offset)
+local function attr_next(attrs, i)
+    local j = i + 1
+    local a = attrs[j]
+    if a then
+        return j, a.name, a.value, a.namespace, a.line, a.column, a.offset
     end
 end
 
@@ -29,18 +27,14 @@ function Element:attr_copy()
 end
 
 function Element:attr_iter()
-    if self.attr then
-        return wrap(function() attr_yield(self.attr) end)
-    else
-        return function() return nil end
-    end
+    return attr_next, self.attr or {}, 0
 end
 
 function Element:attr_iter_sorted()
     if self.attr then
         local copy = self:attr_copy()
         sort(copy, function(a, b) return a.name < b.name end)
-        return wrap(function() attr_yield(copy) end)
+        return attr_next, copy, 0
     else
         return function() return nil end
     end
