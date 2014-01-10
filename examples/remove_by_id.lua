@@ -24,8 +24,12 @@ local function remove_element_by_id(base, id)
     end
 end
 
-local filename = assert(arg[1], "No filename specified")
-local id = assert(arg[2], "No ID specified")
-local document = assert(gumbo.parse_file(filename))
-remove_element_by_id(document, id)
+if not arg[1] then
+    io.stderr:write("Error: No element ID specified\n")
+    io.stderr:write("Usage: ", arg[0], " ELEMENT_ID [FILENAME]\n")
+    os.exit(1)
+end
+
+local document = assert(gumbo.parse_file(arg[2] or io.stdin))
+remove_element_by_id(document, arg[1])
 io.stdout:write(serialize(document))
