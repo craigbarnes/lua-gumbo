@@ -41,34 +41,30 @@ Installation
 Usage
 -----
 
-### Functions
-
 The `gumbo` module provides two functions:
 
-#### `parse(html, tab_stop)`
+`parse(html, tab_stop)`
 
-**Parameters**:
+* `html`: A string of UTF8-encoded HTML to be parsed.
+* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
-1. `html`: A string of UTF8-encoded HTML to be parsed.
-2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+`parse_file(path_or_file, tab_stop)`
 
-#### `parse_file(path_or_file, tab_stop)`
+* `path_or_file`: Either a filename string or a [file handle].
+* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
-**Parameters**:
-
-1. `path_or_file`: Either a filename string or a [file handle].
-2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
-
-### Output
-
-Both functions return a document table (as described below) or `nil`
+Both functions return a `Document` node (as described below) or `nil`
 and an error message on failure (e.g. out of memory, invalid filename etc.)
 
-#### Document Node
+Types
+-----
+
+### Document
 
 The document node is the top-level table returned by the parse functions
-and contains all other nodes as descendants. It contains the following
-fields:
+and contains all other nodes as descendants.
+
+**Fields:**
 
 * `type`: Always has a value of `"document"` for document nodes.
 * `has_doctype`: Whether or not a [doctype declaration] was found (boolean).
@@ -76,29 +72,31 @@ fields:
 * `public_identifier`: The doctype [public identifier].
 * `system_identifier`: The doctype [system identifier].
 * `quirks_mode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
-* `root`: A convenient reference to the child `<html>` element.
+* `root`: A convenient reference to the child `<html>` `Element`.
 * `[1..n]`: Child nodes.
 
-#### Element Nodes
+### Element
 
-Element nodes are represented as tables, with child nodes stored in
-numeric indices and the following named fields:
+`Element` nodes are represented as tables, with child nodes stored in
+numeric indices.
+
+**Fields:**
 
 * `type`: Always has a value of `"element"` for element nodes.
 * `tag`: The tag name, normalized to lower case.
 * `tag_namespace`: Either `"html"`, `"svg"` or `"math"`.
-* `attr`: A table of attributes or `nil`. See below for details.
+* `attr`: A table of `Attribute` types (see below).
 * `parse_flags`
 * `line`
 * `column`
 * `offset`
+* `[1..n]`: Child nodes.
 
-##### Attributes
+#### Attribute
 
-The `attr` field of element nodes is represented as a table, containing
-sub-tables in numeric indices and a convenient `name="value"` index in
-named fields. The sub-tables each represent a single attribute and
-contain the following fields:
+A table representing a single attribute.
+
+**Fields:**
 
 * `name`
 * `value`
@@ -107,9 +105,11 @@ contain the following fields:
 * `column`
 * `offset`
 
-#### Text Nodes
+### Text
 
-Text nodes are represented as tables with the fields:
+There are 4 text node types, which all share a common structure.
+
+**Fields:**
 
 * `type`: One of `"text"`, `"whitespace"`, `"comment"` or `"cdata"`.
 * `text`: The text contents. Does not include comment/cdata delimiters.
