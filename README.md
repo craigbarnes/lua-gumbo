@@ -41,19 +41,23 @@ Installation
 Usage
 -----
 
-### Input
+### Functions
 
 The `gumbo` module provides two functions:
 
 #### `parse(html, tab_stop)`
 
-  1. `html`: A string of UTF8-encoded HTML to be parsed.
-  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+**Parameters**:
+
+1. `html`: A string of UTF8-encoded HTML to be parsed.
+2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
 #### `parse_file(path_or_file, tab_stop)`
 
-  1. `path_or_file`: Either a filename string or a [file handle].
-  2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+**Parameters**:
+
+1. `path_or_file`: Either a filename string or a [file handle].
+2. `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
 
 ### Output
 
