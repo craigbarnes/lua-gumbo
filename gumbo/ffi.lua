@@ -17,7 +17,8 @@
 
 local ffi = require "ffi"
 local C = require "gumbo.cdef"
-local element_mt = require "gumbo.element"
+local Element = require "gumbo.element"
+local Attributes = require "gumbo.attributes"
 local GumboStringPiece = ffi.typeof "GumboStringPiece"
 local ffi_string = ffi.string
 local ffi_cast = ffi.cast
@@ -93,7 +94,8 @@ setmetatable(attrnsmap, attrnsmap)
 local function get_attributes(attrs)
     local length = attrs.length
     if length > 0 then
-        local t = tnew(length, length)
+        local t = setmetatable(tnew(length, length), Attributes)
+        t.length = length
         for i = 0, length - 1 do
             local attr = ffi_cast("GumboAttribute*", attrs.data[i])
             t[i+1] = {
@@ -162,7 +164,7 @@ end
 local function create_element(node)
     local element = node.v.element
     local length = element.children.length
-    local t = setmetatable(tnew(length, 7), element_mt)
+    local t = setmetatable(tnew(length, 7), Element)
     t.type = "element"
     t.tag_namespace = tagnsmap[tonumber(element.tag_namespace)]
     t.tag = get_tag_name(element)

@@ -7,7 +7,7 @@ local document = assert(gumbo.parse_file(filename))
 --- Iterate an element node recursively, printing any href attributes found
 local function find_links(node)
     if node.type == "element" then
-        for index, name, value, namespace, line, column in node:attr_iter() do
+        for index, name, value, namespace, line, column in node.attr:iter() do
             if name == "href" then
                 printf("%s:%d:%d: %s\n", filename, line, column, value)
             end

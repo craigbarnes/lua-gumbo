@@ -13,7 +13,7 @@ return function(node)
             else
                 buf:appendf('| %s<%s>\n', i1, node.tag)
             end
-            for index, name, value, namespace in node:attr_iter_sorted() do
+            for index, name, value, namespace in node.attr:iter_sorted() do
                 if namespace then
                     buf:appendf('| %s%s %s="%s"\n', i2, namespace, name, value)
                 else

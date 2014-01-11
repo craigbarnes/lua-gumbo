@@ -53,11 +53,11 @@ local function to_table(node)
             buf:appendf(nfmt, i1, "column", node.column)
             buf:appendf(nfmt, i1, "offset", node.offset)
 
-            if node.attr then
+            if node.attr.length > 0 then
                 local i3 = indent[level+3]
                 local tmp = Buffer()
                 buf:appendf("%sattr = {\n", i1)
-                for i, name, val, ns, line, col, offset in node:attr_iter() do
+                for i, name, val, ns, line, col, offset in node.attr:iter() do
                     buf:appendf(sfmt, i2, escape_key(name), escape(val))
                     tmp:appendf("%s{\n", i2)
                     tmp:appendf(sfmt, i3, "name", escape(name))
