@@ -2,8 +2,9 @@ local Attributes = require "gumbo.attributes"
 local Element = {}
 Element.__index = Element
 
--- Empty attributes table, shared across all elements with zero attributes
--- (helps to avoid nil checks, without consuming much extra memory).
+-- Element nodes with attributes have an `attr` table added by the tree
+-- constructor. Those without attributes share a default, empty table
+-- via the metatable, to avoid the need for nil-checking in client code.
 Element.attr = Attributes.new()
 
 return Element
