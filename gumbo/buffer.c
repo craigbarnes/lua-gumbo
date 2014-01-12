@@ -47,12 +47,6 @@ static int buffer_write(lua_State *L) {
     return 0;
 }
 
-static int buffer__len(lua_State *L) {
-    Buffer *buf = check_buffer(L, 1);
-    lua_pushinteger(L, buf->length);
-    return 1;
-}
-
 static int buffer__tostring(lua_State *L) {
     Buffer *buf = check_buffer(L, 1);
     lua_pushlstring(L, buf->data, buf->length);
@@ -66,19 +60,18 @@ static int buffer__gc(lua_State *L) {
 }
 
 static int buffer_new(lua_State *L) {
-    const lua_Integer initial_size = luaL_optinteger(L, 1, 10);
+    const lua_Integer capacity = luaL_optinteger(L, 1, 4096);
     Buffer *buffer = (Buffer *)lua_newuserdata(L, sizeof(Buffer));
     luaL_getmetatable(L, MODNAME);
     lua_setmetatable(L, -2);
-    buffer->data = malloc(initial_size);
+    buffer->data = malloc(capacity);
     buffer->length = 0;
-    buffer->capacity = initial_size;
+    buffer->capacity = capacity;
     return 1;
 }
 
 static const luaL_Reg methods[] = {
     {"write", buffer_write},
-    {"__len", buffer__len},
     {"__tostring", buffer__tostring},
     {"__gc", buffer__gc},
     {NULL, NULL}
