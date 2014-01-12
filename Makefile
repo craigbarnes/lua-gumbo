@@ -1,6 +1,8 @@
 CC            = gcc
-CFLAGS        = -g -O2 -fPIC -std=c99 -pedantic -Wall -Wextra -Wswitch-enum \
-                -Wwrite-strings -Wcast-qual -Wshadow
+REQCFLAGS     = -std=c99 -pedantic -fPIC
+CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings \
+                -Wcast-qual -Wshadow
+CFLAGS       += $(REQCFLAGS)
 LDFLAGS       = -shared
 LUA           = lua
 MKDIR         = mkdir -p
