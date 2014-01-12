@@ -118,7 +118,9 @@ local function to_table(node, buffer)
         end
     end
     serialize(node)
-    return tostring(buf)
+    if not io.type(buf) then
+        return tostring(buf)
+    end
 end
 
 return to_table

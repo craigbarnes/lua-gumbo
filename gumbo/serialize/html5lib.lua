@@ -53,5 +53,7 @@ return function(node, buffer)
         end
     end
     serialize(node)
-    return tostring(buf)
+    if not io.type(buf) then
+        return tostring(buf)
+    end
 end
