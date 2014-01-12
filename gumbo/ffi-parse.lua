@@ -16,7 +16,7 @@
 ]]
 
 local ffi = require "ffi"
-local C = require "gumbo.cdef"
+local C = require "gumbo.ffi-cdef"
 local Element = require "gumbo.element"
 local Attributes = require "gumbo.attributes"
 local GumboStringPiece = ffi.typeof "GumboStringPiece"

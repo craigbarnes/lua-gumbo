@@ -6,16 +6,17 @@ CFLAGS       += $(REQCFLAGS)
 LDFLAGS       = -shared
 LUA           = lua
 MKDIR         = mkdir -p
-INSTALL_DATA  = install -p -m 0644
-INSTALL_EXEC  = install -p -m 0755
+INSTALL       = install -p -m 0644
+INSTALLX      = install -p -m 0755
 RM            = rm -f
 PKGCONFIG     = pkg-config --silence-errors
 PC_CHECK      = $(PKGCONFIG) --variable=libdir
 
-DYNLIB        = cgumbo.so
-MODULES_C     = gumbo/buffer.so
-MODULES_G     = gumbo/init.lua gumbo/element.lua gumbo/indent.lua \
-                gumbo/ffi.lua gumbo/cdef.lua
+MODULES_C     = gumbo/parse.c gumbo/buffer.c
+MODULES_O     = $(MODULES_C:.c=.o)
+MODULES_SO    = $(MODULES_O:.o=.so)
+MODULES_L     = gumbo/init.lua gumbo/element.lua gumbo/attributes.lua \
+                gumbo/indent.lua gumbo/ffi-parse.lua gumbo/ffi-cdef.lua
 MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
@@ -63,21 +64,21 @@ LUA_CMOD_DIR  = $(strip $(if $(LUA_PC_CMOD), $(LUA_PC_CMOD), \
 export LUA_PATH = ./?.lua;./?/init.lua
 export LUA_CPATH = ./?.so
 
-all: $(DYNLIB) gumbo/buffer.so
+all: $(MODULES_SO)
 
-$(DYNLIB): gumbo.o Makefile
+gumbo/parse.so: gumbo/parse.o Makefile
 	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
 
-gumbo.o: gumbo.c Makefile
+gumbo/parse.o: gumbo/parse.c Makefile
 	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
 
-gumbo/buffer.so: gumbo/buffer.o
+gumbo/buffer.so: gumbo/buffer.o Makefile
 	$(CC) $(LDFLAGS) -o $@ $<
 
-gumbo/buffer.o: gumbo/buffer.c
+gumbo/buffer.o: gumbo/buffer.c Makefile
 	$(CC) $(CFLAGS) $(LUA_CFLAGS) -c -o $@ $<
 
-gumbo/cdef.lua: $(GUMBO_HEADER) cdef.sed
+gumbo/ffi-cdef.lua: $(GUMBO_HEADER) cdef.sed
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
 	@sed -f cdef.sed $(GUMBO_HEADER) | sed '/^$$/N;/^\n$$/D' >> $@
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
@@ -94,14 +95,14 @@ README.html: README.md
 	$(RM) $@
 	for i in `seq 1 $*`; do cat $< >> $@; done
 
-tags: gumbo.c $(GUMBO_HEADER)
+tags: $(MODULES_C) $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
 lua-gumbo-%.tar.gz: force
 	mkdir -p lua-gumbo-$*/gumbo/serialize lua-gumbo-$*/test
-	cp Makefile README.md cdef.sed gumbo.c gumbo.lua lua-gumbo-$*
-	cp gumbo/*.c gumbo/*.lua lua-gumbo-$*/gumbo
-	cp gumbo/serialize/*.lua lua-gumbo-$*/gumbo/serialize
+	cp Makefile README.md cdef.sed gumbo.lua lua-gumbo-$*
+	cp $(MODULES_C) $(MODULES_L) lua-gumbo-$*/gumbo
+	cp $(MODULES_S) lua-gumbo-$*/gumbo/serialize
 	cp test/*.* lua-gumbo-$*/test
 	cp .git/modules/test/html5lib-tests/HEAD lua-gumbo-$*/test/.H5LT_HEAD
 	tar -czf $@ lua-gumbo-$*
@@ -122,13 +123,11 @@ endif
 install: check-pkgconfig all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
-	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)/'
-	$(INSTALL_EXEC) $(MODULES_C) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
-	$(INSTALL_DATA) $(MODULES_G) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
-	$(INSTALL_DATA) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
+	$(INSTALLX) $(MODULES_SO) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
+	$(INSTALL) $(MODULES_L) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall: check-pkgconfig
-	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/$(DYNLIB)'
 	$(RM) -r '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
@@ -171,8 +170,7 @@ bench-all:
 dist: lua-gumbo-0.1.tar.gz
 
 clean:
-	$(RM) $(DYNLIB) lua-gumbo-*.tar.gz gumbo.o README.html *MiB.html
-	$(RM) gumbo/buffer.{so,o}
+	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz *MiB.html
 
 
 ifeq ($(shell uname),Darwin)

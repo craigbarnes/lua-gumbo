@@ -281,7 +281,7 @@ static inline void require(lua_State *L, const char *modname) {
     lua_setfield(L, LUA_REGISTRYINDEX, modname);
 }
 
-int luaopen_cgumbo(lua_State *L) {
+int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.element");
     require(L, "gumbo.attributes");
     lua_createtable(L, 0, 1);
