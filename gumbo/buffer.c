@@ -12,8 +12,8 @@ typedef struct {
     size_t capacity;
 } Buffer;
 
-static bool buffer_resize_if_needed(Buffer *buffer, size_t n) {
-    size_t length = buffer->length + n;
+static bool buffer_resize_if_needed(Buffer *buffer, const size_t n) {
+    const size_t length = buffer->length + n;
     size_t capacity = buffer->capacity;
     if (capacity >= length) {
         return true;
@@ -27,7 +27,7 @@ static bool buffer_resize_if_needed(Buffer *buffer, size_t n) {
     }
 }
 
-static Buffer *check_buffer(lua_State *L, int narg) {
+static Buffer *check_buffer(lua_State *L, const int narg) {
     return (Buffer *)luaL_checkudata(L, narg, MODNAME);
 }
 
@@ -48,7 +48,7 @@ static int buffer_write(lua_State *L) {
 }
 
 static int buffer__tostring(lua_State *L) {
-    Buffer *buf = check_buffer(L, 1);
+    const Buffer *buf = check_buffer(L, 1);
     lua_pushlstring(L, buf->data, buf->length);
     return 1;
 }
