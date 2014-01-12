@@ -1,5 +1,5 @@
-local Buffer = require "gumbo.util.buffer"
-local Indent = require "gumbo.util.indent"
+local Buffer = require "gumbo.buffer"
+local Indent = require "gumbo.indent"
 
 return function(node)
     local buf = Buffer()
@@ -8,16 +8,14 @@ return function(node)
     local function serialize(node)
         if node.type == "element" then
             local i1, i2 = indent[level], indent[level+1]
-            if node.tag_namespace ~= "html" then
-                buf:appendf('| %s<%s %s>\n', i1, node.tag_namespace, node.tag)
-            else
-                buf:appendf('| %s<%s>\n', i1, node.tag)
-            end
-            for index, name, value, namespace in node.attr:iter_sorted() do
-                if namespace then
-                    buf:appendf('| %s%s %s="%s"\n', i2, namespace, name, value)
+            local tagns = (node.tag_namespace == "html") and "" or
+                          (node.tag_namespace .. " ")
+            buf:write("| ", i1, "<", tagns, node.tag, ">\n")
+            for index, name, value, ns in node.attr:iter_sorted() do
+                if ns then
+                    buf:write("| ", i2, ns, " ", name, '="', value, '"\n')
                 else
-                    buf:appendf('| %s%s="%s"\n', i2, name, value)
+                    buf:write("| ", i2, name, '="', value, '"\n')
                 end
             end
             level = level + 1
@@ -37,19 +35,17 @@ return function(node)
             end
             level = level - 1
         elseif node.type == "text" or node.type == "whitespace" then
-            buf:appendf('| %s"%s"\n', indent[level], node.text)
+            buf:write("| ", indent[level], '"', node.text, '"\n')
         elseif node.type == "comment" then
-            buf:appendf('| %s<!-- %s -->\n', indent[level], node.text)
+            buf:write("| ", indent[level], "<!-- ", node.text, " -->\n")
         elseif node.type == "document" then
             if node.has_doctype == true then
-                local pubid = node.public_identifier
-                local sysid = node.system_identifier
-                if pubid ~= "" or sysid ~= "" then
-                    local fmt = '| <!DOCTYPE %s "%s" "%s">\n'
-                    buf:appendf(fmt, node.name, pubid, sysid)
-                else
-                    buf:appendf("| <!DOCTYPE %s>\n", node.name)
+                buf:write("| <!DOCTYPE ", node.name)
+                local pub, sys = node.public_identifier, node.system_identifier
+                if pub ~= "" or sys ~= "" then
+                    buf:write(' "', pub, '" "', sys, '"')
                 end
+                buf:write(">\n")
             end
             for i = 1, #node do
                 serialize(node[i])
@@ -57,5 +53,5 @@ return function(node)
         end
     end
     serialize(node)
-    return buf:concat()
+    return tostring(buf)
 end

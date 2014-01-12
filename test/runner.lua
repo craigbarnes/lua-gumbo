@@ -5,7 +5,7 @@
 assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
-local Buffer = require "gumbo.util.buffer"
+local Buffer = require "gumbo.buffer"
 local verbose = os.getenv "VERBOSE"
 local results = {passed = 0, failed = 0, skipped = 0}
 local start = os.clock()
@@ -27,7 +27,7 @@ local function parse_testdata(filename)
         linenumber = linenumber + 1
         local section = line:match("^#(.*)$")
         if section then
-            tests[i][field] = buffer:concat("\n")
+            tests[i][field] = tostring(buffer):sub(1, -2) -- Discard last \n
             buffer = Buffer()
             field = section
             if section == "data" then
@@ -35,10 +35,10 @@ local function parse_testdata(filename)
                 tests[i] = {line = linenumber}
             end
         else
-            buffer:append(line)
+            buffer:write(line, "\n")
         end
     end
-    tests[i][field] = buffer:concat("\n") .. "\n"
+    tests[i][field] = tostring(buffer)
     if i > 0 then
         tests.n = i
         return tests

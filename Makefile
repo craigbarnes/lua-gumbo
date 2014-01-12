@@ -11,8 +11,9 @@ PKGCONFIG     = pkg-config --silence-errors
 PC_CHECK      = $(PKGCONFIG) --variable=libdir
 
 DYNLIB        = cgumbo.so
-MODULES_G     = gumbo/init.lua gumbo/element.lua gumbo/ffi.lua gumbo/cdef.lua
-MODULES_U     = gumbo/util/buffer.lua gumbo/util/indent.lua
+MODULES_C     = gumbo/buffer.so
+MODULES_G     = gumbo/init.lua gumbo/element.lua gumbo/indent.lua \
+                gumbo/ffi.lua gumbo/cdef.lua
 MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
@@ -60,13 +61,19 @@ LUA_CMOD_DIR  = $(strip $(if $(LUA_PC_CMOD), $(LUA_PC_CMOD), \
 export LUA_PATH = ./?.lua;./?/init.lua
 export LUA_CPATH = ./?.so
 
-all: $(DYNLIB)
+all: $(DYNLIB) gumbo/buffer.so
 
 $(DYNLIB): gumbo.o Makefile
 	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
 
 gumbo.o: gumbo.c Makefile
 	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
+
+gumbo/buffer.so: gumbo/buffer.o
+	$(CC) $(LDFLAGS) -o $@ $<
+
+gumbo/buffer.o: gumbo/buffer.c
+	$(CC) $(CFLAGS) $(LUA_CFLAGS) -c -o $@ $<
 
 gumbo/cdef.lua: $(GUMBO_HEADER) cdef.sed
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
@@ -88,9 +95,11 @@ README.html: README.md
 tags: gumbo.c $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
-lua-gumbo-%.tar.gz: gumbo/ gumbo.c gumbo.lua Makefile README.md cdef.sed
-	mkdir -p lua-gumbo-$* lua-gumbo-$*/test
-	cp -r $^ lua-gumbo-$*
+lua-gumbo-%.tar.gz: force
+	mkdir -p lua-gumbo-$*/gumbo/serialize lua-gumbo-$*/test
+	cp Makefile README.md cdef.sed gumbo.c gumbo.lua lua-gumbo-$*
+	cp gumbo/*.c gumbo/*.lua lua-gumbo-$*/gumbo
+	cp gumbo/serialize/*.lua lua-gumbo-$*/gumbo/serialize
 	cp test/*.* lua-gumbo-$*/test
 	cp .git/modules/test/html5lib-tests/HEAD lua-gumbo-$*/test/.H5LT_HEAD
 	tar -czf $@ lua-gumbo-$*
@@ -109,16 +118,16 @@ else
 endif
 
 install: check-pkgconfig all
-	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)'
-	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/util'
+	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
 	$(INSTALL_EXEC) $(DYNLIB) '$(DESTDIR)$(LUA_CMOD_DIR)/'
+	$(INSTALL_EXEC) $(MODULES_C) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(INSTALL_DATA) $(MODULES_G) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
-	$(INSTALL_DATA) $(MODULES_U) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/util'
 	$(INSTALL_DATA) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall: check-pkgconfig
 	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/$(DYNLIB)'
+	$(RM) -r '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
 check: all
@@ -140,7 +149,7 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
 	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
-	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=1
+	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=1 LUA_PC=luajit
 	$(MAKE) -sB check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
 check-pkgconfig:
@@ -161,6 +170,7 @@ dist: lua-gumbo-0.1.tar.gz
 
 clean:
 	$(RM) $(DYNLIB) lua-gumbo-*.tar.gz gumbo.o README.html *MiB.html
+	$(RM) gumbo/buffer.{so,o}
 
 
 ifeq ($(shell uname),Darwin)
@@ -168,6 +178,6 @@ ifeq ($(shell uname),Darwin)
 endif
 
 .PHONY: all install uninstall check check-ffi check-html5lib check-valgrind \
-        check-compat check-pkgconfig bench bench-all dist clean
+        check-compat check-pkgconfig bench bench-all dist clean force
 
 .DELETE_ON_ERROR:

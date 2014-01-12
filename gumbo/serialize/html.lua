@@ -1,5 +1,5 @@
-local Buffer = require "gumbo.util.buffer"
-local Indent = require "gumbo.util.indent"
+local Buffer = require "gumbo.buffer"
+local Indent = require "gumbo.indent"
 
 -- This has had much less attention than the other two serializers and is
 -- inherently much harder to do properly. Consider it experimental for now.
@@ -64,40 +64,40 @@ local function to_html(node)
     local function serialize(node)
         if node.type == "element" then
             local tag = node.tag
-            buf:appendf('%s<%s', indent[level], tag)
+            buf:write(indent[level], "<", tag)
             for index, name, value in node.attr:iter() do
                 if value == "" then
-                    buf:appendf(' %s', name)
+                    buf:write(' ', name)
                 else
-                    buf:appendf(' %s="%s"', name, value:gsub('"', "&quot;"))
+                    buf:write(" ", name, '="', value:gsub('"', "&quot;"), '"')
                 end
             end
-            buf:append(">")
+            buf:write(">")
             local length = #node
             if length > 0 then -- recurse into child nodes
-                buf:append("\n")
+                buf:write("\n")
                 level = level + 1
                 for i = 1, length do
                     serialize(node[i])
                 end
                 level = level - 1
                 if not void[tag] then
-                    buf:appendf("%s</%s>\n", indent[level], tag)
+                    buf:write(indent[level], "</", tag, ">\n")
                 end
             else
                 if not void[tag] then
-                    buf:appendf("</%s>\n", tag)
+                    buf:write("</", tag, ">\n")
                 else
-                    buf:append("\n")
+                    buf:write("\n")
                 end
             end
         elseif node.type == "text" then
-            buf:append(wrap(escape(node.text), indent[level]))
+            buf:write(wrap(escape(node.text), indent[level]))
         elseif node.type == "comment" then
-            buf:appendf('%s<!--%s-->\n', indent[level], node.text)
+            buf:write(indent[level], "<!--", node.text, "-->\n")
         elseif node.type == "document" then
             if node.has_doctype == true then
-                buf:appendf("<!doctype %s>\n", node.name)
+                buf:write("<!doctype ", node.name, ">\n")
             end
             for i = 1, #node do
                 serialize(node[i])
@@ -105,7 +105,7 @@ local function to_html(node)
         end
     end
     serialize(node)
-    return buf:concat()
+    return tostring(buf)
 end
 
 return to_html
