@@ -34,8 +34,8 @@ local function escape_key(key)
     end
 end
 
-local function to_table(node)
-    local buf = Buffer()
+local function to_table(node, buffer)
+    local buf = buffer or Buffer()
     local indent = Indent()
     local level = 0
     local sfmt = '%s%s = "%s",\n'

@@ -57,8 +57,8 @@ local function wrap(text, indent)
     return indent .. str .. "\n"
 end
 
-local function to_html(node)
-    local buf = Buffer()
+local function to_html(node, buffer)
+    local buf = buffer or Buffer()
     local indent = Indent()
     local level = 0
     local function serialize(node)

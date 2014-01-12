@@ -25,12 +25,12 @@ local actions = {
     html = function(file)
         local serialize = require "gumbo.serialize.html"
         local document = assert(gumbo.parse_file(file))
-        io.stdout:write(serialize(document))
+        serialize(document, io.stdout)
     end,
     table = function(file)
         local serialize = require "gumbo.serialize.table"
         local document = assert(gumbo.parse_file(file))
-        io.stdout:write(serialize(document))
+        serialize(document, io.stdout)
     end,
     serpent = function(file)
         local serpent = require "serpent"
@@ -41,7 +41,7 @@ local actions = {
     html5lib = function(file)
         local serialize = require "gumbo.serialize.html5lib"
         local document = assert(gumbo.parse_file(file))
-        io.stdout:write(serialize(document))
+        serialize(document, io.stdout)
     end,
     bench = function(file)
         assert(gumbo.parse_file(file))

@@ -1,8 +1,8 @@
 local Buffer = require "gumbo.buffer"
 local Indent = require "gumbo.indent"
 
-return function(node)
-    local buf = Buffer()
+return function(node, buffer)
+    local buf = buffer or Buffer()
     local indent = Indent(2)
     local level = 0
     local function serialize(node)
