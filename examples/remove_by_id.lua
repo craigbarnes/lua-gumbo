@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 local gumbo = require "gumbo"
-local serialize = require "gumbo.serialize.html"
+local to_html = require "gumbo.serialize.html"
 
 --- Iterate an element node recursively and remove any descendant element
 --- with the specified id attribute.
@@ -32,4 +32,4 @@ end
 
 local document = assert(gumbo.parse_file(arg[2] or io.stdin))
 remove_element_by_id(document, arg[1])
-io.stdout:write(serialize(document))
+to_html(document, io.stdout)
