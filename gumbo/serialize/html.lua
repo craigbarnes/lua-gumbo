@@ -41,6 +41,7 @@ local function escape(text)
     return text:gsub("[&<>]", escmap)
 end
 
+-- TODO: Reimplement this in a way that's not so slow and memory-hungry
 local function wrap(text, indent)
     local limit = 78
     local indent_width = #indent
