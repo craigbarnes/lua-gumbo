@@ -53,9 +53,12 @@ static int buffer__tostring(lua_State *L) {
     return 1;
 }
 
-static int buffer__gc(lua_State *L) {
+static int buffer_close(lua_State *L) {
     Buffer *buf = check_buffer(L, 1);
     free(buf->data);
+    buf->data = NULL; // Prevent double-free
+    buf->capacity = 0;
+    buf->length = 0;
     return 0;
 }
 
@@ -72,8 +75,9 @@ static int buffer_new(lua_State *L) {
 
 static const luaL_Reg methods[] = {
     {"write", buffer_write},
+    {"close", buffer_close},
+    {"__gc", buffer_close},
     {"__tostring", buffer__tostring},
-    {"__gc", buffer__gc},
     {NULL, NULL}
 };
 
