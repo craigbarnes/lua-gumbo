@@ -19,7 +19,7 @@ local function parse_testdata(filename)
     local text = assert(file:read("*a"))
     file:close()
     local tests = {[0] = {}}
-    local buffer = Buffer()
+    local buffer = Buffer(32)
     local field = false
     local i = 0
     local linenumber = 0
@@ -28,7 +28,7 @@ local function parse_testdata(filename)
         local section = line:match("^#(.*)$")
         if section then
             tests[i][field] = tostring(buffer):sub(1, -2) -- Discard last \n
-            buffer = Buffer()
+            buffer = Buffer(32)
             field = section
             if section == "data" then
                 i = i + 1
