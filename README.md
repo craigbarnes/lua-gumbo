@@ -19,17 +19,11 @@ following stats:
 Requirements
 ------------
 
-Building the C module requires:
-
-* A C99 compiler
-* Lua headers
+* C99 compiler
+* [GNU Make]
+* [pkg-config]
+* [Lua] 5.1/5.2 or [LuaJIT] 2 (including headers and [pkg-config] file)
 * [Gumbo][Gumbo installation]
-* GNU Make
-* pkg-config
-
-Using the module or running the tests requires:
-
-* Lua 5.1/5.2 or [LuaJIT] 2
 
 Installation
 ------------
@@ -164,6 +158,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
+[GNU Make]: https://www.gnu.org/software/make/
+[pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
 [file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
 [gumbo/init.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/gumbo/init.lua#L5-L23
 [doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
