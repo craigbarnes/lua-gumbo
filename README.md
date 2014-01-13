@@ -111,8 +111,8 @@ There are 4 text node types, which all share a common structure.
 * `column`
 * `offset`
 
-FFI Bindings
-------------
+Compatibility
+-------------
 
 In addition to a C module, lua-gumbo also provides an FFI module,
 compatible with the [LuaJIT FFI] and [luaffi]. By default, both modules
