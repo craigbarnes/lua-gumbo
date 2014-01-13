@@ -85,7 +85,7 @@ gumbo/ffi-cdef.lua: $(GUMBO_HEADER) cdef.sed
 	@echo 'Generated: $@'
 
 README.html: README.md
-	markdown $< > $@
+	markdown -f +toc -T -o $@ $<
 
 1MiB.html: test/4KiB.html
 	$(RM) $@
