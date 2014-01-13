@@ -13,7 +13,7 @@ Commands:
    html     Parse and serialize back to HTML
    table    Parse and serialize to Lua table
    tree     Parse and serialize to html5lib tree-constructor format
-   bench    Parse and exit (for timing the parser via another utility)
+   bench    Parse and print CPU time and memory usage information
    help     Print usage information and exit
 
 ]]
@@ -43,7 +43,12 @@ function commands.tree(input, output)
 end
 
 function commands.bench(input)
-    assert(gumbo.parse_file(input))
+    local start = os.clock()
+    local liveref = assert(gumbo.parse_file(input))
+    local elapsed = os.clock() - start
+    collectgarbage()
+    local gcmem = collectgarbage("count")
+    io.stderr:write(string.format("%.2fs, %dKB\n", elapsed, gcmem))
 end
 
 local input = (arg[2] and arg[2] ~= "-") and assert(open(arg[2])) or io.stdin

@@ -158,7 +158,7 @@ check-pkgconfig:
 
 bench: 5MiB.html all test/serialize.lua
 	@printf '%-20s' '$(LUA) $(LUA_VERSION)$(if $(E), + $(E),):'
-	@time -f '%es, %MKB peak mem.' $(LUA) test/serialize.lua bench $<
+	@$(LUA) test/serialize.lua bench $<
 
 bench-all:
 	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 luajit >= 2.0'
