@@ -107,6 +107,8 @@ printf("Failed: %d\n", results.failed)
 printf("Skipped: %d\n\n", results.skipped)
 
 if results.failed > 0 then
-    print("Re-run with VERBOSE=1 for a full report")
+    if not verbose then
+        print("Re-run with VERBOSE=1 for a full report")
+    end
     os.exit(1)
 end
