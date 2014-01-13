@@ -66,17 +66,12 @@ export LUA_CPATH = ./?.so
 
 all: $(MODULES_SO)
 
-gumbo/parse.so: gumbo/parse.o Makefile
-	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
+gumbo/parse.so: LDFLAGS += $(GUMBO_LDFLAGS)
+gumbo/parse.o: CFLAGS += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
+gumbo/buffer.o: CFLAGS += $(LUA_CFLAGS)
 
-gumbo/parse.o: gumbo/parse.c Makefile
-	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
-
-gumbo/buffer.so: gumbo/buffer.o Makefile
+%.so: %.o
 	$(CC) $(LDFLAGS) -o $@ $<
-
-gumbo/buffer.o: gumbo/buffer.c Makefile
-	$(CC) $(CFLAGS) $(LUA_CFLAGS) -c -o $@ $<
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER) cdef.sed
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
