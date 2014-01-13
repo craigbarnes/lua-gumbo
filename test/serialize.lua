@@ -3,7 +3,6 @@
 -- Can be used with the diff utility for testing against expected output.
 
 local gumbo = require "gumbo"
-local format = string.format
 local open = io.open
 
 local usage = [[
@@ -18,6 +17,16 @@ Commands:
    help     Print usage information and exit
 
 ]]
+
+local function printf(...)
+    io.stdout:write(string.format(...))
+end
+
+local function memory_usage()
+    collectgarbage()
+    local a, b = string.match(collectgarbage("count") ,'^(%d)(%d*)(.-)$')
+    return a .. b:reverse():gsub('(%d%d%d)', '%1,'):reverse()
+end
 
 local commands = setmetatable({}, {__index = function(s) return s.help end})
 
@@ -46,11 +55,7 @@ end
 function commands.bench(input)
     local start = os.clock()
     local liveref = assert(gumbo.parse_file(input))
-    local elapsed = format("%.2f", os.clock() - start)
-    collectgarbage()
-    local mem = format("%.0f", collectgarbage("count"))
-    local memsep = mem:reverse():gsub('(%d%d%d)', '%1,'):reverse()
-    io.stderr:write(elapsed, "s / ", memsep, " KB\n")
+    printf("%.2fs  %sKB\n", os.clock() - start, memory_usage())
 end
 
 local input = (arg[2] and arg[2] ~= "-") and assert(open(arg[2])) or io.stdin
