@@ -105,4 +105,8 @@ printf("\nRan %d tests in %.2fs\n\n", results.total, os.clock() - start)
 printf("Passed: %d\n", results.passed)
 printf("Failed: %d\n", results.failed)
 printf("Skipped: %d\n\n", results.skipped)
-os.exit(results.failed == 0 and 0 or 1)
+
+if results.failed > 0 then
+    print("Re-run with VERBOSE=1 for a full report")
+    os.exit(1)
+end
