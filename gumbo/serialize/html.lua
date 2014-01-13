@@ -68,30 +68,32 @@ local function to_html(node, buffer)
             buf:write(indent[level], "<", tag)
             for index, name, value in node.attr:iter() do
                 if value == "" then
-                    buf:write(' ', name)
+                    buf:write(" ", name)
                 else
                     buf:write(" ", name, '="', value:gsub('"', "&quot;"), '"')
                 end
             end
             buf:write(">")
             local length = #node
-            if length > 0 then -- recurse into child nodes
+            if length == 0 then
+                if not void[tag] then
+                    buf:write("</", tag, ">")
+                end
+            elseif length == 1 and node[1].type == "text"
+                   and #node.attr == 0 and #node[1].text <= 40
+            then
+                buf:write(node[1].text)
+                buf:write("</", tag, ">")
+            else
                 buf:write("\n")
                 level = level + 1
                 for i = 1, length do
                     serialize(node[i])
                 end
                 level = level - 1
-                if not void[tag] then
-                    buf:write(indent[level], "</", tag, ">\n")
-                end
-            else
-                if not void[tag] then
-                    buf:write("</", tag, ">\n")
-                else
-                    buf:write("\n")
-                end
+                buf:write(indent[level], "</", tag, ">")
             end
+            buf:write("\n")
         elseif node.type == "text" then
             buf:write(wrap(escape(node.text), indent[level]))
         elseif node.type == "comment" then
