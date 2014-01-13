@@ -3,6 +3,7 @@
 -- Can be used with the diff utility for testing against expected output.
 
 local gumbo = require "gumbo"
+local format = string.format
 local open = io.open
 
 local usage = [[
@@ -45,9 +46,9 @@ end
 function commands.bench(input)
     local start = os.clock()
     local liveref = assert(gumbo.parse_file(input))
-    local elapsed = ("%.2f"):format(os.clock() - start)
+    local elapsed = format("%.2f", os.clock() - start)
     collectgarbage()
-    local mem = ("%.0f"):format(collectgarbage("count"))
+    local mem = format("%.0f", collectgarbage("count"))
     local memsep = mem:reverse():gsub('(%d%d%d)', '%1,'):reverse()
     io.stderr:write(elapsed, "s / ", memsep, " KB\n")
 end
