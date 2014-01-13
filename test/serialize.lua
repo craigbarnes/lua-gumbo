@@ -45,10 +45,11 @@ end
 function commands.bench(input)
     local start = os.clock()
     local liveref = assert(gumbo.parse_file(input))
-    local elapsed = os.clock() - start
+    local elapsed = ("%.2f"):format(os.clock() - start)
     collectgarbage()
-    local gcmem = collectgarbage("count")
-    io.stderr:write(string.format("%.2fs, %dKB\n", elapsed, gcmem))
+    local mem = ("%.0f"):format(collectgarbage("count"))
+    local memsep = mem:reverse():gsub('(%d%d%d)', '%1,'):reverse()
+    io.stderr:write(elapsed, "s / ", memsep, " KB\n")
 end
 
 local input = (arg[2] and arg[2] ~= "-") and assert(open(arg[2])) or io.stdin
