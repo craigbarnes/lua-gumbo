@@ -28,35 +28,33 @@ local function memory_usage()
     return a .. b:reverse():gsub('(%d%d%d)', '%1,'):reverse()
 end
 
-local commands = setmetatable({}, {__index = function(s) return s.help end})
-
-function commands.help()
+local function help()
     io.stdout:write(string.format(usage, arg[0]))
 end
 
-function commands.html(input, output)
-    local to_html = require "gumbo.serialize.html"
-    local document = assert(gumbo.parse_file(input))
-    to_html(document, output)
-end
-
-function commands.table(input, output)
-    local to_table = require "gumbo.serialize.table"
-    local document = assert(gumbo.parse_file(input))
-    to_table(document, output)
-end
-
-function commands.tree(input, output)
-    local to_tree = require "gumbo.serialize.html5lib"
-    local document = assert(gumbo.parse_file(input))
-    to_tree(document, output)
-end
-
-function commands.bench(input)
+local function bench(input)
     local start = os.clock()
     local liveref = assert(gumbo.parse_file(input))
     printf("%.2fs  %sKB\n", os.clock() - start, memory_usage())
 end
+
+local commands = setmetatable({
+    help = help,
+    bench = bench
+}, {
+    __index = function(self, k)
+        if type(k) == "string" then
+            local exists, serialize = pcall(require, "gumbo.serialize." .. k)
+            if exists then
+                return function(input, output)
+                    local document = assert(gumbo.parse_file(input))
+                    serialize(document, output)
+                end
+            end
+        end
+        return self.help
+    end
+})
 
 local input = (arg[2] and arg[2] ~= "-") and assert(open(arg[2])) or io.stdin
 local output = arg[3] and assert(open(arg[3], "a")) or io.stdout
