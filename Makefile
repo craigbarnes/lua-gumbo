@@ -94,26 +94,11 @@ tags: $(MODULES_C) $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
 lua-gumbo-%.tar.gz: force
-	mkdir -p lua-gumbo-$*/gumbo/serialize lua-gumbo-$*/test
-	cp Makefile README.md cdef.sed gumbo.lua lua-gumbo-$*
-	cp $(MODULES_C) $(MODULES_L) lua-gumbo-$*/gumbo
-	cp $(MODULES_S) lua-gumbo-$*/gumbo/serialize
-	cp test/*.* lua-gumbo-$*/test
-	cp .git/modules/test/html5lib-tests/HEAD lua-gumbo-$*/test/.H5LT_HEAD
-	tar -czf $@ lua-gumbo-$*
-	$(RM) -r lua-gumbo-$*
+	git archive --prefix=lua-gumbo-$*/ -o lua-gumbo-$*.tar.gz $*
 
 test/html5lib-tests/%:
-# If running from a release tarball, fetch with curl
-ifeq ($(shell test -f test/.H5LT_HEAD && echo 1),1)
-	cd test \
-	 && curl -L https://github.com/html5lib/html5lib-tests/archive/$$(cat .H5LT_HEAD)/html5lib-tests.tar.gz > html5lib-tests.tar.gz \
-	 && tar xzf html5lib-tests.tar.gz \
-	 && mv html5lib-tests-$$(cat .H5LT_HEAD) html5lib-tests
-else
 	git submodule init
 	git submodule update
-endif
 
 install: check-pkgconfig all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
@@ -162,8 +147,6 @@ bench-all:
 	@$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=1 LUA_PC=luajit E='FFI'
 	@$(MAKE) -sB bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;' E='luaffi'
 
-dist: lua-gumbo-0.1.tar.gz
-
 clean:
 	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz *MiB.html
 
@@ -172,7 +155,6 @@ ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-.PHONY: all install uninstall check check-ffi check-html5lib check-valgrind \
-        check-compat check-pkgconfig bench bench-all dist clean force
-
+.PHONY: all install uninstall check check-ffi check-html5lib check-valgrind
+.PHONY: check-compat check-pkgconfig bench bench-all clean force
 .DELETE_ON_ERROR:
