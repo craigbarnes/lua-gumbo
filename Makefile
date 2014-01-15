@@ -93,8 +93,10 @@ README.html: README.md
 tags: $(MODULES_C) $(GUMBO_HEADER)
 	ctags --c-kinds=+p $^
 
+dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
+
 lua-gumbo-%.tar.gz: force
-	git archive --prefix=lua-gumbo-$*/ -o lua-gumbo-$*.tar.gz $*
+	git archive --prefix=lua-gumbo-$*/ -o $@ $*
 
 test/html5lib-tests/%:
 	git submodule init
@@ -156,5 +158,5 @@ ifeq ($(shell uname),Darwin)
 endif
 
 .PHONY: all install uninstall check check-ffi check-html5lib check-valgrind
-.PHONY: check-compat check-pkgconfig bench bench-all clean force
+.PHONY: check-compat check-pkgconfig bench bench-all dist clean force
 .DELETE_ON_ERROR:
