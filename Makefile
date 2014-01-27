@@ -119,6 +119,7 @@ check: all
 
 check-ffi: export LGUMBO_USE_FFI = 1
 check-ffi: LUA = luajit
+check-ffi: LUA_PC = luajit
 check-ffi: check
 
 check-html5lib: all | test/html5lib-tests/tree-construction/*.dat

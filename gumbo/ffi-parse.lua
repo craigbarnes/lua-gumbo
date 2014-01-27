@@ -214,7 +214,4 @@ local function parse(input, tab_stop)
     return document
 end
 
-return {
-    _FFI = true,
-    parse = parse
-}
+return parse

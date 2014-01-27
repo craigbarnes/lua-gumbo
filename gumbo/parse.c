@@ -284,8 +284,6 @@ static inline void require(lua_State *L, const char *modname) {
 int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.element");
     require(L, "gumbo.attributes");
-    lua_createtable(L, 0, 1);
     lua_pushcfunction(L, parse);
-    lua_setfield(L, -2, "parse");
     return 1;
 }
