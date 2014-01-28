@@ -117,11 +117,6 @@ check: all
 	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.table -
 	$(LUA) test/misc.lua
 
-check-ffi: export LGUMBO_USE_FFI = 1
-check-ffi: LUA = luajit
-check-ffi: LUA_PC = luajit
-check-ffi: check
-
 check-html5lib: all | test/html5lib-tests/tree-construction/*.dat
 	@$(LUA) test/runner.lua $|
 
@@ -158,6 +153,6 @@ ifeq ($(shell uname),Darwin)
   LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
 endif
 
-.PHONY: all install uninstall check check-ffi check-html5lib check-valgrind
+.PHONY: all install uninstall check check-html5lib check-valgrind
 .PHONY: check-compat check-pkgconfig bench bench-all dist clean force
 .DELETE_ON_ERROR:
