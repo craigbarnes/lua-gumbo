@@ -10,13 +10,9 @@ local function attr_next(attrs, i)
     end
 end
 
-function Attributes:__len()
-    return self.length
-end
-
 function Attributes:copy()
     local copy = Attributes.new()
-    for i = 1, self.length do
+    for i = 1, #self do
         local attr = self[i]
         copy[i] = {
             name = attr.name,
@@ -24,7 +20,6 @@ function Attributes:copy()
             namespace = attr.namespace
         }
     end
-    copy.length = self.length
     return copy
 end
 
@@ -34,7 +29,7 @@ end
 
 -- TODO: Add regression test to ensure `self` is not mutated
 function Attributes:iter_sorted()
-    if self.length > 0 then
+    if #self > 0 then
         local copy = self:copy()
         sort(copy, function(a, b) return a.name < b.name end)
         return attr_next, copy, 0
@@ -44,7 +39,7 @@ function Attributes:iter_sorted()
 end
 
 function Attributes.new()
-    return setmetatable({length = 0}, Attributes)
+    return setmetatable({}, Attributes)
 end
 
 return Attributes

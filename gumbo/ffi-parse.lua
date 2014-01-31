@@ -95,7 +95,6 @@ local function get_attributes(attrs)
     local length = attrs.length
     if length > 0 then
         local t = setmetatable(tnew(length, length), Attributes)
-        t.length = length
         for i = 0, length - 1 do
             local attr = ffi_cast("GumboAttribute*", attrs.data[i])
             t[i+1] = {

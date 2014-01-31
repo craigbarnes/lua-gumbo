@@ -54,7 +54,7 @@ local function to_table(node, buffer)
             buf:write(fmt(nfmt, i1, "column", node.column))
             buf:write(fmt(nfmt, i1, "offset", node.offset))
 
-            if node.attr.length > 0 then
+            if #node.attr > 0 then
                 local i3 = indent[level+3]
                 local tmp = Buffer()
                 buf:write(fmt("%sattr = {\n", i1))

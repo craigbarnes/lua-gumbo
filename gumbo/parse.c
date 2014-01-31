@@ -64,7 +64,6 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
         lua_createtable(L, length, length);
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.attributes");
         lua_setmetatable(L, -2);
-        add_integer(L, "length", length);
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
             add_string(L, attr->name, attr->value);
