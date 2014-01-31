@@ -26,12 +26,12 @@ GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags $(GUMBO_PC))
 GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs $(GUMBO_PC))
 GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir $(GUMBO_PC))/gumbo.h
 
-# The naming of Lua pkg-config files across distributions is a total mess
+# The naming of Lua pkg-config files across distributions is quite a mess:
 # - Fedora and Arch use lua.pc
 # - Debian uses lua5.2.pc and lua5.1.pc
 # - OpenBSD ports uses lua52.pc and lua51.pc
 # - FreeBSD and some others seem to be considering lua-5.2.pc and lua-5.1.pc
-LUA_PC_NAMES  = lua lua5.2 lua5.1 lua52 lua51 lua-5.2 lua-5.1
+LUA_PC_NAMES  = lua lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 luajit
 
 LUA_PC_FOUND  = $(strip $(foreach file, $(LUA_PC_NAMES), \
                 $(if $(shell $(PC_CHECK) $(file)),$(file),)))
