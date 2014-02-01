@@ -4,8 +4,7 @@ local Indent = require "gumbo.indent"
 return function(node, buffer)
     local buf = buffer or Buffer()
     local indent = Indent(2)
-    local level = 0
-    local function serialize(node)
+    local function serialize(node, level)
         if node.type == "element" then
             local i1, i2 = indent[level], indent[level+1]
             local tagns = (node.tag_namespace == "html") and "" or
@@ -18,7 +17,6 @@ return function(node, buffer)
                     buf:write("| ", i2, name, '="', value, '"\n')
                 end
             end
-            level = level + 1
             for i = 1, #node do
                 if node[i].type == "text" and node[i+1]
                    and node[i+1].type == "text"
@@ -30,10 +28,9 @@ return function(node, buffer)
                     node[i+1] = node[i]
                     node[i+1].text = node[i+1].text .. text
                 else
-                    serialize(node[i])
+                    serialize(node[i], level + 1)
                 end
             end
-            level = level - 1
         elseif node.type == "text" or node.type == "whitespace" then
             buf:write("| ", indent[level], '"', node.text, '"\n')
         elseif node.type == "comment" then
@@ -48,11 +45,11 @@ return function(node, buffer)
                 buf:write(">\n")
             end
             for i = 1, #node do
-                serialize(node[i])
+                serialize(node[i], level)
             end
         end
     end
-    serialize(node)
+    serialize(node, 0)
     if not io.type(buf) then
         return tostring(buf)
     end

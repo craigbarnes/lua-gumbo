@@ -37,13 +37,12 @@ end
 local function to_table(node, buffer)
     local buf = buffer or Buffer()
     local indent = Indent()
-    local level = 0
     local sfmt = '%s%s = "%s",\n'
     local nfmt = "%s%s = %d,\n"
     local bfmt = '%s%s = %s,\n'
 
     -- TODO: omit trailing commas where not required
-    local function serialize(node)
+    local function serialize(node, level)
         if node.type == "element" then
             buf:write(fmt("%s{\n", indent[level]))
             local i1, i2 = indent[level+1], indent[level+2]
@@ -84,11 +83,9 @@ local function to_table(node, buffer)
                 end
                 buf:write(fmt("%s},\n", i1))
             end
-            level = level + 1
             for i = 1, #node do
-                serialize(node[i], i)
+                serialize(node[i], level + 1)
             end
-            level = level - 1
             buf:write(fmt("%s},\n", indent[level]))
         elseif node.text then
             local i1, i2 = indent[level], indent[level+1]
@@ -109,15 +106,13 @@ local function to_table(node, buffer)
             buf:write(fmt(sfmt, i1, "system_identifier", node.system_identifier))
             buf:write(fmt(sfmt, i1, "public_identifier", node.public_identifier))
             buf:write(fmt(sfmt, i1, "quirks_mode", node.quirks_mode))
-            level = level + 1
             for i = 1, #node do
-                serialize(node[i])
+                serialize(node[i], level + 1)
             end
-            level = level - 1
             buf:write("}\n")
         end
     end
-    serialize(node)
+    serialize(node, 0)
     if not io.type(buf) then
         return tostring(buf)
     end

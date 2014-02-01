@@ -61,8 +61,7 @@ end
 local function to_html(node, buffer)
     local buf = buffer or Buffer()
     local indent = Indent()
-    local level = 0
-    local function serialize(node)
+    local function serialize(node, level)
         if node.type == "element" then
             local tag = node.tag
             buf:write(indent[level], "<", tag)
@@ -86,11 +85,9 @@ local function to_html(node, buffer)
                 buf:write("</", tag, ">")
             else
                 buf:write("\n")
-                level = level + 1
                 for i = 1, length do
-                    serialize(node[i])
+                    serialize(node[i], level + 1)
                 end
-                level = level - 1
                 buf:write(indent[level], "</", tag, ">")
             end
             buf:write("\n")
@@ -103,11 +100,11 @@ local function to_html(node, buffer)
                 buf:write("<!doctype ", node.name, ">\n")
             end
             for i = 1, #node do
-                serialize(node[i])
+                serialize(node[i], level)
             end
         end
     end
-    serialize(node)
+    serialize(node, 0)
     if not io.type(buf) then
         return tostring(buf)
     end
