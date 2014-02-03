@@ -58,7 +58,7 @@ README.html: README.md
 	$(RM) $@
 	for i in `seq 1 $*`; do cat $< >> $@; done
 
-tags: $(MODULES_C) $(GUMBO_HEADER)
+tags: $(MODULES_C) $(GUMBO_HEADER) Makefile
 	ctags --c-kinds=+p $^
 
 dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
@@ -119,5 +119,5 @@ ifeq ($(shell uname),Darwin)
 endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind
-.PHONY: check-compat check-pkgconfig bench bench-all dist clean force
+.PHONY: check-compat bench bench-all dist clean force
 .DELETE_ON_ERROR:
