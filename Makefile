@@ -19,11 +19,10 @@ MODULES_L     = gumbo/init.lua gumbo/element.lua gumbo/attributes.lua \
 MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
-GUMBO_PC      = $(if $(shell $(PKGCONFIG) --libs gumbo), gumbo, \
-                $(error No pkg-config file found for Gumbo))
-GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags $(GUMBO_PC))
-GUMBO_LDFLAGS = $(shell $(PKGCONFIG) --libs $(GUMBO_PC))
-GUMBO_HEADER  = $(shell $(PKGCONFIG) --variable=includedir $(GUMBO_PC))/gumbo.h
+GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags gumbo)
+GUMBO_LDFLAGS = $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
+GUMBO_INCDIR  = $(shell $(PKGCONFIG) --variable=includedir gumbo)
+GUMBO_HEADER  = $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
 # This include sets a few variables, but only LUA_CFLAGS, LUA_CMOD_DIR and
 # LUA_LMOD_DIR are used here. They can be set manually if need be.
