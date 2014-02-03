@@ -70,14 +70,14 @@ test/html5lib-tests/%:
 	git submodule init
 	git submodule update
 
-install: check-pkgconfig all
+install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
 	$(INSTALLX) $(MODULES_SO) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(INSTALL) $(MODULES_L) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALL) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
-uninstall: check-pkgconfig
+uninstall:
 	$(RM) -r '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
@@ -98,9 +98,6 @@ check-compat:
 	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
 	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=1 LUA_PC=luajit
 	$(MAKE) -sB check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
-
-check-pkgconfig:
-	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 $(GUMBO_PC) >= 1'
 
 bench: 5MiB.html all test/serialize.lua
 	@printf '%-20s' '$(LUA) $(LUA_VERSION)$(if $(E), + $(E),):'
