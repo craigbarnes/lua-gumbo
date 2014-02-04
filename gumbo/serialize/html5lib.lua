@@ -10,7 +10,8 @@ return function(node, buffer)
             local tagns = (node.tag_namespace == "html") and "" or
                           (node.tag_namespace .. " ")
             buf:write("| ", i1, "<", tagns, node.tag, ">\n")
-            for index, name, value, ns in node.attr:iter_sorted() do
+            table.sort(node.attr, function(a, b) return a.name < b.name end)
+            for index, name, value, ns in node.attr:iter() do
                 if ns then
                     buf:write("| ", i2, ns, " ", name, '="', value, '"\n')
                 else
