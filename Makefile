@@ -14,8 +14,7 @@ PKGCONFIG     = pkg-config --silence-errors
 MODULES_C     = gumbo/parse.c gumbo/buffer.c
 MODULES_O     = $(MODULES_C:.c=.o)
 MODULES_SO    = $(MODULES_O:.o=.so)
-MODULES_L     = gumbo/init.lua gumbo/element.lua gumbo/attributes.lua \
-                gumbo/indent.lua
+MODULES_L     = gumbo/init.lua gumbo/indent.lua
 MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
