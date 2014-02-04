@@ -302,6 +302,8 @@ int luaopen_gumbo_parse(lua_State *L) {
         lua_pushcfunction(L, Element_attr_iter);
         lua_setfield(L, -2, "attr_iter");
     }
+    lua_createtable(L, 0, 1);
     lua_pushcfunction(L, parse);
+    lua_setfield(L, -2, "parse");
     return 1;
 }

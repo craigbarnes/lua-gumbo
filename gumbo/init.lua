@@ -1,5 +1,4 @@
-local gumbo = {}
-gumbo.parse = require "gumbo.parse"
+local gumbo = require "gumbo.parse"
 
 -- TODO: Move this into parse.c
 function gumbo.parse_file(path_or_file, tab_stop)
