@@ -36,7 +36,7 @@ return function(node, buffer)
         if node.type == "element" then
             local tag = node.tag
             buf:write("<", tag)
-            for index, name, value in node.attr:iter() do
+            for index, name, value in node:attr_iter() do
                 if value == "" then
                     buf:write(" ", name)
                 else

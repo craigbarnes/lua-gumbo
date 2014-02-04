@@ -11,7 +11,7 @@ return function(node, buffer)
                           (node.tag_namespace .. " ")
             buf:write("| ", i1, "<", tagns, node.tag, ">\n")
             table.sort(node.attr, function(a, b) return a.name < b.name end)
-            for index, name, value, ns in node.attr:iter() do
+            for index, name, value, ns in node:attr_iter() do
                 if ns then
                     buf:write("| ", i2, ns, " ", name, '="', value, '"\n')
                 else

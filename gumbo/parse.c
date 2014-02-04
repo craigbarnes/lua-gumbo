@@ -62,8 +62,6 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length > 0) {
         lua_createtable(L, length, length);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.attributes");
-        lua_setmetatable(L, -2);
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
             add_string(L, attr->name, attr->value);
@@ -281,7 +279,6 @@ static inline void require(lua_State *L, const char *modname) {
 
 int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.element");
-    require(L, "gumbo.attributes");
     lua_pushcfunction(L, parse);
     return 1;
 }
