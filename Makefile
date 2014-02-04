@@ -11,10 +11,10 @@ INSTALLX      = install -p -m 0755
 RM            = rm -f
 PKGCONFIG     = pkg-config --silence-errors
 
-MODULES_C     = gumbo/parse.c gumbo/buffer.c
+MODULES_C     = gumbo.c gumbo/buffer.c
 MODULES_O     = $(MODULES_C:.c=.o)
 MODULES_SO    = $(MODULES_O:.o=.so)
-MODULES_L     = gumbo/init.lua gumbo/indent.lua
+MODULES_L     = gumbo/indent.lua
 MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
@@ -28,13 +28,13 @@ GUMBO_HEADER  = $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 include findlua.mk
 
 # Ensure the tests only load modules from within the current directory
-export LUA_PATH = ./?.lua;./?/init.lua
+export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
 all: $(MODULES_SO)
 
-gumbo/parse.so: LDFLAGS += $(GUMBO_LDFLAGS)
-gumbo/parse.o: CFLAGS += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
+gumbo.so: LDFLAGS += $(GUMBO_LDFLAGS)
+gumbo.o: CFLAGS += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
 gumbo/buffer.o: CFLAGS += $(LUA_CFLAGS)
 
 %.so: %.o
@@ -66,12 +66,14 @@ test/html5lib-tests/%:
 install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
-	$(INSTALLX) $(MODULES_SO) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
+	$(INSTALLX) gumbo.so '$(DESTDIR)$(LUA_CMOD_DIR)/'
+	$(INSTALLX) gumbo/buffer.so '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(INSTALL) $(MODULES_L) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALL) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall:
 	$(RM) -r '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
+	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo.so'
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
 check: all

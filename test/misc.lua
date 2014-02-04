@@ -19,6 +19,12 @@ assert(document[1].offset == 2)
 document = assert(gumbo.parse(string.rep("<div>", 500)), "stack check failed")
 assert(document.root[2][1][1][1][1][1][1][1][1][1][1][1].tag == "div")
 
+-- Check that parse_file works the same with a filename as with a file handle
+local to_table = require "gumbo.serialize.table"
+local a = assert(gumbo.parse_file(io.open("test/t1.html"), 4))
+local b = assert(gumbo.parse_file("test/t1.html", 4))
+assert(to_table(a) == to_table(b))
+
 -- Check that file open/read errors are handled
 assert(not gumbo.parse_file(0), "Passing invalid argument type should fail")
 assert(not gumbo.parse_file".", "Passing a directory name should fail")
