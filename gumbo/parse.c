@@ -270,15 +270,38 @@ static int parse(lua_State *L) {
     }
 }
 
-static inline void require(lua_State *L, const char *modname) {
-    lua_getglobal(L, "require");
-    lua_pushstring(L, modname);
-    lua_call(L, 1, 1);
-    lua_setfield(L, LUA_REGISTRYINDEX, modname);
+static int attr_next(lua_State *L) {
+    const lua_Integer i = luaL_checkinteger(L, 2) + 1;
+    lua_rawgeti(L, 1, i);
+    if (lua_istable(L, 3)) {
+        lua_pushinteger(L, i);
+        lua_getfield(L, 3, "name");
+        lua_getfield(L, 3, "value");
+        lua_getfield(L, 3, "namespace");
+        lua_getfield(L, 3, "line");
+        lua_getfield(L, 3, "column");
+        lua_getfield(L, 3, "offset");
+        return 7;
+    }
+    return 0;
+}
+
+static int Element_attr_iter(lua_State *L) {
+    lua_pushcfunction(L, attr_next);
+    lua_getfield(L, 1, "attr");
+    lua_pushinteger(L, 0);
+    return 3;
 }
 
 int luaopen_gumbo_parse(lua_State *L) {
-    require(L, "gumbo.element");
+    if (luaL_newmetatable(L, "gumbo.element")) {
+        lua_pushvalue(L, -1);
+        lua_setfield(L, -2, "__index");
+        lua_newtable(L);
+        lua_setfield(L, -2, "attr");
+        lua_pushcfunction(L, Element_attr_iter);
+        lua_setfield(L, -2, "attr_iter");
+    }
     lua_pushcfunction(L, parse);
     return 1;
 }
