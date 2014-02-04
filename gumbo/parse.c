@@ -75,7 +75,6 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             add_integer(L, "offset", attr->name_start.offset);
             switch (attr->attr_namespace) {
             case GUMBO_ATTR_NAMESPACE_NONE:
-                add_boolean(L, "namespace", false);
                 break;
             case GUMBO_ATTR_NAMESPACE_XLINK:
                 add_literal(L, "namespace", "xlink");

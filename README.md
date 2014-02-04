@@ -94,7 +94,7 @@ A table representing a single attribute.
 
 * `name`
 * `value`
-* `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `false`.
+* `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
 * `line`
 * `column`
 * `offset`

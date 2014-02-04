@@ -62,7 +62,7 @@ local function to_table(node, buffer)
                     tmp:write(fmt("%s{\n", i2))
                     tmp:write(fmt(sfmt, i3, "name", escape(name)))
                     tmp:write(fmt(sfmt, i3, "value", escape(val)))
-                    tmp:write(fmt(ns and sfmt or bfmt, i3, "namespace", ns))
+                    if ns then tmp:write(fmt(sfmt, i3, "namespace", ns)) end
                     tmp:write(fmt(nfmt, i3, "line", line))
                     tmp:write(fmt(nfmt, i3, "column", col))
                     tmp:write(fmt("%s%s = %d\n", i3, "offset", offset))

@@ -87,6 +87,7 @@ check-valgrind: check
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
+	$(MAKE) -sB check LUA=luajit CC=gcc LUA_PC=luajit
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
 

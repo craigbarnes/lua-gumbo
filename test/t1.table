@@ -112,7 +112,6 @@
                         {
                             name = "href",
                             value = "foobar.html",
-                            namespace = false,
                             line = 5,
                             column = 7,
                             offset = 121
@@ -146,7 +145,6 @@
                     {
                         name = "foo",
                         value = "bar",
-                        namespace = false,
                         line = 6,
                         column = 10,
                         offset = 160
@@ -179,7 +177,6 @@
                     {
                         name = "class",
                         value = "empty",
-                        namespace = false,
                         line = 7,
                         column = 11,
                         offset = 188
