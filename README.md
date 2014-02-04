@@ -86,6 +86,12 @@ numeric indices.
 * `offset`
 * `[1..n]`: Child nodes.
 
+**Methods:**
+
+* `:attr_iter()`: returns an iterator that produces the values
+  `index, name, value, namespace, line, col, offset` for each of the
+  element's attributes.
+
 #### Attribute
 
 A table representing a single attribute.
