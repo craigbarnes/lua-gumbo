@@ -111,20 +111,6 @@ There are 4 text node types, which all share a common structure.
 * `column`
 * `offset`
 
-Compatibility
--------------
-
-In addition to a C module, lua-gumbo also provides an FFI module,
-compatible with the [LuaJIT FFI] and [luaffi]. By default, both modules
-are installed, and a call to `require "gumbo"` is resolved via
-[gumbo/init.lua]. The FFI is preferred only when using LuaJIT, but any
-of the following combinations are supported:
-
-|                | Lua 5.1             | Lua 5.2             | LuaJIT 2.x |
-|----------------|---------------------|---------------------|------------|
-| **C Module**   | Yes                 | Yes                 | Yes        |
-| **FFI Module** | Yes (with [luaffi]) | Yes (with [luaffi]) | Yes        |
-
 Testing
 -------
 
@@ -152,8 +138,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Lua]: http://www.lua.org/
 [LuaJIT]: http://luajit.org/
-[LuaJIT FFI]: http://luajit.org/ext_ffi.html
-[luaffi]: https://github.com/jmckaskill/luaffi "Standalone FFI library for Lua"
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation

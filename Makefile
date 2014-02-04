@@ -15,7 +15,7 @@ MODULES_C     = gumbo/parse.c gumbo/buffer.c
 MODULES_O     = $(MODULES_C:.c=.o)
 MODULES_SO    = $(MODULES_O:.o=.so)
 MODULES_L     = gumbo/init.lua gumbo/element.lua gumbo/attributes.lua \
-                gumbo/indent.lua gumbo/ffi-parse.lua gumbo/ffi-cdef.lua
+                gumbo/indent.lua
 MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
@@ -40,12 +40,6 @@ gumbo/buffer.o: CFLAGS += $(LUA_CFLAGS)
 
 %.so: %.o
 	$(CC) $(LDFLAGS) -o $@ $<
-
-gumbo/ffi-cdef.lua: $(GUMBO_HEADER) cdef.sed
-	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
-	@sed -f cdef.sed $(GUMBO_HEADER) | sed '/^$$/N;/^\n$$/D' >> $@
-	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
-	@echo 'Generated: $@'
 
 README.html: README.md
 	markdown -f +toc -T -o $@ $<
@@ -95,20 +89,9 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
-	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
-	$(MAKE) -sB check LUA=luajit LGUMBO_USE_FFI=1 LUA_PC=luajit
-	$(MAKE) -sB check LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;'
 
 bench: 5MiB.html all test/serialize.lua
-	@printf '%-20s' '$(LUA) $(LUA_VERSION)$(if $(E), + $(E),):'
-	@$(LUA) test/serialize.lua bench $<
-
-bench-all:
-	@$(PKGCONFIG) --print-errors '$(LUA_PC) >= 5.1 luajit >= 2.0'
-	@$(MAKE) -sB bench LUA=lua
-	@$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=0 LUA_PC=luajit
-	@$(MAKE) -sB bench LUA=luajit LGUMBO_USE_FFI=1 LUA_PC=luajit E='FFI'
-	@$(MAKE) -sB bench LUA=lua LGUMBO_USE_FFI=1 LUA_CPATH=';;' E='luaffi'
+	$(LUA) test/serialize.lua bench $<
 
 clean:
 	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz *MiB.html
