@@ -144,7 +144,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [GNU Make]: https://www.gnu.org/software/make/
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
 [file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
-[gumbo/init.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/gumbo/init.lua#L5-L23
 [doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
 [root element]: http://en.wikipedia.org/wiki/Root_element
 [public identifier]: http://dom.spec.whatwg.org/#concept-doctype-publicid
