@@ -251,25 +251,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
 }
 
-static int parse(lua_State *L) {
-    size_t length;
-    const char *input = luaL_checklstring(L, 1, &length);
-    GumboOptions options = kGumboDefaultOptions;
-    options.tab_stop = luaL_optint(L, 2, 8);
-    GumboOutput *output = gumbo_parse_with_options(&options, input, length);
-    if (output) {
-        push_node(L, output->document);
-        lua_rawgeti(L, -1, output->root->index_within_parent + 1);
-        lua_setfield(L, -2, "root");
-        gumbo_destroy_output(&options, output);
-        return 1;
-    } else {
-        lua_pushnil(L);
-        lua_pushliteral(L, "Failed to parse");
-        return 2;
-    }
-}
-
 static int attr_next(lua_State *L) {
     const lua_Integer i = luaL_checkinteger(L, 2) + 1;
     lua_rawgeti(L, 1, i);
@@ -291,6 +272,25 @@ static int Element_attr_iter(lua_State *L) {
     lua_getfield(L, 1, "attr");
     lua_pushinteger(L, 0);
     return 3;
+}
+
+static int parse(lua_State *L) {
+    size_t length;
+    const char *input = luaL_checklstring(L, 1, &length);
+    GumboOptions options = kGumboDefaultOptions;
+    options.tab_stop = luaL_optint(L, 2, 8);
+    GumboOutput *output = gumbo_parse_with_options(&options, input, length);
+    if (output) {
+        push_node(L, output->document);
+        lua_rawgeti(L, -1, output->root->index_within_parent + 1);
+        lua_setfield(L, -2, "root");
+        gumbo_destroy_output(&options, output);
+        return 1;
+    } else {
+        lua_pushnil(L);
+        lua_pushliteral(L, "Failed to parse");
+        return 2;
+    }
 }
 
 int luaopen_gumbo_parse(lua_State *L) {
