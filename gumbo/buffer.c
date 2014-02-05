@@ -21,7 +21,9 @@
 #include <lua.h>
 #include <lauxlib.h>
 
-#define MODNAME "gumbo.buffer"
+#if LUA_VERSION_NUM < 502
+# define luaL_setfuncs(L, l, nup) luaL_register(L, NULL, l)
+#endif
 
 typedef struct {
     char *data;
@@ -45,7 +47,7 @@ static bool buffer_resize_if_needed(Buffer *buffer, const size_t n) {
 }
 
 static Buffer *check_buffer(lua_State *L, const int narg) {
-    return (Buffer *)luaL_checkudata(L, narg, MODNAME);
+    return (Buffer *)luaL_checkudata(L, narg, "gumbo.buffer");
 }
 
 static int buffer_write(lua_State *L) {
@@ -82,7 +84,7 @@ static int buffer_close(lua_State *L) {
 static int buffer_new(lua_State *L) {
     const lua_Integer capacity = luaL_optinteger(L, 1, 4096);
     Buffer *buffer = (Buffer *)lua_newuserdata(L, sizeof(Buffer));
-    luaL_getmetatable(L, MODNAME);
+    luaL_getmetatable(L, "gumbo.buffer");
     lua_setmetatable(L, -2);
     buffer->data = malloc(capacity);
     buffer->length = 0;
@@ -99,14 +101,11 @@ static const luaL_Reg methods[] = {
 };
 
 int luaopen_gumbo_buffer(lua_State *L) {
-    luaL_newmetatable(L, MODNAME);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, -2, "__index");
-    for (int i = 0; methods[i].name != NULL; i++) {
-        lua_pushcfunction(L, methods[i].func);
-        lua_setfield(L, -2, methods[i].name);
+    if (luaL_newmetatable(L, "gumbo.buffer")) {
+        lua_pushvalue(L, -1);
+        lua_setfield(L, -2, "__index");
+        luaL_setfuncs(L, methods, 0);
     }
-    lua_pop(L, 1);
     lua_pushcfunction(L, buffer_new);
     return 1;
 }
