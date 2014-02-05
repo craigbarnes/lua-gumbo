@@ -23,7 +23,8 @@
 #include <gumbo.h>
 
 #if LUA_VERSION_NUM < 502
-# define luaL_newlib(L, R) (lua_newtable(L), luaL_register(L, NULL, R))
+# define luaL_newlib(L, l) (lua_newtable(L), luaL_register(L, NULL, l))
+# define luaL_setfuncs(L, l, nup) luaL_register(L, NULL, l) // assert(nup==0)
 #endif
 
 static const struct {
@@ -330,6 +331,11 @@ static int parse_file(lua_State *L) {
     }
 }
 
+static const struct luaL_Reg Element[] = {
+    {"attr_iter", Element_attr_iter},
+    {NULL, NULL}
+};
+
 static const struct luaL_Reg R[] = {
     {"parse", parse},
     {"parse_file", parse_file},
@@ -342,8 +348,7 @@ int luaopen_gumbo(lua_State *L) {
         lua_setfield(L, -2, "__index");
         lua_newtable(L);
         lua_setfield(L, -2, "attr");
-        lua_pushcfunction(L, Element_attr_iter);
-        lua_setfield(L, -2, "attr_iter");
+        luaL_setfuncs(L, Element, 0);
     }
     luaL_newlib(L, R);
     return 1;
