@@ -22,6 +22,10 @@
 #include <lauxlib.h>
 #include <gumbo.h>
 
+#if LUA_VERSION_NUM < 502
+# define luaL_newlib(L, R) (lua_newtable(L), luaL_register(L, NULL, R))
+#endif
+
 static const struct {
     const unsigned int flag;
     const char *name;
@@ -326,6 +330,12 @@ static int parse_file(lua_State *L) {
     }
 }
 
+static const struct luaL_Reg R[] = {
+    {"parse", parse},
+    {"parse_file", parse_file},
+    {NULL, NULL}
+};
+
 int luaopen_gumbo(lua_State *L) {
     if (luaL_newmetatable(L, "gumbo.element")) {
         lua_pushvalue(L, -1);
@@ -335,10 +345,6 @@ int luaopen_gumbo(lua_State *L) {
         lua_pushcfunction(L, Element_attr_iter);
         lua_setfield(L, -2, "attr_iter");
     }
-    lua_createtable(L, 0, 1);
-    lua_pushcfunction(L, parse);
-    lua_setfield(L, -2, "parse");
-    lua_pushcfunction(L, parse_file);
-    lua_setfield(L, -2, "parse_file");
+    luaL_newlib(L, R);
     return 1;
 }
