@@ -2,7 +2,7 @@
 local gumbo = require "gumbo"
 local to_html = require "gumbo.serialize.html"
 
---- Iterate an element node recursively and remove any descendant element
+--- Do a recursive, depth-first search and remove any descendant element
 --- with the specified id attribute.
 local function remove_element_by_id(base, id)
     local function search_and_remove(node, n)
@@ -12,7 +12,7 @@ local function remove_element_by_id(base, id)
             else
                 -- This loop must use ipairs, to allow the use of
                 -- table.remove. A numeric for loop would overrun if
-                -- the length of node[n] is changed during iteration.
+                -- the length of node[n] changes during iteration.
                 for i in ipairs(node[n]) do
                     search_and_remove(node[n], i)
                 end
