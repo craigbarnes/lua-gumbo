@@ -5,9 +5,9 @@ function Indent:__index(i)
     return self[i]
 end
 
-function Indent.new(indent)
-    if type(indent) == "number" then indent = string.rep(" ", indent) end
-    return setmetatable({[0] = "", [1] = indent or "    "}, Indent)
+function Indent.new(width)
+    local i1 = string.rep(" ", width or 4)
+    return setmetatable({[0] = "", [1] = i1}, Indent)
 end
 
 return Indent.new
