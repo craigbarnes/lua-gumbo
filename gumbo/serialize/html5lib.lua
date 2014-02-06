@@ -1,9 +1,9 @@
 local Buffer = require "gumbo.buffer"
 local Indent = require "gumbo.indent"
 
-return function(node, buffer)
+return function(node, buffer, indent_width)
     local buf = buffer or Buffer()
-    local indent = Indent(2)
+    local indent = Indent(indent_width or 2)
     local function serialize(node, level)
         if node.type == "element" then
             local i1, i2 = indent[level], indent[level+1]
