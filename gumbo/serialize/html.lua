@@ -58,9 +58,9 @@ local function wrap(text, indent)
     return indent .. str .. "\n"
 end
 
-local function to_html(node, buffer)
+local function to_html(node, buffer, indent_width)
     local buf = buffer or Buffer()
-    local indent = Indent()
+    local indent = Indent(indent_width)
     local function serialize(node, level)
         if node.type == "element" then
             local tag = node.tag
