@@ -7,7 +7,6 @@ local Indent = require "gumbo.indent"
 -- TODO:
 -- * Collapse newlines around inline elements and short block elements.
 -- * Handle <style>, <script> and <pre> elements properly.
--- * Implement a "minified" mode.
 -- * Implement escaping for special characters in tag names (e.g. '=')?
 
 -- Set of void elements
