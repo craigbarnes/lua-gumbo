@@ -10,7 +10,7 @@
         text = " document.root isn't always document[1] ",
         line = 2,
         column = 1,
-        offset = 16,
+        offset = 16
     },
     {
         type = "element",
@@ -48,16 +48,16 @@
                     text = "Test Document",
                     line = 3,
                     column = 8,
-                    offset = 71,
-                },
+                    offset = 71
+                }
             },
             {
                 type = "whitespace",
                 text = "\n",
                 line = 3,
                 column = 29,
-                offset = 92,
-            },
+                offset = 92
+            }
         },
         {
             type = "element",
@@ -83,15 +83,15 @@
                     text = "Test Heading",
                     line = 4,
                     column = 5,
-                    offset = 97,
-                },
+                    offset = 97
+                }
             },
             {
                 type = "whitespace",
                 text = "\n",
                 line = 4,
                 column = 22,
-                offset = 114,
+                offset = 114
             },
             {
                 type = "element",
@@ -115,23 +115,23 @@
                             line = 5,
                             column = 7,
                             offset = 121
-                        },
+                        }
                     },
                     {
                         type = "text",
                         text = "Quux",
                         line = 5,
                         column = 24,
-                        offset = 138,
-                    },
-                },
+                        offset = 138
+                    }
+                }
             },
             {
                 type = "whitespace",
                 text = "\n",
                 line = 5,
                 column = 36,
-                offset = 150,
+                offset = 150
             },
             {
                 type = "element",
@@ -148,22 +148,22 @@
                         line = 6,
                         column = 10,
                         offset = 160
-                    },
+                    }
                 },
                 {
                     type = "text",
                     text = "abc",
                     line = 6,
                     column = 20,
-                    offset = 170,
-                },
+                    offset = 170
+                }
             },
             {
                 type = "whitespace",
                 text = "\n\t",
                 line = 6,
                 column = 33,
-                offset = 183,
+                offset = 183
             },
             {
                 type = "element",
@@ -180,30 +180,30 @@
                         line = 7,
                         column = 11,
                         offset = 188
-                    },
-                },
+                    }
+                }
             },
             {
                 type = "whitespace",
                 text = "\n",
                 line = 7,
                 column = 27,
-                offset = 204,
+                offset = 204
             },
             {
                 type = "comment",
                 text = " comment node ",
                 line = 8,
                 column = 1,
-                offset = 205,
+                offset = 205
             },
             {
                 type = "whitespace",
                 text = "\n",
                 line = 8,
                 column = 22,
-                offset = 226,
-            },
-        },
-    },
+                offset = 226
+            }
+        }
+    }
 }

@@ -25,6 +25,11 @@ local a = assert(gumbo.parse_file(io.open("test/t1.html"), 4))
 local b = assert(gumbo.parse_file("test/t1.html", 4))
 assert(to_table(a) == to_table(b))
 
+-- Ensure that serialized table syntax is valid
+local fn = assert(load('return ' .. to_table(a)))
+local t = assert(fn())
+assert(type(t) == "table")
+
 -- Check that file open/read errors are handled
 assert(not gumbo.parse_file(0), "Passing invalid argument type should fail")
 assert(not gumbo.parse_file".", "Passing a directory name should fail")
