@@ -40,6 +40,9 @@ gumbo/buffer.o: CFLAGS += $(LUA_CFLAGS)
 %.so: %.o
 	$(CC) $(LDFLAGS) -o $@ $<
 
+%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
 README.html: README.md
 	markdown -f +toc -T -o $@ $<
 
