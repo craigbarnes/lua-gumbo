@@ -25,9 +25,18 @@ GUMBO_LDFLAGS = $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
 GUMBO_INCDIR  = $(shell $(PKGCONFIG) --variable=includedir gumbo)
 GUMBO_HEADER  = $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
-# This include sets a few variables, but only LUA_CFLAGS, LUA_CMOD_DIR and
-# LUA_LMOD_DIR are used here. They can be set manually if need be.
+# This include uses pkg-config to find the required variables for Lua
 include findlua.mk
+
+# If you prefer not to use pkg-config, the following variables can be
+# specified manually (and the line above removed).
+#
+# Required for "make":
+#  LUA_CFLAGS    = -I/usr/include/lua5.2
+#
+# Required for "make install":
+#  LUA_CMOD_DIR  = /usr/lib/lua/5.2
+#  LUA_LMOD_DIR  = /usr/share/lua/5.2
 
 # Ensure the tests only load modules from within the current directory
 export LUA_PATH = ./?.lua
@@ -49,12 +58,12 @@ README.html: README.md
 	markdown -f +toc -T -o $@ $<
 
 1MiB.html: test/4KiB.html
-	$(RM) $@
-	for i in `seq 1 256`; do cat $< >> $@; done
+	@$(RM) $@
+	@for i in `seq 1 256`; do cat $< >> $@; done
 
 %MiB.html: 1MiB.html
-	$(RM) $@
-	for i in `seq 1 $*`; do cat $< >> $@; done
+	@$(RM) $@
+	@for i in `seq 1 $*`; do cat $< >> $@; done
 
 tags: $(MODULES_C) $(GUMBO_HEADER) Makefile
 	ctags --c-kinds=+p $^
@@ -104,10 +113,11 @@ clean:
 	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz *MiB.html
 
 
-ifeq ($(shell uname),Darwin)
+ifeq "$(shell uname)" "Darwin"
   LDFLAGS = -bundle -undefined dynamic_lookup
 endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind
 .PHONY: check-compat dist clean force
+.SECONDARY: 1MiB.html 2MiB.html 3MiB.html 4MiB.html 5MiB.html
 .DELETE_ON_ERROR:
