@@ -1,5 +1,5 @@
 CC            = gcc
-REQCFLAGS     = -std=c99 -pedantic -fPIC
+REQCFLAGS     = -std=c99 -pedantic -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings \
                 -Wcast-qual -Wshadow
 CFLAGS       += $(REQCFLAGS)
