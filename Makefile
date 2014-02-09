@@ -10,6 +10,8 @@ INSTALL       = install -p -m 0644
 INSTALLX      = install -p -m 0755
 RM            = rm -f
 PKGCONFIG     = pkg-config --silence-errors
+TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
+BENCHFILE     = 2MiB.html
 
 MODULES_C     = gumbo.c gumbo/buffer.c
 MODULES_O     = $(MODULES_C:.c=.o)
@@ -95,8 +97,8 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
 
-bench: 5MiB.html all test/serialize.lua
-	$(LUA) test/serialize.lua bench $<
+bench_%: all test/serialize.lua $(BENCHFILE)
+	$(TIME) $(LUA) test/serialize.lua $@ $(BENCHFILE)
 
 clean:
 	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz *MiB.html
@@ -107,5 +109,5 @@ ifeq ($(shell uname),Darwin)
 endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind
-.PHONY: check-compat bench bench-all dist clean force
+.PHONY: check-compat dist clean force
 .DELETE_ON_ERROR:
