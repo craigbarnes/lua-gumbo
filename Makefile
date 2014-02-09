@@ -100,7 +100,7 @@ clean:
 
 
 ifeq ($(shell uname),Darwin)
-  LDFLAGS = -undefined dynamic_lookup -dynamiclib $(GUMBO_LDFLAGS)
+  LDFLAGS = -bundle -undefined dynamic_lookup
 endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind
