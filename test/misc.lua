@@ -26,7 +26,7 @@ local b = assert(gumbo.parse_file("test/t1.html", 4))
 assert(to_table(a) == to_table(b))
 
 -- Ensure that serialized table syntax is valid
-local fn = assert(load('return ' .. to_table(a)))
+local fn = assert((loadstring or load)('return ' .. to_table(a)))
 local t = assert(fn())
 assert(type(t) == "table")
 
