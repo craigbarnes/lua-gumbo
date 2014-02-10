@@ -29,7 +29,7 @@
 
 static const struct {
     const unsigned int flag;
-    const char *name;
+    const char name[33]; // Fixed size allows storage in read-only data section
 } flag_map[] = {
     {GUMBO_INSERTION_BY_PARSER, "insertion_by_parser"},
     {GUMBO_INSERTION_IMPLICIT_END_TAG, "implicit_end_tag"},
@@ -331,12 +331,12 @@ static int parse_file(lua_State *L) {
     }
 }
 
-static const struct luaL_Reg Element[] = {
+static const luaL_Reg Element[] = {
     {"attr_iter", Element_attr_iter},
     {NULL, NULL}
 };
 
-static const struct luaL_Reg R[] = {
+static const luaL_Reg lib[] = {
     {"parse", parse},
     {"parse_file", parse_file},
     {NULL, NULL}
@@ -350,6 +350,6 @@ int luaopen_gumbo(lua_State *L) {
         lua_setfield(L, -2, "attr");
         luaL_setfuncs(L, Element, 0);
     }
-    luaL_newlib(L, R);
+    luaL_newlib(L, lib);
     return 1;
 }
