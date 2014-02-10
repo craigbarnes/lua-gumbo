@@ -94,17 +94,19 @@ check: all
 	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.table -
 	$(LUA) test/misc.lua
 
-check-html5lib: all | test/html5lib-tests/tree-construction/*.dat
-	@$(LUA) test/runner.lua $|
+check-html5lib: all | test/html5lib-tests/tree-construction
+	@$(LUA) test/runner.lua $|/*.dat
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
 check-valgrind: check
 
+check-all: check check-html5lib
+
 check-compat:
-	$(MAKE) -sB check LUA=lua CC=gcc
-	$(MAKE) -sB check LUA=luajit CC=gcc LUA_PC=luajit
-	$(MAKE) -sB check LUA=lua CC=clang
-	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
+	$(MAKE) -sB check-all LUA=lua CC=gcc
+	$(MAKE) -sB check-all LUA=luajit CC=gcc LUA_PC=luajit
+	$(MAKE) -sB check-all LUA=lua CC=clang
+	$(MAKE) -sB check-all LUA=lua CC=tcc CFLAGS=-Wall
 
 bench_%: all test/serialize.lua $(BENCHFILE)
 	$(TIME) $(LUA) test/serialize.lua $@ $(BENCHFILE)
@@ -118,6 +120,6 @@ ifeq "$(shell uname)" "Darwin"
 endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind
-.PHONY: check-compat dist clean force
+.PHONY: check-all check-compat dist clean force
 .SECONDARY: 1MiB.html 2MiB.html 3MiB.html 4MiB.html 5MiB.html
 .DELETE_ON_ERROR:
