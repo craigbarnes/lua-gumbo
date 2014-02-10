@@ -38,4 +38,4 @@ local commands = setmetatable({
 
 local input = arg[2] or io.stdin
 local output = arg[3] and assert(io.open(arg[3], "a")) or io.stdout
-commands[arg[1]](input, output)
+commands[arg[1] or "help"](input, output)
