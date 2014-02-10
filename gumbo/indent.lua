@@ -1,8 +1,12 @@
 local Indent = {}
 
-function Indent:__index(i)
-    self[i] = self[1]:rep(i)
-    return self[i]
+function Indent:__index(depth)
+    if depth < 25 then
+        self[depth] = self[1]:rep(depth)
+        return self[depth]
+    else -- stop indenting at depth of 25, to avoid buffer/output bloat
+        return ""
+    end
 end
 
 function Indent.new(width)
