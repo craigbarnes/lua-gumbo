@@ -28,7 +28,7 @@ local commands = setmetatable({
         if exists then
             return function(input, output)
                 local document = assert(gumbo.parse_file(input))
-                serialize(document, not benchcmd and output or nil)
+                assert(serialize(document, not benchcmd and output or nil))
             end
         else
             return self.help

@@ -104,9 +104,7 @@ local function to_html(node, buffer, indent_width)
         end
     end
     serialize(node, 0)
-    if not io.type(buf) then
-        return tostring(buf)
-    end
+    return io.type(buf) and true or tostring(buf)
 end
 
 return to_html

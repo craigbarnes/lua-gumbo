@@ -63,7 +63,7 @@ for i = 1, #arg do
             skipped = skipped + 1
         else
             local document = assert(gumbo.parse(test.data))
-            local serialized = serialize(document)
+            local serialized = assert(serialize(document))
             if serialized == test.document then
                 passed = passed + 1
             else
