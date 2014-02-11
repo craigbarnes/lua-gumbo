@@ -50,6 +50,8 @@ static Buffer *check_buffer(lua_State *L, const int narg) {
 
 static int buffer_write(lua_State *L) {
     Buffer *buf = check_buffer(L, 1);
+    if (!buf->data)
+        return luaL_error(L, "Error: attempt to write to closed buffer");
     const int n = lua_gettop(L);
     for (int i = 2; i <= n; i++) {
         size_t length;
@@ -80,7 +82,9 @@ static int buffer_close(lua_State *L) {
 }
 
 static int buffer_new(lua_State *L) {
-    const lua_Integer capacity = luaL_optinteger(L, 1, 4096);
+    lua_Integer capacity = luaL_optinteger(L, 1, 4096);
+    if (capacity < 1)
+        capacity = 4096;
     Buffer *buffer = (Buffer *)lua_newuserdata(L, sizeof(Buffer));
     luaL_getmetatable(L, "gumbo.buffer");
     lua_setmetatable(L, -2);
