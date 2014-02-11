@@ -50,6 +50,8 @@ The `gumbo` module provides two functions:
 Both functions return a `Document` node (as described below) or `nil`
 and an error message on failure (e.g. out of memory, invalid filename etc.)
 
+For examples, see [`find_links.lua`] and [`remove_by_id.lua`].
+
 Types
 -----
 
@@ -89,8 +91,8 @@ numeric indices.
 **Methods:**
 
 * `:attr_iter()`: returns an iterator that produces the values
-  `index, name, value, namespace, line, col, offset` for each of the
-  element's attributes.
+  `index, name, value, namespace, line, column, offset` for each of the
+  element's attributes. See also: [`find_links.lua`].
 
 #### Attribute
 
@@ -156,3 +158,5 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [system identifier]: http://dom.spec.whatwg.org/#concept-doctype-systemid
 [quirks mode]: http://dom.spec.whatwg.org/#concept-document-quirks
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
+[`find_links.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
+[`remove_by_id.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
