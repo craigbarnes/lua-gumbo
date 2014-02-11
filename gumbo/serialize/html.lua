@@ -40,12 +40,11 @@ local function escape(text)
     return text:gsub("[&<>]", escmap)
 end
 
--- TODO: Reimplement this in a way that's not so slow and memory-hungry
 local function wrap(text, indent)
     local limit = 78
     local indent_width = #indent
     local pos = 1 - indent_width
-    local function reflow(sep, start, word, stop)
+    local function reflow(start, word, stop)
         if stop - pos > limit then
             pos = start - indent_width
             return "\n" .. indent .. word
@@ -53,8 +52,7 @@ local function wrap(text, indent)
             return " " .. word
         end
     end
-    local str = text:gsub("(%s+)()(%S+)()", reflow)
-    return indent .. str .. "\n"
+    return indent, text:gsub("%s+()(%S+)()", reflow), "\n"
 end
 
 local function to_html(node, buffer, indent_width)
