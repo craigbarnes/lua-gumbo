@@ -34,16 +34,14 @@ typedef struct {
 static bool buffer_resize_if_needed(Buffer *buffer, const size_t n) {
     const size_t length = buffer->length + n;
     size_t capacity = buffer->capacity;
-    if (capacity >= length) {
-        return true;
-    } else {
-        while (capacity < length)
-            capacity *= 2;
-        char *data = realloc(buffer->data, capacity);
-        buffer->data = data;
-        buffer->capacity = capacity;
-        return data ? true : false;
+    while (capacity < length) {
+        capacity *= 2;
     }
+    if (capacity != buffer->capacity) {
+        buffer->capacity = capacity;
+        buffer->data = realloc(buffer->data, capacity);
+    }
+    return buffer->data ? true : false;
 }
 
 static Buffer *check_buffer(lua_State *L, const int narg) {
