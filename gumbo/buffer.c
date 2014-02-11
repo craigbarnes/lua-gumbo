@@ -86,10 +86,14 @@ static int buffer_new(lua_State *L) {
     Buffer *buffer = (Buffer *)lua_newuserdata(L, sizeof(Buffer));
     luaL_getmetatable(L, "gumbo.buffer");
     lua_setmetatable(L, -2);
-    buffer->data = malloc(capacity);
     buffer->length = 0;
     buffer->capacity = capacity;
-    return 1;
+    buffer->data = malloc(capacity);
+    if (buffer->data) {
+        return 1;
+    } else {
+        return luaL_error(L, "Error: out of memory");
+    }
 }
 
 static const luaL_Reg methods[] = {
