@@ -109,7 +109,7 @@ check-compat:
 	$(MAKE) -sB check-all LUA=lua CC=tcc CFLAGS=-Wall
 
 bench_%: all test/serialize.lua $(BENCHFILE)
-	$(TIME) $(LUA) test/serialize.lua $@ $(BENCHFILE)
+	$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
 	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz *MiB.html
