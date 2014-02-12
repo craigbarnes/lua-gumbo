@@ -32,10 +32,8 @@ Installation
     make check
     [sudo] make install
 
-API
----
-
-### Parsing
+Usage
+-----
 
 The `gumbo` module provides two functions:
 
@@ -43,19 +41,22 @@ The `gumbo` module provides two functions:
 
 Parses a string of UTF-8 encoded HTML and returns a `Document` node. The
 optional `tab_stop` parameter specifies the size to use for tab
-characters when computing source positions.
+characters when computing source positions (default: `8`).
 
 `parse_file(path_or_file [, tab_stop])`
 
-As above, but reading input from a [file handle] or opening and reading
-input from a path specified as a string.
+As above, but first reading input from an open [file handle] or opening
+and reading input from a filename specified as a string.
 
-**Note:** either function may return `nil` and an error message, which
-should either be handled explicitly or wrapped with `assert()`.
+Either function may return `nil` and an error message on failure, which
+can either be handled explicitly or wrapped with `assert()`.
 
-### Node Types
+See also: [find_links.lua] and [remove_by_id.lua].
 
-#### Document
+Output
+------
+
+### Document
 
 The document node is the top-level table returned by the parse functions
 and contains all other nodes as descendants.
@@ -71,7 +72,7 @@ and contains all other nodes as descendants.
 * `root`: A reference to the child `<html>` `Element`.
 * `[1..n]`: Child nodes.
 
-#### Element
+### Element
 
 `Element` nodes are represented as tables, with child nodes stored in
 numeric indices.
@@ -101,7 +102,7 @@ numeric indices.
   `index, name, value, namespace, line, column, offset` for each of the
   element's attributes. See: [find_links.lua].
 
-#### Text
+### Text
 
 There are 4 text node types, which all share a common structure.
 
@@ -112,11 +113,6 @@ There are 4 text node types, which all share a common structure.
 * `line`
 * `column`
 * `offset`
-
-Usage
------
-
-See: [find_links.lua] and [remove_by_id.lua].
 
 Testing
 -------
