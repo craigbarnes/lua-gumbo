@@ -21,16 +21,26 @@ Requirements
 
 * C99 compiler
 * [GNU Make]
-* [pkg-config]
-* [Lua] 5.1/5.2 or [LuaJIT] 2 (including headers and [pkg-config] file)
+* [Lua] 5.1/5.2 or [LuaJIT] 2
 * [Gumbo][Gumbo installation]
 
 Installation
 ------------
 
+By default, the Makefile will consult [pkg-config] for the appropriate
+Lua variables. Usually the following commands will be sufficient:
+
     make
     make check
     [sudo] make install
+
+However, if your Lua installation doesn't include a pkg-config file,
+running `make` will simply complain and exit. In this case, the 3
+relevant variables will have to be specified manually, for example:
+
+    make LUA_CFLAGS=-I/usr/include/lua5.2
+    make check
+    make install LUA_LMOD_DIR=/usr/share/lua/5.2 LUA_CMOD_DIR=/usr/lib/lua/5.2
 
 Usage
 -----
