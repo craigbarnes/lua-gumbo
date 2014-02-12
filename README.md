@@ -81,7 +81,7 @@ numeric indices.
 * `type`: Always has a value of `"element"` for element nodes.
 * `tag`: The tag name, normalized to lower case.
 * `tag_namespace`: Either `"html"`, `"svg"` or `"math"`.
-* `attr`: An array of attributes.
+* `attr`: An ordered array of attributes.
   * `[1..n]`: Attribute tables, each with the following fields:
     * `name`: The name of the attribute (normalized to lower case).
     * `value`: The attribute value.
