@@ -32,30 +32,30 @@ Installation
     make check
     [sudo] make install
 
-Usage
------
+API
+---
+
+### Parsing
 
 The `gumbo` module provides two functions:
 
-`parse(html, tab_stop)`
+`parse(html [, tab_stop])`
 
-* `html`: A string of UTF8-encoded HTML to be parsed.
-* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+Parses a string of UTF-8 encoded HTML and returns a `Document` node. The
+optional `tab_stop` parameter specifies the size to use for tab
+characters when computing source positions.
 
-`parse_file(path_or_file, tab_stop)`
+`parse_file(path_or_file [, tab_stop])`
 
-* `path_or_file`: Either a filename string or a [file handle].
-* `tab_stop`: The size to use for tab characters (optional, defaults to `8`).
+As above, but reading input from a [file handle] or opening and reading
+input from a path specified as a string.
 
-Both functions return a `Document` node (as described below) or `nil`
-and an error message on failure (e.g. out of memory, invalid filename etc.)
+**Note:** either function may return `nil` and an error message, which
+should either be handled explicitly or wrapped with `assert()`.
 
-For examples, see [`find_links.lua`] and [`remove_by_id.lua`].
+### Node Types
 
-Types
------
-
-### Document
+#### Document
 
 The document node is the top-level table returned by the parse functions
 and contains all other nodes as descendants.
@@ -68,10 +68,10 @@ and contains all other nodes as descendants.
 * `public_identifier`: The doctype [public identifier].
 * `system_identifier`: The doctype [system identifier].
 * `quirks_mode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
-* `root`: A convenient reference to the child `<html>` `Element`.
+* `root`: A reference to the child `<html>` `Element`.
 * `[1..n]`: Child nodes.
 
-### Element
+#### Element
 
 `Element` nodes are represented as tables, with child nodes stored in
 numeric indices.
@@ -81,7 +81,14 @@ numeric indices.
 * `type`: Always has a value of `"element"` for element nodes.
 * `tag`: The tag name, normalized to lower case.
 * `tag_namespace`: Either `"html"`, `"svg"` or `"math"`.
-* `attr`: A table of `Attribute` types (see below).
+* `attr`: An array of attributes.
+  * `[1..n]`: Attribute tables, each with the following fields:
+    * `name`: The name of the attribute (normalized to lower case).
+    * `value`: The attribute value.
+    * `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
+    * `line`
+    * `column`
+    * `offset`
 * `parse_flags`
 * `line`
 * `column`
@@ -94,20 +101,7 @@ numeric indices.
   `index, name, value, namespace, line, column, offset` for each of the
   element's attributes. See also: [`find_links.lua`].
 
-#### Attribute
-
-A table representing a single attribute.
-
-**Fields:**
-
-* `name`
-* `value`
-* `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
-* `line`
-* `column`
-* `offset`
-
-### Text
+#### Text
 
 There are 4 text node types, which all share a common structure.
 
@@ -118,6 +112,11 @@ There are 4 text node types, which all share a common structure.
 * `line`
 * `column`
 * `offset`
+
+Usage
+-----
+
+See: [`find_links.lua`] and [`remove_by_id.lua`].
 
 Testing
 -------
