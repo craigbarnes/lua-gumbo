@@ -99,7 +99,7 @@ numeric indices.
 
 * `:attr_iter()`: returns an iterator that produces the values
   `index, name, value, namespace, line, column, offset` for each of the
-  element's attributes. See also: [`find_links.lua`].
+  element's attributes. See: [find_links.lua].
 
 #### Text
 
@@ -116,7 +116,7 @@ There are 4 text node types, which all share a common structure.
 Usage
 -----
 
-See: [`find_links.lua`] and [`remove_by_id.lua`].
+See: [find_links.lua] and [remove_by_id.lua].
 
 Testing
 -------
@@ -157,5 +157,5 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [system identifier]: http://dom.spec.whatwg.org/#concept-doctype-systemid
 [quirks mode]: http://dom.spec.whatwg.org/#concept-document-quirks
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
-[`find_links.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
-[`remove_by_id.lua`]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
+[find_links.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
+[remove_by_id.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
