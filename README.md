@@ -82,14 +82,15 @@ numeric indices.
 * `type`: Always has a value of `"element"` for element nodes.
 * `tag`: The tag name, normalized to lower case.
 * `tag_namespace`: Either `"html"`, `"svg"` or `"math"`.
-* `attr`: An ordered array of attributes.
-  * `[1..n]`: Attribute tables, each with the following fields:
+* `attr`: A table of attributes.
+  * `[1..n]`: Tables, each representing a single attribute, in source order:
     * `name`: The name of the attribute (normalized to lower case).
     * `value`: The attribute value.
     * `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
     * `line`
     * `column`
     * `offset`
+  * `["name"]`: A shortcut for `attr[i].value`, where `attr[i].name == "name"`.
 * `parse_flags`
 * `line`
 * `column`
