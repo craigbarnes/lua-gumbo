@@ -273,6 +273,7 @@ static int attr_next(lua_State *L) {
 }
 
 static int Element_attr_iter(lua_State *L) {
+    luaL_checktype(L, 1, LUA_TTABLE);
     lua_pushcfunction(L, attr_next);
     lua_getfield(L, 1, "attr");
     lua_pushinteger(L, 0);
