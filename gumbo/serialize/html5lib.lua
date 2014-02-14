@@ -11,12 +11,8 @@ return function(node, buffer, indent_width)
                           (node.tag_namespace .. " ")
             buf:write("| ", i1, "<", tagns, node.tag, ">\n")
             table.sort(node.attr, function(a, b) return a.name < b.name end)
-            for index, name, value, ns in node:attr_iter() do
-                if ns then
-                    buf:write("| ", i2, ns, " ", name, '="', value, '"\n')
-                else
-                    buf:write("| ", i2, name, '="', value, '"\n')
-                end
+            for _, n, v, ns in node:attr_iter() do
+                buf:write("| ", i2, ns and ns.." " or "", n, '="', v, '"\n')
             end
             for i = 1, #node do
                 if node[i].type == "text" and node[i+1]
