@@ -37,12 +37,16 @@ local function to_table(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local indent = Indent(indent_width)
 
-    local function serialize(node, level, last)
+    local function serialize(node, level, last, index)
         if node.type == "element" then
             local node_length = #node
             local attr_length = #node.attr
 
-            buf:write(indent[level], '{\n')
+            buf:write(indent[level])
+            if index then
+                buf:write("[", tostring(index), "] = ")
+            end
+            buf:write('{\n')
             local i1, i2 = indent[level+1], indent[level+2]
             buf:write(i1, 'type = "element",\n')
             buf:write(i1, 'tag = "', node.tag, '",\n')
@@ -57,7 +61,7 @@ local function to_table(node, buffer, indent_width)
                 buf:write(i1, 'attr = {\n')
                 for i, name, val, ns, line, col, offset in node:attr_iter() do
                     buf:write(i2, escape_key(name), ' = "', escape(val), '",\n')
-                    tmp:write(i2, "{\n")
+                    tmp:write(i2, "[", tostring(i), "] = {\n")
                     tmp:write(i3, 'name = "', escape(name), '",\n')
                     tmp:write(i3, 'value = "', escape(val), '",\n')
                     if ns then tmp:write(i3, 'namespace = "', ns, '",\n') end
@@ -83,12 +87,16 @@ local function to_table(node, buffer, indent_width)
                 buf:write(i1, '}', node_length > 0 and "," or "", '\n')
             end
             for i = 1, node_length do
-                serialize(node[i], level + 1, i == node_length)
+                serialize(node[i], level + 1, i == node_length, i)
             end
             buf:write(indent[level], '}', last and "" or ",", '\n')
         elseif node.text then
             local i1, i2 = indent[level], indent[level+1]
-            buf:write(i1, '{\n')
+            buf:write(i1)
+            if index then
+                buf:write("[", tostring(index), "] = ")
+            end
+            buf:write('{\n')
             buf:write(i2, 'type = "', node.type, '",\n')
             buf:write(i2, 'text = "', escape(node.text), '",\n')
             buf:write(i2, 'line = ', node.line, ',\n')
@@ -107,7 +115,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(i1, 'quirks_mode = "', node.quirks_mode, '",\n')
             local node_length = #node
             for i = 1, node_length do
-                serialize(node[i], level + 1, i == node_length)
+                serialize(node[i], level + 1, i == node_length, i)
             end
             buf:write("}\n")
         end
