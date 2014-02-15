@@ -37,17 +37,17 @@ local function to_table(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local indent = Indent(indent_width)
 
-    local function serialize(node, level, last, index)
+    local function serialize(node, depth, last, index)
         if node.type == "element" then
             local node_length = #node
             local attr_length = #node.attr
 
-            buf:write(indent[level])
+            buf:write(indent[depth])
             if index then
                 buf:write("[", tostring(index), "] = ")
             end
             buf:write('{\n')
-            local i1, i2 = indent[level+1], indent[level+2]
+            local i1, i2 = indent[depth+1], indent[depth+2]
             buf:write(i1, 'type = "element",\n')
             buf:write(i1, 'tag = "', node.tag, '",\n')
             buf:write(i1, 'tag_namespace = "', node.tag_namespace, '",\n')
@@ -56,7 +56,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(i1, 'offset = ', node.offset, ',\n')
 
             if attr_length > 0 then
-                local i3 = indent[level+3]
+                local i3 = indent[depth+3]
                 local tmp = Buffer()
                 buf:write(i1, 'attr = {\n')
                 for i, name, val, ns, line, col, offset in node:attr_iter() do
@@ -87,11 +87,11 @@ local function to_table(node, buffer, indent_width)
                 buf:write(i1, '}', node_length > 0 and "," or "", '\n')
             end
             for i = 1, node_length do
-                serialize(node[i], level + 1, i == node_length, i)
+                serialize(node[i], depth + 1, i == node_length, i)
             end
-            buf:write(indent[level], '}', last and "" or ",", '\n')
+            buf:write(indent[depth], '}', last and "" or ",", '\n')
         elseif node.text then
-            local i1, i2 = indent[level], indent[level+1]
+            local i1, i2 = indent[depth], indent[depth+1]
             buf:write(i1)
             if index then
                 buf:write("[", tostring(index), "] = ")
@@ -104,9 +104,9 @@ local function to_table(node, buffer, indent_width)
             buf:write(i2, 'offset = ', node.offset, '\n')
             buf:write(i1, '}', last and "" or ",", '\n')
         elseif node.type == "document" then
-            assert(level == 0, "document nodes cannot be nested")
+            assert(depth == 0, "document nodes cannot be nested")
             buf:write("{\n")
-            local i1 = indent[level+1]
+            local i1 = indent[depth+1]
             buf:write(i1, 'type = "document",\n')
             buf:write(i1, 'has_doctype = ', tostring(node.has_doctype), ',\n')
             buf:write(i1, 'name = "', node.name, '",\n')
@@ -115,7 +115,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(i1, 'quirks_mode = "', node.quirks_mode, '",\n')
             local node_length = #node
             for i = 1, node_length do
-                serialize(node[i], level + 1, i == node_length, i)
+                serialize(node[i], depth + 1, i == node_length, i)
             end
             buf:write("}\n")
         end

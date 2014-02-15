@@ -58,10 +58,10 @@ end
 local function to_html(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local indent = Indent(indent_width)
-    local function serialize(node, level)
+    local function serialize(node, depth)
         if node.type == "element" then
             local tag = node.tag
-            buf:write(indent[level], "<", tag)
+            buf:write(indent[depth], "<", tag)
             for index, name, value in node:attr_iter() do
                 if value == "" then
                     buf:write(" ", name)
@@ -78,8 +78,8 @@ local function to_html(node, buffer, indent_width)
             elseif tag == "script" or tag == "style" then -- Raw text node
                 assert(length == 1 and node[1].type == "text")
                 buf:write("\n")
-                buf:write(wrap(node[1].text, indent[level+1]))
-                buf:write(indent[level], "</", tag, ">")
+                buf:write(wrap(node[1].text, indent[depth+1]))
+                buf:write(indent[depth], "</", tag, ">")
             elseif length == 1 and node[1].type == "text"
                    and #node.attr == 0 and #node[1].text <= 40
             then
@@ -88,21 +88,21 @@ local function to_html(node, buffer, indent_width)
             else
                 buf:write("\n")
                 for i = 1, length do
-                    serialize(node[i], level + 1)
+                    serialize(node[i], depth + 1)
                 end
-                buf:write(indent[level], "</", tag, ">")
+                buf:write(indent[depth], "</", tag, ">")
             end
             buf:write("\n")
         elseif node.type == "text" then
-            buf:write(wrap(escape(node.text), indent[level]))
+            buf:write(wrap(escape(node.text), indent[depth]))
         elseif node.type == "comment" then
-            buf:write(indent[level], "<!--", node.text, "-->\n")
+            buf:write(indent[depth], "<!--", node.text, "-->\n")
         elseif node.type == "document" then
             if node.has_doctype == true then
                 buf:write("<!doctype ", node.name, ">\n")
             end
             for i = 1, #node do
-                serialize(node[i], level)
+                serialize(node[i], depth)
             end
         end
     end
