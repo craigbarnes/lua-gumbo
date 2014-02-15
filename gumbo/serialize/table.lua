@@ -37,7 +37,7 @@ local function to_table(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local indent = Indent(indent_width)
 
-    local function serialize(node, depth, last, index)
+    local function serialize(node, depth, index, is_last_child)
         if node.type == "element" then
             local node_length = #node
             local attr_length = #node.attr
@@ -87,9 +87,9 @@ local function to_table(node, buffer, indent_width)
                 buf:write(i1, '}', node_length > 0 and "," or "", '\n')
             end
             for i = 1, node_length do
-                serialize(node[i], depth + 1, i == node_length, i)
+                serialize(node[i], depth + 1, i, i == node_length)
             end
-            buf:write(indent[depth], '}', last and "" or ",", '\n')
+            buf:write(indent[depth], '}', is_last_child and "" or ",", '\n')
         elseif node.text then
             local i1, i2 = indent[depth], indent[depth+1]
             buf:write(i1)
@@ -102,7 +102,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(i2, 'line = ', node.line, ',\n')
             buf:write(i2, 'column = ', node.column, ',\n')
             buf:write(i2, 'offset = ', node.offset, '\n')
-            buf:write(i1, '}', last and "" or ",", '\n')
+            buf:write(i1, '}', is_last_child and "" or ",", '\n')
         elseif node.type == "document" then
             assert(depth == 0, "document nodes cannot be nested")
             buf:write("{\n")
@@ -115,7 +115,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(i1, 'quirks_mode = "', node.quirks_mode, '",\n')
             local node_length = #node
             for i = 1, node_length do
-                serialize(node[i], depth + 1, i == node_length, i)
+                serialize(node[i], depth + 1, i, i == node_length)
             end
             buf:write("}\n")
         end
