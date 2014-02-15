@@ -75,6 +75,11 @@ local function to_html(node, buffer, indent_width)
                 if not void[tag] then
                     buf:write("</", tag, ">")
                 end
+            elseif tag == "script" or tag == "style" then -- Raw text node
+                assert(length == 1 and node[1].type == "text")
+                buf:write("\n")
+                buf:write(wrap(node[1].text, indent[level+1]))
+                buf:write(indent[level], "</", tag, ">")
             elseif length == 1 and node[1].type == "text"
                    and #node.attr == 0 and #node[1].text <= 40
             then
