@@ -1,10 +1,6 @@
 local Buffer = require "gumbo.buffer"
 local Indent = require "gumbo.indent"
 
--- TODO:
--- * Conform to the spec for HTML fragment serialization:
---  * Include attribute namespace prefixes
-
 local void = {
     area = true,
     base = true,
