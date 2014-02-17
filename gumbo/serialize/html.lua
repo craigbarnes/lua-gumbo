@@ -84,11 +84,13 @@ local function to_html(node, buffer, indent_width)
         if node.type == "element" then
             local tag = node.tag
             buf:write(indent[depth], "<", tag)
-            for index, name, value in node:attr_iter() do
-                if value == "" then
-                    buf:write(" ", name)
-                else
-                    buf:write(" ", name, '="', escape_attr(value), '"')
+            for index, name, value, ns in node:attr_iter() do
+                if ns == "xmlns" and name == "xmlns" then
+                    ns = nil
+                end
+                buf:write(" ", ns and ns..":" or "", name)
+                if value ~= "" then
+                    buf:write('="', escape_attr(value), '"')
                 end
             end
             buf:write(">")
@@ -96,12 +98,6 @@ local function to_html(node, buffer, indent_width)
             if void[tag] then
                 buf:write("\n")
             elseif length == 0 then
-                buf:write("</", tag, ">\n")
-            elseif length == 1 and node[1].type == "text"
-                   and #node.attr == 0 and #node[1].text <= 40
-            then
-                local text = node[1].text
-                buf:write(raw[node.tag] and text or escape_text(text))
                 buf:write("</", tag, ">\n")
             else
                 buf:write("\n")
@@ -112,7 +108,7 @@ local function to_html(node, buffer, indent_width)
             end
         elseif node.type == "text" then
             if raw[parent_tag] then
-                buf:write(node.text)
+                buf:write(indent[depth], node.text, "\n")
             else
                 buf:write(wrap(escape_text(node.text), indent[depth]))
             end
