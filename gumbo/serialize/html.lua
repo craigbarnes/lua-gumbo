@@ -29,14 +29,29 @@ local void = {
     wbr = true
 }
 
+-- Escaping a string consists of running the following steps:
+-- 1. Replace any occurrence of the "&" character by the string "&amp;".
+-- 2. Replace any occurrences of the U+00A0 NO-BREAK SPACE character by the
+--    string "&nbsp;".
+-- 3. If the algorithm was invoked in the attribute mode, replace any
+--    occurrences of the """ character by the string "&quot;".
+-- 4. If the algorithm was not invoked in the attribute mode, replace any
+--    occurrences of the "<" character by the string "&lt;", and any
+--    occurrences of the ">" character by the string "&gt;".
+
 local escmap = {
     ["&"] = "&amp;",
     ["<"] = "&lt;",
-    [">"] = "&gt;"
+    [">"] = "&gt;",
+    ['"'] = "&quot;"
 }
 
-local function escape(text)
-    return text:gsub("[&<>]", escmap)
+local function escape_text(text)
+    return (text:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
+end
+
+local function escape_attr(text)
+    return (text:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
 end
 
 local function wrap(text, indent)
@@ -65,7 +80,7 @@ local function to_html(node, buffer, indent_width)
                 if value == "" then
                     buf:write(" ", name)
                 else
-                    buf:write(" ", name, '="', value:gsub('"', "&quot;"), '"')
+                    buf:write(" ", name, '="', escape_attr(value), '"')
                 end
             end
             buf:write(">")
@@ -82,7 +97,7 @@ local function to_html(node, buffer, indent_width)
             elseif length == 1 and node[1].type == "text"
                    and #node.attr == 0 and #node[1].text <= 40
             then
-                buf:write(node[1].text)
+                buf:write(escape_text(node[1].text))
                 buf:write("</", tag, ">")
             else
                 buf:write("\n")
@@ -93,7 +108,7 @@ local function to_html(node, buffer, indent_width)
             end
             buf:write("\n")
         elseif node.type == "text" then
-            buf:write(wrap(escape(node.text), indent[depth]))
+            buf:write(wrap(escape_text(node.text), indent[depth]))
         elseif node.type == "comment" then
             buf:write(indent[depth], "<!--", node.text, "-->\n")
         elseif node.type == "document" then
