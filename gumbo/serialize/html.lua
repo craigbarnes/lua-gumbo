@@ -1,22 +1,21 @@
 local Buffer = require "gumbo.buffer"
 local Indent = require "gumbo.indent"
 
--- This has had much less attention than the other two serializers and is
--- inherently much harder to do properly. Consider it experimental for now.
-
 -- TODO:
--- * Collapse newlines around inline elements and short block elements.
--- * Handle <style>, <script> and <pre> elements properly.
--- * Implement escaping for special characters in tag names (e.g. '=')?
+-- * Conform to the spec for HTML fragment serialization:
+--  * Include attribute namespace prefixes
 
 -- Set of void elements
 -- whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
 local void = {
     area = true,
     base = true,
+    basefont = true,
+    bgsound = true,
     br = true,
     col = true,
     embed = true,
+    frame = true,
     hr = true,
     img = true,
     input = true,
