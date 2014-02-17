@@ -33,6 +33,40 @@ local raw = {
     plaintext = true
 }
 
+local boolattr = {
+    allowfullscreen = true,
+    async = true,
+    autofocus = true,
+    checked = true,
+    compact = true,
+    declare = true,
+    default = true,
+    defer = true,
+    disabled = true,
+    formnovalidate = true,
+    hidden = true,
+    inert = true,
+    ismap = true,
+    itemscope = true,
+    multiple = true,
+    multiple = true,
+    muted = true,
+    nohref = true,
+    noresize = true,
+    noshade = true,
+    novalidate = true,
+    nowrap = true,
+    open = true,
+    readonly = true,
+    required = true,
+    reversed = true,
+    seamless = true,
+    selected = true,
+    sortable = true,
+    truespeed = true,
+    typemustmatch = true
+}
+
 -- Escaping a string consists of running the following steps:
 -- 1. Replace any occurrence of the "&" character by the string "&amp;".
 -- 2. Replace any occurrences of the U+00A0 NO-BREAK SPACE character by the
@@ -80,13 +114,13 @@ local function to_html(node, buffer, indent_width)
         if node.type == "element" then
             local tag = node.tag
             buf:write(indent[depth], "<", tag)
-            for index, name, value, ns in node:attr_iter() do
+            for index, name, val, ns in node:attr_iter() do
                 if ns == "xmlns" and name == "xmlns" then
                     ns = nil
                 end
                 buf:write(" ", ns and ns..":" or "", name)
-                if value ~= "" then
-                    buf:write('="', escape_attr(value), '"')
+                if not boolattr[name] or not (val == "" or val == name) then
+                    buf:write('="', escape_attr(val), '"')
                 end
             end
             buf:write(">")
