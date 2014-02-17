@@ -120,7 +120,7 @@ local function to_html(node, buffer, indent_width)
             buf:write(indent[depth], "<!--", node.text, "-->\n")
         elseif node.type == "document" then
             if node.has_doctype == true then
-                buf:write("<!doctype ", node.name, ">\n")
+                buf:write("<!DOCTYPE ", node.name, ">\n")
             end
             for i = 1, #node do
                 serialize(node[i], depth)
