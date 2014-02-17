@@ -5,8 +5,6 @@ local Indent = require "gumbo.indent"
 -- * Conform to the spec for HTML fragment serialization:
 --  * Include attribute namespace prefixes
 
--- Set of void elements
--- whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
 local void = {
     area = true,
     base = true,
@@ -85,28 +83,27 @@ local function to_html(node, buffer, indent_width)
             end
             buf:write(">")
             local length = #node
-            if length == 0 then
-                if not void[tag] then
-                    buf:write("</", tag, ">")
-                end
+            if void[tag] then
+                buf:write("\n")
+            elseif length == 0 then
+                buf:write("</", tag, ">\n")
             elseif tag == "script" or tag == "style" then -- Raw text node
                 assert(length == 1 and node[1].type == "text")
                 buf:write("\n")
                 buf:write(wrap(node[1].text, indent[depth+1]))
-                buf:write(indent[depth], "</", tag, ">")
+                buf:write(indent[depth], "</", tag, ">\n")
             elseif length == 1 and node[1].type == "text"
                    and #node.attr == 0 and #node[1].text <= 40
             then
                 buf:write(escape_text(node[1].text))
-                buf:write("</", tag, ">")
+                buf:write("</", tag, ">\n")
             else
                 buf:write("\n")
                 for i = 1, length do
                     serialize(node[i], depth + 1)
                 end
-                buf:write(indent[depth], "</", tag, ">")
+                buf:write(indent[depth], "</", tag, ">\n")
             end
-            buf:write("\n")
         elseif node.type == "text" then
             buf:write(wrap(escape_text(node.text), indent[depth]))
         elseif node.type == "comment" then
