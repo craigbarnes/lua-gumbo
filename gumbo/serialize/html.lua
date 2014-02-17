@@ -27,6 +27,16 @@ local void = {
     wbr = true
 }
 
+local raw = {
+    style = true,
+    script = true,
+    xmp = true,
+    iframe = true,
+    noembed = true,
+    noframes = true,
+    plaintext = true
+}
+
 -- Escaping a string consists of running the following steps:
 -- 1. Replace any occurrence of the "&" character by the string "&amp;".
 -- 2. Replace any occurrences of the U+00A0 NO-BREAK SPACE character by the
@@ -70,7 +80,7 @@ end
 local function to_html(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local indent = Indent(indent_width)
-    local function serialize(node, depth)
+    local function serialize(node, depth, parent_tag)
         if node.type == "element" then
             local tag = node.tag
             buf:write(indent[depth], "<", tag)
@@ -87,25 +97,25 @@ local function to_html(node, buffer, indent_width)
                 buf:write("\n")
             elseif length == 0 then
                 buf:write("</", tag, ">\n")
-            elseif tag == "script" or tag == "style" then -- Raw text node
-                assert(length == 1 and node[1].type == "text")
-                buf:write("\n")
-                buf:write(wrap(node[1].text, indent[depth+1]))
-                buf:write(indent[depth], "</", tag, ">\n")
             elseif length == 1 and node[1].type == "text"
                    and #node.attr == 0 and #node[1].text <= 40
             then
-                buf:write(escape_text(node[1].text))
+                local text = node[1].text
+                buf:write(raw[node.tag] and text or escape_text(text))
                 buf:write("</", tag, ">\n")
             else
                 buf:write("\n")
                 for i = 1, length do
-                    serialize(node[i], depth + 1)
+                    serialize(node[i], depth + 1, node.tag)
                 end
                 buf:write(indent[depth], "</", tag, ">\n")
             end
         elseif node.type == "text" then
-            buf:write(wrap(escape_text(node.text), indent[depth]))
+            if raw[parent_tag] then
+                buf:write(node.text)
+            else
+                buf:write(wrap(escape_text(node.text), indent[depth]))
+            end
         elseif node.type == "comment" then
             buf:write(indent[depth], "<!--", node.text, "-->\n")
         elseif node.type == "document" then
