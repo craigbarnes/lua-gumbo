@@ -11,7 +11,7 @@ INSTALLX      = install -p -m 0755
 RM            = rm -f
 PKGCONFIG     = pkg-config --silence-errors
 TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
-BENCHFILE     = 2MiB.html
+BENCHFILE     = test/2MiB.html
 
 MODULES_C     = gumbo.c gumbo/buffer.c
 MODULES_O     = $(MODULES_C:.c=.o)
@@ -57,13 +57,16 @@ gumbo/buffer.o: CFLAGS += $(LUA_CFLAGS)
 README.html: README.md
 	markdown -f +toc -T -o $@ $<
 
-1MiB.html: test/4KiB.html
+test/1MiB.html: test/4KiB.html
 	@$(RM) $@
 	@for i in `seq 1 256`; do cat $< >> $@; done
 
-%MiB.html: 1MiB.html
+test/%MiB.html: test/1MiB.html
 	@$(RM) $@
 	@for i in `seq 1 $*`; do cat $< >> $@; done
+
+# Some static instances of the above pattern rule, just for autocompletion
+test/2MiB.html test/3MiB.html test/4MiB.html test/5MiB.html:
 
 tags: $(MODULES_C) $(GUMBO_HEADER) Makefile
 	ctags --c-kinds=+p $^
@@ -112,7 +115,7 @@ bench_%: all test/serialize.lua $(BENCHFILE)
 	$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz *MiB.html
+	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz test/*MiB.html
 
 
 ifeq "$(shell uname)" "Darwin"
@@ -121,5 +124,4 @@ endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind
 .PHONY: check-all check-compat dist clean force
-.SECONDARY: 1MiB.html 2MiB.html 3MiB.html 4MiB.html 5MiB.html
 .DELETE_ON_ERROR:

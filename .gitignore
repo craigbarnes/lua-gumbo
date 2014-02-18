@@ -3,4 +3,4 @@
 *.tar.gz
 tags
 README.html
-*MiB.html
+test/*MiB.html
