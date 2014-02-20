@@ -8,11 +8,8 @@ local serialize = require "gumbo.serialize.html5lib"
 local Buffer = require "gumbo.buffer"
 local verbose = os.getenv "VERBOSE"
 local results = {passed = 0, failed = 0, skipped = 0}
+local hrule = string.rep("=", 76)
 local start = os.clock()
-
-local function printf(...)
-    io.stdout:write(string.format(...))
-end
 
 local function parse_testdata(filename)
     local file = assert(io.open(filename))
@@ -69,12 +66,14 @@ for i = 1, #arg do
             else
                 failed = failed + 1
                 if verbose then
-                    printf("%s\n", string.rep("=", 76))
-                    printf("%s:%d: Test %d failed\n", filename, test.line, i)
-                    printf("%s\n\n", string.rep("=", 76))
-                    printf("Input:\n%s\n\n", test.data)
-                    printf("Expected:\n%s\n", test.document)
-                    printf("Received:\n%s\n", serialized)
+                    io.write(
+                        hrule, "\n",
+                        filename, ":", test.line, ": Test ", i, " failed\n",
+                        hrule, "\n\n",
+                        "Input:\n", test.data, "\n\n",
+                        "Expected:\n", test.document, "\n",
+                        "Received:\n", serialized, "\n"
+                    )
                 end
             end
         end
@@ -94,17 +93,13 @@ end
 
 results.total = results.passed + results.failed + results.skipped
 
-for i = 1, #results do
-    local r = results[i]
-    if r.failed > 0 then
-        printf("%s: %d of %d tests failed\n", r.basename, r.failed, r.total)
-    end
-end
-
-printf("\nRan %d tests in %.2fs\n\n", results.total, os.clock() - start)
-printf("Passed: %d\n", results.passed)
-printf("Failed: %d\n", results.failed)
-printf("Skipped: %d\n\n", results.skipped)
+io.write(
+    "\nRan ", results.total, " tests in ",
+    string.format("%.2fs", os.clock() - start), "\n\n",
+    "Passed: ", results.passed, "\n",
+    "Failed: ", results.failed, "\n",
+    "Skipped: ", results.skipped, "\n\n"
+)
 
 if results.failed > 0 then
     if not verbose then
