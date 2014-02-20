@@ -18,13 +18,14 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
 
 #if LUA_VERSION_NUM < 502
 # define luaL_newlib(L, l) (lua_newtable(L), luaL_register(L, NULL, l))
-# define luaL_setfuncs(L, l, nup) luaL_register(L, NULL, l) // assert(nup==0)
+# define luaL_setfuncs(L, l, nup) (assert(nup == 0), luaL_register(L, NULL, l))
 #endif
 
 static const struct {
@@ -41,6 +42,25 @@ static const struct {
     {GUMBO_INSERTION_ADOPTION_AGENCY_CLONED, "adoption_agency_cloned"},
     {GUMBO_INSERTION_ADOPTION_AGENCY_MOVED, "adoption_agency_moved"},
     {GUMBO_INSERTION_FOSTER_PARENTED, "foster_parented"}
+};
+
+static const char attrnsmap[5][6] = {
+    [GUMBO_ATTR_NAMESPACE_NONE] = "", // Never accessed, only here for clarity
+    [GUMBO_ATTR_NAMESPACE_XLINK] = "xlink",
+    [GUMBO_ATTR_NAMESPACE_XML] = "xml",
+    [GUMBO_ATTR_NAMESPACE_XMLNS] = "xmlns"
+};
+
+static const char tagnsmap[4][5] = {
+    [GUMBO_NAMESPACE_HTML] = "html",
+    [GUMBO_NAMESPACE_SVG] = "svg",
+    [GUMBO_NAMESPACE_MATHML] = "math"
+};
+
+static const char quirksmap[4][15] = {
+    [GUMBO_DOCTYPE_NO_QUIRKS] = "no-quirks",
+    [GUMBO_DOCTYPE_QUIRKS] = "quirks",
+    [GUMBO_DOCTYPE_LIMITED_QUIRKS] = "limited-quirks"
 };
 
 #define add_literal(L, k, v) ( \
@@ -76,21 +96,8 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             add_integer(L, "line", attr->name_start.line);
             add_integer(L, "column", attr->name_start.column);
             add_integer(L, "offset", attr->name_start.offset);
-            switch (attr->attr_namespace) {
-            case GUMBO_ATTR_NAMESPACE_NONE:
-                break;
-            case GUMBO_ATTR_NAMESPACE_XLINK:
-                add_literal(L, "namespace", "xlink");
-                break;
-            case GUMBO_ATTR_NAMESPACE_XML:
-                add_literal(L, "namespace", "xml");
-                break;
-            case GUMBO_ATTR_NAMESPACE_XMLNS:
-                add_literal(L, "namespace", "xmlns");
-                break;
-            default:
-                luaL_error(L, "Error: invalid attribute namespace");
-            }
+            if (attr->attr_namespace != GUMBO_ATTR_NAMESPACE_NONE)
+                add_string(L, "namespace", attrnsmap[attr->attr_namespace]);
             lua_rawseti(L, -2, i+1);
         }
         lua_setfield(L, -2, "attr");
@@ -138,22 +145,6 @@ static void add_tag(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "tag");
 }
 
-static void add_tag_namespace(lua_State *L, const GumboNamespaceEnum ns) {
-    switch (ns) {
-    case GUMBO_NAMESPACE_HTML:
-        add_literal(L, "tag_namespace", "html");
-        break;
-    case GUMBO_NAMESPACE_MATHML:
-        add_literal(L, "tag_namespace", "math");
-        break;
-    case GUMBO_NAMESPACE_SVG:
-        add_literal(L, "tag_namespace", "svg");
-        break;
-    default:
-        luaL_error(L, "Error: invalid tag namespace");
-    }
-}
-
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
     static const unsigned int nflags = sizeof(flag_map) / sizeof(flag_map[0]);
     if (flags != GUMBO_INSERTION_NORMAL) {
@@ -173,24 +164,6 @@ static void create_text_node(lua_State *L, const GumboText *text) {
     add_integer(L, "line", text->start_pos.line);
     add_integer(L, "column", text->start_pos.column);
     add_integer(L, "offset", text->start_pos.offset);
-}
-
-static void add_quirks_mode(lua_State *L, const GumboQuirksModeEnum qm) {
-    switch (qm) {
-    case GUMBO_DOCTYPE_NO_QUIRKS:
-        lua_pushliteral(L, "no-quirks");
-        break;
-    case GUMBO_DOCTYPE_QUIRKS:
-        lua_pushliteral(L, "quirks");
-        break;
-    case GUMBO_DOCTYPE_LIMITED_QUIRKS:
-        lua_pushliteral(L, "limited-quirks");
-        break;
-    default:
-        luaL_error(L, "Error: invalid quirks mode");
-        return;
-    }
-    lua_setfield(L, -2, "quirks_mode");
 }
 
 // Forward declaration, to allow mutual recursion
@@ -215,7 +188,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
         add_string(L, "public_identifier", document->public_identifier);
         add_string(L, "system_identifier", document->system_identifier);
         add_boolean(L, "has_doctype", document->has_doctype);
-        add_quirks_mode(L, document->doc_type_quirks_mode);
+        add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
         add_children(L, &document->children);
         return;
     }
@@ -226,7 +199,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
         lua_setmetatable(L, -2);
         add_literal(L, "type", "element");
         add_tag(L, element);
-        add_tag_namespace(L, element->tag_namespace);
+        add_string(L, "tag_namespace", tagnsmap[element->tag_namespace]);
         add_integer(L, "line", element->start_pos.line);
         add_integer(L, "column", element->start_pos.column);
         add_integer(L, "offset", element->start_pos.offset);
