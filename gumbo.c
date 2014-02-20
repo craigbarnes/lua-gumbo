@@ -44,20 +44,20 @@ static const struct {
     {GUMBO_INSERTION_FOSTER_PARENTED, "foster_parented"}
 };
 
-static const char attrnsmap[5][6] = {
+static const char attrnsmap[][6] = {
     [GUMBO_ATTR_NAMESPACE_NONE] = "", // Never accessed, only here for clarity
     [GUMBO_ATTR_NAMESPACE_XLINK] = "xlink",
     [GUMBO_ATTR_NAMESPACE_XML] = "xml",
     [GUMBO_ATTR_NAMESPACE_XMLNS] = "xmlns"
 };
 
-static const char tagnsmap[4][5] = {
+static const char tagnsmap[][5] = {
     [GUMBO_NAMESPACE_HTML] = "html",
     [GUMBO_NAMESPACE_SVG] = "svg",
     [GUMBO_NAMESPACE_MATHML] = "math"
 };
 
-static const char quirksmap[4][15] = {
+static const char quirksmap[][15] = {
     [GUMBO_DOCTYPE_NO_QUIRKS] = "no-quirks",
     [GUMBO_DOCTYPE_QUIRKS] = "quirks",
     [GUMBO_DOCTYPE_LIMITED_QUIRKS] = "limited-quirks"
