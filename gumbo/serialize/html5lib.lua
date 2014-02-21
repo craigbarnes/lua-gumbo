@@ -10,10 +10,25 @@ return function(node, buffer, indent_width)
             local tagns = (node.tag_namespace == "html") and "" or
                           (node.tag_namespace .. " ")
             buf:write("| ", i1, "<", tagns, node.tag, ">\n")
-            table.sort(node.attr, function(a, b) return a.name < b.name end)
-            for _, n, v, ns in node:attr_iter() do
-                buf:write("| ", i2, ns and ns.." " or "", n, '="', v, '"\n')
+
+            -- The html5lib tree format expects attributes to be sorted by
+            -- name, in lexicographic order. Instead of sorting in-place or
+            -- copying the entire table, we build a lightweight, sorted index.
+            local attr = node.attr
+            local attr_length = #attr
+            local attr_index = {}
+            for i = 1, attr_length do
+                attr_index[i] = i
             end
+            table.sort(attr_index, function(a, b)
+                return attr[a].name < attr[b].name
+            end)
+            for i = 1, attr_length do
+                local a = attr[attr_index[i]]
+                local ns = a.namespace and (a.namespace .. " ") or ""
+                buf:write("| ", i2, ns, a.name, '="', a.value, '"\n')
+            end
+
             for i = 1, #node do
                 if node[i].type == "text" and node[i+1]
                    and node[i+1].type == "text"
