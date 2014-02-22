@@ -92,7 +92,7 @@ io.write(
 
 if total_failed > 0 then
     if not verbose then
-        print("Re-run with VERBOSE=1 for a full report")
+        print "Re-run with VERBOSE=1 for a full report"
     end
     os.exit(1)
 end
