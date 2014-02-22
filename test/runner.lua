@@ -12,7 +12,7 @@ local hrule = string.rep("=", 76)
 local start = os.clock()
 
 local function parse_testdata(filename)
-    local file = assert(io.open(filename))
+    local file = assert(io.open(filename, "rb"))
     local text = assert(file:read("*a"))
     file:close()
     local tests = {[0] = {}}
