@@ -79,12 +79,12 @@ and contains all other nodes as descendants.
 * `public_identifier`: The doctype [public identifier].
 * `system_identifier`: The doctype [system identifier].
 * `quirks_mode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
-* `root`: A reference to the child `<html>` `Element`.
+* `root`: A reference to the child `<html>` element.
 * `[1..n]`: Child nodes.
 
 ### Element
 
-`Element` nodes are represented as tables, with child nodes stored in
+Element nodes are represented as tables, with child nodes stored in
 numeric indices.
 
 **Fields:**
