@@ -1,6 +1,7 @@
 *.o
 *.so
 *.tar.gz
+*.rockspec
 tags
 README.html
 test/*MiB.html

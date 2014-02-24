@@ -76,6 +76,9 @@ dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
 lua-gumbo-%.tar.gz: force
 	git archive --prefix=lua-gumbo-$*/ -o $@ $*
 
+gumbo-%-1.rockspec: rockspec.in
+	sed 's/%VERSION%/$*/' $< > $@
+
 test/html5lib-tests/%:
 	git submodule init
 	git submodule update
@@ -115,7 +118,8 @@ bench_%: all test/serialize.lua $(BENCHFILE)
 	$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) $(MODULES_SO) $(MODULES_O) lua-gumbo-*.tar.gz test/*MiB.html
+	$(RM) $(MODULES_SO) $(MODULES_O)
+	$(RM) lua-gumbo-*.tar.gz gumbo-*.rockspec test/*MiB.html
 
 
 ifeq "$(shell uname)" "Darwin"

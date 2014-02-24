@@ -1,0 +1,38 @@
+package = "gumbo"
+version = "%VERSION%-1"
+supported_platforms = {"unix"}
+
+description = {
+    summary = "Lua bindings for the Gumbo HTML5 parsing library",
+    homepage = "https://github.com/craigbarnes/lua-gumbo",
+    license = "ISC"
+}
+
+source = {
+    url = "git://github.com/craigbarnes/lua-gumbo.git",
+    tag = "%VERSION%"
+}
+
+dependencies = {
+    "lua >= 5.1"
+}
+
+external_dependencies = {
+    GUMBO = {
+        header = "gumbo.h"
+    }
+}
+
+build = {
+    -- Could use "builtin" type, if there were a reasonable way to enable C99
+    type = "make",
+    build_variables = {
+        CFLAGS = "$(CFLAGS) -std=c99",
+        LUA_CFLAGS = "-I$(LUA_INCDIR)",
+        LDFLAGS = "$(LIBFLAG)"
+    },
+    install_variables = {
+        LUA_CMOD_DIR = "$(LIBDIR)",
+        LUA_LMOD_DIR = "$(LUADIR)"
+    }
+}
