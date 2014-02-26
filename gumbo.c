@@ -109,11 +109,7 @@ static char *strnlower(const char *string, const size_t length) {
     if (!lower) return NULL;
     for (size_t i = 0; i < length; i++) {
         const char c = string[i];
-        if (c <= 'Z' && c >= 'A') {
-            lower[i] = c + 32;
-        } else {
-            lower[i] = c;
-        }
+        lower[i] = (c <= 'Z' && c >= 'A') ? c + 32 : c;
     }
     lower[length] = '\0';
     return lower;
