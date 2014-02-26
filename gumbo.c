@@ -17,7 +17,6 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <assert.h>
 #include <lua.h>
 #include <lauxlib.h>
@@ -210,7 +209,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
         add_literal(L, "type", "whitespace");
         return;
     default:
-        luaL_error(L, "Error: invalid node type");
+        assert(false && "invalid node type");
     }
 }
 
