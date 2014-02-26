@@ -104,17 +104,6 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
     }
 }
 
-static char *strnlower(const char *string, const size_t length) {
-    char *lower = malloc(length + 1);
-    if (!lower) return NULL;
-    for (size_t i = 0; i < length; i++) {
-        const char c = string[i];
-        lower[i] = (c <= 'Z' && c >= 'A') ? c + 32 : c;
-    }
-    lower[length] = '\0';
-    return lower;
-}
-
 static void add_tag(lua_State *L, const GumboElement *element) {
     if (element->tag_namespace == GUMBO_NAMESPACE_SVG) {
         GumboStringPiece original_tag = element->original_tag;
@@ -128,13 +117,13 @@ static void add_tag(lua_State *L, const GumboElement *element) {
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
-        char *lower = strnlower(original_tag.data, original_tag.length);
-        if (lower) {
-            lua_pushlstring(L, lower, original_tag.length);
-            free(lower);
-        } else {
-            luaL_error(L, "Error: out of memory");
+        luaL_Buffer b;
+        luaL_buffinit(L, &b);
+        for (size_t i = 0; i < original_tag.length; i++) {
+            const char c = original_tag.data[i];
+            luaL_addchar(&b, (c <= 'Z' && c >= 'A') ? c + 32 : c);
         }
+        luaL_pushresult(&b);
     } else {
         lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     }
