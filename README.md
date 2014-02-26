@@ -100,7 +100,7 @@ numeric indices.
     * `line`
     * `column`
     * `offset`
-  * `["name"]`: A shortcut for `attr[i].value`, where `attr[i].name == "name"`.
+  * `["xyz"]`: The `value` of the attribute with `name` `"xyz"`.
 * `parse_flags`
 * `line`
 * `column`
