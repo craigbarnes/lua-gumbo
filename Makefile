@@ -25,18 +25,8 @@ GUMBO_LDFLAGS = $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
 GUMBO_INCDIR  = $(shell $(PKGCONFIG) --variable=includedir gumbo)
 GUMBO_HEADER  = $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
-# This include uses pkg-config to find the required variables for Lua
+# This uses pkg-config to set LUA_CFLAGS, LUA_CMOD_DIR and LUA_LMOD_DIR
 include findlua.mk
-
-# If you prefer not to use pkg-config, the following variables can be
-# specified manually (and the line above removed).
-#
-# Required for "make":
-#  LUA_CFLAGS    = -I/usr/include/lua5.2
-#
-# Required for "make install":
-#  LUA_CMOD_DIR  = /usr/lib/lua/5.2
-#  LUA_LMOD_DIR  = /usr/share/lua/5.2
 
 # Ensure the tests only load modules from within the current directory
 export LUA_PATH = ./?.lua
