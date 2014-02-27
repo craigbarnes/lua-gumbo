@@ -86,12 +86,13 @@ static int buffer_new(lua_State *L) {
     if (capacity < 1)
         capacity = 4096;
     Buffer *buffer = (Buffer *)lua_newuserdata(L, sizeof(Buffer));
-    luaL_getmetatable(L, "gumbo.buffer");
-    lua_setmetatable(L, -2);
     buffer->length = 0;
-    buffer->capacity = capacity;
+    buffer->capacity = 0;
     buffer->data = malloc(capacity);
     if (buffer->data) {
+        buffer->capacity = capacity;
+        luaL_getmetatable(L, "gumbo.buffer");
+        lua_setmetatable(L, -2);
         return 1;
     } else {
         return luaL_error(L, "Error: out of memory");
