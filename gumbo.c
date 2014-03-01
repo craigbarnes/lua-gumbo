@@ -39,24 +39,11 @@ static const struct {
     {GUMBO_INSERTION_FOSTER_PARENTED, "foster_parented"}
 };
 
-static const char attrnsmap[][6] = {
-    [GUMBO_ATTR_NAMESPACE_NONE] = "", // Never accessed, only here for clarity
-    [GUMBO_ATTR_NAMESPACE_XLINK] = "xlink",
-    [GUMBO_ATTR_NAMESPACE_XML] = "xml",
-    [GUMBO_ATTR_NAMESPACE_XMLNS] = "xmlns"
-};
+static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
+static const char tagnsmap[][5] = {"html", "svg", "math"};
+static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 
-static const char tagnsmap[][5] = {
-    [GUMBO_NAMESPACE_HTML] = "html",
-    [GUMBO_NAMESPACE_SVG] = "svg",
-    [GUMBO_NAMESPACE_MATHML] = "math"
-};
-
-static const char quirksmap[][15] = {
-    [GUMBO_DOCTYPE_NO_QUIRKS] = "no-quirks",
-    [GUMBO_DOCTYPE_QUIRKS] = "quirks",
-    [GUMBO_DOCTYPE_LIMITED_QUIRKS] = "limited-quirks"
-};
+#define ARRAYLEN(array) (sizeof(array) / sizeof(array[0]))
 
 #define add_literal(L, k, v) ( \
     lua_pushliteral(L, v), \
@@ -84,6 +71,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
         lua_createtable(L, length, length);
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
+            assert(attr->attr_namespace < ARRAYLEN(attrnsmap));
             add_string(L, attr->name, attr->value);
             lua_createtable(L, 0, 6);
             add_string(L, "name", attr->name);
@@ -126,7 +114,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
-    static const unsigned int nflags = sizeof(flag_map) / sizeof(flag_map[0]);
+    static const unsigned int nflags = ARRAYLEN(flag_map);
     if (flags != GUMBO_INSERTION_NORMAL) {
         lua_createtable(L, 0, 1);
         for (unsigned int i = 0; i < nflags; i++) {
@@ -162,6 +150,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
+        assert(document->doc_type_quirks_mode < ARRAYLEN(quirksmap));
         lua_createtable(L, document->children.length, 7);
         add_literal(L, "type", "document");
         add_string(L, "name", document->name);
@@ -174,6 +163,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
+        assert(element->tag_namespace < ARRAYLEN(tagnsmap));
         lua_createtable(L, element->children.length, 7);
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.element");
         lua_setmetatable(L, -2);
