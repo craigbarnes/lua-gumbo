@@ -34,15 +34,17 @@ export LUA_CPATH = ./?.so
 
 all: $(MODULES_SO)
 
-gumbo.so: LDFLAGS += $(GUMBO_LDFLAGS)
-gumbo.o: CFLAGS += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
-gumbo/buffer.o: CFLAGS += $(LUA_CFLAGS)
+gumbo.so: gumbo.o
+	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
 
-%.so: %.o
+gumbo.o: gumbo.c compat.h
+	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
+
+gumbo/buffer.so: gumbo/buffer.o
 	$(CC) $(LDFLAGS) -o $@ $<
 
-%.o: %.c compat.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+gumbo/buffer.o: gumbo/buffer.c compat.h
+	$(CC) $(CFLAGS) $(LUA_CFLAGS) -c -o $@ $<
 
 README.html: README.md
 	markdown -f +toc -T -o $@ $<
