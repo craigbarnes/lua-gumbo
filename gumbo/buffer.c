@@ -20,10 +20,7 @@
 #include <string.h>
 #include <lua.h>
 #include <lauxlib.h>
-
-#if LUA_VERSION_NUM < 502
-# define luaL_setfuncs(L, l, nup) luaL_register(L, NULL, l)
-#endif
+#include "../compat.h"
 
 typedef struct {
     char *data;

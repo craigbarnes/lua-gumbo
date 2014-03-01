@@ -41,7 +41,7 @@ gumbo/buffer.o: CFLAGS += $(LUA_CFLAGS)
 %.so: %.o
 	$(CC) $(LDFLAGS) -o $@ $<
 
-%.o: %.c
+%.o: %.c compat.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 README.html: README.md

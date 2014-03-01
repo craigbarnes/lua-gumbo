@@ -21,11 +21,7 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
-
-#if LUA_VERSION_NUM < 502
-# define luaL_newlib(L, l) (lua_newtable(L), luaL_register(L, NULL, l))
-# define luaL_setfuncs(L, l, nup) (assert(nup == 0), luaL_register(L, NULL, l))
-#endif
+#include "compat.h"
 
 static const struct {
     const unsigned int flag;
