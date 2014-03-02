@@ -167,7 +167,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
         lua_createtable(L, element->children.length, 7);
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.element");
         lua_setmetatable(L, -2);
-        add_literal(L, "type", "element");
         add_tag(L, element);
         add_string(L, "tag_namespace", tagnsmap[element->tag_namespace]);
         add_integer(L, "line", element->start_pos.line);
@@ -292,6 +291,7 @@ int luaopen_gumbo(lua_State *L) {
         lua_setfield(L, -2, "__index");
         lua_newtable(L);
         lua_setfield(L, -2, "attr");
+        add_literal(L, "type", "element");
         luaL_setfuncs(L, Element, 0);
     }
     luaL_newlib(L, lib);
