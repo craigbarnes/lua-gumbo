@@ -13,5 +13,5 @@ function Buffer:__tostring()
 end
 
 return function()
-    return setmetatable({n = 0}, Buffer)
+    return setmetatable({}, Buffer)
 end
