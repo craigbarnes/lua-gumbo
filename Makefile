@@ -13,11 +13,8 @@ PKGCONFIG     = pkg-config --silence-errors
 TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 BENCHFILE     = test/2MiB.html
 
-MODULES_C     = gumbo.c gumbo/buffer.c
-MODULES_O     = $(MODULES_C:.c=.o)
-MODULES_SO    = $(MODULES_O:.o=.so)
-MODULES_L     = gumbo/indent.lua
-MODULES_S     = gumbo/serialize/table.lua gumbo/serialize/html.lua \
+UTILITIES     = gumbo/buffer.lua gumbo/indent.lua
+SERIALIZERS   = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
 GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags gumbo)
@@ -32,19 +29,13 @@ include findlua.mk
 export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
-all: $(MODULES_SO)
+all: gumbo.so
 
 gumbo.so: gumbo.o
 	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
 
 gumbo.o: gumbo.c compat.h
 	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
-
-gumbo/buffer.so: gumbo/buffer.o
-	$(CC) $(LDFLAGS) -o $@ $<
-
-gumbo/buffer.o: gumbo/buffer.c compat.h
-	$(CC) $(CFLAGS) $(LUA_CFLAGS) -c -o $@ $<
 
 README.html: README.md
 	markdown -f +toc -T -o $@ $<
@@ -60,7 +51,7 @@ test/%MiB.html: test/1MiB.html
 # Some static instances of the above pattern rule, just for autocompletion
 test/2MiB.html test/3MiB.html test/4MiB.html test/5MiB.html:
 
-tags: $(MODULES_C) $(GUMBO_HEADER) Makefile
+tags: gumbo.c $(GUMBO_HEADER) Makefile
 	ctags --c-kinds=+p $^
 
 dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
@@ -76,15 +67,13 @@ test/html5lib-tests/%:
 	git submodule update
 
 install: all
-	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
+	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
 	$(INSTALLX) gumbo.so '$(DESTDIR)$(LUA_CMOD_DIR)/'
-	$(INSTALLX) gumbo/buffer.so '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
-	$(INSTALL) $(MODULES_L) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
-	$(INSTALL) $(MODULES_S) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
+	$(INSTALL) $(UTILITIES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL) $(SERIALIZERS) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall:
-	$(RM) -r '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo'
 	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo.so'
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
@@ -110,7 +99,7 @@ bench_%: all test/serialize.lua $(BENCHFILE)
 	$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) $(MODULES_SO) $(MODULES_O)
+	$(RM) gumbo.so gumbo.o
 	$(RM) lua-gumbo-*.tar.gz gumbo-*.rockspec test/*MiB.html
 
 
