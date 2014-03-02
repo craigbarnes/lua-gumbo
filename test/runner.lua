@@ -4,8 +4,9 @@
 
 assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
+local util = require "gumbo.util"
+local Buffer = util.Buffer
 local serialize = require "gumbo.serialize.html5lib"
-local Buffer = require "gumbo.buffer"
 local verbose = os.getenv "VERBOSE"
 local total_passed, total_failed, total_skipped = 0, 0, 0
 local hrule = string.rep("=", 76)

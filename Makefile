@@ -13,7 +13,6 @@ PKGCONFIG     = pkg-config --silence-errors
 TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 BENCHFILE     = test/2MiB.html
 
-UTILITIES     = gumbo/buffer.lua gumbo/indent.lua
 SERIALIZERS   = gumbo/serialize/table.lua gumbo/serialize/html.lua \
                 gumbo/serialize/html5lib.lua
 
@@ -70,7 +69,7 @@ install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
 	$(INSTALLX) gumbo.so '$(DESTDIR)$(LUA_CMOD_DIR)/'
-	$(INSTALL) $(UTILITIES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL) gumbo/util.lua '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALL) $(SERIALIZERS) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall:

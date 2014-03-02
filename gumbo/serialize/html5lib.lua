@@ -1,5 +1,6 @@
-local Buffer = require "gumbo.buffer"
-local Indent = require "gumbo.indent"
+local util = require "gumbo.util"
+local Buffer = util.Buffer
+local Indent = util.Indent
 
 return function(node, buffer, indent_width)
     local buf = buffer or Buffer()
