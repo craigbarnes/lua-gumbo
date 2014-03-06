@@ -95,10 +95,12 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
 
 bench: all $(BENCHFILE)
-	$(TIME) $(LUA) -e 'require("gumbo").parse_file("$(BENCHFILE)")'
+	@echo 'Parsing $(BENCHFILE)...'
+	@$(TIME) $(LUA) -e 'require("gumbo").parse_file("$(BENCHFILE)")'
 
 bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
-	$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
+	@echo 'Parsing and serializing $(BENCHFILE) to $*...'
+	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
 	$(RM) gumbo.so gumbo.o
