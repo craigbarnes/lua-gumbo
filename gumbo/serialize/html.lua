@@ -2,74 +2,31 @@ local util = require "gumbo.util"
 local Buffer = util.Buffer
 local Indent = util.Indent
 
-local void = {
-    area = true,
-    base = true,
-    basefont = true,
-    bgsound = true,
-    br = true,
-    col = true,
-    embed = true,
-    frame = true,
-    hr = true,
-    img = true,
-    input = true,
-    keygen = true,
-    link = true,
-    menuitem = true,
-    meta = true,
-    param = true,
-    source = true,
-    track = true,
-    wbr = true
+local function Set(t)
+    local set = {}
+    for i = 1, #t do set[t[i]] = true end
+    return set
+end
+
+local void = Set {
+    "area", "base", "basefont", "bgsound", "br", "col", "embed",
+    "frame", "hr", "img", "input", "keygen", "link", "menuitem", "meta",
+    "param", "source", "track", "wbr"
 }
 
-local raw = {
-    style = true,
-    script = true,
-    xmp = true,
-    iframe = true,
-    noembed = true,
-    noframes = true,
-    plaintext = true
+local raw = Set {
+    "style", "script", "xmp", "iframe", "noembed", "noframes",
+    "plaintext"
 }
 
-local boolattr = {
-    allowfullscreen = true,
-    async = true,
-    autofocus = true,
-    autoplay = true,
-    checked = true,
-    compact = true,
-    controls = true,
-    declare = true,
-    default = true,
-    defer = true,
-    disabled = true,
-    formnovalidate = true,
-    hidden = true,
-    inert = true,
-    ismap = true,
-    itemscope = true,
-    loop = true,
-    multiple = true,
-    multiple = true,
-    muted = true,
-    nohref = true,
-    noresize = true,
-    noshade = true,
-    novalidate = true,
-    nowrap = true,
-    open = true,
-    readonly = true,
-    required = true,
-    reversed = true,
-    scoped = true,
-    seamless = true,
-    selected = true,
-    sortable = true,
-    truespeed = true,
-    typemustmatch = true
+local boolattr = Set {
+    "allowfullscreen", "async", "autofocus", "autoplay", "checked",
+    "compact", "controls", "declare", "default", "defer", "disabled",
+    "formnovalidate", "hidden", "inert", "ismap", "itemscope", "loop",
+    "multiple", "multiple", "muted", "nohref", "noresize", "noshade",
+    "novalidate", "nowrap", "open", "readonly", "required", "reversed",
+    "scoped", "seamless", "selected", "sortable", "truespeed",
+    "typemustmatch"
 }
 
 -- Escaping a string consists of running the following steps:
