@@ -11,6 +11,8 @@ INSTALLX      = install -p -m 0755
 RM            = rm -f
 PKGCONFIG     = pkg-config --silence-errors
 TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
+TOHTML        = $(LUA) test/serialize.lua html
+TOTABLE       = $(LUA) test/serialize.lua table
 BENCHFILE     = test/2MiB.html
 
 SERIALIZERS   = gumbo/serialize/table.lua gumbo/serialize/html.lua \
@@ -77,7 +79,9 @@ uninstall:
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
 check: all
-	$(LUA) test/serialize.lua table test/t1.html | diff -u2 test/t1.table -
+	$(TOTABLE) test/t1.html | diff -u2 test/t1.table -
+	$(TOHTML) test/t1.html | diff -u2 test/t1.out.html -
+	$(TOHTML) test/t1.html | $(TOHTML) | diff -u2 test/t1.out.html -
 	$(LUA) test/misc.lua
 
 check-html5lib: all | test/html5lib-tests/tree-construction

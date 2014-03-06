@@ -58,6 +58,7 @@ local function wrap(text, indent)
     local limit = 78
     local indent_width = #indent
     local pos = 1 - indent_width
+    text = text:gsub("^%s*(.-)%s*$", "%1")
     local function reflow(start, word, stop)
         if stop - pos > limit then
             pos = start - indent_width
