@@ -94,7 +94,10 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=clang
 	$(MAKE) -sB check LUA=lua CC=tcc CFLAGS=-Wall
 
-bench_%: all test/serialize.lua $(BENCHFILE)
+bench: all $(BENCHFILE)
+	$(TIME) $(LUA) -e 'require("gumbo").parse_file("$(BENCHFILE)")'
+
+bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
 	$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
@@ -107,5 +110,5 @@ ifeq "$(shell uname)" "Darwin"
 endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind
-.PHONY: check-all check-compat dist clean force
+.PHONY: check-all check-compat dist bench bench-html bench-table clean force
 .DELETE_ON_ERROR:
