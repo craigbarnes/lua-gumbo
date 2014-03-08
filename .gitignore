@@ -1,7 +1,10 @@
-*.o
-*.so
-*.tar.gz
-*.rockspec
+gumbo.so
+gumbo.o
+gumbo.lo
+libluagumbo.la
+.libs/
+lua-gumbo-*.tar.gz
+gumbo-*.rockspec
 tags
 README.html
 test/*MiB.html

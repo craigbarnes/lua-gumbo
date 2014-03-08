@@ -9,6 +9,9 @@ MKDIR         = mkdir -p
 INSTALL       = install -p -m 0644
 INSTALLX      = install -p -m 0755
 RM            = rm -f
+LIBTOOL       = libtool --tag=CC --silent
+LTLINK        = $(LIBTOOL) --mode=link
+LTCOMPILE     = $(LIBTOOL) --mode=compile
 PKGCONFIG     = pkg-config --silence-errors
 TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 TOHTML        = $(LUA) test/serialize.lua html
@@ -32,11 +35,24 @@ export LUA_CPATH = ./?.so
 
 all: gumbo.so
 
+ifndef USE_LIBTOOL
 gumbo.so: gumbo.o
 	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
+else
+gumbo.so: .libs/libluagumbo.so.0.0.0
+	cp $< $@
+endif
 
 gumbo.o: gumbo.c compat.h
 	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
+
+.libs/libluagumbo.so.0.0.0: libluagumbo.la
+
+libluagumbo.la: gumbo.lo
+	$(LTLINK) $(CC) $(GUMBO_LDFLAGS) -rpath $(LUA_CMOD_DIR) -o $@ $<
+
+gumbo.lo: gumbo.c compat.h
+	$(LTCOMPILE) $(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c $<
 
 README.html: README.md
 	markdown -f +toc -T -o $@ $<
@@ -107,8 +123,9 @@ bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) gumbo.so gumbo.o
+	$(RM) gumbo.so gumbo.o gumbo.lo libluagumbo.la
 	$(RM) lua-gumbo-*.tar.gz gumbo-*.rockspec test/*MiB.html
+	$(RM) -r .libs
 
 
 ifeq "$(shell uname)" "Darwin"
