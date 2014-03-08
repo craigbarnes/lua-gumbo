@@ -1,0 +1,17 @@
+language: c
+
+install:
+    - sudo apt-get install pkg-config lua5.2 liblua5.2-dev
+    - git clone git://github.com/google/gumbo-parser.git
+    - cd gumbo-parser
+    - sh autogen.sh
+    - ./configure --prefix=/usr
+    - make
+    - sudo make install
+    - cd ..
+    - sudo ldconfig
+
+script: make check USE_LIBTOOL=1
+
+notifications:
+    email: false
