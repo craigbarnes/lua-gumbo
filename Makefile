@@ -73,7 +73,7 @@ tags: gumbo.c $(GUMBO_HEADER) Makefile
 
 dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
 
-lua-gumbo-%.tar.gz: force
+lua-gumbo-%.tar.gz lua-gumbo-%.zip: force
 	git archive --prefix=lua-gumbo-$*/ -o $@ $*
 
 gumbo-%-1.rockspec: rockspec.in
@@ -123,8 +123,8 @@ bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) gumbo.so gumbo.o gumbo.lo libluagumbo.la
-	$(RM) lua-gumbo-*.tar.gz gumbo-*.rockspec test/*MiB.html
+	$(RM) gumbo.so gumbo.o gumbo.lo libluagumbo.la test/*MiB.html
+	$(RM) lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
 	$(RM) -r .libs
 
 

@@ -4,6 +4,7 @@ gumbo.lo
 libluagumbo.la
 .libs/
 lua-gumbo-*.tar.gz
+lua-gumbo-*.zip
 gumbo-*.rockspec
 tags
 README.html
