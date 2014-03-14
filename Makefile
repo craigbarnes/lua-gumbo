@@ -3,7 +3,6 @@ REQCFLAGS     = -std=c99 -pedantic -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings \
                 -Wcast-qual -Wshadow
 CFLAGS       += $(REQCFLAGS)
-LDFLAGS       = -shared
 LUA           = lua
 MKDIR         = mkdir -p
 INSTALL       = install -p -m 0644
@@ -133,10 +132,6 @@ clean:
 	$(RM) lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
 	$(RM) -r .libs
 
-
-ifeq "$(shell uname)" "Darwin"
-  LDFLAGS = -bundle -undefined dynamic_lookup
-endif
 
 .PHONY: all install uninstall check check-html5lib check-valgrind githooks
 .PHONY: check-all check-compat dist bench bench-html bench-table clean force

@@ -1,3 +1,9 @@
+ifeq "$(shell uname)" "Darwin"
+  LDFLAGS = -bundle -undefined dynamic_lookup
+else
+  LDFLAGS = -shared
+endif
+
 PKGCONFIG    ?= pkg-config --silence-errors
 
 # The naming of Lua pkg-config files across distributions is a mess:
