@@ -1,3 +1,2 @@
 .git* export-ignore
 test/html5lib-tests/ export-ignore
-.travis.yml export-ignore

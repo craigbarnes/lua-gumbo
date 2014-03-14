@@ -71,6 +71,12 @@ test/2MiB.html test/3MiB.html test/4MiB.html test/5MiB.html:
 tags: gumbo.c $(GUMBO_HEADER) Makefile
 	ctags --c-kinds=+p $^
 
+githooks: .git/hooks/pre-commit
+
+.git/hooks/pre-commit: Makefile
+	printf '#!/bin/sh\n\nmake -s check || exit 1' > $@
+	chmod +x $@
+
 dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
 
 lua-gumbo-%.tar.gz lua-gumbo-%.zip: force
@@ -132,6 +138,6 @@ ifeq "$(shell uname)" "Darwin"
   LDFLAGS = -bundle -undefined dynamic_lookup
 endif
 
-.PHONY: all install uninstall check check-html5lib check-valgrind
+.PHONY: all install uninstall check check-html5lib check-valgrind githooks
 .PHONY: check-all check-compat dist bench bench-html bench-table clean force
 .DELETE_ON_ERROR:
