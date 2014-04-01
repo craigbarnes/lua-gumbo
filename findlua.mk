@@ -49,7 +49,7 @@ ifndef USE_LIBTOOL
 	$(CC) $(LDFLAGS) $(LDLIBS) -o $@ $<
 else
 %.so: .libs/%.so
-	ln -sf .libs/$*.so $@
+	ln -sf $< $@
 endif
 
 .libs/%.so: %.la
