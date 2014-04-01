@@ -1,10 +1,13 @@
+CC            = gcc
+LDFLAGS       = -shared
+LIBTOOL       = libtool --tag=CC --silent
+LTLINK        = $(LIBTOOL) --mode=link
+LTCOMPILE     = $(LIBTOOL) --mode=compile
+PKGCONFIG    ?= pkg-config --silence-errors
+
 ifeq "$(shell uname)" "Darwin"
   LDFLAGS = -bundle -undefined dynamic_lookup
-else
-  LDFLAGS = -shared
 endif
-
-PKGCONFIG    ?= pkg-config --silence-errors
 
 # The naming of Lua pkg-config files across distributions is a mess:
 # - Fedora and Arch use lua.pc
@@ -39,3 +42,25 @@ LUA_LMOD_DIR  = $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
 
 LUA_CMOD_DIR  = $(strip $(if $(LUA_PC_CMOD), $(LUA_PC_CMOD), \
                 $(LUA_LIBDIR)/lua/$(LUA_VERSION)))
+
+
+ifndef USE_LIBTOOL
+%.so: %.o
+	$(CC) $(LDFLAGS) $(LDLIBS) -o $@ $<
+else
+%.so: .libs/%.so
+	ln -sf .libs/$*.so $@
+endif
+
+.libs/%.so: %.la
+	@touch $@
+
+%.la: %.lo
+	$(LTLINK) $(CC) $(LDLIBS) -module -rpath $(LUA_CMOD_DIR) -o $@ $<
+
+%.lo: %.c
+	$(LTCOMPILE) $(CC) $(CFLAGS) -c $<
+
+
+.DELETE_ON_ERROR:
+.SECONDARY:

@@ -1,7 +1,7 @@
-gumbo.so
-gumbo.o
-gumbo.lo
-libluagumbo.la
+*.so
+*.o
+*.lo
+*.la
 .libs/
 lua-gumbo-*.tar.gz
 lua-gumbo-*.zip

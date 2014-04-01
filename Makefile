@@ -1,4 +1,3 @@
-CC            = gcc
 REQCFLAGS     = -std=c99 -pedantic -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings \
                 -Wcast-qual -Wshadow
@@ -8,50 +7,26 @@ MKDIR         = mkdir -p
 INSTALL       = install -p -m 0644
 INSTALLX      = install -p -m 0755
 RM            = rm -f
-LIBTOOL       = libtool --tag=CC --silent
-LTLINK        = $(LIBTOOL) --mode=link
-LTCOMPILE     = $(LIBTOOL) --mode=compile
 PKGCONFIG     = pkg-config --silence-errors
 TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 TOHTML        = $(LUA) test/serialize.lua html
 TOTABLE       = $(LUA) test/serialize.lua table
 BENCHFILE     = test/2MiB.html
-
-SERIALIZERS   = gumbo/serialize/table.lua gumbo/serialize/html.lua \
-                gumbo/serialize/html5lib.lua
+SERIALIZERS   = $(addprefix gumbo/serialize/, table.lua html.lua html5lib.lua)
 
 GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags gumbo)
-GUMBO_LDFLAGS = $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
+GUMBO_LDLIBS  = $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
 GUMBO_INCDIR  = $(shell $(PKGCONFIG) --variable=includedir gumbo)
 GUMBO_HEADER  = $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
 # This uses pkg-config to set LUA_CFLAGS, LUA_CMOD_DIR and LUA_LMOD_DIR
 include findlua.mk
 
-# Ensure the tests only load modules from within the current directory
-export LUA_PATH = ./?.lua
-export LUA_CPATH = ./?.so
-
 all: gumbo.so
 
-ifndef USE_LIBTOOL
-gumbo.so: gumbo.o
-	$(CC) $(LDFLAGS) $(GUMBO_LDFLAGS) -o $@ $<
-else
-gumbo.so: .libs/libluagumbo.so.0.0.0
-	cp $< $@
-endif
-
-gumbo.o: gumbo.c compat.h
-	$(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c -o $@ $<
-
-.libs/libluagumbo.so.0.0.0: libluagumbo.la
-
-libluagumbo.la: gumbo.lo
-	$(LTLINK) $(CC) $(GUMBO_LDFLAGS) -rpath $(LUA_CMOD_DIR) -o $@ $<
-
-gumbo.lo: gumbo.c compat.h
-	$(LTCOMPILE) $(CC) $(CFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS) -c $<
+gumbo.so gumbo.la: LDLIBS += $(GUMBO_LDLIBS)
+gumbo.o gumbo.lo: CFLAGS += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
+gumbo.o gumbo.lo: gumbo.c compat.h
 
 README.html: README.md
 	markdown -f +toc -T -o $@ $<
@@ -99,6 +74,10 @@ uninstall:
 	$(RM) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo.so'
 	$(RM) -r '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo'
 
+# Ensure the tests only load modules from within the current directory
+export LUA_PATH = ./?.lua
+export LUA_CPATH = ./?.so
+
 check: all
 	$(TOTABLE) test/t1.html | diff -u2 test/t1.table -
 	$(TOHTML) test/t1.html | diff -u2 test/t1.out.html -
@@ -128,7 +107,7 @@ bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) gumbo.so gumbo.o gumbo.lo libluagumbo.la test/*MiB.html
+	$(RM) gumbo.so gumbo.o gumbo.lo gumbo.la test/*MiB.html
 	$(RM) lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
 	$(RM) -r .libs
 
