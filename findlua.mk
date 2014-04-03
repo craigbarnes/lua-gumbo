@@ -1,5 +1,5 @@
 CC            = gcc
-LDFLAGS       = -shared
+LDFLAGS       = -shared -Wl,--no-as-needed
 LIBTOOL       = libtool --tag=CC --silent
 LTLINK        = $(LIBTOOL) --mode=link
 LTCOMPILE     = $(LIBTOOL) --mode=compile
