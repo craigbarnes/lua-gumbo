@@ -102,7 +102,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
         gumbo_tag_from_original_text(&original_tag);
         luaL_Buffer b;
         luaL_buffinit(L, &b);
-        for (size_t i = 0; i < original_tag.length; i++) {
+        for (size_t i = 0, n = original_tag.length; i < n; i++) {
             const char c = original_tag.data[i];
             luaL_addchar(&b, (c <= 'Z' && c >= 'A') ? c + 32 : c);
         }
@@ -134,7 +134,7 @@ static void create_text_node(lua_State *L, const GumboText *text) {
     add_integer(L, "offset", text->start_pos.offset);
 }
 
-// Forward declaration, to allow mutual recursion
+// Forward declaration, to allow mutual recursion with add_children()
 static void push_node(lua_State *L, const GumboNode *node);
 
 static void add_children(lua_State *L, const GumboVector *children) {
