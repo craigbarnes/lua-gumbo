@@ -49,9 +49,10 @@ return function(node, buffer, indent_width)
         elseif node.type == "comment" then
             buf:write("| ", indent[depth], "<!-- ", node.text, " -->\n")
         elseif node.type == "document" then
-            if node.has_doctype == true then
-                buf:write("| <!DOCTYPE ", node.name)
-                local pub, sys = node.public_identifier, node.system_identifier
+            local doctype = node.doctype
+            if doctype then
+                buf:write("| <!DOCTYPE ", doctype.name)
+                local pub, sys = doctype.publicId, doctype.systemId
                 if pub ~= "" or sys ~= "" then
                     buf:write(' "', pub, '" "', sys, '"')
                 end

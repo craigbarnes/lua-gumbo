@@ -151,13 +151,16 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
         assert(document->doc_type_quirks_mode < ARRAYLEN(quirksmap));
-        lua_createtable(L, document->children.length, 7);
+        lua_createtable(L, document->children.length, 4);
         add_literal(L, "type", "document");
-        add_string(L, "name", document->name);
-        add_string(L, "public_identifier", document->public_identifier);
-        add_string(L, "system_identifier", document->system_identifier);
-        add_boolean(L, "has_doctype", document->has_doctype);
         add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
+        if (document->has_doctype) {
+            lua_createtable(L, 0, 3);
+            add_string(L, "name", document->name);
+            add_string(L, "publicId", document->public_identifier);
+            add_string(L, "systemId", document->system_identifier);
+            lua_setfield(L, -2, "doctype");
+        }
         add_children(L, &document->children);
         return;
     }

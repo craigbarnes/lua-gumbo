@@ -110,16 +110,22 @@ local function to_table(node, buffer, indent_width)
             )
         elseif node.type == "document" then
             assert(depth == 0, "document nodes cannot be nested")
-            local i1 = indent[depth+1]
+            local i1, i2 = indent[depth+1], indent[depth+2]
+            local doctype = node.doctype
             buf:write(
                 "{\n",
                 i1, 'type = "document",\n',
-                i1, 'has_doctype = ', tostring(node.has_doctype), ',\n',
-                i1, 'name = "', node.name, '",\n',
-                i1, 'system_identifier = "', node.system_identifier, '",\n',
-                i1, 'public_identifier = "', node.public_identifier, '",\n',
                 i1, 'quirks_mode = "', node.quirks_mode, '",\n'
             )
+            if doctype then
+                buf:write(
+                    i1, 'doctype = {\n',
+                    i2, 'name = "', doctype.name, '",\n',
+                    i2, 'systemId = "', doctype.systemId, '",\n',
+                    i2, 'publicId = "', doctype.publicId, '"\n',
+                    i1, '},\n'
+                )
+            end
             for i = 1, #node do
                 serialize(node[i], depth + 1, i, i == #node)
             end

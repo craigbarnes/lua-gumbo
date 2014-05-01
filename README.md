@@ -74,10 +74,10 @@ and contains all other nodes as descendants.
 **Fields:**
 
 * `type`: Always has a value of `"document"` for document nodes.
-* `has_doctype`: Whether or not a [doctype declaration] was found (boolean).
-* `name`: The doctype [root element] name.
-* `public_identifier`: The doctype [public identifier].
-* `system_identifier`: The doctype [system identifier].
+* `doctype`: A table of fields parsed from the [doctype declaration] or `nil`:
+  * `name`: The [root element] name.
+  * `publicId`: The [public identifier] or `""`.
+  * `systemId`: The [system identifier] or `""`.
 * `quirks_mode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
 * `root`: A reference to the child `<html>` element.
 * `[1..n]`: Child nodes.

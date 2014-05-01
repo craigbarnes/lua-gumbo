@@ -109,8 +109,8 @@ local function to_html(node, buffer, indent_width)
         elseif node.type == "comment" then
             buf:write(indent, "<!--", node.text, "-->\n")
         elseif node.type == "document" then
-            if node.has_doctype == true then
-                buf:write("<!DOCTYPE ", node.name, ">\n")
+            if node.doctype then
+                buf:write("<!DOCTYPE ", node.doctype.name, ">\n")
             end
             for i = 1, #node do
                 serialize(node[i], depth)

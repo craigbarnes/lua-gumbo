@@ -1,10 +1,11 @@
 {
     type = "document",
-    has_doctype = true,
-    name = "html",
-    system_identifier = "",
-    public_identifier = "",
     quirks_mode = "no-quirks",
+    doctype = {
+        name = "html",
+        systemId = "",
+        publicId = ""
+    },
     [1] = {
         type = "comment",
         text = " document.root isn't always document[1] ",
