@@ -41,8 +41,6 @@ static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char tagnsmap[][5] = {"html", "svg", "math"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 
-#define ARRAYLEN(array) (sizeof(array) / sizeof(array[0]))
-
 #define add_literal(L, k, v) ( \
     lua_pushliteral(L, v), \
     lua_setfield(L, -2, k) \
@@ -106,7 +104,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
-    static const unsigned int nflags = ARRAYLEN(flag_map);
+    static const unsigned int nflags = sizeof(flag_map) / sizeof(flag_map[0]);
     if (flags != GUMBO_INSERTION_NORMAL) {
         lua_createtable(L, 0, 1);
         for (unsigned int i = 0; i < nflags; i++) {
