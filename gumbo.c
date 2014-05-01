@@ -16,8 +16,6 @@
 */
 
 #include <stddef.h>
-#include <stdbool.h>
-#include <assert.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
@@ -60,18 +58,12 @@ static inline void add_integer(lua_State *L, const char *k, const int v) {
     lua_setfield(L, -2, k);
 }
 
-static inline void add_boolean(lua_State *L, const char *k, const bool v) {
-    lua_pushboolean(L, v);
-    lua_setfield(L, -2, k);
-}
-
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length > 0) {
         lua_createtable(L, length, length);
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
-            assert(attr->attr_namespace < ARRAYLEN(attrnsmap));
             add_string(L, attr->name, attr->value);
             lua_createtable(L, 0, 6);
             add_string(L, "name", attr->name);
@@ -119,7 +111,8 @@ static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
         lua_createtable(L, 0, 1);
         for (unsigned int i = 0; i < nflags; i++) {
             if ((flags & flag_map[i].flag) != 0) {
-                add_boolean(L, flag_map[i].name, true);
+                lua_pushboolean(L, 1);
+                lua_setfield(L, -2, flag_map[i].name);
             }
         }
         lua_setfield(L, -2, "parse_flags");
@@ -150,7 +143,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
     switch (node->type) {
     case GUMBO_NODE_DOCUMENT: {
         const GumboDocument *document = &node->v.document;
-        assert(document->doc_type_quirks_mode < ARRAYLEN(quirksmap));
         lua_createtable(L, document->children.length, 4);
         add_literal(L, "type", "document");
         add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
@@ -166,7 +158,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
-        assert(element->tag_namespace < ARRAYLEN(tagnsmap));
         lua_createtable(L, element->children.length, 7);
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.element");
         lua_setmetatable(L, -2);
@@ -196,8 +187,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
         create_text_node(L, &node->v.text);
         add_literal(L, "type", "whitespace");
         return;
-    default:
-        assert(false && "invalid node type");
     }
 }
 
