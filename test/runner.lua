@@ -17,27 +17,25 @@ local function parse_testdata(filename)
     local text = assert(file:read("*a"))
     file:close()
     local tests = {[0] = {}}
-    local buffer = Buffer(32)
+    local buffer = Buffer()
     local field = false
-    local i = 0
-    local linenumber = 0
+    local testnum, linenum = 0, 0
     for line in text:gmatch "([^\n]*)\n" do
-        linenumber = linenumber + 1
-        local section = line:match("^#(.*)$")
-        if section then
-            tests[i][field] = tostring(buffer):sub(1, -2) -- Discard last \n
-            buffer = Buffer(32)
-            field = section
-            if section == "data" then
-                i = i + 1
-                tests[i] = {line = linenumber}
+        linenum = linenum + 1
+        if line:sub(1, 1) == "#" then
+            tests[testnum][field] = tostring(buffer):sub(1, -2)
+            buffer = Buffer()
+            field = line:sub(2, -1)
+            if field == "data" then
+                testnum = testnum + 1
+                tests[testnum] = {line = linenum}
             end
         else
             buffer:write(line, "\n")
         end
     end
-    tests[i][field] = tostring(buffer)
-    if i > 0 then
+    tests[testnum][field] = tostring(buffer)
+    if testnum > 0 then
         return tests
     else
         return nil, "No test data found in " .. filename
