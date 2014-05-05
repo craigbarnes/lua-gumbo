@@ -79,10 +79,11 @@ export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
 check: all
-	$(TOTABLE) test/t1.html | diff -u2 test/t1.table -
-	$(TOHTML) test/t1.html | diff -u2 test/t1.out.html -
-	$(TOHTML) test/t1.html | $(TOHTML) | diff -u2 test/t1.out.html -
-	$(LUA) test/misc.lua
+	@$(TOTABLE) test/t1.html | diff -u2 test/t1.table -
+	@$(TOHTML) test/t1.html | diff -u2 test/t1.out.html -
+	@$(TOHTML) test/t1.html | $(TOHTML) | diff -u2 test/t1.out.html -
+	@$(LUA) test/misc.lua
+	@echo OK
 
 check-html5lib: all | test/html5lib-tests/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
