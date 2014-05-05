@@ -21,25 +21,23 @@
 #include <gumbo.h>
 #include "compat.h"
 
-static const struct {
-    const unsigned int flag;
-    const char name[33]; // Fixed size allows storage in read-only data section
-} flag_map[] = {
-    {GUMBO_INSERTION_BY_PARSER, "insertion_by_parser"},
-    {GUMBO_INSERTION_IMPLICIT_END_TAG, "implicit_end_tag"},
-    {GUMBO_INSERTION_IMPLIED, "insertion_implied"},
-    {GUMBO_INSERTION_CONVERTED_FROM_END_TAG, "converted_from_end_tag"},
-    {GUMBO_INSERTION_FROM_ISINDEX, "insertion_from_isindex"},
-    {GUMBO_INSERTION_FROM_IMAGE, "insertion_from_image"},
-    {GUMBO_INSERTION_RECONSTRUCTED_FORMATTING_ELEMENT, "reconstructed_formatting_element"},
-    {GUMBO_INSERTION_ADOPTION_AGENCY_CLONED, "adoption_agency_cloned"},
-    {GUMBO_INSERTION_ADOPTION_AGENCY_MOVED, "adoption_agency_moved"},
-    {GUMBO_INSERTION_FOSTER_PARENTED, "foster_parented"}
-};
-
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char tagnsmap[][5] = {"html", "svg", "math"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
+
+static const char flagmap[][33] = { // Fixed size allows storage in rodata
+    "insertion_by_parser",
+    "implicit_end_tag",
+    "", // Unused index
+    "insertion_implied",
+    "converted_from_end_tag",
+    "insertion_from_isindex",
+    "insertion_from_image",
+    "reconstructed_formatting_element",
+    "adoption_agency_cloned",
+    "adoption_agency_moved",
+    "foster_parented"
+};
 
 #define add_literal(L, k, v) ( \
     lua_pushliteral(L, v), \
@@ -104,13 +102,13 @@ static void add_tag(lua_State *L, const GumboElement *element) {
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
-    static const unsigned int nflags = sizeof(flag_map) / sizeof(flag_map[0]);
+    static const unsigned int nflags = sizeof(flagmap) / sizeof(flagmap[0]);
     if (flags != GUMBO_INSERTION_NORMAL) {
         lua_createtable(L, 0, 1);
         for (unsigned int i = 0; i < nflags; i++) {
-            if ((flags & flag_map[i].flag) != 0) {
+            if ((flags & (1 << i)) != 0) {
                 lua_pushboolean(L, 1);
-                lua_setfield(L, -2, flag_map[i].name);
+                lua_setfield(L, -2, flagmap[i]);
             }
         }
         lua_setfield(L, -2, "parse_flags");
