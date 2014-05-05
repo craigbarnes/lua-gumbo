@@ -42,7 +42,7 @@ test/%MiB.html: test/1MiB.html
 # Some static instances of the above pattern rule, just for autocompletion
 test/2MiB.html test/3MiB.html test/4MiB.html test/5MiB.html:
 
-tags: gumbo.c $(GUMBO_HEADER) Makefile
+tags: $(GUMBO_HEADER) $(LUA_HEADERS) gumbo.c Makefile findlua.mk
 	ctags --c-kinds=+p $^
 
 githooks: .git/hooks/pre-commit
