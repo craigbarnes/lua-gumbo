@@ -8,4 +8,5 @@ lua-gumbo-*.zip
 gumbo-*.rockspec
 tags
 README.html
+gh.css
 test/*MiB.html

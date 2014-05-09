@@ -28,8 +28,11 @@ gumbo.so gumbo.la: LDLIBS += $(GUMBO_LDLIBS)
 gumbo.o gumbo.lo: CFLAGS += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
 gumbo.o gumbo.lo: gumbo.c compat.h
 
-README.html: README.md
-	markdown -f +toc -T -o $@ $<
+gh.css:
+	curl -o $@ https://raw.githubusercontent.com/craigbarnes/showdown/89a861cdea62331e8c3187a294f300818a005d09/gh.css
+
+README.html: README.md template.html gh.css
+	discount-theme -t template.html -o $@ $<
 
 test/1MiB.html: test/4KiB.html
 	@$(RM) $@
@@ -108,7 +111,8 @@ bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) gumbo.so gumbo.o gumbo.lo gumbo.la test/*MiB.html
+	$(RM) gumbo.so gumbo.o gumbo.lo gumbo.la
+	$(RM) test/*MiB.html README.html gh.css
 	$(RM) lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
 	$(RM) -r .libs
 
