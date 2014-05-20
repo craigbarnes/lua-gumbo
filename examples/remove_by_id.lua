@@ -27,8 +27,10 @@ local function remove_element_by_id(base, id)
 end
 
 if not arg[1] then
-    io.stderr:write("Error: No element ID specified\n")
-    io.stderr:write("Usage: ", arg[0], " ELEMENT_ID [FILENAME]\n")
+    io.stderr:write(
+        "Error: No element ID specified\n",
+        "Usage: ", arg[0], " ELEMENT-ID [FILENAME]\n"
+    )
     os.exit(1)
 end
 
