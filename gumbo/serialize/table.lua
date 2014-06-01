@@ -52,14 +52,20 @@ local function to_table(node, buffer, indent_width)
                 local i3 = indent[depth+3]
                 buf:write(i1, 'attr = {\n')
                 for i, name, val, ns, line, col, offset in node:attr_iter() do
-                    buf:write(i2, "[", tostring(i), "] = {\n")
-                    buf:write(i3, 'name = "', escape(name), '",\n')
-                    buf:write(i3, 'value = "', escape(val), '",\n')
-                    if ns then buf:write(i3, 'namespace = "', ns, '",\n') end
-                    buf:write(i3, 'line = ', line, ',\n')
-                    buf:write(i3, 'column = ', col, ',\n')
-                    buf:write(i3, 'offset = ', offset, '\n')
-                    buf:write(i2, i == attr_length and '}\n' or '},\n')
+                    buf:write(
+                        i2, "[", tostring(i), "] = {\n",
+                        i3, 'name = "', escape(name), '",\n',
+                        i3, 'value = "', escape(val), '",\n'
+                    )
+                    if ns then
+                        buf:write(i3, 'namespace = "', ns, '",\n')
+                    end
+                    buf:write(
+                        i3, 'line = ', line, ',\n',
+                        i3, 'column = ', col, ',\n',
+                        i3, 'offset = ', offset, '\n',
+                        i2, i == attr_length and '}\n' or '},\n'
+                    )
                 end
                 local sep = (node_length > 0 or node.parse_flags) and "," or ""
                 buf:write(i1, '}', sep, '\n')
