@@ -60,7 +60,6 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
         lua_createtable(L, length, length);
         for (unsigned int i = 0; i < length; i++) {
             const GumboAttribute *attr = (const GumboAttribute *)attrs->data[i];
-            add_string(L, attr->name, attr->value);
             if (attr->attr_namespace == GUMBO_ATTR_NAMESPACE_NONE) {
                 lua_createtable(L, 0, 5);
             } else {
@@ -72,6 +71,8 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             add_integer(L, "line", attr->name_start.line);
             add_integer(L, "column", attr->name_start.column);
             add_integer(L, "offset", attr->name_start.offset);
+            lua_pushvalue(L, -1);
+            lua_setfield(L, -3, attr->name);
             lua_rawseti(L, -2, i+1);
         }
         lua_setfield(L, -2, "attr");

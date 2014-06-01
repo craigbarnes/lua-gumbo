@@ -7,7 +7,7 @@ local to_html = require "gumbo.serialize.html"
 local function remove_element_by_id(base, id)
     local function search_and_remove(node, n)
         if node[n].type == "element" then
-            if node[n].attr.id == id then
+            if node[n].attr.id and node[n].attr.id.value == id then
                 table.remove(node, n)
             else
                 -- This loop must use ipairs, to allow the use of
