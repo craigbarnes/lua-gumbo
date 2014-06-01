@@ -115,8 +115,7 @@
                             line = 5,
                             column = 7,
                             offset = 121
-                        },
-                        href = "foobar.html"
+                        }
                     },
                     [1] = {
                         type = "text",
@@ -148,8 +147,7 @@
                         line = 6,
                         column = 10,
                         offset = 160
-                    },
-                    foo = "bar"
+                    }
                 },
                 [1] = {
                     type = "text",
@@ -180,8 +178,7 @@
                         line = 7,
                         column = 11,
                         offset = 188
-                    },
-                    class = "empty"
+                    }
                 }
             },
             [8] = {

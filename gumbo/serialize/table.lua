@@ -26,14 +26,6 @@ local function escape(text)
     return text:gsub('[\n\t"]', escmap)
 end
 
-local function escape_key(key)
-    if key:match("^[A-Za-z_][A-Za-z0-9_]*$") then
-        return key
-    else
-        return string.format('["%s"]', escape(key))
-    end
-end
-
 local function to_table(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local indent = Indent(indent_width)
@@ -67,12 +59,7 @@ local function to_table(node, buffer, indent_width)
                     buf:write(i3, 'line = ', line, ',\n')
                     buf:write(i3, 'column = ', col, ',\n')
                     buf:write(i3, 'offset = ', offset, '\n')
-                    buf:write(i2, '},\n')
-                end
-                for i, name, val in node:attr_iter() do
-                    local key = escape_key(name)
-                    local sep = (i < attr_length) and "," or ""
-                    buf:write(i2, key, ' = "', escape(val), '"', sep, '\n')
+                    buf:write(i2, i == attr_length and '}\n' or '},\n')
                 end
                 local sep = (node_length > 0 or node.parse_flags) and "," or ""
                 buf:write(i1, '}', sep, '\n')
