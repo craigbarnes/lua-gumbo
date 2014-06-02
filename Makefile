@@ -1,7 +1,9 @@
+include findlua.mk
+
 REQCFLAGS     = -std=c99 -pedantic -fpic
-CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings \
-                -Wcast-qual -Wshadow
-CFLAGS       += $(REQCFLAGS)
+CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
+CFLAGS       += $(REQCFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS)
+LDLIBS        = $(GUMBO_LDLIBS)
 LUA           = lua
 MKDIR         = mkdir -p
 INSTALL       = install -p -m 0644
@@ -19,14 +21,8 @@ GUMBO_LDLIBS  = $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
 GUMBO_INCDIR  = $(shell $(PKGCONFIG) --variable=includedir gumbo)
 GUMBO_HEADER  = $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
-# This uses pkg-config to set LUA_CFLAGS, LUA_CMOD_DIR and LUA_LMOD_DIR
-include findlua.mk
-
 all: gumbo.so
-
-gumbo.so gumbo.la: LDLIBS += $(GUMBO_LDLIBS)
-gumbo.o gumbo.lo: CFLAGS += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
-gumbo.o gumbo.lo: gumbo.c compat.h
+gumbo.o: gumbo.c compat.h
 
 gh.css:
 	curl -o $@ https://raw.githubusercontent.com/craigbarnes/showdown/89a861cdea62331e8c3187a294f300818a005d09/gh.css
@@ -111,8 +107,7 @@ bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) gumbo.so gumbo.o gumbo.lo gumbo.la
-	$(RM) test/*MiB.html README.html gh.css
+	$(RM) gumbo.so gumbo.o test/*MiB.html README.html gh.css
 	$(RM) lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
 	$(RM) -r .libs
 

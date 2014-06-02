@@ -1,8 +1,5 @@
 *.so
 *.o
-*.lo
-*.la
-.libs/
 lua-gumbo-*.tar.gz
 lua-gumbo-*.zip
 gumbo-*.rockspec
