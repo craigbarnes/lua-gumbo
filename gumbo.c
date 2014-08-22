@@ -21,11 +21,12 @@
 #include <gumbo.h>
 #include "compat.h"
 
+// Enum-to-string maps (fixed in size, to allow storage in .rodata)
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char tagnsmap[][5] = {"html", "svg", "math"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 
-static const char flagmap[][33] = { // Fixed size allows storage in rodata
+static const char flagmap[][33] = {
     "insertion_by_parser",
     "implicit_end_tag",
     "", // Unused index
