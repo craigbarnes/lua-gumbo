@@ -144,21 +144,6 @@ static void add_children(lua_State *L, const GumboVector *children) {
 static void push_node(lua_State *L, const GumboNode *node) {
     luaL_checkstack(L, 10, "element nesting too deep");
     switch (node->type) {
-    case GUMBO_NODE_DOCUMENT: {
-        const GumboDocument *document = &node->v.document;
-        lua_createtable(L, document->children.length, 4);
-        add_literal(L, "type", "document");
-        add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
-        if (document->has_doctype) {
-            lua_createtable(L, 0, 3);
-            add_string(L, "name", document->name);
-            add_string(L, "publicId", document->public_identifier);
-            add_string(L, "systemId", document->system_identifier);
-            lua_setfield(L, -2, "doctype");
-        }
-        add_children(L, &document->children);
-        return;
-    }
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 7);
@@ -188,6 +173,12 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_WHITESPACE:
         create_text_node(L, &node->v.text);
         add_literal(L, "type", "whitespace");
+        return;
+    case GUMBO_NODE_DOCUMENT:
+        luaL_error(L, "Invalid nested Document node");
+        return;
+    default:
+        luaL_error(L, "Invalid node type");
         return;
     }
 }
@@ -223,7 +214,18 @@ static int parse(lua_State *L) {
     options.tab_stop = luaL_optint(L, 2, 8);
     GumboOutput *output = gumbo_parse_with_options(&options, input, length);
     if (output) {
-        push_node(L, output->document);
+        const GumboDocument *document = &output->document->v.document;
+        lua_createtable(L, document->children.length, 4);
+        add_literal(L, "type", "document");
+        add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
+        if (document->has_doctype) {
+            lua_createtable(L, 0, 3);
+            add_string(L, "name", document->name);
+            add_string(L, "publicId", document->public_identifier);
+            add_string(L, "systemId", document->system_identifier);
+            lua_setfield(L, -2, "doctype");
+        }
+        add_children(L, &document->children);
         lua_rawgeti(L, -1, output->root->index_within_parent + 1);
         lua_setfield(L, -2, "root");
         gumbo_destroy_output(&options, output);
