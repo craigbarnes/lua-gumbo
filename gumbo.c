@@ -23,7 +23,6 @@
 
 // Enum-to-string maps (fixed in size, to allow storage in .rodata)
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
-static const char tagnsmap[][5] = {"html", "svg", "math"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 
 static const char flagmap[][33] = {
@@ -82,6 +81,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
 
 static void add_tag(lua_State *L, const GumboElement *element) {
     if (element->tag_namespace == GUMBO_NAMESPACE_SVG) {
+        add_string(L, "tag_namespace", "svg");
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
         const char *normalized = gumbo_normalize_svg_tagname(&original_tag);
@@ -89,6 +89,8 @@ static void add_tag(lua_State *L, const GumboElement *element) {
             add_string(L, "tag", normalized);
             return;
         }
+    } else if (element->tag_namespace == GUMBO_NAMESPACE_MATHML) {
+        add_string(L, "tag_namespace", "math");
     }
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
@@ -163,7 +165,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.element");
         lua_setmetatable(L, -2);
         add_tag(L, element);
-        add_string(L, "tag_namespace", tagnsmap[element->tag_namespace]);
         add_integer(L, "line", element->start_pos.line);
         add_integer(L, "column", element->start_pos.column);
         add_integer(L, "offset", element->start_pos.offset);

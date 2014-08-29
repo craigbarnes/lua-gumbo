@@ -42,8 +42,12 @@ local function to_table(node, buffer, indent_width)
             buf:write(
                 "{\n",
                 i1, 'type = "element",\n',
-                i1, 'tag = "', node.tag, '",\n',
-                i1, 'tag_namespace = "', node.tag_namespace, '",\n',
+                i1, 'tag = "', node.tag, '",\n'
+            )
+            if node.tag_namespace then
+                buf:write(i1, 'tag_namespace = "', node.tag_namespace, '",\n')
+            end
+            buf:write(
                 i1, 'line = ', node.line, ',\n',
                 i1, 'column = ', node.column, ',\n',
                 i1, 'offset = ', node.offset, ',\n'

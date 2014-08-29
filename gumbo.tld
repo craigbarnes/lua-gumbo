@@ -14,7 +14,7 @@ end
 interface Element
     type: string -- Always has a value of `"element"` for `Element` nodes.
     tag: string -- The tag name, normalized to lower case.
-    tag_namespace: string -- `"html"`, `"svg"` or `"math"`.
+    tag_namespace: string? -- `"svg"`, `"math"` or `nil`.
     attr: { -- Ordered list of attributes.
         {
             "name": string, -- The attribute name, normalized to lower case.

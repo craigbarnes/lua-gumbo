@@ -8,9 +8,8 @@ return function(node, buffer, indent_width)
     local function serialize(node, depth)
         if node.type == "element" then
             local i1, i2 = indent[depth], indent[depth+1]
-            local tagns = (node.tag_namespace == "html") and "" or
-                          (node.tag_namespace .. " ")
-            buf:write("| ", i1, "<", tagns, node.tag, ">\n")
+            local tagns = node.tag_namespace and (node.tag_namespace .. " ")
+            buf:write("| ", i1, "<", tagns or "", node.tag, ">\n")
 
             -- The html5lib tree format expects attributes to be sorted by
             -- name, in lexicographic order. Instead of sorting in-place or
