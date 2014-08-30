@@ -1,4 +1,4 @@
-include findlua.mk
+include lualib.mk
 
 REQCFLAGS     = -std=c99 -pedantic -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
@@ -41,7 +41,7 @@ test/%MiB.html: test/1MiB.html
 # Some static instances of the above pattern rule, just for autocompletion
 test/2MiB.html test/3MiB.html test/4MiB.html test/5MiB.html:
 
-tags: $(GUMBO_HEADER) $(LUA_HEADERS) gumbo.c Makefile findlua.mk
+tags: $(GUMBO_HEADER) $(LUA_HEADERS) gumbo.c Makefile lualib.mk
 	ctags --c-kinds=+p $^
 
 githooks: .git/hooks/pre-commit
