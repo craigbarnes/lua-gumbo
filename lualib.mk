@@ -1,6 +1,13 @@
+-include local.mk
+
 CC        = gcc
 LDFLAGS   = -shared -Wl,--no-as-needed
 PKGCONFIG = pkg-config --silence-errors
+LUA       = lua
+MKDIR     = mkdir -p
+INSTALL   = install -p -m 0644
+INSTALLX  = install -p -m 0755
+RM        = rm -f
 
 ifeq "$(shell uname)" "Darwin"
   LDFLAGS = -bundle -undefined dynamic_lookup

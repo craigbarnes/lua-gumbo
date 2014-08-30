@@ -4,12 +4,6 @@ REQCFLAGS     = -std=c99 -pedantic -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
 CFLAGS       += $(REQCFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS)
 LDLIBS        = $(GUMBO_LDLIBS)
-LUA           = lua
-MKDIR         = mkdir -p
-INSTALL       = install -p -m 0644
-INSTALLX      = install -p -m 0755
-RM            = rm -f
-PKGCONFIG     = pkg-config --silence-errors
 TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 TOHTML        = $(LUA) test/serialize.lua html
 TOTABLE       = $(LUA) test/serialize.lua table
