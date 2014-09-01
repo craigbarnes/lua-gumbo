@@ -1,3 +1,4 @@
+local.mk
 *.so
 *.o
 lua-gumbo-*.tar.gz
