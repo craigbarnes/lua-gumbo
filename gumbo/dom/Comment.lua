@@ -1,8 +1,6 @@
-local CharacterData = require "gumbo.dom.CharacterData"
 local util = require "gumbo.dom.util"
 
-local Comment = util.clone(CharacterData)
-Comment.__index = Comment
+local Comment = util.implements("CharacterData")
 Comment.type = "comment"
 
 return Comment

@@ -1,13 +1,8 @@
-local Node = require "gumbo.dom.Node"
-local ChildNode = require "gumbo.dom.ChildNode"
 local util = require "gumbo.dom.util"
 
-local Element = util.clone(Node)
-Element.__index = Element
+local Element = util.implements("Node", "ChildNode")
 Element.type = "element"
 Element.attr = {}
-
-Element.remove = ChildNode.remove -- TODO: use "implements" function for this
 
 local function attr_next(attrs, i)
     local j = i + 1

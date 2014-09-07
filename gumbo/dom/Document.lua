@@ -1,14 +1,10 @@
-local Node = require "gumbo.dom.Node"
 local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
-local NonElementParentNode = require "gumbo.dom.NonElementParentNode"
 local util = require "gumbo.dom.util"
 
-local Document = util.clone(Node)
-Document.__index = Document
+local Document = util.implements("Node", "NonElementParentNode")
 Document.type = "document"
-Document.getElementById = NonElementParentNode.getElementById
 
 -- The createElement(localName) method must run the these steps:
 --
