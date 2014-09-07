@@ -147,7 +147,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 7);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.element");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.element");
         lua_setmetatable(L, -2);
         add_tag(L, element);
         add_integer(L, "line", element->start_pos.line);
@@ -160,11 +160,13 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
     case GUMBO_NODE_TEXT:
         create_text_node(L, &node->v.text);
-        add_literal(L, "type", "text");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.text");
+        lua_setmetatable(L, -2);
         return;
     case GUMBO_NODE_COMMENT:
         create_text_node(L, &node->v.text);
-        add_literal(L, "type", "comment");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.comment");
+        lua_setmetatable(L, -2);
         return;
     case GUMBO_NODE_CDATA:
         create_text_node(L, &node->v.text);
@@ -183,30 +185,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
 }
 
-static int attr_next(lua_State *L) {
-    const lua_Integer i = luaL_checkinteger(L, 2) + 1;
-    lua_rawgeti(L, 1, i);
-    if (lua_istable(L, 3)) {
-        lua_pushinteger(L, i);
-        lua_getfield(L, 3, "name");
-        lua_getfield(L, 3, "value");
-        lua_getfield(L, 3, "namespace");
-        lua_getfield(L, 3, "line");
-        lua_getfield(L, 3, "column");
-        lua_getfield(L, 3, "offset");
-        return 7;
-    }
-    return 0;
-}
-
-static int Element_attr_iter(lua_State *L) {
-    luaL_checktype(L, 1, LUA_TTABLE);
-    lua_pushcfunction(L, attr_next);
-    lua_getfield(L, 1, "attr");
-    lua_pushinteger(L, 0);
-    return 3;
-}
-
 static int parse(lua_State *L) {
     size_t length;
     const char *input = luaL_checklstring(L, 1, &length);
@@ -216,7 +194,8 @@ static int parse(lua_State *L) {
     if (output) {
         const GumboDocument *document = &output->document->v.document;
         lua_createtable(L, document->children.length, 4);
-        add_literal(L, "type", "document");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.document");
+        lua_setmetatable(L, -2);
         add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
             lua_createtable(L, 0, 3);
@@ -270,26 +249,28 @@ static int parse_file(lua_State *L) {
     }
 }
 
-static const luaL_Reg Element[] = {
-    {"attr_iter", Element_attr_iter},
-    {NULL, NULL}
-};
-
 static const luaL_Reg lib[] = {
     {"parse", parse},
     {"parse_file", parse_file},
     {NULL, NULL}
 };
 
-int luaopen_gumbo(lua_State *L) {
-    if (luaL_newmetatable(L, "gumbo.element")) {
-        lua_pushvalue(L, -1);
-        lua_setfield(L, -2, "__index");
-        lua_newtable(L);
-        lua_setfield(L, -2, "attr");
-        add_literal(L, "type", "element");
-        luaL_setfuncs(L, Element, 0);
+static inline void require(lua_State *L, const char *modname) {
+    lua_getglobal(L, "require");
+    lua_pushstring(L, modname);
+    lua_call(L, 1, 1);
+    if (lua_istable(L, -1)) {
+        lua_setfield(L, LUA_REGISTRYINDEX, modname);
+    } else {
+        luaL_error(L, "require('%s') returned invalid module table", modname);
     }
+}
+
+int luaopen_gumbo(lua_State *L) {
+    require(L, "gumbo.dom.text");
+    require(L, "gumbo.dom.comment");
+    require(L, "gumbo.dom.element");
+    require(L, "gumbo.dom.document");
     luaL_newlib(L, lib);
     return 1;
 }
