@@ -137,6 +137,13 @@ static void add_children(lua_State *L, const GumboVector *children) {
     const unsigned int length = children->length;
     for (unsigned int i = 0; i < length; i++) {
         push_node(L, (const GumboNode *)children->data[i]);
+
+        // child.parentNode = parent
+        lua_pushliteral(L, "parentNode");
+        lua_pushvalue(L, -3);
+        lua_rawset(L, -3);
+
+        // parent[i+1] = child
         lua_rawseti(L, -2, i + 1);
     }
 }
@@ -146,7 +153,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     switch (node->type) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
-        lua_createtable(L, element->children.length, 7);
+        lua_createtable(L, element->children.length, 8);
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Element");
         lua_setmetatable(L, -2);
         add_tag(L, element);
