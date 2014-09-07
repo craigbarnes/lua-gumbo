@@ -1,4 +1,4 @@
-local Node = require "gumbo.dom.node"
+local Node = require "gumbo.dom.Node"
 local util = require "gumbo.dom.util"
 
 local Text = util.clone(Node)

@@ -1,7 +1,7 @@
-local Node = require "gumbo.dom.node"
-local Element = require "gumbo.dom.element"
-local Text = require "gumbo.dom.text"
-local Comment = require "gumbo.dom.comment"
+local Node = require "gumbo.dom.Node"
+local Element = require "gumbo.dom.Element"
+local Text = require "gumbo.dom.Text"
+local Comment = require "gumbo.dom.Comment"
 local util = require "gumbo.dom.util"
 
 local Document = util.clone(Node)

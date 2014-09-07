@@ -147,7 +147,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 7);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.element");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Element");
         lua_setmetatable(L, -2);
         add_tag(L, element);
         add_integer(L, "line", element->start_pos.line);
@@ -160,12 +160,12 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
     case GUMBO_NODE_TEXT:
         create_text_node(L, &node->v.text);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.text");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Text");
         lua_setmetatable(L, -2);
         return;
     case GUMBO_NODE_COMMENT:
         create_text_node(L, &node->v.text);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.comment");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Comment");
         lua_setmetatable(L, -2);
         return;
     case GUMBO_NODE_CDATA:
@@ -194,7 +194,7 @@ static int parse(lua_State *L) {
     if (output) {
         const GumboDocument *document = &output->document->v.document;
         lua_createtable(L, document->children.length, 4);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.document");
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Document");
         lua_setmetatable(L, -2);
         add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
@@ -267,10 +267,10 @@ static inline void require(lua_State *L, const char *modname) {
 }
 
 int luaopen_gumbo(lua_State *L) {
-    require(L, "gumbo.dom.text");
-    require(L, "gumbo.dom.comment");
-    require(L, "gumbo.dom.element");
-    require(L, "gumbo.dom.document");
+    require(L, "gumbo.dom.Text");
+    require(L, "gumbo.dom.Comment");
+    require(L, "gumbo.dom.Element");
+    require(L, "gumbo.dom.Document");
     luaL_newlib(L, lib);
     return 1;
 }
