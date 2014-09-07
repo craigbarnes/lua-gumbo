@@ -33,7 +33,7 @@ local function to_table(node, buffer, indent_width)
     local function serialize(node, depth, index, is_last_child)
         if node.type == "element" then
             local node_length = #node
-            local attr_length = #node.attr
+            local attr_length = #node.attributes
             local i1, i2 = indent[depth+1], indent[depth+2]
             buf:write(indent[depth])
             if index then
@@ -54,7 +54,7 @@ local function to_table(node, buffer, indent_width)
             )
             if attr_length > 0 then
                 local i3 = indent[depth+3]
-                buf:write(i1, 'attr = {\n')
+                buf:write(i1, 'attributes = {\n')
                 for i, name, val, pfx, line, col, offset in node:attr_iter() do
                     buf:write(
                         i2, "[", tostring(i), "] = {\n",

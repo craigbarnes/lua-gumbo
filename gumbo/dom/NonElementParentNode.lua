@@ -15,9 +15,11 @@ end
 
 function NonElementParentNode:getElementById(elementId)
     for node in walk(self) do
-        -- TODO: clean up these conditionals with something less hacky
-        if node.attr and node.attr.id and node.attr.id.value == elementId then
-            return node
+        if node.type == "element" then
+            local attr = node.attributes
+            if attr.id and attr.id.value == elementId then
+                return node
+            end
         end
     end
 end

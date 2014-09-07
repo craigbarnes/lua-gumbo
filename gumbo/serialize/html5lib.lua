@@ -14,7 +14,7 @@ return function(node, buffer, indent_width)
             -- The html5lib tree format expects attributes to be sorted by
             -- name, in lexicographic order. Instead of sorting in-place or
             -- copying the entire table, we build a lightweight, sorted index.
-            local attr = node.attr
+            local attr = node.attributes
             local attr_length = #attr
             local attr_index = {}
             for i = 1, attr_length do

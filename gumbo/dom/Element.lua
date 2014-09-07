@@ -2,7 +2,7 @@ local util = require "gumbo.dom.util"
 
 local Element = util.implements("Node", "ChildNode")
 Element.type = "element"
-Element.attr = {}
+Element.attributes = {}
 
 local function attr_next(attrs, i)
     local j = i + 1
@@ -13,7 +13,7 @@ local function attr_next(attrs, i)
 end
 
 function Element:attr_iter()
-    return attr_next, self.attr or {}, 0
+    return attr_next, self.attributes or {}, 0
 end
 
 return Element

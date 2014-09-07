@@ -75,7 +75,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             lua_setfield(L, -3, attr->name);
             lua_rawseti(L, -2, i+1);
         }
-        lua_setfield(L, -2, "attr");
+        lua_setfield(L, -2, "attributes");
     }
 }
 
