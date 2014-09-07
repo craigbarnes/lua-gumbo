@@ -1,7 +1,7 @@
-local Node = require "gumbo.dom.Node"
+local CharacterData = require "gumbo.dom.CharacterData"
 local util = require "gumbo.dom.util"
 
-local Text = util.clone(Node)
+local Text = util.clone(CharacterData)
 Text.__index = Text
 Text.type = "text"
 
