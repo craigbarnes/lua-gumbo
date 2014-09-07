@@ -5,6 +5,8 @@ local util = require "gumbo.dom.util"
 
 local Document = util.implements("Node", "NonElementParentNode")
 Document.type = "document"
+Document.nodeName = "#document"
+Document.nodeType = 9
 
 -- The createElement(localName) method must run the these steps:
 --
