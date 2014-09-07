@@ -206,7 +206,7 @@ static int parse(lua_State *L) {
         }
         add_children(L, &document->children);
         lua_rawgeti(L, -1, output->root->index_within_parent + 1);
-        lua_setfield(L, -2, "root");
+        lua_setfield(L, -2, "documentElement");
         gumbo_destroy_output(&options, output);
         return 1;
     } else {

@@ -16,4 +16,4 @@ local function find_links(node)
 end
 
 local document = assert(gumbo.parse_file(arg[1] or io.stdin))
-find_links(document.root)
+find_links(document.documentElement)

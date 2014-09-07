@@ -8,7 +8,7 @@
     },
     [1] = {
         type = "comment",
-        text = " document.root isn't always document[1] ",
+        text = " document.documentElement isn't always document[1] ",
         line = 2,
         column = 1,
         offset = 16
@@ -18,7 +18,7 @@
         tag = "html",
         line = 3,
         column = 1,
-        offset = 64,
+        offset = 75,
         parse_flags = {
             insertion_by_parser = true,
             implicit_end_tag = true,
@@ -29,7 +29,7 @@
             tag = "head",
             line = 3,
             column = 1,
-            offset = 64,
+            offset = 75,
             parse_flags = {
                 insertion_by_parser = true,
                 implicit_end_tag = true,
@@ -40,13 +40,13 @@
                 tag = "title",
                 line = 3,
                 column = 1,
-                offset = 64,
+                offset = 75,
                 [1] = {
                     type = "text",
                     text = "Test Document",
                     line = 3,
                     column = 8,
-                    offset = 71
+                    offset = 82
                 }
             },
             [2] = {
@@ -54,7 +54,7 @@
                 text = "\n",
                 line = 3,
                 column = 29,
-                offset = 92
+                offset = 103
             }
         },
         [2] = {
@@ -62,7 +62,7 @@
             tag = "body",
             line = 4,
             column = 1,
-            offset = 93,
+            offset = 104,
             parse_flags = {
                 insertion_by_parser = true,
                 implicit_end_tag = true,
@@ -73,13 +73,13 @@
                 tag = "h1",
                 line = 4,
                 column = 1,
-                offset = 93,
+                offset = 104,
                 [1] = {
                     type = "text",
                     text = "Test Heading",
                     line = 4,
                     column = 5,
-                    offset = 97
+                    offset = 108
                 }
             },
             [2] = {
@@ -87,27 +87,27 @@
                 text = "\n",
                 line = 4,
                 column = 22,
-                offset = 114
+                offset = 125
             },
             [3] = {
                 type = "element",
                 tag = "p",
                 line = 5,
                 column = 1,
-                offset = 115,
+                offset = 126,
                 [1] = {
                     type = "element",
                     tag = "a",
                     line = 5,
                     column = 4,
-                    offset = 118,
+                    offset = 129,
                     attr = {
                         [1] = {
                             name = "href",
                             value = "foobar.html",
                             line = 5,
                             column = 7,
-                            offset = 121
+                            offset = 132
                         }
                     },
                     [1] = {
@@ -115,7 +115,7 @@
                         text = "Quux",
                         line = 5,
                         column = 24,
-                        offset = 138
+                        offset = 149
                     }
                 }
             },
@@ -124,21 +124,21 @@
                 text = "\n",
                 line = 5,
                 column = 36,
-                offset = 150
+                offset = 161
             },
             [5] = {
                 type = "element",
                 tag = "invalid",
                 line = 6,
                 column = 1,
-                offset = 151,
+                offset = 162,
                 attr = {
                     [1] = {
                         name = "foo",
                         value = "bar",
                         line = 6,
                         column = 10,
-                        offset = 160
+                        offset = 171
                     }
                 },
                 [1] = {
@@ -146,7 +146,7 @@
                     text = "abc",
                     line = 6,
                     column = 20,
-                    offset = 170
+                    offset = 181
                 }
             },
             [6] = {
@@ -154,21 +154,21 @@
                 text = "\n\t",
                 line = 6,
                 column = 33,
-                offset = 183
+                offset = 194
             },
             [7] = {
                 type = "element",
                 tag = "p",
                 line = 7,
                 column = 8,
-                offset = 185,
+                offset = 196,
                 attr = {
                     [1] = {
                         name = "class",
                         value = "empty",
                         line = 7,
                         column = 11,
-                        offset = 188
+                        offset = 199
                     }
                 }
             },
@@ -177,21 +177,21 @@
                 text = "\n",
                 line = 7,
                 column = 27,
-                offset = 204
+                offset = 215
             },
             [9] = {
                 type = "comment",
                 text = " comment node ",
                 line = 8,
                 column = 1,
-                offset = 205
+                offset = 216
             },
             [10] = {
                 type = "whitespace",
                 text = "\n",
                 line = 8,
                 column = 22,
-                offset = 226
+                offset = 237
             }
         }
     }
