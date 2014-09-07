@@ -16,7 +16,7 @@ local Node = {
 Node.__index = Node
 
 function Node:hasChildNodes()
-    return #self > 0
+    return self[1] and true or false
 end
 
 return Node
