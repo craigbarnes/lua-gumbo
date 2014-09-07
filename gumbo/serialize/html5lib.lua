@@ -9,7 +9,7 @@ return function(node, buffer, indent_width)
         if node.type == "element" then
             local i1, i2 = indent[depth], indent[depth+1]
             local tagns = node.tag_namespace and (node.tag_namespace .. " ")
-            buf:write("| ", i1, "<", tagns or "", node.tag, ">\n")
+            buf:write("| ", i1, "<", tagns or "", node.localName, ">\n")
 
             -- The html5lib tree format expects attributes to be sorted by
             -- name, in lexicographic order. Instead of sorting in-place or
@@ -25,8 +25,8 @@ return function(node, buffer, indent_width)
             end)
             for i = 1, attr_length do
                 local a = attr[attr_index[i]]
-                local ns = a.namespace and (a.namespace .. " ") or ""
-                buf:write("| ", i2, ns, a.name, '="', a.value, '"\n')
+                local prefix = a.prefix and (a.prefix .. " ") or ""
+                buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
             end
 
             for i = 1, #node do
@@ -36,17 +36,17 @@ return function(node, buffer, indent_width)
                     -- Merge adjacent text nodes, as expected by the
                     -- spec and the html5lib tests
                     -- TODO: Why doesn't Gumbo do this during parsing?
-                    local text = node[i+1].text
+                    local text = node[i+1].data
                     node[i+1] = node[i]
-                    node[i+1].text = node[i+1].text .. text
+                    node[i+1].data = node[i+1].data .. text
                 else
                     serialize(node[i], depth + 1)
                 end
             end
         elseif node.type == "text" or node.type == "whitespace" then
-            buf:write("| ", indent[depth], '"', node.text, '"\n')
+            buf:write("| ", indent[depth], '"', node.data, '"\n')
         elseif node.type == "comment" then
-            buf:write("| ", indent[depth], "<!-- ", node.text, " -->\n")
+            buf:write("| ", indent[depth], "<!-- ", node.data, " -->\n")
         elseif node.type == "document" then
             local doctype = node.doctype
             if doctype then

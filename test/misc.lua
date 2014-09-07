@@ -7,8 +7,8 @@ local document = assert(gumbo.parse("\t\t<!--one--><!--two--><h1>Hi</h1>", 16))
 -- Check that document.documentElement is set correctly
 assert(#document == 3)
 assert(document.documentElement and document.documentElement == document[3])
-assert(document[1].text == "one")
-assert(document[2].text == "two")
+assert(document[1].data == "one")
+assert(document[2].data == "two")
 
 -- Check that tab_stop parameter is used
 assert(document[1].line == 1)
@@ -17,7 +17,7 @@ assert(document[1].offset == 2)
 
 -- Make sure deeply nested elements don't cause a stack overflow
 document = assert(gumbo.parse(string.rep("<div>", 500)), "stack check failed")
-assert(document.documentElement[2][1][1][1][1][1][1][1][1][1][1].tag == "div")
+assert(document.documentElement[2][1][1][1][1][1][1][1][1].localName == "div")
 
 -- Check that parse_file works the same with a filename as with a file handle
 local to_table = require "gumbo.serialize.table"

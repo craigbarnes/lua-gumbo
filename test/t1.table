@@ -8,14 +8,14 @@
     },
     [1] = {
         type = "comment",
-        text = " document.documentElement isn't always document[1] ",
+        data = " document.documentElement isn't always document[1] ",
         line = 2,
         column = 1,
         offset = 16
     },
     [2] = {
         type = "element",
-        tag = "html",
+        localName = "html",
         line = 3,
         column = 1,
         offset = 75,
@@ -26,7 +26,7 @@
         },
         [1] = {
             type = "element",
-            tag = "head",
+            localName = "head",
             line = 3,
             column = 1,
             offset = 75,
@@ -37,13 +37,13 @@
             },
             [1] = {
                 type = "element",
-                tag = "title",
+                localName = "title",
                 line = 3,
                 column = 1,
                 offset = 75,
                 [1] = {
                     type = "text",
-                    text = "Test Document",
+                    data = "Test Document",
                     line = 3,
                     column = 8,
                     offset = 82
@@ -51,7 +51,7 @@
             },
             [2] = {
                 type = "whitespace",
-                text = "\n",
+                data = "\n",
                 line = 3,
                 column = 29,
                 offset = 103
@@ -59,7 +59,7 @@
         },
         [2] = {
             type = "element",
-            tag = "body",
+            localName = "body",
             line = 4,
             column = 1,
             offset = 104,
@@ -70,13 +70,13 @@
             },
             [1] = {
                 type = "element",
-                tag = "h1",
+                localName = "h1",
                 line = 4,
                 column = 1,
                 offset = 104,
                 [1] = {
                     type = "text",
-                    text = "Test Heading",
+                    data = "Test Heading",
                     line = 4,
                     column = 5,
                     offset = 108
@@ -84,20 +84,20 @@
             },
             [2] = {
                 type = "whitespace",
-                text = "\n",
+                data = "\n",
                 line = 4,
                 column = 22,
                 offset = 125
             },
             [3] = {
                 type = "element",
-                tag = "p",
+                localName = "p",
                 line = 5,
                 column = 1,
                 offset = 126,
                 [1] = {
                     type = "element",
-                    tag = "a",
+                    localName = "a",
                     line = 5,
                     column = 4,
                     offset = 129,
@@ -112,7 +112,7 @@
                     },
                     [1] = {
                         type = "text",
-                        text = "Quux",
+                        data = "Quux",
                         line = 5,
                         column = 24,
                         offset = 149
@@ -121,14 +121,14 @@
             },
             [4] = {
                 type = "whitespace",
-                text = "\n",
+                data = "\n",
                 line = 5,
                 column = 36,
                 offset = 161
             },
             [5] = {
                 type = "element",
-                tag = "invalid",
+                localName = "invalid",
                 line = 6,
                 column = 1,
                 offset = 162,
@@ -143,7 +143,7 @@
                 },
                 [1] = {
                     type = "text",
-                    text = "abc",
+                    data = "abc",
                     line = 6,
                     column = 20,
                     offset = 181
@@ -151,14 +151,14 @@
             },
             [6] = {
                 type = "whitespace",
-                text = "\n\t",
+                data = "\n\t",
                 line = 6,
                 column = 33,
                 offset = 194
             },
             [7] = {
                 type = "element",
-                tag = "p",
+                localName = "p",
                 line = 7,
                 column = 8,
                 offset = 196,
@@ -174,21 +174,21 @@
             },
             [8] = {
                 type = "whitespace",
-                text = "\n",
+                data = "\n",
                 line = 7,
                 column = 27,
                 offset = 215
             },
             [9] = {
                 type = "comment",
-                text = " comment node ",
+                data = " comment node ",
                 line = 8,
                 column = 1,
                 offset = 216
             },
             [10] = {
                 type = "whitespace",
-                text = "\n",
+                data = "\n",
                 line = 8,
                 column = 22,
                 offset = 237

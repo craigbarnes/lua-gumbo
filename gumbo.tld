@@ -3,7 +3,7 @@
 interface Document
     type: string -- Always has a value of "document" for Document nodes.
     quirks_mode: string -- "quirks", "no-quirks" or "limited-quirks".
-    root: Element -- The root <html> element.
+    documentElement: Element -- The root <html> element.
     doctype: { -- Fields parsed from the doctype declaration, if present.
         "name": string, -- The root element name.
         "publicId": string, -- The public identifier.
@@ -13,13 +13,13 @@ end
 
 interface Element
     type: string -- Always has a value of "element" for Element nodes.
-    tag: string -- The tag name, normalized to lower case.
+    localName: string -- The tag name, normalized to lower case.
     tag_namespace: string? -- "svg", "math" or nil.
     attr: { -- Ordered list of attributes.
         {
             "name": string, -- The attribute name, normalized to lower case.
             "value": string, -- The attribute value.
-            "namespace": string?, -- "xlink", "xml", "xmlns" or nil.
+            "prefix": string?, -- "xlink", "xml", "xmlns" or nil.
             "line": number?,
             "column": number?,
             "offset": number?
@@ -32,7 +32,7 @@ end
 
 interface Text
     type: string -- "text", "whitespace", "comment" or "cdata".
-    text: string -- The text contents.
+    data: string -- The text contents.
     line: number?
     column: number?
     offset: number?

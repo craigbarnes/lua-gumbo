@@ -42,7 +42,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(
                 "{\n",
                 i1, 'type = "element",\n',
-                i1, 'tag = "', node.tag, '",\n'
+                i1, 'localName = "', node.localName, '",\n'
             )
             if node.tag_namespace then
                 buf:write(i1, 'tag_namespace = "', node.tag_namespace, '",\n')
@@ -55,14 +55,14 @@ local function to_table(node, buffer, indent_width)
             if attr_length > 0 then
                 local i3 = indent[depth+3]
                 buf:write(i1, 'attr = {\n')
-                for i, name, val, ns, line, col, offset in node:attr_iter() do
+                for i, name, val, pfx, line, col, offset in node:attr_iter() do
                     buf:write(
                         i2, "[", tostring(i), "] = {\n",
                         i3, 'name = "', escape(name), '",\n',
                         i3, 'value = "', escape(val), '",\n'
                     )
-                    if ns then
-                        buf:write(i3, 'namespace = "', ns, '",\n')
+                    if pfx then
+                        buf:write(i3, 'prefix = "', pfx, '",\n')
                     end
                     buf:write(
                         i3, 'line = ', line, ',\n',
@@ -90,7 +90,7 @@ local function to_table(node, buffer, indent_width)
                 serialize(node[i], depth + 1, i, i == node_length)
             end
             buf:write(indent[depth], '}', is_last_child and "" or ",", '\n')
-        elseif node.text then
+        elseif node.data then
             local i1, i2 = indent[depth], indent[depth+1]
             buf:write(i1)
             if index then
@@ -99,7 +99,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(
                 "{\n",
                 i2, 'type = "', node.type, '",\n',
-                i2, 'text = "', escape(node.text), '",\n',
+                i2, 'data = "', escape(node.data), '",\n',
                 i2, 'line = ', node.line, ',\n',
                 i2, 'column = ', node.column, ',\n',
                 i2, 'offset = ', node.offset, '\n',

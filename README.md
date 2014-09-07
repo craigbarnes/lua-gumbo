@@ -79,7 +79,7 @@ and contains all other nodes as descendants.
   * `publicId`: The [public identifier], or `""`.
   * `systemId`: The [system identifier], or `""`.
 * `quirks_mode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
-* `root`: A reference to the child `<html>` element.
+* `documentElement`: A reference to the child `<html>` element.
 * `[1..n]`: Child nodes.
 
 ### Element
@@ -96,7 +96,7 @@ numeric indices.
   * `[1..n]`: Tables, each representing a single attribute, in source order:
     * `name`: The name of the attribute (normalized to lower case).
     * `value`: The attribute value.
-    * `namespace`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
+    * `prefix`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
     * `line`
     * `column`
     * `offset`
@@ -110,7 +110,7 @@ numeric indices.
 **Methods:**
 
 * `attr_iter`: returns an iterator that produces the values
-  `index, name, value, namespace, line, column, offset` for each of the
+  `index, name, value, prefix, line, column, offset` for each of the
   element's attributes. See: [find_links.lua].
 
 ### Text
@@ -120,7 +120,7 @@ There are 4 text node types, which all share a common structure.
 **Fields:**
 
 * `type`: One of `"text"`, `"whitespace"`, `"comment"` or `"cdata"`.
-* `text`: The text contents. Does not include comment/cdata delimiters.
+* `data`: The text contents. Does not include comment/cdata delimiters.
 * `line`
 * `column`
 * `offset`

@@ -64,7 +64,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
                 lua_createtable(L, 0, 5);
             } else {
                 lua_createtable(L, 0, 6);
-                add_string(L, "namespace", attrnsmap[attr->attr_namespace]);
+                add_string(L, "prefix", attrnsmap[attr->attr_namespace]);
             }
             add_string(L, "name", attr->name);
             add_string(L, "value", attr->value);
@@ -86,7 +86,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
         gumbo_tag_from_original_text(&original_tag);
         const char *normalized = gumbo_normalize_svg_tagname(&original_tag);
         if (normalized) {
-            add_string(L, "tag", normalized);
+            add_string(L, "localName", normalized);
             return;
         }
     } else if (element->tag_namespace == GUMBO_NAMESPACE_MATHML) {
@@ -105,7 +105,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
     } else {
         lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     }
-    lua_setfield(L, -2, "tag");
+    lua_setfield(L, -2, "localName");
 }
 
 static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
@@ -124,7 +124,7 @@ static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
 
 static void create_text_node(lua_State *L, const GumboText *text) {
     lua_createtable(L, 0, 5);
-    add_string(L, "text", text->text);
+    add_string(L, "data", text->text);
     add_integer(L, "line", text->start_pos.line);
     add_integer(L, "column", text->start_pos.column);
     add_integer(L, "offset", text->start_pos.offset);

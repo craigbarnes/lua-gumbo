@@ -73,10 +73,10 @@ end
 local function to_html(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local get_indent = Indent(indent_width)
-    local function serialize(node, depth, parent_tag)
+    local function serialize(node, depth)
         local indent = get_indent[depth]
         if node.type == "element" then
-            local tag = node.tag
+            local tag = node.localName
             buf:write(indent, "<", tag)
             for index, name, val, ns in node:attr_iter() do
                 if ns == "xmlns" and name == "xmlns" then
@@ -96,18 +96,19 @@ local function to_html(node, buffer, indent_width)
             else
                 buf:write("\n")
                 for i = 1, length do
-                    serialize(node[i], depth + 1, node.tag)
+                    serialize(node[i], depth + 1)
                 end
                 buf:write(indent, "</", tag, ">\n")
             end
         elseif node.type == "text" then
-            if raw[parent_tag] then
-                buf:write(indent, node.text, "\n")
+            local parent = node.parentNode
+            if parent and raw[parent.localName] then
+                buf:write(indent, node.data, "\n")
             else
-                buf:write(wrap(escape_text(node.text), indent))
+                buf:write(wrap(escape_text(node.data), indent))
             end
         elseif node.type == "comment" then
-            buf:write(indent, "<!--", node.text, "-->\n")
+            buf:write(indent, "<!--", node.data, "-->\n")
         elseif node.type == "document" then
             if node.doctype then
                 buf:write("<!DOCTYPE ", node.doctype.name, ">\n")
