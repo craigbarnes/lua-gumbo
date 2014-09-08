@@ -14,7 +14,7 @@ end
 interface Element
     type: string -- Always has a value of "element" for Element nodes.
     localName: string -- The tag name, normalized to lower case.
-    tag_namespace: string? -- "svg", "math" or nil.
+    namespace: string? -- "svg", "math" or nil.
     attributes: { -- Ordered list of attributes.
         {
             "name": string, -- The attribute name, normalized to lower case.

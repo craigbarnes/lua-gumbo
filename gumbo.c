@@ -81,7 +81,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
 
 static void add_tag(lua_State *L, const GumboElement *element) {
     if (element->tag_namespace == GUMBO_NAMESPACE_SVG) {
-        add_string(L, "tag_namespace", "svg");
+        add_string(L, "namespace", "svg");
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
         const char *normalized = gumbo_normalize_svg_tagname(&original_tag);
@@ -90,7 +90,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
             return;
         }
     } else if (element->tag_namespace == GUMBO_NAMESPACE_MATHML) {
-        add_string(L, "tag_namespace", "math");
+        add_string(L, "namespace", "math");
     }
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
