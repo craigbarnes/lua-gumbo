@@ -16,7 +16,7 @@ local function attr_next(attrs, i)
 end
 
 function Element:attr_iter()
-    return attr_next, self.attributes or {}, 0
+    return attr_next, self.attributes, 0
 end
 
 function Element:hasAttribute(name)
