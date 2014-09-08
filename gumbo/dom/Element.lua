@@ -33,4 +33,20 @@ function Element:hasAttribute(name)
     return false
 end
 
+function Element:getAttribute(name)
+    if type(name) == "string" then
+        -- If the context object is in the HTML namespace and its node document
+        -- is an HTML document, let name be converted to ASCII lowercase.
+        if self.namespace == nil --[[and self.ownerDocument.ISHTMLDOC]] then
+            name = name:lower()
+        end
+        -- Return the value of the first attribute in the context object's
+        -- attribute list whose name is name, and null otherwise.
+        local attr = self.attributes[name]
+        if attr then
+            return attr.value
+        end
+    end
+end
+
 return Element
