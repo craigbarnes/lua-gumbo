@@ -19,4 +19,18 @@ function Element:attr_iter()
     return attr_next, self.attributes or {}, 0
 end
 
+function Element:hasAttribute(name)
+    if type(name) == "string" then
+        -- If the context object is in the HTML namespace and its node document
+        -- is an HTML document, let name be converted to ASCII lowercase.
+        if self.namespace == nil --[[and self.ownerDocument.ISHTMLDOC]] then
+            name = name:lower()
+        end
+        -- Return true if the context object has an attribute whose name is
+        -- name, and false otherwise.
+        return self.attributes[name] and true or false
+    end
+    return false
+end
+
 return Element
