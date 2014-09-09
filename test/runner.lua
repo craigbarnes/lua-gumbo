@@ -4,10 +4,12 @@
 
 assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
+local serialize = require "gumbo.serialize.html5lib"
 local util = require "gumbo.util"
 local Buffer = util.Buffer
-local serialize = require "gumbo.serialize.html5lib"
+local write = io.write
 local verbose = os.getenv "VERBOSE"
+local quiet = os.getenv "QUIET"
 local total_passed, total_failed, total_skipped = 0, 0, 0
 local hrule = string.rep("=", 76)
 local start = os.clock()
@@ -64,7 +66,7 @@ for i = 1, #arg do
             else
                 failed = failed + 1
                 if verbose then
-                    io.write(
+                    write(
                         hrule, "\n",
                         filename, ":", test.line, ": Test ", i, " failed\n",
                         hrule, "\n\n",
@@ -81,17 +83,19 @@ for i = 1, #arg do
     total_skipped = total_skipped + skipped
 end
 
-io.write(
-    "\nRan ", total_passed + total_failed + total_skipped, " tests in ",
-    string.format("%.2fs", os.clock() - start), "\n\n",
-    "Passed: ", total_passed, "\n",
-    "Failed: ", total_failed, "\n",
-    "Skipped: ", total_skipped, "\n\n"
-)
+if not quiet or total_failed > 0 then
+    write(
+        "\nRan ", total_passed + total_failed + total_skipped, " tests in ",
+        string.format("%.2fs", os.clock() - start), "\n\n",
+        "Passed: ", total_passed, "\n",
+        "Failed: ", total_failed, "\n",
+        "Skipped: ", total_skipped, "\n\n"
+    )
+end
 
 if total_failed > 0 then
     if not verbose then
-        print "Re-run with VERBOSE=1 for a full report"
+        write "Re-run with VERBOSE=1 for a full report\n"
     end
     os.exit(1)
 end

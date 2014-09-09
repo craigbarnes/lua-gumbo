@@ -71,20 +71,25 @@ uninstall:
 export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
-check: all
+check: export QUIET = yes
+check: check-serialize check-misc check-html5lib
+
+check-serialize: all
 	@$(TOTABLE) test/t1.html | diff -u2 test/t1.table -
 	@$(TOHTML) test/t1.html | diff -u2 test/t1.out.html -
 	@$(TOHTML) test/t1.html | $(TOHTML) | diff -u2 test/t1.out.html -
+	@printf "%16s: %s\n" $@ OK
+
+check-misc: all
 	@$(LUA) test/misc.lua
-	@echo OK
+	@printf "%16s: %s\n" $@ OK
 
 check-html5lib: all | test/html5lib-tests/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
+	@printf "%16s: %s\n" $@ OK
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
-check-valgrind: check
-
-check-all: check check-html5lib
+check-valgrind: check-serialize check-misc
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
@@ -106,6 +111,7 @@ clean:
 	$(RM) -r .libs
 
 
-.PHONY: all install uninstall check check-html5lib check-valgrind githooks
-.PHONY: check-all check-compat dist bench bench-html bench-table clean force
+.PHONY: all install uninstall clean dist force githooks check
+.PHONY: check-serialize check-misc check-html5lib check-compat check-valgrind
+.PHONY: bench bench-html bench-table
 .DELETE_ON_ERROR:
