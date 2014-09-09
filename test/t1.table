@@ -1,6 +1,6 @@
 {
     type = "document",
-    quirks_mode = "no-quirks",
+    quirksMode = "no-quirks",
     doctype = {
         name = "html",
         systemId = "",

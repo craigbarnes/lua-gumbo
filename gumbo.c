@@ -203,7 +203,7 @@ static int parse(lua_State *L) {
         lua_createtable(L, document->children.length, 4);
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Document");
         lua_setmetatable(L, -2);
-        add_string(L, "quirks_mode", quirksmap[document->doc_type_quirks_mode]);
+        add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
             lua_createtable(L, 0, 3);
             add_string(L, "name", document->name);

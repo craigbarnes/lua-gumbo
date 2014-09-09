@@ -112,7 +112,7 @@ local function to_table(node, buffer, indent_width)
             buf:write(
                 "{\n",
                 i1, 'type = "document",\n',
-                i1, 'quirks_mode = "', node.quirks_mode, '",\n'
+                i1, 'quirksMode = "', node.quirksMode, '",\n'
             )
             if doctype then
                 buf:write(

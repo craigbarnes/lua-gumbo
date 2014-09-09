@@ -78,7 +78,7 @@ and contains all other nodes as descendants.
   * `name`: The [root element] name.
   * `publicId`: The [public identifier], or `""`.
   * `systemId`: The [system identifier], or `""`.
-* `quirks_mode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
+* `quirksMode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
 * `documentElement`: A reference to the child `<html>` element.
 * `[1..n]`: Child nodes.
 
@@ -101,7 +101,6 @@ numeric indices.
     * `column`
     * `offset`
   * `["xyz"]`: A reference to the attribute with `name` `"xyz"`, or `nil`.
-* `parse_flags`
 * `line`
 * `column`
 * `offset`
