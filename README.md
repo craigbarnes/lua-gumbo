@@ -90,7 +90,7 @@ numeric indices.
 **Fields:**
 
 * `type`: Always has a value of `"element"` for element nodes.
-* `tag`: The tag name, normalized to lower case.
+* `localName`: The tag name, normalized to lower case.
 * `namespace`: Either `"svg"`, `"math"` or `nil`.
 * `attributes`: A table of attributes (may be empty but never `nil`).
   * `[1..n]`: Tables, each representing a single attribute, in source order:
