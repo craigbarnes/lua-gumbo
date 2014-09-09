@@ -106,9 +106,8 @@ bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) gumbo.so gumbo.o test/*MiB.html README.html gh.css
-	$(RM) lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
-	$(RM) -r .libs
+	$(RM) gumbo.so gumbo.o test/*MiB.html README.html gh.css \
+	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
 
 
 .PHONY: all install uninstall clean dist force githooks check
