@@ -12,8 +12,8 @@ stabilized.
 Running the html5lib [tree-construction tests] currently produces the
 following stats:
 
-    Passed: 1217
-    Failed: 3
+    Passed: 1220
+    Failed: 0
     Skipped: 115
 
 Requirements
