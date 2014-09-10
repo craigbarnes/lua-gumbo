@@ -223,45 +223,6 @@ static int parse(lua_State *L) {
     }
 }
 
-static int parse_file(lua_State *L) {
-    const int tabstop = luaL_optint(L, 2, 8);
-    lua_settop(L, 1);
-    if (lua_isstring(L, 1)) {
-        lua_getglobal(L, "io");
-        lua_getfield(L, -1, "open");
-        lua_pushvalue(L, 1);
-        lua_call(L, 1, 2);
-        if (lua_isnil(L, -2))
-            return 2;
-        lua_pop(L, 1);
-    }
-    if (!lua_isuserdata(L, -1))
-        return luaL_argerror(L, 1, "not a file handle or filename string");
-    if (!luaL_getmetafield(L, -1, "read"))
-        return luaL_argerror(L, 1, "not a file handle or filename string");
-    lua_pushvalue(L, -2);
-    lua_pushliteral(L, "*a");
-    lua_call(L, 2, 2);
-    if (lua_isnil(L, -2))
-        return 2;
-    lua_pushcfunction(L, parse);
-    lua_pushvalue(L, -3);
-    lua_pushinteger(L, tabstop);
-    lua_call(L, 2, 2);
-    if (lua_isnil(L, -2)) {
-        return 2;
-    } else {
-        lua_pop(L, 1);
-        return 1;
-    }
-}
-
-static const luaL_Reg lib[] = {
-    {"parse", parse},
-    {"parse_file", parse_file},
-    {NULL, NULL}
-};
-
 static inline void require(lua_State *L, const char *modname) {
     lua_getglobal(L, "require");
     lua_pushstring(L, modname);
@@ -273,11 +234,11 @@ static inline void require(lua_State *L, const char *modname) {
     }
 }
 
-int luaopen_gumbo(lua_State *L) {
+int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.dom.Text");
     require(L, "gumbo.dom.Comment");
     require(L, "gumbo.dom.Element");
     require(L, "gumbo.dom.Document");
-    luaL_newlib(L, lib);
+    lua_pushcfunction(L, parse);
     return 1;
 }
