@@ -1,6 +1,6 @@
 include lualib.mk
 
-REQCFLAGS     = -std=c99 -pedantic -fpic
+REQCFLAGS     = -std=c99 -pedantic-errors -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
 CFLAGS       += $(REQCFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS)
 LDLIBS        = $(GUMBO_LDLIBS)

@@ -39,20 +39,15 @@ static const char flagmap[][33] = {
     "foster_parented"
 };
 
-#define add_literal(L, k, v) ( \
-    lua_pushliteral(L, v), \
-    lua_setfield(L, -2, k) \
+#define add_field(T, L, k, v) ( \
+    lua_pushliteral(L, k), \
+    lua_push##T(L, v), \
+    lua_rawset(L, -3) \
 )
 
-static inline void add_string(lua_State *L, const char *k, const char *v) {
-    lua_pushstring(L, v);
-    lua_setfield(L, -2, k);
-}
-
-static inline void add_integer(lua_State *L, const char *k, const int v) {
-    lua_pushinteger(L, v);
-    lua_setfield(L, -2, k);
-}
+#define add_literal(L, k, v) add_field(literal, L, k, v)
+#define add_string(L, k, v) add_field(string, L, k, v)
+#define add_integer(L, k, v) add_field(integer, L, k, v)
 
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
