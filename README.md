@@ -110,7 +110,7 @@ numeric indices.
 
 * `attr_iter`: returns an iterator that produces the values
   `index, name, value, prefix, line, column, offset` for each of the
-  element's attributes. See: [find_links.lua].
+  element's attributes.
 
 ### Text
 

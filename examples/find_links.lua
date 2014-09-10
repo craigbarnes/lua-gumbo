@@ -4,10 +4,9 @@ local gumbo = require "gumbo"
 --- Iterate an element node recursively, printing any href attributes found
 local function find_links(node)
     if node.type == "element" then
-        for i, name, value in node:attr_iter() do
-            if name == "href" then
-                print(value)
-            end
+        local href = node.attributes.href
+        if href then
+            print(href.value)
         end
         for i = 1, #node do
             find_links(node[i])
