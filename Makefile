@@ -88,6 +88,7 @@ check-serialize: all
 
 check-misc: all
 	@$(LUA) test/misc.lua
+	@$(LUA) test/dom.lua
 	@printf "%16s: %s\n" $@ OK
 
 check-html5lib: all | test/html5lib-tests/tree-construction
