@@ -8,6 +8,10 @@ TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 TOHTML        = $(LUA) test/serialize.lua html
 TOTABLE       = $(LUA) test/serialize.lua table
 BENCHFILE     = test/2MiB.html
+
+DOM_IFACES    = CharacterData ChildNode Comment Document Element \
+                Node NonElementParentNode Text
+DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
 SERIALIZERS   = $(addprefix gumbo/serialize/, table.lua html.lua html5lib.lua)
 
 GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags gumbo)
@@ -58,9 +62,11 @@ test/html5lib-tests/%:
 
 install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)'
-	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize'
+	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
+	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
 	$(INSTALLX) gumbo.so '$(DESTDIR)$(LUA_CMOD_DIR)/'
 	$(INSTALL) gumbo/util.lua '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL) $(DOM_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
 	$(INSTALL) $(SERIALIZERS) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 
 uninstall:
