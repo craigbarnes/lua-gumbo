@@ -3,18 +3,40 @@ lua-gumbo
 
 [Lua] bindings for the [Gumbo][] [HTML5] parsing library.
 
-Status
-------
+Goals and Features
+------------------
 
-*Work in progress*. A versioned release will be made when the API has
-stabilized.
+* Supports C99/POSIX conforming platforms.
+* Provides a selection of [DOM4] APIs, useful for tools and libraries.
+* Tree serializers to output HTML5, Lua tables and html5lib ASTs.
+* Passes all html5lib 0.95 [tree-construction tests].
 
-Running the html5lib [tree-construction tests] currently produces the
-following stats:
+Non-goals
+---------
 
-    Passed: 1220
-    Failed: 0
-    Skipped: 115
+* Full DOM implementation/conformance. lua-gumbo is intended to be useful for
+  tools and libraries, as opposed to web browsers. Althought the parse tree
+  should fully align with the HTML5 parsing specification, the additional DOM
+  interfaces are only provided for convenience and familiarity. The API will
+  diverge from the DOM spec where the spec is deemed an unfortunate
+  historical accident (e.g. UTF-16 `DOMString`s) and omit the parts that
+  are just redundant bloat (e.g. the 60 or so `HTML*Element` interfaces).
+* Support for Windows.
+
+TODO
+----
+
+* Update this readme to include new DOM APIs.
+* Restructure DOM metatable inheritance.
+* Use proxy tables to implement `getter` and `readonly` DOM interfaces.
+* Implement `ParentNode.querySelector()` and `ParentNode.querySelectorAll()`:
+  + CSS3 selector parser.
+  + Code generator.
+  + Tree walker.
+* Implement `Node.length`.
+* Move Document/Element children to a dedicated `childNodes` table field.
+* Don't include whitespace nodes in `childNodes`, but keep them around
+  somewhere for html5lib testing.
 
 Requirements
 ------------
@@ -152,6 +174,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [Lua]: http://www.lua.org/
 [LuaJIT]: http://luajit.org/
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
+[DOM4]: http://www.w3.org/TR/dom/
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
