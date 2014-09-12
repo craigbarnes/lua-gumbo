@@ -6,21 +6,15 @@ lua-gumbo
 Goals and Features
 ------------------
 
-* Supports C99/POSIX conforming platforms.
-* Provides a selection of [DOM4] APIs, useful for tools and libraries.
+* Support for C99/POSIX conforming platforms.
+* Provides a small selection of [DOM4] APIs.
 * Tree serializers to output HTML5, Lua tables and html5lib ASTs.
 * Passes all html5lib 0.95 [tree-construction tests].
 
 Non-goals
 ---------
 
-* Full DOM implementation/conformance. lua-gumbo is intended to be useful for
-  tools and libraries, as opposed to web browsers. Althought the parse tree
-  should fully align with the HTML5 parsing specification, the additional DOM
-  interfaces are only provided for convenience and familiarity. The API will
-  diverge from the DOM spec where the spec is deemed an unfortunate
-  historical accident (e.g. UTF-16 `DOMString`s) and omit the parts that
-  are just redundant bloat (e.g. the 60 or so `HTML*Element` interfaces).
+* Full DOM implementation/conformance.
 * Support for Windows.
 
 TODO
