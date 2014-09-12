@@ -3,10 +3,11 @@ local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local util = require "gumbo.dom.util"
 
-local Document = util.implements("Node", "NonElementParentNode")
-Document.type = "document"
-Document.nodeName = "#document"
-Document.nodeType = 9
+local Document = util.merge("Node", "NonElementParentNode", {
+    type = "document",
+    nodeName = "#document",
+    nodeType = 9
+})
 
 -- The createElement(localName) method must run the these steps:
 --

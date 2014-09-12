@@ -1,11 +1,35 @@
 local util = require "gumbo.dom.util"
 
--- TODO: Implement nodeName (http://www.w3.org/TR/dom/#dom-node-nodename)
+local Element = util.merge("Node", "ChildNode", {
+    type = "element",
+    nodeType = 1,
+    attributes = {}
+})
 
-local Element = util.implements("Node", "ChildNode")
-Element.type = "element"
-Element.nodeType = 1
-Element.attributes = {}
+local getters = {}
+
+-- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
+function getters:tagName()
+    if self.namespace then
+        return self.localName
+    else
+        return self.localName:upper()
+    end
+end
+
+getters.nodeName = getters.tagName
+
+function Element:__index(k)
+    local field = Element[k]
+    if field then
+        return field
+    else
+        local getter = getters[k]
+        if getter then
+            return getter(self)
+        end
+    end
+end
 
 local function attr_next(attrs, i)
     local j = i + 1

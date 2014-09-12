@@ -1,7 +1,6 @@
 local yield, wrap = coroutine.yield, coroutine.wrap
 
 local NonElementParentNode = {}
-NonElementParentNode.__index = NonElementParentNode
 
 local function walk(root)
     local function iter(node)

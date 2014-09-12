@@ -1,8 +1,9 @@
 local util = require "gumbo.dom.util"
 
-local Text = util.implements("CharacterData")
-Text.type = "text"
-Text.nodeName = "#text"
-Text.nodeType = 3
+local Text = util.merge("CharacterData", {
+    type = "text",
+    nodeName = "#text",
+    nodeType = 3
+})
 
 return Text

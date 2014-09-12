@@ -13,8 +13,6 @@ local Node = {
     NOTATION_NODE = 12 -- historical
 }
 
-Node.__index = Node
-
 function Node:hasChildNodes()
     return self[1] and true or false
 end

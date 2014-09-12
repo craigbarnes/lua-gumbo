@@ -1,7 +1,6 @@
 local remove = table.remove
 
 local ChildNode = {}
-ChildNode.__index = ChildNode
 
 function ChildNode:remove()
     local parent = self.parentNode
