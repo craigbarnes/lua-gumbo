@@ -8,6 +8,18 @@ local Element = util.merge("Node", "ChildNode", {
 
 local getters = {}
 
+-- TODO: This attribute is not readonly -- also implement a setter
+function getters:id()
+    local id_attr = self.attributes.id
+    return id_attr and id_attr.value
+end
+
+-- TODO: This attribute is not readonly -- also implement a setter
+function getters:className()
+    local class_attr = self.attributes.class
+    return class_attr and class_attr.value
+end
+
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
 function getters:tagName()
     if self.namespace then
