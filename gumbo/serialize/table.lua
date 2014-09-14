@@ -32,7 +32,8 @@ local function to_table(node, buffer, indent_width)
 
     local function serialize(node, depth, index, is_last_child)
         if node.type == "element" then
-            local node_length = #node
+            local children = node.childNodes
+            local node_length = #children
             local attr_length = #node.attributes
             local i1, i2 = indent[depth+1], indent[depth+2]
             buf:write(indent[depth])
@@ -87,7 +88,7 @@ local function to_table(node, buffer, indent_width)
                 buf:write(i1, '}', node_length > 0 and "," or "", '\n')
             end
             for i = 1, node_length do
-                serialize(node[i], depth + 1, i, i == node_length)
+                serialize(children[i], depth + 1, i, i == node_length)
             end
             buf:write(indent[depth], '}', is_last_child and "" or ",", '\n')
         elseif node.data then
@@ -123,8 +124,10 @@ local function to_table(node, buffer, indent_width)
                     i1, '},\n'
                 )
             end
-            for i = 1, #node do
-                serialize(node[i], depth + 1, i, i == #node)
+            local children = node.childNodes
+            local n = #children
+            for i = 1, n do
+                serialize(children[i], depth + 1, i, i == n)
             end
             buf:write("}\n")
         end

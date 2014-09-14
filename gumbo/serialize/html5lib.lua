@@ -29,18 +29,20 @@ return function(node, buffer, indent_width)
                 buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
             end
 
-            for i = 1, #node do
-                if node[i].type == "text" and node[i+1]
-                   and node[i+1].type == "text"
+            local children = node.childNodes
+            local n = #children
+            for i = 1, n do
+                if children[i].type == "text" and children[i+1]
+                   and children[i+1].type == "text"
                 then
                     -- Merge adjacent text nodes, as expected by the
                     -- spec and the html5lib tests
                     -- TODO: Why doesn't Gumbo do this during parsing?
-                    local text = node[i+1].data
-                    node[i+1] = node[i]
-                    node[i+1].data = node[i+1].data .. text
+                    local text = children[i+1].data
+                    children[i+1] = children[i]
+                    children[i+1].data = children[i+1].data .. text
                 else
-                    serialize(node[i], depth + 1)
+                    serialize(children[i], depth + 1)
                 end
             end
         elseif node.type == "text" or node.type == "whitespace" then
@@ -57,8 +59,9 @@ return function(node, buffer, indent_width)
                 end
                 buf:write(">\n")
             end
-            for i = 1, #node do
-                serialize(node[i], depth)
+            local children = node.childNodes
+            for i = 1, #children do
+                serialize(children[i], depth)
             end
         end
     end

@@ -88,7 +88,8 @@ local function to_html(node, buffer, indent_width)
                 end
             end
             buf:write(">")
-            local length = #node
+            local children = node.childNodes
+            local length = #children
             if void[tag] then
                 buf:write("\n")
             elseif length == 0 then
@@ -96,7 +97,7 @@ local function to_html(node, buffer, indent_width)
             else
                 buf:write("\n")
                 for i = 1, length do
-                    serialize(node[i], depth + 1)
+                    serialize(children[i], depth + 1)
                 end
                 buf:write(indent, "</", tag, ">\n")
             end
@@ -113,8 +114,9 @@ local function to_html(node, buffer, indent_width)
             if node.doctype then
                 buf:write("<!DOCTYPE ", node.doctype.name, ">\n")
             end
-            for i = 1, #node do
-                serialize(node[i], depth)
+            local children = node.childNodes
+            for i = 1, #children do
+                serialize(children[i], depth)
             end
         end
     end

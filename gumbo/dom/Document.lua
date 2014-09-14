@@ -35,10 +35,6 @@ function Document:__index(k)
     end
 end
 
-function Document:__len()
-    return #self.childNodes
-end
-
 -- The createElement(localName) method must run the these steps:
 --
 -- 1. If localName does not match the Name production, throw an

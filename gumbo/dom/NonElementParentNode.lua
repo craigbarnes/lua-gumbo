@@ -5,8 +5,9 @@ local NonElementParentNode = {}
 local function walk(root)
     local function iter(node)
         yield(node)
-        for i = 1, #node do
-            iter(node[i])
+        local children = node.childNodes
+        for i = 1, #children do
+            iter(children[i])
         end
     end
     return wrap(function() iter(root) end)

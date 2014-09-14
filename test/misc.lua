@@ -5,8 +5,8 @@ local gumbo = require "gumbo"
 local document = assert(gumbo.parse("\t\t<!--one--><!--two--><h1>Hi</h1>", 16))
 
 -- Check that document.documentElement is set correctly
+assert(document.childNodes.length == 3)
 assert(#document.childNodes == 3)
-assert(#document == 3)
 assert(document.documentElement and document.documentElement == document[3])
 assert(document[1].data == "one")
 assert(document[2].data == "two")
