@@ -11,7 +11,7 @@ TOTABLE       = $(LUA) test/serialize.lua table
 BENCHFILE     = test/2MiB.html
 
 DOM_IFACES    = CharacterData ChildNode Comment Document Element \
-                Node NonElementParentNode Text
+                Node NodeList NonElementParentNode Text
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
 SERIALIZERS   = $(addprefix gumbo/serialize/, table.lua html.lua html5lib.lua)
 

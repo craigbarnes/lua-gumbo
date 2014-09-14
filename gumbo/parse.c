@@ -130,16 +130,22 @@ static void push_node(lua_State *L, const GumboNode *node);
 
 static void add_children(lua_State *L, const GumboVector *children) {
     const unsigned int length = children->length;
-    for (unsigned int i = 0; i < length; i++) {
-        push_node(L, (const GumboNode *)children->data[i]);
+    if (length > 0) {
+        lua_createtable(L, length, 0);
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.NodeList");
+        lua_setmetatable(L, -2);
+        for (unsigned int i = 0; i < length; i++) {
+            push_node(L, (const GumboNode *)children->data[i]);
 
-        // child.parentNode = parent
-        lua_pushliteral(L, "parentNode");
-        lua_pushvalue(L, -3);
-        lua_rawset(L, -3);
+            // child.parentNode = parent
+            lua_pushliteral(L, "parentNode");
+            lua_pushvalue(L, -4);
+            lua_rawset(L, -3);
 
-        // parent[i+1] = child
-        lua_rawseti(L, -2, i + 1);
+            // parent.childNodes[i+1] = child
+            lua_rawseti(L, -2, i + 1);
+        }
+        lua_setfield(L, -2, "childNodes");
     }
 }
 
@@ -207,8 +213,14 @@ static int parse(lua_State *L) {
             lua_setfield(L, -2, "doctype");
         }
         add_children(L, &document->children);
-        lua_rawgeti(L, -1, output->root->index_within_parent + 1);
-        lua_setfield(L, -2, "documentElement");
+
+        // document.documentElement = document.childNodes[root_index]
+        size_t root_index = output->root->index_within_parent + 1;
+        lua_getfield(L, -1, "childNodes");
+        lua_rawgeti(L, -1, root_index);
+        lua_setfield(L, -3, "documentElement");
+        lua_pop(L, 1);
+
         gumbo_destroy_output(&options, output);
         return 1;
     } else {
@@ -234,6 +246,7 @@ int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.dom.Comment");
     require(L, "gumbo.dom.Element");
     require(L, "gumbo.dom.Document");
+    require(L, "gumbo.dom.NodeList");
     lua_pushcfunction(L, parse);
     return 1;
 }

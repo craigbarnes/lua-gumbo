@@ -2,7 +2,7 @@ local gumbo = require "gumbo"
 
 local input = [[
 <div id=main class='foo bar baz etc'>
-    <h1 id=heading>Title</h1>
+    <h1 id=heading>Title <!--comment --></h1>
 </div>
 ]]
 
@@ -32,13 +32,13 @@ assert(heading.attributes[1].value == "heading")
 assert(heading.attributes.id.value == "heading")
 assert(heading[1].nodeName == "#text")
 assert(heading[1].nodeType == document.TEXT_NODE)
-assert(heading[1].data == "Title")
+assert(heading[1].data == "Title ")
 
--- TODO:
---  #heading should be heading.length
---  heading[1] should be heading.childNodes[1]
 assert(heading:hasChildNodes() == true)
-assert(#heading == 1)
-heading[1]:remove()
+assert(heading.childNodes.length == 2)
+heading.childNodes[2]:remove()
+assert(heading:hasChildNodes() == true)
+assert(heading.childNodes.length == 1)
+heading.childNodes[1]:remove()
 assert(heading:hasChildNodes() == false)
-assert(#heading == 0)
+assert(heading.childNodes.length == 0)

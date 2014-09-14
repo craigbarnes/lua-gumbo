@@ -9,6 +9,17 @@ local Document = util.merge("Node", "NonElementParentNode", {
     nodeType = 9
 })
 
+function Document:__index(k)
+    if type(k) == "number" then
+        return self.childNodes[k]
+    end
+    return Document[k]
+end
+
+function Document:__len()
+    return #self.childNodes
+end
+
 -- The createElement(localName) method must run the these steps:
 --
 -- 1. If localName does not match the Name production, throw an

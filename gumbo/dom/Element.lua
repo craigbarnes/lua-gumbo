@@ -32,6 +32,9 @@ end
 getters.nodeName = getters.tagName
 
 function Element:__index(k)
+    if type(k) == "number" then
+        return self.childNodes[k]
+    end
     local field = Element[k]
     if field then
         return field
@@ -41,6 +44,10 @@ function Element:__index(k)
             return getter(self)
         end
     end
+end
+
+function Element:__len()
+    return #self.childNodes
 end
 
 local function attr_next(attrs, i)

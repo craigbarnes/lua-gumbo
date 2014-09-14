@@ -5,9 +5,15 @@ local ChildNode = {}
 function ChildNode:remove()
     local parent = self.parentNode
     if parent then
-        for i = 1, #parent do
-            if parent[i] == self then
-                remove(parent, i)
+        local cnodes = parent.childNodes
+        local n = #cnodes
+        for i = 1, n do
+            if cnodes[i] == self then
+                if n == 1 then
+                    parent.childNodes = nil
+                else
+                    remove(cnodes, i)
+                end
             end
         end
     end

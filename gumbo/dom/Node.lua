@@ -10,11 +10,13 @@ local Node = {
     DOCUMENT_NODE = 9,
     DOCUMENT_TYPE_NODE = 10,
     DOCUMENT_FRAGMENT_NODE = 11,
-    NOTATION_NODE = 12 -- historical
+    NOTATION_NODE = 12, -- historical
+
+    childNodes = {length = 0}
 }
 
 function Node:hasChildNodes()
-    return self[1] and true or false
+    return self.childNodes[1] and true or false
 end
 
 return Node
