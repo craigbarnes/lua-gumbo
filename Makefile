@@ -3,22 +3,23 @@ include lualib.mk
 REQCFLAGS     = -std=c99 -pedantic-errors -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
 CFLAGS       += $(REQCFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS)
-LDLIBS        = $(GUMBO_LDLIBS)
-TIME          = $(or $(shell which time), $(error $@)) -f '%es, %MKB'
-RMDIRP        = rmdir --ignore-fail-on-non-empty -p
-TOHTML        = $(LUA) test/serialize.lua html
-TOTABLE       = $(LUA) test/serialize.lua table
-BENCHFILE     = test/2MiB.html
+
+LDLIBS       ?= $(GUMBO_LDLIBS)
+TIME         ?= $(or $(shell which time), $(error $@)) -f '%es, %MKB'
+RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
+TOHTML       ?= $(LUA) test/serialize.lua html
+TOTABLE      ?= $(LUA) test/serialize.lua table
+BENCHFILE    ?= test/2MiB.html
 
 DOM_IFACES    = CharacterData ChildNode Comment Document Element \
                 Node NodeList NonElementParentNode Text
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
 SERIALIZERS   = $(addprefix gumbo/serialize/, table.lua html.lua html5lib.lua)
 
-GUMBO_CFLAGS  = $(shell $(PKGCONFIG) --cflags gumbo)
-GUMBO_LDLIBS  = $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
-GUMBO_INCDIR  = $(shell $(PKGCONFIG) --variable=includedir gumbo)
-GUMBO_HEADER  = $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
+GUMBO_CFLAGS ?= $(shell $(PKGCONFIG) --cflags gumbo)
+GUMBO_LDLIBS ?= $(or $(shell $(PKGCONFIG) --libs gumbo), -lgumbo)
+GUMBO_INCDIR ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
+GUMBO_HEADER ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h
