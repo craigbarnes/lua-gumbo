@@ -12,6 +12,8 @@ local main = assert(document:getElementById("main"))
 local heading = assert(document:getElementById("heading"))
 
 assert(document.nodeName == "#document")
+assert(document.firstChild == body.parentNode)
+assert(document.lastChild == body.parentNode)
 
 assert(body.nodeName == "BODY")
 assert(body.nodeType == document.ELEMENT_NODE)
@@ -36,9 +38,17 @@ assert(heading[1].data == "Title ")
 
 assert(heading:hasChildNodes() == true)
 assert(heading.childNodes.length == 2)
+assert(heading.firstChild == heading.childNodes[1])
+assert(heading.lastChild == heading.childNodes[2])
+
 heading.childNodes[2]:remove()
 assert(heading:hasChildNodes() == true)
 assert(heading.childNodes.length == 1)
+assert(heading.firstChild == heading.childNodes[1])
+assert(heading.lastChild == heading.childNodes[1])
+
 heading.childNodes[1]:remove()
 assert(heading:hasChildNodes() == false)
 assert(heading.childNodes.length == 0)
+assert(heading.firstChild == nil)
+assert(heading.lastChild == nil)

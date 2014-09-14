@@ -8,6 +8,15 @@ local Element = util.merge("Node", "ChildNode", {
 
 local getters = {}
 
+function getters:firstChild()
+    return self.childNodes[1]
+end
+
+function getters:lastChild()
+    local cnodes = self.childNodes
+    return cnodes[#cnodes]
+end
+
 -- TODO: This attribute is not readonly -- also implement a setter
 function getters:id()
     local id_attr = self.attributes.id

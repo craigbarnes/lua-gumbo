@@ -9,11 +9,30 @@ local Document = util.merge("Node", "NonElementParentNode", {
     nodeType = 9
 })
 
+local getters = {}
+
+function getters:firstChild()
+    return self.childNodes[1]
+end
+
+function getters:lastChild()
+    local cnodes = self.childNodes
+    return cnodes[#cnodes]
+end
+
 function Document:__index(k)
     if type(k) == "number" then
         return self.childNodes[k]
     end
-    return Document[k]
+    local field = Document[k]
+    if field then
+        return field
+    else
+        local getter = getters[k]
+        if getter then
+            return getter(self)
+        end
+    end
 end
 
 function Document:__len()
