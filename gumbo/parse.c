@@ -171,6 +171,12 @@ static void push_node(lua_State *L, const GumboNode *node) {
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Text");
         lua_setmetatable(L, -2);
         return;
+    case GUMBO_NODE_WHITESPACE:
+        create_text_node(L, &node->v.text);
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Text");
+        lua_setmetatable(L, -2);
+        add_literal(L, "type", "whitespace");
+        return;
     case GUMBO_NODE_COMMENT:
         create_text_node(L, &node->v.text);
         lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Comment");
@@ -179,10 +185,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_CDATA:
         create_text_node(L, &node->v.text);
         add_literal(L, "type", "cdata");
-        return;
-    case GUMBO_NODE_WHITESPACE:
-        create_text_node(L, &node->v.text);
-        add_literal(L, "type", "whitespace");
         return;
     case GUMBO_NODE_DOCUMENT:
         luaL_error(L, "Invalid nested Document node");
