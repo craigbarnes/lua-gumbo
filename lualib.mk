@@ -1,6 +1,6 @@
 -include local.mk
 
-CC        ?= gcc
+CC         = gcc
 LDFLAGS   ?= -shared -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors
 LUA       ?= lua
