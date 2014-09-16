@@ -1,0 +1,219 @@
+{
+    type = "document",
+    quirksMode = "no-quirks",
+    doctype = {
+        name = "html",
+        systemId = "",
+        publicId = ""
+    },
+    [1] = {
+        type = "element",
+        localName = "html",
+        line = 1,
+        column = 16,
+        offset = 15,
+        parse_flags = {
+            insertion_by_parser = true,
+            implicit_end_tag = true,
+            insertion_implied = true,
+        },
+        [1] = {
+            type = "element",
+            localName = "head",
+            line = 1,
+            column = 16,
+            offset = 15,
+            parse_flags = {
+                insertion_by_parser = true,
+                implicit_end_tag = true,
+                insertion_implied = true,
+            }
+        },
+        [2] = {
+            type = "element",
+            localName = "body",
+            line = 1,
+            column = 16,
+            offset = 15,
+            parse_flags = {
+                implicit_end_tag = true,
+            },
+            [1] = {
+                type = "text",
+                data = "foo",
+                line = 1,
+                column = 22,
+                offset = 21
+            },
+            [2] = {
+                type = "element",
+                localName = "math",
+                namespaceURI = "http://www.w3.org/1998/Math/MathML",
+                line = 1,
+                column = 25,
+                offset = 24,
+                [1] = {
+                    type = "element",
+                    localName = "mtext",
+                    namespaceURI = "http://www.w3.org/1998/Math/MathML",
+                    line = 1,
+                    column = 31,
+                    offset = 30,
+                    [1] = {
+                        type = "element",
+                        localName = "i",
+                        line = 1,
+                        column = 38,
+                        offset = 37,
+                        [1] = {
+                            type = "text",
+                            data = "baz",
+                            line = 1,
+                            column = 41,
+                            offset = 40
+                        }
+                    }
+                },
+                [2] = {
+                    type = "element",
+                    localName = "annotation-xml",
+                    namespaceURI = "http://www.w3.org/1998/Math/MathML",
+                    line = 1,
+                    column = 56,
+                    offset = 55,
+                    [1] = {
+                        type = "element",
+                        localName = "svg",
+                        namespaceURI = "http://www.w3.org/2000/svg",
+                        line = 1,
+                        column = 72,
+                        offset = 71,
+                        [1] = {
+                            type = "element",
+                            localName = "desc",
+                            namespaceURI = "http://www.w3.org/2000/svg",
+                            line = 1,
+                            column = 77,
+                            offset = 76,
+                            [1] = {
+                                type = "element",
+                                localName = "b",
+                                line = 1,
+                                column = 83,
+                                offset = 82,
+                                [1] = {
+                                    type = "text",
+                                    data = "eggs",
+                                    line = 1,
+                                    column = 86,
+                                    offset = 85
+                                }
+                            }
+                        },
+                        [2] = {
+                            type = "element",
+                            localName = "g",
+                            namespaceURI = "http://www.w3.org/2000/svg",
+                            line = 1,
+                            column = 101,
+                            offset = 100,
+                            [1] = {
+                                type = "element",
+                                localName = "foreignObject",
+                                namespaceURI = "http://www.w3.org/2000/svg",
+                                line = 1,
+                                column = 104,
+                                offset = 103,
+                                [1] = {
+                                    type = "element",
+                                    localName = "p",
+                                    line = 1,
+                                    column = 119,
+                                    offset = 118,
+                                    parse_flags = {
+                                        implicit_end_tag = true,
+                                    },
+                                    [1] = {
+                                        type = "text",
+                                        data = "spam",
+                                        line = 1,
+                                        column = 122,
+                                        offset = 121
+                                    }
+                                },
+                                [2] = {
+                                    type = "element",
+                                    localName = "table",
+                                    line = 1,
+                                    column = 126,
+                                    offset = 125,
+                                    [1] = {
+                                        type = "element",
+                                        localName = "tbody",
+                                        line = 1,
+                                        column = 133,
+                                        offset = 132,
+                                        parse_flags = {
+                                            insertion_by_parser = true,
+                                            implicit_end_tag = true,
+                                            insertion_implied = true,
+                                        },
+                                        [1] = {
+                                            type = "element",
+                                            localName = "tr",
+                                            line = 1,
+                                            column = 133,
+                                            offset = 132,
+                                            parse_flags = {
+                                                implicit_end_tag = true,
+                                            },
+                                            [1] = {
+                                                type = "element",
+                                                localName = "td",
+                                                line = 1,
+                                                column = 137,
+                                                offset = 136,
+                                                [1] = {
+                                                    type = "element",
+                                                    localName = "img",
+                                                    line = 1,
+                                                    column = 141,
+                                                    offset = 140,
+                                                    parse_flags = {
+                                                        implicit_end_tag = true,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        [3] = {
+                            type = "element",
+                            localName = "g",
+                            namespaceURI = "http://www.w3.org/2000/svg",
+                            line = 1,
+                            column = 179,
+                            offset = 178,
+                            [1] = {
+                                type = "text",
+                                data = "quux",
+                                line = 1,
+                                column = 182,
+                                offset = 181
+                            }
+                        }
+                    }
+                }
+            },
+            [3] = {
+                type = "text",
+                data = "bar\n",
+                line = 1,
+                column = 220,
+                offset = 219
+            }
+        }
+    }
+}

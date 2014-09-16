@@ -84,13 +84,14 @@ export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
 check: export QUIET = yes
-check: check-serialize check-misc check-html5lib
+check: check-serialize-ns check-serialize-t1 check-misc check-html5lib
 
-check-serialize: all
-	@$(TOTABLE) test/t1.html | diff -u2 test/t1.table -
-	@$(TOHTML) test/t1.html | diff -u2 test/t1.out.html -
-	@$(TOHTML) test/t1.html | $(TOHTML) | diff -u2 test/t1.out.html -
-	@printf "%16s: %s\n" $@ OK
+check-serialize-ns check-serialize-t1: \
+check-serialize-%: all test/%.html test/%.out.html test/%.table
+	@$(TOTABLE) test/$*.html | diff -u2 test/$*.table -
+	@$(TOHTML) test/$*.html | diff -u2 test/$*.out.html -
+	@$(TOHTML) test/$*.html | $(TOHTML) | diff -u2 test/$*.out.html -
+	@printf "%16s: %s\n" test/$*.html OK
 
 check-misc: all
 	@$(LUA) test/misc.lua
@@ -129,6 +130,7 @@ clean:
 
 
 .PHONY: all install uninstall clean dist force githooks check
-.PHONY: check-serialize check-misc check-html5lib check-compat check-valgrind
-.PHONY: check-install bench bench-html bench-table
+.PHONY: check-misc check-html5lib check-compat check-valgrind check-install
+.PHONY: check-serialize-ns check-serialize-t1
+.PHONY: bench bench-html bench-table
 .DELETE_ON_ERROR:
