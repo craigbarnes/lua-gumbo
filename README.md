@@ -107,7 +107,7 @@ numeric indices.
 
 * `type`: Always has a value of `"element"` for element nodes.
 * `localName`: The tag name, normalized to lower case.
-* `namespace`: Either `"svg"`, `"math"` or `nil`.
+* `namespaceURI`: The canonical [namespace URI] for either HTML, MathML or SVG.
 * `attributes`: A table of attributes (may be empty but never `nil`).
   * `[1..n]`: Tables, each representing a single attribute, in source order:
     * `name`: The name of the attribute (normalized to lower case).
@@ -168,7 +168,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [Lua]: http://www.lua.org/
 [LuaJIT]: http://luajit.org/
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
-[DOM4]: http://www.w3.org/TR/dom/
+[DOM4]: https://dom.spec.whatwg.org/
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
@@ -179,6 +179,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [public identifier]: http://dom.spec.whatwg.org/#concept-doctype-publicid
 [system identifier]: http://dom.spec.whatwg.org/#concept-doctype-systemid
 [quirks mode]: http://dom.spec.whatwg.org/#concept-document-quirks
+[namespace URI]: https://html.spec.whatwg.org/multipage/infrastructure.html#namespaces
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [find_links.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
 [remove_by_id.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua

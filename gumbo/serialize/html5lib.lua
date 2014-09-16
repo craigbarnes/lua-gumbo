@@ -2,13 +2,19 @@ local util = require "gumbo.util"
 local Buffer = util.Buffer
 local Indent = util.Indent
 
+local nsmap = {
+    ["http://www.w3.org/1999/xhtml"] = "",
+    ["http://www.w3.org/1998/Math/MathML"] = "math ",
+    ["http://www.w3.org/2000/svg"] = "svg "
+}
+
 return function(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local indent = Indent(indent_width or 2)
     local function serialize(node, depth)
         if node.type == "element" then
             local i1, i2 = indent[depth], indent[depth+1]
-            local namespace = node.namespace and (node.namespace .. " ") or ""
+            local namespace = nsmap[node.namespaceURI] or ""
             buf:write("| ", i1, "<", namespace, node.localName, ">\n")
 
             -- The html5lib tree format expects attributes to be sorted by

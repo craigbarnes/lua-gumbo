@@ -45,8 +45,8 @@ local function to_table(node, buffer, indent_width)
                 i1, 'type = "element",\n',
                 i1, 'localName = "', node.localName, '",\n'
             )
-            if node.namespace then
-                buf:write(i1, 'namespace = "', node.namespace, '",\n')
+            if node.namespaceURI ~= "http://www.w3.org/1999/xhtml" then
+                buf:write(i1, 'namespaceURI = "', node.namespaceURI, '",\n')
             end
             buf:write(
                 i1, 'line = ', node.line, ',\n',

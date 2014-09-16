@@ -3,6 +3,7 @@ local util = require "gumbo.dom.util"
 local Element = util.merge("Node", "ChildNode", {
     type = "element",
     nodeType = 1,
+    namespaceURI = "http://www.w3.org/1999/xhtml",
     attributes = {}
 })
 
@@ -31,10 +32,10 @@ end
 
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
 function getters:tagName()
-    if self.namespace then
-        return self.localName
-    else
+    if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
         return self.localName:upper()
+    else
+        return self.localName
     end
 end
 
@@ -67,25 +68,11 @@ function Element:attr_iter()
     return attr_next, self.attributes, 0
 end
 
-function Element:hasAttribute(name)
-    if type(name) == "string" then
-        -- If the context object is in the HTML namespace and its node document
-        -- is an HTML document, let name be converted to ASCII lowercase.
-        if self.namespace == nil --[[and self.ownerDocument.ISHTMLDOC]] then
-            name = name:lower()
-        end
-        -- Return true if the context object has an attribute whose name is
-        -- name, and false otherwise.
-        return self.attributes[name] and true or false
-    end
-    return false
-end
-
 function Element:getAttribute(name)
     if type(name) == "string" then
         -- If the context object is in the HTML namespace and its node document
         -- is an HTML document, let name be converted to ASCII lowercase.
-        if self.namespace == nil --[[and self.ownerDocument.ISHTMLDOC]] then
+        if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
             name = name:lower()
         end
         -- Return the value of the first attribute in the context object's
@@ -95,6 +82,10 @@ function Element:getAttribute(name)
             return attr.value
         end
     end
+end
+
+function Element:hasAttribute(name)
+    return self:getAttribute(name) and true or false
 end
 
 return Element
