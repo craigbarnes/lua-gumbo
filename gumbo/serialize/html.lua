@@ -79,10 +79,11 @@ local function to_html(node, buffer, indent_width)
             local tag = node.localName
             buf:write(indent, "<", tag)
             for index, name, val, ns in node:attr_iter() do
-                if ns == "xmlns" and name == "xmlns" then
-                    ns = nil
+                if ns and not (ns == "xmlns" and name == "xmlns") then
+                    buf:write(" ", ns, ":", name)
+                else
+                    buf:write(" ", name)
                 end
-                buf:write(" ", ns and ns..":" or "", name)
                 if not boolattr[name] or not (val == "" or val == name) then
                     buf:write('="', escape_attr(val), '"')
                 end
