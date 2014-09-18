@@ -28,9 +28,6 @@ TODO
   + Code generator.
   + Tree walker.
 * Implement `Node.length`.
-* Move Document/Element children to a dedicated `childNodes` table field.
-* Don't include whitespace nodes in `childNodes`, but keep them around
-  somewhere for html5lib testing.
 
 Requirements
 ------------
@@ -96,7 +93,7 @@ and contains all other nodes as descendants.
   * `systemId`: The [system identifier], or `""`.
 * `quirksMode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
 * `documentElement`: A reference to the child `<html>` element.
-* `[1..n]`: Child nodes.
+* `childNodes`: An ordered table of child nodes.
 
 ### Element
 
@@ -117,10 +114,10 @@ numeric indices.
     * `column`
     * `offset`
   * `["xyz"]`: A reference to the attribute with `name` `"xyz"`, or `nil`.
+* `childNodes`: An ordered table of child nodes.
 * `line`
 * `column`
 * `offset`
-* `[1..n]`: Child nodes.
 
 **Methods:**
 
@@ -143,8 +140,11 @@ There are 4 text node types, which all share a common structure.
 Testing
 -------
 
-* `make check`: run the lua-gumbo functional tests.
-* `make check-html5lib`: run the html5lib [tree-construction tests].
+* `make check`: Runs all unit tests.
+* `make check-html5lib`: Runs just the html5lib [tree-construction tests].
+* `make check-install`: Creates an isolated installation in a temporary
+  directory and then runs `make check` with `LUA_PATH` and `LUA_CPATH` set
+  to only allow loading from within that directory.
 
 [License]
 ---------
