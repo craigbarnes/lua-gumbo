@@ -47,13 +47,31 @@ Lua variables. Usually the following commands will be sufficient:
     make check
     [sudo] make install
 
-However, if your Lua installation doesn't include a pkg-config file,
+The following pkg-config names are searched in order and the first one
+to be found is used (yes, these all exist in the wild):
+
+    lua lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 luajit
+
+If, for example, your system has both `lua.pc` and `luajit.pc` installed
+then `lua.pc` will be used by default. You can override this default
+behaviour by specifying the `LUA_PC` and `LUA` variables. To build for
+LuaJIT, in this case, use:
+
+    make LUA_PC=luajit
+    make check LUA=luajit
+    [sudo] make install LUA_PC=luajit
+
+If your Lua installation doesn't include a pkg-config file,
 running `make` will simply complain and exit. In this case, the 3
 relevant variables will have to be specified manually, for example:
 
     make LUA_CFLAGS=-I/usr/include/lua5.2
     make check
     make install LUA_LMOD_DIR=/usr/share/lua/5.2 LUA_CMOD_DIR=/usr/lib/lua/5.2
+
+For convenience, you can store any of the above variables in a file
+named `local.mk`. The Makefile includes this file for each run and any
+variables declared within take precedence over the defaults.
 
 Usage
 -----
