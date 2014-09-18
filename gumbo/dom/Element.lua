@@ -56,18 +56,6 @@ function Element:__index(k)
     end
 end
 
-local function attr_next(attrs, i)
-    local j = i + 1
-    local a = attrs[j]
-    if a then
-        return j, a.name, a.value, a.prefix, a.line, a.column, a.offset
-    end
-end
-
-function Element:attr_iter()
-    return attr_next, self.attributes, 0
-end
-
 function Element:getAttribute(name)
     if type(name) == "string" then
         -- If the context object is in the HTML namespace and its node document

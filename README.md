@@ -137,12 +137,6 @@ numeric indices.
 * `column`
 * `offset`
 
-**Methods:**
-
-* `attr_iter`: returns an iterator that produces the values
-  `index, name, value, prefix, line, column, offset` for each of the
-  element's attributes.
-
 ### Text
 
 There are 4 text node types, which all share a common structure.

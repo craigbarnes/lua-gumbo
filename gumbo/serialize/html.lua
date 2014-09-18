@@ -78,7 +78,8 @@ local function to_html(node, buffer, indent_width)
         if node.type == "element" then
             local tag = node.localName
             buf:write(indent, "<", tag)
-            for index, name, val, ns in node:attr_iter() do
+            for i, attr in ipairs(node.attributes) do
+                local ns, name, val = attr.prefix, attr.name, attr.value
                 if ns and not (ns == "xmlns" and name == "xmlns") then
                     buf:write(" ", ns, ":", name)
                 else

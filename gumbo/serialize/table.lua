@@ -56,19 +56,19 @@ local function to_table(node, buffer, indent_width)
             if attr_length > 0 then
                 local i3 = indent[depth+3]
                 buf:write(i1, 'attributes = {\n')
-                for i, name, val, pfx, line, col, offset in node:attr_iter() do
+                for i, attr in ipairs(node.attributes) do
                     buf:write(
                         i2, "[", tostring(i), "] = {\n",
-                        i3, 'name = "', escape(name), '",\n',
-                        i3, 'value = "', escape(val), '",\n'
+                        i3, 'name = "', escape(attr.name), '",\n',
+                        i3, 'value = "', escape(attr.value), '",\n'
                     )
                     if pfx then
-                        buf:write(i3, 'prefix = "', pfx, '",\n')
+                        buf:write(i3, 'prefix = "', attr.prefix, '",\n')
                     end
                     buf:write(
-                        i3, 'line = ', line, ',\n',
-                        i3, 'column = ', col, ',\n',
-                        i3, 'offset = ', offset, '\n',
+                        i3, 'line = ', attr.line, ',\n',
+                        i3, 'column = ', attr.column, ',\n',
+                        i3, 'offset = ', attr.offset, '\n',
                         i2, i == attr_length and '}\n' or '},\n'
                     )
                 end
