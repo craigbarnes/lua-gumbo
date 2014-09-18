@@ -9,6 +9,7 @@ interface Document
         "publicId": string, -- The public identifier.
         "systemId": string -- The system identifier.
     }?
+    childNodes: {Element|Comment}
 end
 
 interface Element
@@ -25,14 +26,23 @@ interface Element
             "offset": number?
         }?
     }
+    childNodes: {Element|Text|Comment}
     line: number?
     column: number?
     offset: number?
 end
 
 interface Text
-    type: string -- "text", "whitespace", "comment" or "cdata".
+    type: string -- Either "text" or "whitespace".
     data: string -- The text contents.
+    line: number?
+    column: number?
+    offset: number?
+end
+
+interface Comment
+    type: string -- Always has a value of "comment" for Comment nodes.
+    data: string -- The comment text, not including delimiters.
     line: number?
     column: number?
     offset: number?
