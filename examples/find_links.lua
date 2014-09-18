@@ -8,8 +8,9 @@ local function find_links(node)
         if href then
             print(href.value)
         end
-        for i = 1, #node do
-            find_links(node[i])
+        local children = node.childNodes
+        for i = 1, #children do
+            find_links(children[i])
         end
     end
 end
