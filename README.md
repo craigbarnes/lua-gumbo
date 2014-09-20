@@ -1,33 +1,9 @@
 lua-gumbo
 =========
 
-[Lua] bindings for the [Gumbo][] [HTML5] parsing library.
-
-Goals and Features
-------------------
-
-* Support for C99/POSIX conforming platforms.
-* Provides a small selection of [DOM4] APIs.
-* Tree serializers to output HTML5, Lua tables and html5lib ASTs.
-* Passes all html5lib 0.95 [tree-construction tests].
-
-Non-goals
----------
-
-* Full DOM implementation/conformance.
-* Support for Windows.
-
-TODO
-----
-
-* Update this readme to include new DOM APIs.
-* Restructure DOM metatable inheritance.
-* Use proxy tables to implement `getter` and `readonly` DOM interfaces.
-* Implement `ParentNode.querySelector()` and `ParentNode.querySelectorAll()`:
-  + CSS3 selector parser.
-  + Code generator.
-  + Tree walker.
-* Implement `Node.length`.
+[Lua] bindings for the [Gumbo][] [HTML5] parsing library, including a
+minimal, DOM-like API and tree serializers for HTML5, Lua tables
+and html5lib ASTs.
 
 Requirements
 ------------
