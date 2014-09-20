@@ -57,8 +57,10 @@ dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
 lua-gumbo-%.tar.gz lua-gumbo-%.zip: force
 	git archive --prefix=lua-gumbo-$*/ -o $@ $*
 
-gumbo-%-1.rockspec: rockspec.in
-	sed 's/%VERSION%/$*/' $< > $@
+gumbo-%-1.rockspec: rockspec.in | .git/refs/tags/%
+	@sed 's/%VERSION%/$*/' $< > $@
+	@LUA_PATH=';;' luarocks lint $@
+	@echo 'Generated: $@'
 
 test/html5lib-tests/%:
 	git submodule init
