@@ -130,9 +130,8 @@ Testing
 
 * `make check`: Runs all unit tests.
 * `make check-html5lib`: Runs just the html5lib [tree-construction tests].
-* `make check-install`: Creates an isolated installation in a temporary
-  directory and then runs `make check` with `LUA_PATH` and `LUA_CPATH` set
-  to only allow loading from within that directory.
+* `make check-install`: Runs `make check` within a temporary, isolated
+  installation, to ensure all modules are installed correctly.
 
 [License]
 ---------
