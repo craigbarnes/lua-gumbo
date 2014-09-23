@@ -6,10 +6,17 @@ local util = require "gumbo.dom.util"
 local Document = util.merge("Node", "NonElementParentNode", {
     type = "document",
     nodeName = "#document",
-    nodeType = 9
+    nodeType = 9,
+    contentType = "text/html",
+    characterSet = "UTF-8",
+    URL = "about:blank"
 })
 
 local getters = {}
+
+function getters:documentURI()
+    return self.URL
+end
 
 function getters:firstChild()
     return self.childNodes[1]
@@ -18,6 +25,15 @@ end
 function getters:lastChild()
     local cnodes = self.childNodes
     return cnodes[#cnodes]
+end
+
+function getters:compatMode()
+    local qmode = self.quirksMode
+    if qmode == "no-quirks" or qmode == "limited-quirks" then
+        return "CSS1Compat"
+    else
+        return "BackCompat"
+    end
 end
 
 function Document:__index(k)
