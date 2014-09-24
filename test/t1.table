@@ -16,25 +16,17 @@
     [2] = {
         type = "element",
         localName = "html",
+        parseFlags = 0xb,
         line = 3,
         column = 1,
         offset = 75,
-        parse_flags = {
-            insertion_by_parser = true,
-            implicit_end_tag = true,
-            insertion_implied = true,
-        },
         [1] = {
             type = "element",
             localName = "head",
+            parseFlags = 0xb,
             line = 3,
             column = 1,
             offset = 75,
-            parse_flags = {
-                insertion_by_parser = true,
-                implicit_end_tag = true,
-                insertion_implied = true,
-            },
             [1] = {
                 type = "element",
                 localName = "title",
@@ -60,14 +52,10 @@
         [2] = {
             type = "element",
             localName = "body",
+            parseFlags = 0xb,
             line = 4,
             column = 1,
             offset = 104,
-            parse_flags = {
-                insertion_by_parser = true,
-                implicit_end_tag = true,
-                insertion_implied = true,
-            },
             [1] = {
                 type = "element",
                 localName = "h1",

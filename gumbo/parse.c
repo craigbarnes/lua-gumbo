@@ -25,20 +25,6 @@
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 
-static const char flagmap[][33] = {
-    "insertion_by_parser",
-    "implicit_end_tag",
-    "", // Unused index
-    "insertion_implied",
-    "converted_from_end_tag",
-    "insertion_from_isindex",
-    "insertion_from_image",
-    "reconstructed_formatting_element",
-    "adoption_agency_cloned",
-    "adoption_agency_moved",
-    "foster_parented"
-};
-
 #define add_field(T, L, k, v) ( \
     lua_pushliteral(L, k), \
     lua_push##T(L, v), \
@@ -103,20 +89,6 @@ static void add_tag(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "localName");
 }
 
-static void add_parseflags(lua_State *L, const GumboParseFlags flags) {
-    static const unsigned int nflags = sizeof(flagmap) / sizeof(flagmap[0]);
-    if (flags != GUMBO_INSERTION_NORMAL) {
-        lua_createtable(L, 0, 1);
-        for (unsigned int i = 0; i < nflags; i++) {
-            if ((flags & (1 << i)) != 0) {
-                lua_pushboolean(L, 1);
-                lua_setfield(L, -2, flagmap[i]);
-            }
-        }
-        lua_setfield(L, -2, "parse_flags");
-    }
-}
-
 static void create_text_node(lua_State *L, const GumboText *text) {
     lua_createtable(L, 0, 5);
     add_string(L, "data", text->text);
@@ -161,7 +133,9 @@ static void push_node(lua_State *L, const GumboNode *node) {
         add_integer(L, "line", element->start_pos.line);
         add_integer(L, "column", element->start_pos.column);
         add_integer(L, "offset", element->start_pos.offset);
-        add_parseflags(L, node->parse_flags);
+        if (node->parse_flags != GUMBO_INSERTION_NORMAL) {
+            add_integer(L, "parseFlags", node->parse_flags);
+        }
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
         return;

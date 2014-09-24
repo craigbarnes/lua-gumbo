@@ -1,20 +1,7 @@
 local util = require "gumbo.util"
 local Buffer = util.Buffer
 local Indent = util.Indent
-
-local parse_flags_fields = {
-    -- Serialized in this order:
-    "insertion_by_parser",
-    "implicit_end_tag",
-    "insertion_implied",
-    "converted_from_end_tag",
-    "insertion_from_isindex",
-    "insertion_from_image",
-    "reconstructed_formatting_element",
-    "adoption_agency_cloned",
-    "adoption_agency_moved",
-    "foster_parented"
-}
+local format = string.format
 
 local escmap = {
     ["\n"] = "\\n",
@@ -48,6 +35,10 @@ local function to_table(node, buffer, indent_width)
             if node.namespaceURI ~= "http://www.w3.org/1999/xhtml" then
                 buf:write(i1, 'namespaceURI = "', node.namespaceURI, '",\n')
             end
+            if node.parseFlags then
+                local flags = format("0x%x", node.parseFlags)
+                buf:write(i1, 'parseFlags = ', flags, ',\n')
+            end
             buf:write(
                 i1, 'line = ', node.line, ',\n',
                 i1, 'column = ', node.column, ',\n',
@@ -62,7 +53,7 @@ local function to_table(node, buffer, indent_width)
                         i3, 'name = "', escape(attr.name), '",\n',
                         i3, 'value = "', escape(attr.value), '",\n'
                     )
-                    if pfx then
+                    if attr.prefix then
                         buf:write(i3, 'prefix = "', attr.prefix, '",\n')
                     end
                     buf:write(
@@ -71,19 +62,6 @@ local function to_table(node, buffer, indent_width)
                         i3, 'offset = ', attr.offset, '\n',
                         i2, i == attr_length and '}\n' or '},\n'
                     )
-                end
-                local sep = (node_length > 0 or node.parse_flags) and "," or ""
-                buf:write(i1, '}', sep, '\n')
-            end
-
-            if node.parse_flags then
-                buf:write(i1, 'parse_flags = {\n')
-                for i = 1, #parse_flags_fields do
-                    local field = parse_flags_fields[i]
-                    local value = node.parse_flags[field]
-                    if value then
-                        buf:write(i2, field, " = ", tostring(value), ",\n")
-                    end
                 end
                 buf:write(i1, '}', node_length > 0 and "," or "", '\n')
             end

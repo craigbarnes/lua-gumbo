@@ -9,35 +9,25 @@
     [1] = {
         type = "element",
         localName = "html",
+        parseFlags = 0xb,
         line = 1,
         column = 16,
         offset = 15,
-        parse_flags = {
-            insertion_by_parser = true,
-            implicit_end_tag = true,
-            insertion_implied = true,
-        },
         [1] = {
             type = "element",
             localName = "head",
+            parseFlags = 0xb,
             line = 1,
             column = 16,
             offset = 15,
-            parse_flags = {
-                insertion_by_parser = true,
-                implicit_end_tag = true,
-                insertion_implied = true,
-            }
         },
         [2] = {
             type = "element",
             localName = "body",
+            parseFlags = 0x2,
             line = 1,
             column = 16,
             offset = 15,
-            parse_flags = {
-                implicit_end_tag = true,
-            },
             [1] = {
                 type = "text",
                 data = "foo",
@@ -127,12 +117,10 @@
                                 [1] = {
                                     type = "element",
                                     localName = "p",
+                                    parseFlags = 0x2,
                                     line = 1,
                                     column = 119,
                                     offset = 118,
-                                    parse_flags = {
-                                        implicit_end_tag = true,
-                                    },
                                     [1] = {
                                         type = "text",
                                         data = "spam",
@@ -150,23 +138,17 @@
                                     [1] = {
                                         type = "element",
                                         localName = "tbody",
+                                        parseFlags = 0xb,
                                         line = 1,
                                         column = 133,
                                         offset = 132,
-                                        parse_flags = {
-                                            insertion_by_parser = true,
-                                            implicit_end_tag = true,
-                                            insertion_implied = true,
-                                        },
                                         [1] = {
                                             type = "element",
                                             localName = "tr",
+                                            parseFlags = 0x2,
                                             line = 1,
                                             column = 133,
                                             offset = 132,
-                                            parse_flags = {
-                                                implicit_end_tag = true,
-                                            },
                                             [1] = {
                                                 type = "element",
                                                 localName = "td",
@@ -176,12 +158,10 @@
                                                 [1] = {
                                                     type = "element",
                                                     localName = "img",
+                                                    parseFlags = 0x2,
                                                     line = 1,
                                                     column = 141,
                                                     offset = 140,
-                                                    parse_flags = {
-                                                        implicit_end_tag = true,
-                                                    }
                                                 }
                                             }
                                         }
