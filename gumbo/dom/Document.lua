@@ -28,11 +28,10 @@ function getters:lastChild()
 end
 
 function getters:compatMode()
-    local qmode = self.quirksMode
-    if qmode == "no-quirks" or qmode == "limited-quirks" then
-        return "CSS1Compat"
-    else
+    if self.quirksMode == "quirks" then
         return "BackCompat"
+    else
+        return "CSS1Compat"
     end
 end
 
