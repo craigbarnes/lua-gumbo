@@ -56,6 +56,26 @@ function Element:__index(k)
     end
 end
 
+function Element:getElementsByTagName(localName)
+    local collection = {} -- TODO: = setmetatable({}, HTMLCollection)
+    local length = 0
+    local function gather(parent)
+        local childNodes = parent.childNodes
+        for i = 1, #childNodes do
+            local c = childNodes[i]
+            if c.type == "element" then
+                if c.localName == localName then
+                    length = length + 1
+                    collection[length] = c
+                end
+                gather(c)
+            end
+        end
+    end
+    gather(self)
+    return collection
+end
+
 function Element:getAttribute(name)
     if type(name) == "string" then
         -- If the context object is in the HTML namespace and its node document

@@ -65,4 +65,6 @@ function Document:createComment(data)
     return setmetatable({data = data}, Comment)
 end
 
+Document.getElementsByTagName = Element.getElementsByTagName
+
 return Document

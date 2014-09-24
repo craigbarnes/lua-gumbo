@@ -13,6 +13,12 @@ local heading = assert(document:getElementById("heading"))
 local text = assert(heading.childNodes[1])
 local comment = assert(heading.childNodes[2])
 
+assert(document:getElementsByTagName("div")[1] == main)
+assert(body:getElementsByTagName("h1")[1] == heading)
+local tendivs = assert(gumbo.parse(string.rep("<div>", 10)))
+-- TODO: use .length instead of length operator
+assert(#tendivs:getElementsByTagName("div") == 10)
+
 assert(document.nodeName == "#document")
 assert(document.firstChild == body.parentNode)
 assert(document.lastChild == body.parentNode)
