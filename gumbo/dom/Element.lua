@@ -76,4 +76,30 @@ function Element:hasAttribute(name)
     return self:getAttribute(name) and true or false
 end
 
+function Element:hasAttributes()
+    return self.attributes[1] and true or false
+end
+
+function Element:cloneNode(deep)
+    if deep then error "NYI" end -- << TODO
+    local clone = {
+        localName = self.localName,
+        namespaceURI = self.namespaceURI,
+        prefix = self.prefix
+    }
+    if self:hasAttributes() then
+        local attrs = {}
+        for i, attr in ipairs(self.attributes) do
+            attrs[i] = {
+                name = attr.name,
+                value = attr.value,
+                prefix = attr.prefix
+            }
+            attrs[attr.name] = attrs[i]
+        end
+        clone.attributes = attrs
+    end
+    return setmetatable(clone, Element)
+end
+
 return Element
