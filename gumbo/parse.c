@@ -157,12 +157,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
         lua_setmetatable(L, -2);
         return;
     case GUMBO_NODE_CDATA:
-        create_text_node(L, &node->v.text);
-        add_literal(L, "type", "cdata");
-        return;
     case GUMBO_NODE_DOCUMENT:
-        luaL_error(L, "Invalid nested Document node");
-        return;
     default:
         luaL_error(L, "Invalid node type");
         return;
