@@ -6,4 +6,8 @@ local Comment = util.merge("CharacterData", {
     nodeType = 8
 })
 
+function Comment:cloneNode()
+    return setmetatable({data = self.data}, Comment)
+end
+
 return Comment

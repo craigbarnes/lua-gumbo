@@ -6,4 +6,8 @@ local Text = util.merge("CharacterData", {
     nodeType = 3
 })
 
+function Text:cloneNode()
+    return setmetatable({data = self.data}, Text)
+end
+
 return Text
