@@ -20,6 +20,11 @@ assert(document.URL == "about:blank")
 assert(document.documentURI == document.URL)
 assert(document.compatMode == "BackCompat")
 
+assert(document:createElement("p").localName == "p")
+assert(pcall(document.createElement, document, "Inv@lidName") == false)
+assert(document:createTextNode("xyz..").data == "xyz..")
+assert(document:createComment(" etc ").data == " etc ")
+
 assert(body.nodeName == "BODY")
 assert(body.nodeType == document.ELEMENT_NODE)
 assert(body.localName == "body")
