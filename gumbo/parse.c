@@ -89,12 +89,14 @@ static void add_tag(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "localName");
 }
 
-static void create_text_node(lua_State *L, const GumboText *text) {
+static void create_text_node(lua_State *L, const GumboText *t, const char *m) {
     lua_createtable(L, 0, 5);
-    add_string(L, "data", text->text);
-    add_integer(L, "line", text->start_pos.line);
-    add_integer(L, "column", text->start_pos.column);
-    add_integer(L, "offset", text->start_pos.offset);
+    lua_getfield(L, LUA_REGISTRYINDEX, m);
+    lua_setmetatable(L, -2);
+    add_string(L, "data", t->text);
+    add_integer(L, "line", t->start_pos.line);
+    add_integer(L, "column", t->start_pos.column);
+    add_integer(L, "offset", t->start_pos.offset);
 }
 
 // Forward declaration, to allow mutual recursion with add_children()
@@ -141,20 +143,14 @@ static void push_node(lua_State *L, const GumboNode *node) {
         return;
     }
     case GUMBO_NODE_TEXT:
-        create_text_node(L, &node->v.text);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Text");
-        lua_setmetatable(L, -2);
+        create_text_node(L, &node->v.text, "gumbo.dom.Text");
         return;
     case GUMBO_NODE_WHITESPACE:
-        create_text_node(L, &node->v.text);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Text");
-        lua_setmetatable(L, -2);
+        create_text_node(L, &node->v.text, "gumbo.dom.Text");
         add_literal(L, "type", "whitespace");
         return;
     case GUMBO_NODE_COMMENT:
-        create_text_node(L, &node->v.text);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Comment");
-        lua_setmetatable(L, -2);
+        create_text_node(L, &node->v.text, "gumbo.dom.Comment");
         return;
     case GUMBO_NODE_CDATA:
     case GUMBO_NODE_DOCUMENT:
