@@ -14,8 +14,8 @@ LDLIBS       ?= $(GUMBO_LDLIBS)
 
 TIME         ?= $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
-TOHTML       ?= $(LUA) test/serialize.lua html
-TOTABLE      ?= $(LUA) test/serialize.lua table
+TOHTML       ?= $(LUA) bin/htmlfmt.lua
+TOTABLE      ?= $(LUA) bin/htmltotable.lua
 BENCHFILE    ?= test/2MiB.html
 
 DOM_IFACES    = CharacterData ChildNode Comment Document Element \
