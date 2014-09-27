@@ -115,12 +115,20 @@ numeric indices.
 
 ### Text
 
-There are 4 text node types, which all share a common structure.
+**Fields:**
+
+* `type`: Either `"text"` or `"whitespace"`.
+* `data`: The text contents.
+* `line`
+* `column`
+* `offset`
+
+### Comment
 
 **Fields:**
 
-* `type`: One of `"text"`, `"whitespace"`, `"comment"` or `"cdata"`.
-* `data`: The text contents. Does not include comment/cdata delimiters.
+* `type`: Always has a value of `"comment"` for comment nodes.
+* `data`: The comment contents, not including delimiters.
 * `line`
 * `column`
 * `offset`
