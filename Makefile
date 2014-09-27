@@ -6,11 +6,10 @@ GUMBO_LDLIBS  ?= $(or $(shell $(PKGCONFIG) --libs-only-l gumbo), -lgumbo)
 GUMBO_INCDIR  ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
 GUMBO_HEADER  ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
-REQCFLAGS     = -std=c99 -pedantic-errors -fpic
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
-CFLAGS       += $(REQCFLAGS) $(LUA_CFLAGS) $(GUMBO_CFLAGS)
-LDFLAGS      += $(GUMBO_LDFLAGS)
-LDLIBS       ?= $(GUMBO_LDLIBS)
+XCFLAGS      += -std=c99 -pedantic-errors -fpic
+XCFLAGS      += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
+XLDFLAGS     += $(GUMBO_LDFLAGS) $(GUMBO_LDLIBS)
 
 TIME         ?= $(or $(shell which time), $(error $@)) -f '%es, %MKB'
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
@@ -43,8 +42,11 @@ test/%MiB.html: test/1MiB.html
 # Some static instances of the above pattern rule, just for autocompletion
 test/2MiB.html test/3MiB.html test/4MiB.html test/5MiB.html:
 
-tags: $(GUMBO_HEADER) $(LUA_HEADERS) gumbo/parse.c Makefile lualib.mk
-	ctags --c-kinds=+p $^
+# The *_HEADER* variables aren't in the deps list to avoid unnecessary
+# pkg-config queries on every run. They can be lazy evaluated if they only
+# appear in the body of the recipe.
+tags: gumbo/parse.c Makefile lualib.mk
+	ctags --c-kinds=+p $(GUMBO_HEADER) $(LUA_HEADERS) $^
 
 githooks: .git/hooks/pre-commit
 

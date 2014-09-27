@@ -19,17 +19,24 @@ dependencies = {
 
 external_dependencies = {
     GUMBO = {
+        library = "gumbo",
         header = "gumbo.h"
     }
 }
 
 build = {
-    -- Could use "builtin" type, if there were a reasonable way to enable C99
     type = "make",
+    variables = {
+        LUA = "$(LUA)",
+        LUA_INCDIR = "$(LUA_INCDIR)",
+        LUA_LIBDIR = "$(LUA_LIBDIR)"
+    },
     build_variables = {
-        CFLAGS = "$(CFLAGS) -std=c99",
+        CFLAGS = "$(CFLAGS)",
+        LDFLAGS = "$(LIBFLAG)",
         LUA_CFLAGS = "-I$(LUA_INCDIR)",
-        LDFLAGS = "$(LIBFLAG)"
+        GUMBO_CFLAGS = "-I$(GUMBO_INCDIR)",
+        GUMBO_LDFLAGS = "-L$(GUMBO_LIBDIR)"
     },
     install_variables = {
         LUA_CMOD_DIR = "$(LIBDIR)",
