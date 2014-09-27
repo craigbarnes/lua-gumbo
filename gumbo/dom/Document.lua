@@ -2,6 +2,7 @@ local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local util = require "gumbo.dom.util"
+local getters = {}
 
 local Document = util.merge("Node", "NonElementParentNode", {
     type = "document",
@@ -9,31 +10,9 @@ local Document = util.merge("Node", "NonElementParentNode", {
     nodeType = 9,
     contentType = "text/html",
     characterSet = "UTF-8",
-    URL = "about:blank"
+    URL = "about:blank",
+    getElementsByTagName = Element.getElementsByTagName
 })
-
-local getters = {}
-
-function getters:documentURI()
-    return self.URL
-end
-
-function getters:firstChild()
-    return self.childNodes[1]
-end
-
-function getters:lastChild()
-    local cnodes = self.childNodes
-    return cnodes[#cnodes]
-end
-
-function getters:compatMode()
-    if self.quirksMode == "quirks" then
-        return "BackCompat"
-    else
-        return "CSS1Compat"
-    end
-end
 
 function Document:__index(k)
     if type(k) == "number" then
@@ -65,6 +44,25 @@ function Document:createComment(data)
     return setmetatable({data = data}, Comment)
 end
 
-Document.getElementsByTagName = Element.getElementsByTagName
+function getters:documentURI()
+    return self.URL
+end
+
+function getters:firstChild()
+    return self.childNodes[1]
+end
+
+function getters:lastChild()
+    local cnodes = self.childNodes
+    return cnodes[#cnodes]
+end
+
+function getters:compatMode()
+    if self.quirksMode == "quirks" then
+        return "BackCompat"
+    else
+        return "CSS1Compat"
+    end
+end
 
 return Document

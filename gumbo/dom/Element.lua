@@ -1,4 +1,5 @@
 local util = require "gumbo.dom.util"
+local getters = {}
 
 local Element = util.merge("Node", "ChildNode", {
     type = "element",
@@ -6,40 +7,6 @@ local Element = util.merge("Node", "ChildNode", {
     namespaceURI = "http://www.w3.org/1999/xhtml",
     attributes = {}
 })
-
-local getters = {}
-
-function getters:firstChild()
-    return self.childNodes[1]
-end
-
-function getters:lastChild()
-    local cnodes = self.childNodes
-    return cnodes[#cnodes]
-end
-
--- TODO: This attribute is not readonly -- also implement a setter
-function getters:id()
-    local id_attr = self.attributes.id
-    return id_attr and id_attr.value
-end
-
--- TODO: This attribute is not readonly -- also implement a setter
-function getters:className()
-    local class_attr = self.attributes.class
-    return class_attr and class_attr.value
-end
-
--- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
-function getters:tagName()
-    if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
-        return self.localName:upper()
-    else
-        return self.localName
-    end
-end
-
-getters.nodeName = getters.tagName
 
 function Element:__index(k)
     if type(k) == "number" then
@@ -121,5 +88,37 @@ function Element:cloneNode(deep)
     end
     return setmetatable(clone, Element)
 end
+
+function getters:firstChild()
+    return self.childNodes[1]
+end
+
+function getters:lastChild()
+    local cnodes = self.childNodes
+    return cnodes[#cnodes]
+end
+
+-- TODO: This attribute is not readonly -- also implement a setter
+function getters:id()
+    local id_attr = self.attributes.id
+    return id_attr and id_attr.value
+end
+
+-- TODO: This attribute is not readonly -- also implement a setter
+function getters:className()
+    local class_attr = self.attributes.class
+    return class_attr and class_attr.value
+end
+
+-- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
+function getters:tagName()
+    if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
+        return self.localName:upper()
+    else
+        return self.localName
+    end
+end
+
+getters.nodeName = getters.tagName
 
 return Element
