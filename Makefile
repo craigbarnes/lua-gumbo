@@ -118,6 +118,8 @@ check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
 check-install: export LUA_CPATH = $(DESTDIR)$(LUA_CMOD_DIR)/?.so
 check-install: install check uninstall
+	$(LUA) -e 'assert(package.path == "$(DESTDIR)$(LUA_LMOD_DIR)/?.lua")'
+	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
 	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
 
 bench: all $(BENCHFILE)
