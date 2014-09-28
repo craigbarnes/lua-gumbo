@@ -49,6 +49,7 @@ function Element:getElementsByTagName(localName)
         end
     end
     gather(self)
+    collection.length = length
     return collection
 end
 
