@@ -1,5 +1,5 @@
 local util = require "gumbo.dom.util"
-local getters = {}
+local getters, setters = {}, {}
 
 local Element = util.merge("Node", "ChildNode", {
     type = "element",
@@ -20,6 +20,15 @@ function Element:__index(k)
         if getter then
             return getter(self)
         end
+    end
+end
+
+function Element:__newindex(k, v)
+    local setter = setters[k]
+    if setter then
+        setter(self, v)
+    else
+        rawset(self, k, v)
     end
 end
 
@@ -98,18 +107,6 @@ function getters:lastChild()
     return cnodes[#cnodes]
 end
 
--- TODO: This attribute is not readonly -- also implement a setter
-function getters:id()
-    local id_attr = self.attributes.id
-    return id_attr and id_attr.value
-end
-
--- TODO: This attribute is not readonly -- also implement a setter
-function getters:className()
-    local class_attr = self.attributes.class
-    return class_attr and class_attr.value
-end
-
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
 function getters:tagName()
     if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
@@ -120,5 +117,31 @@ function getters:tagName()
 end
 
 getters.nodeName = getters.tagName
+
+local function attr_getter(name)
+    return function(self)
+        local attr = self.attributes[name]
+        if attr then return attr.value end
+    end
+end
+
+local function attr_setter(name)
+    return function(self, value)
+        local attributes = self.attributes
+        local attr = attributes[name]
+        if attr then
+            attr.value = value
+        else
+            attr = {name = name, value = value}
+            attributes[#attributes + 1] = attr
+            attributes[name] = attr
+        end
+    end
+end
+
+getters.id = attr_getter("id")
+setters.id = attr_setter("id")
+getters.className = attr_getter("class")
+setters.className = attr_setter("class")
 
 return Element

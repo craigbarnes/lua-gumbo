@@ -129,8 +129,6 @@ static void push_node(lua_State *L, const GumboNode *node) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, element->children.length, 8);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Element");
-        lua_setmetatable(L, -2);
         add_tag(L, element);
         add_integer(L, "line", element->start_pos.line);
         add_integer(L, "column", element->start_pos.column);
@@ -140,6 +138,8 @@ static void push_node(lua_State *L, const GumboNode *node) {
         }
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Element");
+        lua_setmetatable(L, -2);
         return;
     }
     case GUMBO_NODE_TEXT:

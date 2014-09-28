@@ -75,6 +75,14 @@ assert(commentclone.parentNode == nil)
 
 assert(heading.attributes[1].value == "heading")
 assert(heading.attributes.id.value == "heading")
+heading.id = "new-id"
+assert(heading.attributes[1].value == "new-id")
+assert(heading.attributes.id.value == "new-id")
+
+heading.className = "x y z"
+assert(heading.className == "x y z")
+assert(heading.attributes[2].value == "x y z")
+assert(heading.attributes.class.value == "x y z")
 
 assert(heading:hasChildNodes() == true)
 assert(heading.childNodes.length == 2)
