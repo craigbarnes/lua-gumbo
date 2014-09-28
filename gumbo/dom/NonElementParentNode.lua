@@ -2,15 +2,16 @@ local yield, wrap = coroutine.yield, coroutine.wrap
 
 local NonElementParentNode = {}
 
-local function walk(root)
-    local function iter(node)
-        yield(node)
-        local children = node.childNodes
-        for i = 1, #children do
-            iter(children[i])
-        end
+local function iter(node)
+    yield(node)
+    local children = node.childNodes
+    for i = 1, #children do
+        iter(children[i])
     end
-    return wrap(function() iter(root) end)
+end
+
+local function walk(node)
+    return wrap(function() iter(node) end)
 end
 
 function NonElementParentNode:getElementById(elementId)
