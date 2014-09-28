@@ -122,13 +122,17 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
 	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
 
-bench: all $(BENCHFILE)
+bench-parse: all $(BENCHFILE)
 	@echo 'Parsing $(BENCHFILE)...'
 	@$(TIME) $(LUA) -e 'require("gumbo").parse_file("$(BENCHFILE)")'
 
-bench-html bench-table: bench-%: all test/serialize.lua $(BENCHFILE)
-	@echo 'Parsing and serializing $(BENCHFILE) to $*...'
-	@$(TIME) $(LUA) test/serialize.lua $* $(BENCHFILE) /dev/null
+bench-serialize-html: all bin/htmlfmt.lua $(BENCHFILE)
+	@echo 'Parsing and serializing $(BENCHFILE) to html...'
+	@$(TIME) $(LUA) bin/htmlfmt.lua $(BENCHFILE) /dev/null
+
+bench-serialize-table: all bin/htmltotable.lua $(BENCHFILE)
+	@echo 'Parsing and serializing $(BENCHFILE) to table...'
+	@$(TIME) $(LUA) bin/htmltotable.lua $(BENCHFILE) /dev/null
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/*MiB.html README.html gh.css \
@@ -138,5 +142,5 @@ clean:
 .PHONY: all install uninstall clean dist force githooks check
 .PHONY: check-misc check-html5lib check-compat check-valgrind check-install
 .PHONY: check-serialize-ns check-serialize-t1
-.PHONY: bench bench-html bench-table
+.PHONY: bench-parse bench-serialize-html bench-serialize-table
 .DELETE_ON_ERROR:
