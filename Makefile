@@ -11,7 +11,9 @@ XCFLAGS      += -std=c99 -pedantic-errors -fpic
 XCFLAGS      += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
 XLDFLAGS     += $(GUMBO_LDFLAGS) $(GUMBO_LDLIBS)
 
-TIME         ?= $(or $(shell which time), $(error $@)) -f '%es, %MKB'
+TIMEFMT      ?= 'Process peak memory usage: %MKB'
+TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
+TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) bin/htmlfmt.lua
 TOTABLE      ?= $(LUA) bin/htmltotable.lua
@@ -122,9 +124,8 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
 	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
 
-bench-parse: all $(BENCHFILE)
-	@echo 'Parsing $(BENCHFILE)...'
-	@$(TIME) $(LUA) -e 'require("gumbo").parse_file("$(BENCHFILE)")'
+bench-parse: all test/bench.lua $(BENCHFILE)
+	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
 
 bench-serialize-html: all bin/htmlfmt.lua $(BENCHFILE)
 	@echo 'Parsing and serializing $(BENCHFILE) to html...'
