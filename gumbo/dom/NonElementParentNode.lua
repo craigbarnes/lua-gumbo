@@ -15,6 +15,7 @@ local function walk(node)
 end
 
 function NonElementParentNode:getElementById(elementId)
+    assert(self.childNodes, "Invalid self argument")
     for node in walk(self) do
         if node.type == "element" then
             local attr = node.attributes

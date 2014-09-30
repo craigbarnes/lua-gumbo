@@ -117,6 +117,20 @@ function getters:tagName()
     end
 end
 
+function getters:classList()
+    local class = self.attributes.class
+    if class then
+        local list = {}
+        local length = 0
+        for s in class.value:gmatch "%S+" do
+            length = length + 1
+            list[length] = s
+        end
+        list.length = length
+        return list
+    end
+end
+
 getters.nodeName = getters.tagName
 
 local function attr_getter(name)
