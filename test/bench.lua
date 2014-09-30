@@ -16,8 +16,7 @@ do
     local start_time = clock()
     document = parse(text)
     local stop_time = clock()
-    assert(document)
-    assert(document.documentElement.childNodes[2].localName == "body")
+    assert(document and document.documentElement)
     duration = stop_time - start_time
 end
 
