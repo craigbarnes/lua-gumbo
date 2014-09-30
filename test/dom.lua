@@ -38,6 +38,7 @@ assert(body.localName == "body")
 assert(body.parentNode.localName == "html")
 
 assert(main == body[1])
+assert(main:getElementsByTagName("div").length == 0)
 assert(main.nodeName == "DIV")
 assert(main.nodeName == main.tagName)
 assert(main:hasAttribute("class") == true)
