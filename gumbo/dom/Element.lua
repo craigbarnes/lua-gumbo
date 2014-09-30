@@ -35,20 +35,12 @@ end
 function Element:getElementsByTagName(localName)
     local collection = {} -- TODO: = setmetatable({}, HTMLCollection)
     local length = 0
-    local function gather(parent)
-        local childNodes = parent.childNodes
-        for i = 1, #childNodes do
-            local c = childNodes[i]
-            if c.type == "element" then
-                if c.localName == localName then
-                    length = length + 1
-                    collection[length] = c
-                end
-                gather(c)
-            end
+    for node in self:walk() do
+        if node.type == "element" and node.localName == localName then
+            length = length + 1
+            collection[length] = node
         end
     end
-    gather(self)
     collection.length = length
     return collection
 end

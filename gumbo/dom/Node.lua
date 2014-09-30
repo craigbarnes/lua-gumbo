@@ -1,3 +1,5 @@
+local yield, wrap = coroutine.yield, coroutine.wrap
+
 local Node = {
     ELEMENT_NODE = 1,
     ATTRIBUTE_NODE = 2, -- historical
@@ -14,6 +16,19 @@ local Node = {
 
     childNodes = {length = 0}
 }
+
+local function iter(node)
+    local childNodes = node.childNodes
+    for i = 1, #childNodes do
+        local child = childNodes[i]
+        yield(child)
+        iter(child)
+    end
+end
+
+function Node:walk()
+    return wrap(function() iter(self) end)
+end
 
 function Node:hasChildNodes()
     return self.childNodes[1] and true or false
