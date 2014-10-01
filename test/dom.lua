@@ -7,12 +7,15 @@ local input = [[
 ]]
 
 local document = assert(gumbo.parse(input))
-local body = assert(document.documentElement[2])
+local head = assert(document.head)
+local body = assert(document.body)
 local main = assert(document:getElementById("main"))
 local heading = assert(document:getElementById("heading"))
 local text = assert(heading.childNodes[1])
 local comment = assert(heading.childNodes[2])
 
+assert(document:getElementsByTagName("head")[1] == head)
+assert(document:getElementsByTagName("body")[1] == body)
 assert(document:getElementsByTagName("div")[1] == main)
 assert(body:getElementsByTagName("h1")[1] == heading)
 local tendivs = assert(gumbo.parse(string.rep("<div>", 10)))
@@ -32,6 +35,7 @@ assert(pcall(document.createElement, document, "Inv@lidName") == false)
 assert(document:createTextNode("xyz..").data == "xyz..")
 assert(document:createComment(" etc ").data == " etc ")
 
+assert(body == document.documentElement[2])
 assert(body.nodeName == "BODY")
 assert(body.nodeType == document.ELEMENT_NODE)
 assert(body.localName == "body")

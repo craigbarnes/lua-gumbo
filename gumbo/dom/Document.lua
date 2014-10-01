@@ -44,6 +44,22 @@ function Document:createComment(data)
     return setmetatable({data = data}, Comment)
 end
 
+function getters:body()
+    for i, node in ipairs(self.documentElement.childNodes) do
+        if node.type == "element" and node.localName == "body" then
+            return node
+        end
+    end
+end
+
+function getters:head()
+    for i, node in ipairs(self.documentElement.childNodes) do
+        if node.type == "element" and node.localName == "head" then
+            return node
+        end
+    end
+end
+
 function getters:documentURI()
     return self.URL
 end
