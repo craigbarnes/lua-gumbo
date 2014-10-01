@@ -30,6 +30,7 @@ function Document:__index(k)
 end
 
 function Document:createElement(localName)
+    -- TODO: Implement full Name pattern from http://www.w3.org/TR/xml/#NT-Name
     if not string.find(localName, "^[A-Za-z:_][A-Za-z0-9:_.-]*$") then
         return error("InvalidCharacterError")
     end
