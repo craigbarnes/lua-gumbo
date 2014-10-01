@@ -11,7 +11,7 @@ XCFLAGS      += -std=c99 -pedantic-errors -fpic
 XCFLAGS      += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
 XLDFLAGS     += $(GUMBO_LDFLAGS) $(GUMBO_LDLIBS)
 
-TIMEFMT      ?= 'Process peak memory usage: %MKB'
+TIMEFMT      ?= 'Process time: %es\nProcess peak memory usage: %MKB'
 TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
