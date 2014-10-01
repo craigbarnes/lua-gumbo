@@ -109,7 +109,7 @@ check-html5lib: all | test/html5lib-tests/tree-construction
 	@printf "%16s: %s\n" $@ OK
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
-check-valgrind: check-serialize check-misc
+check-valgrind: check-misc
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
