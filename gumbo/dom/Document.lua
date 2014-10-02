@@ -31,10 +31,11 @@ end
 
 function Document:createElement(localName)
     -- TODO: Implement full Name pattern from http://www.w3.org/TR/xml/#NT-Name
-    if not string.find(localName, "^[A-Za-z:_][A-Za-z0-9:_.-]*$") then
+    if localName:find("^[A-Za-z:_][A-Za-z0-9:_.-]*$") then
+        return setmetatable({localName = localName:lower()}, Element)
+    else
         return error("InvalidCharacterError")
     end
-    return setmetatable({localName = localName:lower()}, Element)
 end
 
 function Document:createTextNode(data)
