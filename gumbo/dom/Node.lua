@@ -17,16 +17,22 @@ local Node = {
     childNodes = {length = 0}
 }
 
-local function iter(node)
-    local childNodes = node.childNodes
-    for i = 1, #childNodes do
-        local child = childNodes[i]
-        yield(child)
-        iter(child)
-    end
-end
 
 function Node:walk()
+    local level = 0
+    local function iter(node)
+        local childNodes = node.childNodes
+        local length = #childNodes
+        if length > 0 then
+            level = level + 1
+            for index = 1, length do
+                local child = childNodes[index]
+                yield(child, level, index, length)
+                iter(child)
+            end
+            level = level - 1
+        end
+    end
     return wrap(function() iter(self) end)
 end
 

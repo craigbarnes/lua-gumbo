@@ -1,4 +1,5 @@
 local util = require "gumbo.dom.util"
+local Buffer = require "gumbo.util".Buffer
 local getters, setters = {}, {}
 
 local Element = util.merge("Node", "ChildNode", {
@@ -137,6 +138,87 @@ function getters:children()
         collection.length = length
         return collection
     end
+end
+
+local function Set(t)
+    local set = {}
+    for i = 1, #t do set[t[i]] = true end
+    return set
+end
+
+local void = Set {
+    "area", "base", "basefont", "bgsound", "br", "col", "embed",
+    "frame", "hr", "img", "input", "keygen", "link", "menuitem", "meta",
+    "param", "source", "track", "wbr"
+}
+
+local raw = Set {
+    "style", "script", "xmp", "iframe", "noembed", "noframes",
+    "plaintext"
+}
+
+local boolattr = Set {
+    "allowfullscreen", "async", "autofocus", "autoplay", "checked",
+    "compact", "controls", "declare", "default", "defer", "disabled",
+    "formnovalidate", "hidden", "inert", "ismap", "itemscope", "loop",
+    "multiple", "multiple", "muted", "nohref", "noresize", "noshade",
+    "novalidate", "nowrap", "open", "readonly", "required", "reversed",
+    "scoped", "seamless", "selected", "sortable", "truespeed",
+    "typemustmatch"
+}
+
+local escmap = {
+    ["&"] = "&amp;",
+    ["<"] = "&lt;",
+    [">"] = "&gt;",
+    ['"'] = "&quot;"
+}
+
+local function escape_text(text)
+    return (text:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
+end
+
+local function escape_attr(text)
+    return (text:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
+end
+
+function getters:innerHTML()
+    local buf = Buffer()
+    for node, level, index, length in self:walk() do
+        if node.type == "element" then
+            local tag = node.localName
+            buf:write("<", tag)
+            for i, attr in ipairs(node.attributes) do
+                local ns, name, val = attr.prefix, attr.name, attr.value
+                if ns and not (ns == "xmlns" and name == "xmlns") then
+                    buf:write(" ", ns, ":", name)
+                else
+                    buf:write(" ", name)
+                end
+                if not boolattr[name] or not (val == "" or val == name) then
+                    buf:write('="', escape_attr(val), '"')
+                end
+            end
+            buf:write(">")
+            if node.childNodes.length == 0 and not void[tag] then
+                buf:write("</", tag, ">")
+            end
+        elseif node.type == "text" then
+            if raw[node.parentNode.localName] then
+                buf:write(node.data)
+            else
+                buf:write(escape_text(node.data))
+            end
+        elseif node.type == "whitespace" then
+            buf:write(node.data)
+        elseif node.type == "comment" then
+            buf:write("<!--", node.data, "-->")
+        end
+        if index == length and level > 1 then
+            buf:write("</", node.parentNode.localName, ">")
+        end
+    end
+    return tostring(buf)
 end
 
 local function attr_getter(name)
