@@ -123,7 +123,21 @@ function getters:classList()
     end
 end
 
-getters.nodeName = getters.tagName
+-- TODO: Move to separate ParentNode module when inheritance system is fixed
+function getters:children()
+    if self:hasChildNodes() then
+        local collection = {}
+        local length = 0
+        for i, node in ipairs(self.childNodes) do
+            if node.type == "element" then
+                length = length + 1
+                collection[length] = node
+            end
+        end
+        collection.length = length
+        return collection
+    end
+end
 
 local function attr_getter(name)
     return function(self)
@@ -146,6 +160,7 @@ local function attr_setter(name)
     end
 end
 
+getters.nodeName = getters.tagName
 getters.id = attr_getter("id")
 setters.id = attr_setter("id")
 getters.className = attr_getter("class")

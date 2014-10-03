@@ -96,6 +96,7 @@ assert(heading.attributes.class.value == "x y z")
 
 assert(heading:hasChildNodes() == true)
 assert(heading.childNodes.length == 2)
+assert(heading.children.length == 0)
 assert(heading.firstChild == heading.childNodes[1])
 assert(heading.lastChild == heading.childNodes[2])
 
