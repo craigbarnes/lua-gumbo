@@ -93,9 +93,6 @@ and contains all other nodes as descendants.
 
 ### Element
 
-Element nodes are represented as tables, with child nodes stored in
-numeric indices.
-
 **Fields:**
 
 * `type`: Always has a value of `"element"` for element nodes.
