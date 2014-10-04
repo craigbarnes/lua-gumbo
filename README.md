@@ -87,7 +87,9 @@ and contains all other nodes as descendants.
   * `systemId`: The [system identifier], or `""`.
 * `quirksMode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
 * `documentElement`: A reference to the child `<html>` element.
-* `childNodes`: An ordered table of child nodes.
+* `childNodes`: An ordered table of child nodes. According to the HTML5
+  parsing specification, this always contains exactly 1 `Element` node
+  (the `documentElement`) and 0 or more `Comment` nodes.
 
 ### Element
 
