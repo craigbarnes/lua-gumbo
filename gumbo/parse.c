@@ -182,7 +182,7 @@ static int parse(lua_State *L) {
         add_children(L, &document->children);
 
         // document.documentElement = document.childNodes[root_index]
-        size_t root_index = output->root->index_within_parent + 1;
+        const size_t root_index = output->root->index_within_parent + 1;
         lua_getfield(L, -1, "childNodes");
         lua_rawgeti(L, -1, root_index);
         lua_setfield(L, -3, "documentElement");
