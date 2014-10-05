@@ -4,5 +4,10 @@ return {
     runreport = true,
     deletestats = true,
     include = {},
-    exclude = {"luacov"}
+    exclude = {
+        "luacov",
+        "test/coverage",
+        "test/misc",
+        "test/dom"
+    }
 }
