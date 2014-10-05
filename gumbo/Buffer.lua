@@ -1,3 +1,5 @@
+local select, tconcat, setmetatable = select, table.concat, setmetatable
+local _ENV = nil
 local Buffer = {}
 Buffer.__index = Buffer
 
@@ -11,7 +13,7 @@ function Buffer:write(...)
 end
 
 function Buffer:__tostring()
-    return table.concat(self)
+    return tconcat(self)
 end
 
 return function()
