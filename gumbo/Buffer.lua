@@ -2,10 +2,12 @@ local Buffer = {}
 Buffer.__index = Buffer
 
 function Buffer:write(...)
-    local n = #self
+    local length = self.length
     for i = 1, select("#", ...) do
-        self[n+i] = select(i, ...)
+        length = length + 1
+        self[length] = select(i, ...)
     end
+    self.length = length
 end
 
 function Buffer:__tostring()
@@ -13,5 +15,5 @@ function Buffer:__tostring()
 end
 
 return function()
-    return setmetatable({}, Buffer)
+    return setmetatable({length = 0}, Buffer)
 end
