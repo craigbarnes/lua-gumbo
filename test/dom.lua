@@ -7,6 +7,7 @@ local input = [[
 ]]
 
 local document = assert(gumbo.parse(input))
+local html = assert(document.documentElement)
 local head = assert(document.head)
 local body = assert(document.body)
 local main = assert(document:getElementById("main"))
@@ -35,12 +36,18 @@ assert(pcall(document.createElement, document, "Inv@lidName") == false)
 assert(document:createTextNode("xyz..").data == "xyz..")
 assert(document:createComment(" etc ").data == " etc ")
 
-assert(body == document.documentElement[2])
+assert(html.localName == "html")
+assert(html.nodeType == document.ELEMENT_NODE)
+assert(html.parentNode == document)
+assert(html.outerHTML == "<html><head></head><body>"..input.."</body></html>")
+
+assert(body == html.childNodes[2])
 assert(body.nodeName == "BODY")
 assert(body.nodeType == document.ELEMENT_NODE)
 assert(body.localName == "body")
 assert(body.parentNode.localName == "html")
 assert(body.innerHTML == input)
+assert(body.outerHTML == "<body>" .. input .. "</body>")
 
 assert(main == body[1])
 assert(main:getElementsByTagName("div").length == 0)

@@ -182,44 +182,55 @@ local function escape_attr(text)
     return (text:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
 end
 
--- FIXME: Logic for serializing closing tags is broken.
-function getters:innerHTML()
-    local buf = Buffer()
-    for node, level, index, length in self:walk() do
-        if node.type == "element" then
-            local tag = node.localName
-            buf:write("<", tag)
-            for i, attr in ipairs(node.attributes) do
-                local ns, name, val = attr.prefix, attr.name, attr.value
-                if ns and not (ns == "xmlns" and name == "xmlns") then
-                    buf:write(" ", ns, ":", name)
-                else
-                    buf:write(" ", name)
-                end
-                if not boolattr[name] or not (val == "" or val == name) then
-                    buf:write('="', escape_attr(val), '"')
-                end
-            end
-            buf:write(">")
-            if node.childNodes.length == 0 and not void[tag] then
-                buf:write("</", tag, ">")
-            end
-        elseif node.type == "text" then
-            if raw[node.parentNode.localName] then
-                buf:write(node.data)
+local function serialize(node, buf)
+    if node.type == "element" then
+        local tag = node.localName
+        buf:write("<", tag)
+        for i, attr in ipairs(node.attributes) do
+            local ns, name, val = attr.prefix, attr.name, attr.value
+            if ns and not (ns == "xmlns" and name == "xmlns") then
+                buf:write(" ", ns, ":", name)
             else
-                buf:write(escape_text(node.data))
+                buf:write(" ", name)
             end
-        elseif node.type == "whitespace" then
+            if not boolattr[name] or not (val == "" or val == name) then
+                buf:write('="', escape_attr(val), '"')
+            end
+        end
+        buf:write(">")
+        local children = node.childNodes
+        local length = #children
+        if not void[tag] then
+            for i = 1, length do
+                serialize(children[i], buf)
+            end
+            buf:write("</", tag, ">")
+        end
+    elseif node.type == "text" then
+        if raw[node.parentNode.localName] then
             buf:write(node.data)
-        elseif node.type == "comment" then
-            buf:write("<!--", node.data, "-->")
+        else
+            buf:write(escape_text(node.data))
         end
-        if index == length and level > 1 then
-            buf:write("</", node.parentNode.localName, ">")
-        end
+    elseif node.type == "whitespace" then
+        buf:write(node.data)
+    elseif node.type == "comment" then
+        buf:write("<!--", node.data, "-->")
     end
-    return tostring(buf)
+end
+
+function getters:innerHTML()
+    local buffer = Buffer()
+    for i, node in ipairs(self.childNodes) do
+        serialize(node, buffer)
+    end
+    return tostring(buffer)
+end
+
+function getters:outerHTML()
+    local buffer = Buffer()
+    serialize(self, buffer)
+    return tostring(buffer)
 end
 
 local function attr_getter(name)
