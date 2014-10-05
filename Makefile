@@ -21,8 +21,9 @@ BENCHFILE    ?= test/2MiB.html
 
 DOM_IFACES    = CharacterData ChildNode Comment Document Element \
                 Node NodeList NonElementParentNode Text
+SERIALIZERS   = html.lua html5lib.lua table.lua
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
-SERIALIZERS   = $(addprefix gumbo/serialize/, table.lua html.lua html5lib.lua)
+SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua $(SERIALIZERS))
 
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h
@@ -74,8 +75,8 @@ install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
-	$(INSTALL) gumbo/util.lua '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
-	$(INSTALL) $(SERIALIZERS) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
+	$(INSTALL) gumbo/Buffer.lua '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL) $(SLZ_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 	$(INSTALL) $(DOM_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
 	$(INSTALLX) gumbo/parse.so '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(INSTALL) gumbo.lua '$(DESTDIR)$(LUA_LMOD_DIR)/'

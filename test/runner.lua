@@ -5,8 +5,7 @@
 assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
-local util = require "gumbo.util"
-local Buffer = util.Buffer
+local Buffer = require "gumbo.Buffer"
 local write = io.write
 local verbose = os.getenv "VERBOSE"
 local quiet = os.getenv "QUIET"

@@ -1,6 +1,5 @@
-local util = require "gumbo.util"
-local Buffer = util.Buffer
-local Indent = util.Indent
+local Buffer = require "gumbo.Buffer"
+local Indent = require "gumbo.serialize.Indent"
 local format = string.format
 
 local escmap = {

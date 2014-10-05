@@ -1,5 +1,5 @@
 local util = require "gumbo.dom.util"
-local Buffer = require "gumbo.util".Buffer
+local Buffer = require "gumbo.Buffer"
 local getters, setters = {}, {}
 
 local Element = util.merge("Node", "ChildNode", {
