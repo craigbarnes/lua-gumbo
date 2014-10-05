@@ -6,15 +6,18 @@ assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
 local serialize = require "gumbo.serialize.html5lib"
 local Buffer = require "gumbo.Buffer"
-local write = io.write
+local open, write, assert, tostring = io.open, io.write, assert, tostring
+local format, clock, exit = string.format, os.clock, os.exit
+local arg = {...}
 local verbose = os.getenv "VERBOSE"
 local quiet = os.getenv "QUIET"
-local total_passed, total_failed, total_skipped = 0, 0, 0
 local hrule = string.rep("=", 76)
-local start = os.clock()
+local _ENV = nil
+local total_passed, total_failed, total_skipped = 0, 0, 0
+local start = clock()
 
 local function parse_testdata(filename)
-    local file = assert(io.open(filename, "rb"))
+    local file = assert(open(filename, "rb"))
     local text = assert(file:read("*a"))
     file:close()
     local tests = {[0] = {}}
@@ -85,7 +88,7 @@ end
 if not quiet or total_failed > 0 then
     write(
         "\nRan ", total_passed + total_failed + total_skipped, " tests in ",
-        string.format("%.2fs", os.clock() - start), "\n\n",
+        format("%.2fs", clock() - start), "\n\n",
         "Passed: ", total_passed, "\n",
         "Failed: ", total_failed, "\n",
         "Skipped: ", total_skipped, "\n\n"
@@ -96,5 +99,5 @@ if total_failed > 0 then
     if not verbose then
         write "Re-run with VERBOSE=1 for a full report\n"
     end
-    os.exit(1)
+    exit(1)
 end

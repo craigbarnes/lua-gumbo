@@ -1,5 +1,7 @@
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
+local sort, tostring, iotype = table.sort, tostring, io.type
+local _ENV = nil
 
 local nsmap = {
     ["http://www.w3.org/1999/xhtml"] = "",
@@ -25,7 +27,7 @@ return function(node, buffer, indent_width)
             for i = 1, attr_length do
                 attr_index[i] = i
             end
-            table.sort(attr_index, function(a, b)
+            sort(attr_index, function(a, b)
                 return attr[a].name < attr[b].name
             end)
             for i = 1, attr_length do
@@ -71,5 +73,5 @@ return function(node, buffer, indent_width)
         end
     end
     serialize(node, 0)
-    return io.type(buf) and true or tostring(buf)
+    return iotype(buf) and true or tostring(buf)
 end

@@ -1,3 +1,5 @@
+local assert = assert
+local _ENV = nil
 local NonElementParentNode = {}
 
 function NonElementParentNode:getElementById(elementId)

@@ -1,3 +1,5 @@
+local rep, setmetatable = string.rep, setmetatable
+local _ENV = nil
 local Indent = {}
 
 function Indent:__index(depth)
@@ -10,6 +12,6 @@ function Indent:__index(depth)
 end
 
 return function(width)
-    local i1 = string.rep(" ", width or 4)
+    local i1 = rep(" ", width or 4)
     return setmetatable({[0] = "", [1] = i1}, Indent)
 end

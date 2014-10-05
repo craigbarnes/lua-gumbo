@@ -1,13 +1,15 @@
 local parse = require "gumbo.parse"
+local type, open, iotype = type, io.open, io.type
+local _ENV = nil
 
 local function parse_file(path_or_file, tab_stop)
     local file, openerr
     if type(path_or_file) == "string" then
-        file, openerr = io.open(path_or_file)
+        file, openerr = open(path_or_file)
         if not file then
             return nil, openerr
         end
-    elseif io.type(path_or_file) == "file" then
+    elseif iotype(path_or_file) == "file" then
         file = path_or_file
     else
         return nil, "Invalid argument #1: not a file handle or filename string"

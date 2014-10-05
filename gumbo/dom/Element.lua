@@ -1,5 +1,8 @@
 local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
+local type, ipairs, tostring = type, ipairs, tostring
+local setmetatable = setmetatable
+local _ENV = nil
 local getters, setters = {}, {}
 
 local Element = util.merge("Node", "ChildNode", {

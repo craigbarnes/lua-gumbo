@@ -1,6 +1,8 @@
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
-local format = string.format
+local format, iotype, tostring = string.format, io.type, tostring
+local ipairs, assert = ipairs, assert
+local _ENV = nil
 
 local escmap = {
     ["\n"] = "\\n",
@@ -110,7 +112,7 @@ local function to_table(node, buffer, indent_width)
         end
     end
     serialize(node, 0)
-    return io.type(buf) and true or tostring(buf)
+    return iotype(buf) and true or tostring(buf)
 end
 
 return to_table

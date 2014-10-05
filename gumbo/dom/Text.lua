@@ -1,4 +1,6 @@
 local util = require "gumbo.dom.util"
+local setmetatable = setmetatable
+local _ENV = nil
 
 local Text = util.merge("CharacterData", {
     type = "text",

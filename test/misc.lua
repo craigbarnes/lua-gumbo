@@ -1,4 +1,8 @@
 local gumbo = require "gumbo"
+local to_table = require "gumbo.serialize.table"
+local assert, type, open, rep = assert, type, io.open, string.rep
+local load = loadstring or load
+local _ENV = nil
 
 do
     local input = "\t\t<!--one--><!--two--><h1>Hi</h1>"
@@ -20,19 +24,18 @@ do
 end
 
 do -- Make sure deeply nested elements don't cause a stack overflow
-    local input = string.rep("<div>", 500)
+    local input = rep("<div>", 500)
     local document = assert(gumbo.parse(input), "stack check failed")
     assert(document.body[1][1][1][1][1][1][1][1][1][1][1].localName == "div")
 end
 
 do -- Check that parse_file works the same with a filename as with a file
-    local to_table = require "gumbo.serialize.table"
-    local a = assert(gumbo.parse_file(io.open("test/t1.html"), 4))
+    local a = assert(gumbo.parse_file(open("test/t1.html"), 4))
     local b = assert(gumbo.parse_file("test/t1.html", 4))
     assert(to_table(a) == to_table(b))
 
     -- Ensure that serialized table syntax is valid
-    local fn = assert((loadstring or load)('return ' .. to_table(a)))
+    local fn = assert(load('return ' .. to_table(a)))
     local t = assert(fn())
     assert(type(t) == "table")
 end

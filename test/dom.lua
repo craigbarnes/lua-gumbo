@@ -1,4 +1,6 @@
 local gumbo = require "gumbo"
+local assert, rep, pcall = assert, string.rep, pcall
+local _ENV = nil
 
 local input = [[
 <div id="main" class="foo bar baz etc">
@@ -19,7 +21,7 @@ assert(document:getElementsByTagName("head")[1] == head)
 assert(document:getElementsByTagName("body")[1] == body)
 assert(document:getElementsByTagName("div")[1] == main)
 assert(body:getElementsByTagName("h1")[1] == heading)
-local tendivs = assert(gumbo.parse(string.rep("<div>", 10)))
+local tendivs = assert(gumbo.parse(rep("<div>", 10)))
 assert(tendivs:getElementsByTagName("div").length == 10)
 
 assert(document.nodeName == "#document")

@@ -1,5 +1,7 @@
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
+local ipairs, iotype, tostring = ipairs, io.type, tostring
+local _ENV = nil
 
 local function Set(t)
     local set = {}
@@ -122,7 +124,7 @@ local function to_html(node, buffer, indent_width)
         end
     end
     serialize(node, 0)
-    return io.type(buf) and true or tostring(buf)
+    return iotype(buf) and true or tostring(buf)
 end
 
 return to_html

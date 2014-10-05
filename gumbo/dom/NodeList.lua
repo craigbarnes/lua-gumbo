@@ -1,3 +1,4 @@
+local _ENV = nil
 local NodeList = {}
 
 function NodeList:__index(k)

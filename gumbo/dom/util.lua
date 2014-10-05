@@ -1,3 +1,5 @@
+local type, select, pairs, require = type, select, pairs, require
+local _ENV = nil
 local util = {}
 
 function util.merge(...)

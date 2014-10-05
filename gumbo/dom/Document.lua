@@ -2,6 +2,8 @@ local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local util = require "gumbo.dom.util"
+local type, rawset, ipairs, setmetatable = type, rawset, ipairs, setmetatable
+local _ENV = nil
 local getters = {}
 
 local Document = util.merge("Node", "NonElementParentNode", {

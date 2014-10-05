@@ -1,4 +1,5 @@
 local yield, wrap = coroutine.yield, coroutine.wrap
+local _ENV = nil
 
 local Node = {
     ELEMENT_NODE = 1,
@@ -16,7 +17,6 @@ local Node = {
 
     childNodes = {length = 0}
 }
-
 
 function Node:walk()
     local level = 0
