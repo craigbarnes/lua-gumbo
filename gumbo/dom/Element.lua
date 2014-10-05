@@ -182,6 +182,7 @@ local function escape_attr(text)
     return (text:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
 end
 
+-- FIXME: Logic for serializing closing tags is broken.
 function getters:innerHTML()
     local buf = Buffer()
     for node, level, index, length in self:walk() do
