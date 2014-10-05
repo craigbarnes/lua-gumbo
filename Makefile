@@ -131,9 +131,9 @@ check-spelling: README.md
 	@hunspell -d en_GB,en_US -p `pwd`/.wordlist <($(MDFILTER) $<)
 
 coverage.txt: export LUA_PATH = ./?.lua;;
-coverage.txt: .luacov gumbo/parse.so test/dom.lua test/misc.lua gumbo.lua \
-              gumbo/Buffer.lua $(DOM_MODULES)
-	@$(LUA) -lluacov test/dom.lua test/misc.lua
+coverage.txt: gumbo/parse.so gumbo.lua gumbo/Buffer.lua $(DOM_MODULES) \
+              test/coverage.lua test/misc.lua test/dom.lua .luacov
+	@$(LUA) test/coverage.lua
 
 bench-parse: all test/bench.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
