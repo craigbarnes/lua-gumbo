@@ -39,7 +39,12 @@ assert(document:createComment(" etc ").data == " etc ")
 assert(html.localName == "html")
 assert(html.nodeType == document.ELEMENT_NODE)
 assert(html.parentNode == document)
+assert(html.innerHTML == "<head></head><body>"..input.."</body>")
 assert(html.outerHTML == "<html><head></head><body>"..input.."</body></html>")
+
+assert(head.childNodes.length == 0)
+assert(head.innerHTML == "")
+assert(head.outerHTML == "<head></head>")
 
 assert(body == html.childNodes[2])
 assert(body.nodeName == "BODY")
