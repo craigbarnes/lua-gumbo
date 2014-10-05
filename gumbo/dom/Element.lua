@@ -28,7 +28,9 @@ function Element:__newindex(k, v)
     local setter = setters[k]
     if setter then
         setter(self, v)
-    else
+    -- TODO: Create a lookup table of all readonly fields and do a
+    --       single check against that.
+    elseif not getters[k] and not Element[k] and type(K) ~= "number" then
         rawset(self, k, v)
     end
 end

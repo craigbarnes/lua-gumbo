@@ -30,6 +30,8 @@ assert(document.characterSet == "UTF-8")
 assert(document.URL == "about:blank")
 assert(document.documentURI == document.URL)
 assert(document.compatMode == "BackCompat")
+document.nodeName = "this-is-readonly"
+assert(document.nodeName == "#document")
 
 assert(document:createElement("p").localName == "p")
 assert(pcall(document.createElement, document, "Inv@lidName") == false)
@@ -110,6 +112,11 @@ assert(heading.attributes.class.value == "x y z")
 assert(heading:hasChildNodes() == true)
 assert(heading.childNodes.length == 2)
 assert(heading.children.length == 0)
+assert(heading.firstChild == heading.childNodes[1])
+assert(heading.lastChild == heading.childNodes[2])
+
+heading.firstChild = false
+heading.lastChild = "bla"
 assert(heading.firstChild == heading.childNodes[1])
 assert(heading.lastChild == heading.childNodes[2])
 

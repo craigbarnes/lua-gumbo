@@ -29,6 +29,14 @@ function Document:__index(k)
     end
 end
 
+function Document:__newindex(k, v)
+    -- TODO: Create a lookup table of all readonly fields and do a
+    --       single check against that.
+    if not getters[k] and not Document[k] then
+        rawset(self, k, v)
+    end
+end
+
 function Document:createElement(localName)
     -- TODO: Implement full Name pattern from http://www.w3.org/TR/xml/#NT-Name
     if localName:find("^[A-Za-z:_][A-Za-z0-9:_.-]*$") then

@@ -169,15 +169,14 @@ static int parse(lua_State *L) {
     if (output) {
         const GumboDocument *document = &output->document->v.document;
         lua_createtable(L, document->children.length, 4);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Document");
-        lua_setmetatable(L, -2);
         add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
+            lua_pushliteral(L, "doctype");
             lua_createtable(L, 0, 3);
             add_string(L, "name", document->name);
             add_string(L, "publicId", document->public_identifier);
             add_string(L, "systemId", document->system_identifier);
-            lua_setfield(L, -2, "doctype");
+            lua_rawset(L, -3);
         }
         add_children(L, &document->children);
 
@@ -187,6 +186,9 @@ static int parse(lua_State *L) {
         lua_rawgeti(L, -1, root_index);
         lua_setfield(L, -3, "documentElement");
         lua_pop(L, 1);
+
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Document");
+        lua_setmetatable(L, -2);
 
         gumbo_destroy_output(&options, output);
         return 1;
