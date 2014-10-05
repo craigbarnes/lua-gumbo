@@ -1,8 +1,8 @@
 local gumbo = require "gumbo"
 
 local input = [[
-<div id=main class='foo bar baz etc'>
-    <h1 id=heading>Title <!--comment --></h1>
+<div id="main" class="foo bar baz etc">
+    <h1 id="heading">Title <!--comment --></h1>
 </div>
 ]]
 
@@ -40,6 +40,7 @@ assert(body.nodeName == "BODY")
 assert(body.nodeType == document.ELEMENT_NODE)
 assert(body.localName == "body")
 assert(body.parentNode.localName == "html")
+assert(body.innerHTML == input)
 
 assert(main == body[1])
 assert(main:getElementsByTagName("div").length == 0)
