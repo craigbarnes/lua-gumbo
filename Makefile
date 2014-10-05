@@ -124,6 +124,11 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
 	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
 
+MDFILTER = sed 's/`[^`]*`//g; /^    [^*]/d; /^\[/d; s/\[[A-Za-z0-9_-.]*\]//g'
+check-spelling: SHELL = /bin/bash
+check-spelling: README.md
+	@hunspell -d en_GB,en_US -p `pwd`/.wordlist <($(MDFILTER) $<)
+
 bench-parse: all test/bench.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
 
@@ -142,6 +147,6 @@ clean:
 
 .PHONY: all install uninstall clean dist force githooks check
 .PHONY: check-misc check-html5lib check-compat check-valgrind check-install
-.PHONY: check-serialize-ns check-serialize-t1
+.PHONY: check-spelling check-serialize-ns check-serialize-t1
 .PHONY: bench-parse bench-serialize-html bench-serialize-table
 .DELETE_ON_ERROR:
