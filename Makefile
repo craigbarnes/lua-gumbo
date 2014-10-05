@@ -130,6 +130,11 @@ check-spelling: SHELL = /bin/bash
 check-spelling: README.md
 	@hunspell -d en_GB,en_US -p `pwd`/.wordlist <($(MDFILTER) $<)
 
+coverage.txt: export LUA_PATH = ./?.lua;;
+coverage.txt: .luacov gumbo/parse.so test/dom.lua test/misc.lua gumbo.lua \
+              gumbo/Buffer.lua $(DOM_MODULES)
+	@$(LUA) -lluacov test/dom.lua test/misc.lua
+
 bench-parse: all test/bench.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
 
@@ -143,7 +148,7 @@ bench-serialize-table: all bin/htmltotable.lua $(BENCHFILE)
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/*MiB.html README.html gh.css \
-	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec
+	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec coverage.txt
 
 
 .PHONY: all install uninstall clean dist force githooks check

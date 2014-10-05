@@ -4,6 +4,7 @@ local.mk
 lua-gumbo-*.tar.gz
 lua-gumbo-*.zip
 gumbo-*.rockspec
+coverage.txt
 tags
 README.html
 gh.css
