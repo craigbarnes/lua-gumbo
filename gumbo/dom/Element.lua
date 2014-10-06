@@ -1,10 +1,15 @@
 local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
+local ParentNode = require "gumbo.dom.ParentNode"
 local namePattern = util.namePattern
 local type, ipairs, tostring, error = type, ipairs, tostring, error
 local tremove, setmetatable = table.remove, setmetatable
 local _ENV = nil
-local getters, setters = {}, {}
+local setters = {}
+
+local getters = {
+    children = ParentNode.getters.children
+}
 
 local Element = util.merge("Node", "ChildNode", {
     type = "element",
@@ -154,22 +159,6 @@ function getters:classList()
         end
         list.length = length
         return list
-    end
-end
-
--- TODO: Move to separate ParentNode module when inheritance system is fixed
-function getters:children()
-    if self:hasChildNodes() then
-        local collection = {}
-        local length = 0
-        for i, node in ipairs(self.childNodes) do
-            if node.type == "element" then
-                length = length + 1
-                collection[length] = node
-            end
-        end
-        collection.length = length
-        return collection
     end
 end
 
