@@ -3,7 +3,7 @@ local Buffer = require "gumbo.Buffer"
 local ParentNode = require "gumbo.dom.ParentNode"
 local namePattern = util.namePattern
 local type, ipairs, tostring, error = type, ipairs, tostring, error
-local tremove, setmetatable = table.remove, setmetatable
+local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
 local _ENV = nil
 local setters = {}
 
@@ -39,7 +39,7 @@ function Element:__newindex(k, v)
         setter(self, v)
     -- TODO: Create a lookup table of all readonly fields and do a
     --       single check against that.
-    elseif not getters[k] and not Element[k] and type(K) ~= "number" then
+    elseif not getters[k] and not Element[k] and type(k) ~= "number" then
         rawset(self, k, v)
     end
 end
