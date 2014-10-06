@@ -2,7 +2,7 @@ local parse
 
 if jit then
     local have_ffi, ffi = pcall(require, "ffi")
-    if ffi then
+    if have_ffi then
         parse = require "gumbo.ffi-parse"
     end
 end
