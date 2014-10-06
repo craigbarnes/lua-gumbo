@@ -1,4 +1,16 @@
-local parse = require "gumbo.parse"
+local parse
+
+if jit then
+    local have_ffi, ffi = pcall(require, "ffi")
+    if ffi then
+        parse = require "gumbo.ffi-parse"
+    end
+end
+
+if not parse then
+    parse = require "gumbo.parse"
+end
+
 local type, open, iotype = type, io.open, io.type
 local _ENV = nil
 

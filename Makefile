@@ -24,9 +24,16 @@ DOM_IFACES    = CharacterData ChildNode Comment Document Element \
 SERIALIZERS   = html.lua html5lib.lua table.lua
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua $(SERIALIZERS))
+FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
 
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h
+
+gumbo/ffi-cdef.lua: $(GUMBO_HEADER) cdef.sed
+	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
+	@sed -f cdef.sed $(GUMBO_HEADER) | sed '/^$$/N;/^\n$$/D' >> $@
+	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
+	@echo 'Generated: $@'
 
 gh.css:
 	curl -o $@ https://raw.githubusercontent.com/craigbarnes/showdown/89a861cdea62331e8c3187a294f300818a005d09/gh.css
@@ -78,6 +85,7 @@ install: all
 	$(INSTALL) gumbo/Buffer.lua '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALL) $(SLZ_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 	$(INSTALL) $(DOM_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
+	$(INSTALL) $(FFI_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALLX) gumbo/parse.so '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(INSTALL) gumbo.lua '$(DESTDIR)$(LUA_LMOD_DIR)/'
 

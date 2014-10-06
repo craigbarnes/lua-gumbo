@@ -3,7 +3,8 @@ local basemem = collectgarbage("count")
 local document, duration
 
 do
-    local parse = require "gumbo.parse"
+    local gumbo = require "gumbo"
+    local parse = gumbo.parse
     local have_socket, socket = pcall(require, "socket")
     local clock = have_socket and socket.gettime or os.clock
 
