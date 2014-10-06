@@ -2,6 +2,7 @@ local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local util = require "gumbo.dom.util"
+local namePattern = util.namePattern
 local type, rawset, ipairs, setmetatable = type, rawset, ipairs, setmetatable
 local _ENV = nil
 local getters = {}
@@ -40,8 +41,7 @@ function Document:__newindex(k, v)
 end
 
 function Document:createElement(localName)
-    -- TODO: Implement full Name pattern from http://www.w3.org/TR/xml/#NT-Name
-    if localName:find("^[A-Za-z:_][A-Za-z0-9:_.-]*$") then
+    if localName:find(namePattern) then
         return setmetatable({localName = localName:lower()}, Element)
     else
         return error("InvalidCharacterError")

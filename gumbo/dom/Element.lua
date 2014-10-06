@@ -1,6 +1,7 @@
 local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
-local type, ipairs, tostring = type, ipairs, tostring
+local namePattern = util.namePattern
+local type, ipairs, tostring, error = type, ipairs, tostring, error
 local setmetatable = setmetatable
 local _ENV = nil
 local getters, setters = {}, {}
@@ -64,6 +65,20 @@ function Element:getAttribute(name)
         if attr then
             return attr.value
         end
+    end
+end
+
+function Element:setAttribute(name, value)
+    if not name:find(namePattern) then
+        return error("InvalidCharacterError")
+    end
+    local attributes = self.attributes
+    if attributes[name] then
+        attributes[name].value = value
+    else
+        local attr = {name = name, value = value}
+        attributes[#attributes+1] = attr
+        attributes[name] = attr
     end
 end
 

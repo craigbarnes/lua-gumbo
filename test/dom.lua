@@ -106,9 +106,16 @@ heading.id = "new-id"
 assert(heading.attributes[1].value == "new-id")
 assert(heading.attributes.id.value == "new-id")
 
+heading:setAttribute("id", "test...")
+assert(heading.attributes[1].value == "test...")
+assert(heading.attributes.id.value == "test...")
+heading:setAttribute("new_attr", "new_value")
+assert(heading.attributes[2].value == "new_value")
+assert(heading.attributes.new_attr.value == "new_value")
+
 heading.className = "x y z"
 assert(heading.className == "x y z")
-assert(heading.attributes[2].value == "x y z")
+assert(heading.attributes[3].value == "x y z")
 assert(heading.attributes.class.value == "x y z")
 
 assert(heading:hasChildNodes() == true)
