@@ -73,10 +73,11 @@ function Element:setAttribute(name, value)
         return error("InvalidCharacterError")
     end
     local attributes = self.attributes
-    if attributes[name] then
-        attributes[name].value = value
+    local attr = attributes[name]
+    if attr then
+        attr.value = value
     else
-        local attr = {name = name, value = value}
+        attr = {name = name, value = value}
         attributes[#attributes+1] = attr
         attributes[name] = attr
     end
@@ -129,6 +130,8 @@ function getters:tagName()
         return self.localName
     end
 end
+
+getters.nodeName = getters.tagName
 
 function getters:classList()
     local class = self.attributes.class
@@ -253,31 +256,22 @@ function getters:outerHTML()
     return tostring(buffer)
 end
 
-local function attr_getter(name)
-    return function(self)
-        local attr = self.attributes[name]
-        if attr then return attr.value end
-    end
+function getters:id()
+    local id = self.attributes.id
+    return id and id.value
 end
 
-local function attr_setter(name)
-    return function(self, value)
-        local attributes = self.attributes
-        local attr = attributes[name]
-        if attr then
-            attr.value = value
-        else
-            attr = {name = name, value = value}
-            attributes[#attributes + 1] = attr
-            attributes[name] = attr
-        end
-    end
+function getters:className()
+    local class = self.attributes.class
+    return class and class.value
 end
 
-getters.nodeName = getters.tagName
-getters.id = attr_getter("id")
-setters.id = attr_setter("id")
-getters.className = attr_getter("class")
-setters.className = attr_setter("class")
+function setters:id(value)
+    self:setAttribute("id", value)
+end
+
+function setters:className(value)
+    self:setAttribute("class", value)
+end
 
 return Element
