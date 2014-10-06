@@ -73,6 +73,11 @@ See also: [find_links.lua] and [remove_by_id.lua].
 Output
 ------
 
+**NOTE:** I am currently in the process of implementing the [DOM4] core
+API and hope to eventually replace most of the documentation below with
+a link to the [MDN DOM documentation]. Current progress can be followed
+in [issue #4].
+
 ### Document
 
 The document node is the top-level table returned by the parse functions
@@ -177,3 +182,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [find_links.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
 [remove_by_id.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
+[DOM4]: http://www.w3.org/TR/dom/
+[MDN DOM Documentation]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
+[issue #4]: https://github.com/craigbarnes/lua-gumbo/issues/4
