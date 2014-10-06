@@ -1,8 +1,10 @@
 -include local.mk
 
 CC         = gcc
+XLDFLAGS  += -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
-LUA       ?= lua
+EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
+LUA       ?= $(if $(call EQUAL,$(LUA_PC),luajit), luajit, lua)
 MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
@@ -13,8 +15,6 @@ ifeq "$(shell uname)" "Darwin"
 else
   LDFLAGS ?= -shared
 endif
-
-XLDFLAGS  += -Wl,--no-as-needed
 
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
