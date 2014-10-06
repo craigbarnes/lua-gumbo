@@ -136,6 +136,12 @@ local function create_text(node)
     return setmetatable(n, Text)
 end
 
+local function create_cdata(node)
+    local n = make_text(node)
+    n.type = "cdata"
+    return setmetatable(n, Text)
+end
+
 local function create_whitespace(node)
     local n = make_text(node)
     n.type = "whitespace"
@@ -147,15 +153,16 @@ local function create_comment(node)
     return setmetatable(n, Comment)
 end
 
-local createmap = setmetatable({
-    [tonumber(C.GUMBO_NODE_ELEMENT)] = create_element,
-    [tonumber(C.GUMBO_NODE_TEXT)] = create_text,
-    [tonumber(C.GUMBO_NODE_WHITESPACE)] = create_whitespace,
-    [tonumber(C.GUMBO_NODE_COMMENT)] = create_comment,
+local typemap = setmetatable({
+    create_element,
+    create_text,
+    create_cdata,
+    create_comment,
+    create_whitespace,
 }, {__index = function() error "Error: invalid node type" end})
 
 create_node = function(node)
-    return createmap[tonumber(node.type)](node)
+    return typemap[tonumber(node.type)](node)
 end
 
 local function parse(input, tab_stop)

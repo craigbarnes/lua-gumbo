@@ -153,6 +153,9 @@ static void push_node(lua_State *L, const GumboNode *node) {
         create_text_node(L, &node->v.text, "gumbo.dom.Comment");
         return;
     case GUMBO_NODE_CDATA:
+        create_text_node(L, &node->v.text, "gumbo.dom.Text");
+        add_literal(L, "type", "cdata");
+        return;
     case GUMBO_NODE_DOCUMENT:
     default:
         luaL_error(L, "Invalid node type");
