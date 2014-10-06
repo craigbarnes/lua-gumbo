@@ -2,7 +2,7 @@ local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
 local namePattern = util.namePattern
 local type, ipairs, tostring, error = type, ipairs, tostring, error
-local setmetatable = setmetatable
+local tremove, setmetatable = table.remove, setmetatable
 local _ENV = nil
 local getters, setters = {}, {}
 
@@ -80,6 +80,16 @@ function Element:setAttribute(name, value)
         attr = {name = name, value = value}
         attributes[#attributes+1] = attr
         attributes[name] = attr
+    end
+end
+
+function Element:removeAttribute(name)
+    local attributes = self.attributes
+    for i, attr in ipairs(attributes) do
+        if attr.name == name then
+            attributes[name] = nil
+            tremove(attributes, i)
+        end
     end
 end
 
