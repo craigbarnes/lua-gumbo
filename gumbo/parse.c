@@ -128,7 +128,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
     switch (node->type) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
-        lua_createtable(L, element->children.length, 8);
+        lua_createtable(L, 0, 7);
         add_tag(L, element);
         add_integer(L, "line", element->start_pos.line);
         add_integer(L, "column", element->start_pos.column);
@@ -168,7 +168,7 @@ static int parse(lua_State *L) {
     GumboOutput *output = gumbo_parse_with_options(&options, input, length);
     if (output) {
         const GumboDocument *document = &output->document->v.document;
-        lua_createtable(L, document->children.length, 4);
+        lua_createtable(L, 0, 4);
         add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
             lua_pushliteral(L, "doctype");
