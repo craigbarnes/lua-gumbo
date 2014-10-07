@@ -1,22 +1,19 @@
 local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
-local ParentNode = require "gumbo.dom.ParentNode"
 local namePattern = util.namePattern
 local type, ipairs, tostring, error = type, ipairs, tostring, error
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
 local _ENV = nil
 local setters = {}
 
-local getters = {
-    children = ParentNode.getters.children
-}
-
-local Element = util.merge("Node", "ChildNode", {
+local Element = util.merge("Node", "ChildNode", "ParentNode", {
     type = "element",
     nodeType = 1,
     namespaceURI = "http://www.w3.org/1999/xhtml",
     attributes = {}
 })
+
+local getters = Element.getters or {}
 
 function Element:__index(k)
     if type(k) == "number" then

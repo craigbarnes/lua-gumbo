@@ -1,17 +1,12 @@
 local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
-local ParentNode = require "gumbo.dom.ParentNode"
 local util = require "gumbo.dom.util"
 local namePattern = util.namePattern
 local type, rawset, ipairs, setmetatable = type, rawset, ipairs, setmetatable
 local _ENV = nil
 
-local getters = {
-    children = ParentNode.getters.children
-}
-
-local Document = util.merge("Node", "NonElementParentNode", {
+local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     type = "document",
     nodeName = "#document",
     nodeType = 9,
@@ -20,6 +15,8 @@ local Document = util.merge("Node", "NonElementParentNode", {
     URL = "about:blank",
     getElementsByTagName = Element.getElementsByTagName
 })
+
+local getters = Document.getters or {}
 
 function Document:__index(k)
     if type(k) == "number" then

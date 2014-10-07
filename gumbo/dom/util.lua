@@ -8,6 +8,7 @@ local util = {
 
 function util.merge(...)
     local t = {}
+    local g = {}
     for i = 1, select("#", ...) do
         local arg = select(i, ...)
         local argtype = type(arg)
@@ -20,9 +21,17 @@ function util.merge(...)
             error "Invalid argument type"
         end
         for k, v in pairs(m) do
-            t[k] = v
+            if k ~= "getters" and k ~= "setters" then
+                t[k] = v
+            end
+        end
+        if m.getters then
+            for k, v in pairs(m.getters) do
+                g[k] = v
+            end
         end
     end
+    t.getters = g
     t.__index = t
     return t
 end
