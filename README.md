@@ -1,8 +1,8 @@
 lua-gumbo
 =========
 
-[Lua] bindings for the [Gumbo][] [HTML5] parsing library, including a
-(growing) set of DOM APIs implemented with metatables.
+[Lua] C and FFI bindings for the [Gumbo][] [HTML5] parsing library,
+including a small (but growing) set of DOM APIs implemented in pure Lua.
 
 Requirements
 ------------
