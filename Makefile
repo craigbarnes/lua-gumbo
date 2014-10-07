@@ -17,7 +17,7 @@ TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) bin/htmlfmt.lua
 TOTABLE      ?= $(LUA) bin/htmltotable.lua
-BENCHFILE    ?= test/2MiB.html
+BENCHFILE    ?= test/data/2MiB.html
 
 DOM_IFACES    = CharacterData ChildNode Comment Document Element \
                 Node NodeList NonElementParentNode ParentNode Text
@@ -41,16 +41,16 @@ gh.css:
 README.html: README.md template.html gh.css
 	discount-theme -t template.html -o $@ $<
 
-test/1MiB.html: test/4KiB.html
+test/data/1MiB.html: test/data/4KiB.html
 	@$(RM) $@
 	@for i in `seq 1 256`; do cat $< >> $@; done
 
-test/%MiB.html: test/1MiB.html
+test/data/%MiB.html: test/data/1MiB.html
 	@$(RM) $@
 	@for i in `seq 1 $*`; do cat $< >> $@; done
 
 # Some static instances of the above pattern rule, just for autocompletion
-test/2MiB.html test/3MiB.html test/4MiB.html test/5MiB.html:
+test/data/2MiB.html test/data/5MiB.html test/data/10MiB.html:
 
 # The *_HEADER* variables aren't in the deps list to avoid unnecessary
 # pkg-config queries on every run. They can be lazy evaluated if they only
@@ -102,20 +102,20 @@ check: export QUIET = yes
 check: check-serialize-ns check-serialize-t1 check-misc check-html5lib
 
 check-serialize-ns check-serialize-t1: \
-check-serialize-%: all test/%.html test/%.out.html test/%.table
-	@$(TOTABLE) test/$*.html | diff -u2 test/$*.table -
-	@$(TOHTML) test/$*.html | diff -u2 test/$*.out.html -
-	@$(TOHTML) test/$*.html | $(TOHTML) | diff -u2 test/$*.out.html -
-	@printf "%16s: %s\n" test/$*.html OK
+check-serialize-%: all test/data/%.html test/data/%.out.html test/data/%.table
+	@$(TOTABLE) test/data/$*.html | diff -u2 test/data/$*.table -
+	@$(TOHTML) test/data/$*.html | diff -u2 test/data/$*.out.html -
+	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
+	@printf "%18s: %s\n" $@ OK
 
 check-misc: all
 	@$(LUA) test/misc.lua
 	@$(LUA) test/dom.lua
-	@printf "%16s: %s\n" $@ OK
+	@printf "%18s: %s\n" $@ OK
 
 check-html5lib: all | test/html5lib-tests/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
-	@printf "%16s: %s\n" $@ OK
+	@printf "%18s: %s\n" $@ OK
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
 check-valgrind: check-misc
@@ -155,7 +155,7 @@ bench-serialize-table: all bin/htmltotable.lua $(BENCHFILE)
 	@$(TIME) $(LUA) bin/htmltotable.lua $(BENCHFILE) /dev/null
 
 clean:
-	$(RM) gumbo/parse.so gumbo/parse.o test/*MiB.html README.html gh.css \
+	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
 	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec coverage.txt
 
 

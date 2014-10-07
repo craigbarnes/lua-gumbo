@@ -30,8 +30,8 @@ do -- Make sure deeply nested elements don't cause a stack overflow
 end
 
 do -- Check that parse_file works the same with a filename as with a file
-    local a = assert(gumbo.parse_file(open("test/t1.html"), 4))
-    local b = assert(gumbo.parse_file("test/t1.html", 4))
+    local a = assert(gumbo.parse_file(open("test/data/t1.html"), 4))
+    local b = assert(gumbo.parse_file("test/data/t1.html", 4))
     assert(to_table(a) == to_table(b))
 
     -- Ensure that serialized table syntax is valid

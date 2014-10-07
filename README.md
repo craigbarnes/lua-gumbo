@@ -146,9 +146,9 @@ Testing
 * `make coverage.txt`: Generates a test coverage report with [luacov].
 * `make check-spelling`: Spell checks `README.md` using [Hunspell] and a
   custom word list.
-* `make bench-parse BENCHFILE=test/${size}MiB.html`: Parses an automatically
-  generated document of `${size}` MiB, then prints CPU time and memory usage
-  stats.
+* `make bench-parse BENCHFILE=test/data/${size}MiB.html`: Parses an
+  automatically generated document of `${size}` MiB, then prints CPU time
+  and memory usage stats.
 * `make githooks`: Installs a pre-commit hook to `.git/hooks/pre-commit`
   that only allows commits if `make check` exits cleanly.
 
