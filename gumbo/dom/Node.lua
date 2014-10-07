@@ -59,7 +59,7 @@ function Node:removeChild(child)
 end
 
 function Node:contains(other)
-    if not other then
+    if not other or not other.nodeType then
         return false
     elseif other == self then
         return true
