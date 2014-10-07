@@ -105,4 +105,16 @@ function getters:lastChild()
     return cnodes[#cnodes]
 end
 
+local isTextOrComment = {
+    [Node.TEXT_NODE] = true,
+    [Node.COMMENT_NODE] = true
+}
+
+-- TODO: implement setter
+function getters:nodeValue()
+    if isTextOrComment[self.nodeType] then
+        return self.data
+    end
+end
+
 return Node
