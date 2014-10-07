@@ -89,4 +89,11 @@ function getters:ownerDocument()
     end
 end
 
+function getters:parentElement()
+    local parentNode = self.parentNode
+    if parentNode and parentNode.type == "element" then
+        return parentNode
+    end
+end
+
 return Node

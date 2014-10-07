@@ -45,6 +45,12 @@ assert(pcall(document.createElement, document, "Inv@lidName") == false)
 assert(document:createTextNode("xyz..").data == "xyz..")
 assert(document:createComment(" etc ").data == " etc ")
 
+assert(text.parentElement == heading)
+assert(comment.parentElement == heading)
+assert(body.parentElement == html)
+assert(document.parentElement == nil)
+assert(html.parentElement == nil)
+
 assert(html.localName == "html")
 assert(html.nodeType == document.ELEMENT_NODE)
 assert(html.parentNode == document)
