@@ -8,6 +8,20 @@ local Text = util.merge("CharacterData", {
     nodeType = 3
 })
 
+local getters = Text.getters or {}
+
+function Text:__index(k)
+    local field = Text[k]
+    if field then
+        return field
+    else
+        local getter = getters[k]
+        if getter then
+            return getter(self)
+        end
+    end
+end
+
 function Text:cloneNode()
     return setmetatable({data = self.data}, Text)
 end

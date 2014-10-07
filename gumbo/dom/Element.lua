@@ -270,14 +270,4 @@ function setters:className(value)
     self:setAttribute("class", value)
 end
 
-function getters:ownerDocument()
-    local node = self
-    while node.parentNode do
-        node = node.parentNode
-    end
-    if node.type == "document" then
-        return node
-    end
-end
-
 return Element

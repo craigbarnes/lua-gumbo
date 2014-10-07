@@ -1,6 +1,7 @@
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tremove, error = table.remove, error
 local _ENV = nil
+local getters = {}
 
 local Node = {
     ELEMENT_NODE = 1,
@@ -16,7 +17,8 @@ local Node = {
     DOCUMENT_FRAGMENT_NODE = 11,
     NOTATION_NODE = 12, -- historical
 
-    childNodes = {length = 0}
+    childNodes = {length = 0},
+    getters = getters
 }
 
 function Node:walk()
@@ -72,6 +74,19 @@ function Node:contains(other)
         node = node.parentNode
     end
     return false
+end
+
+function getters:ownerDocument()
+    if self.type == "document" then
+        return nil
+    end
+    local node = self
+    while node.parentNode do
+        node = node.parentNode
+    end
+    if node.type == "document" then
+        return node
+    end
 end
 
 return Node

@@ -8,6 +8,20 @@ local Comment = util.merge("CharacterData", {
     nodeType = 8
 })
 
+local getters = Comment.getters or {}
+
+function Comment:__index(k)
+    local field = Comment[k]
+    if field then
+        return field
+    else
+        local getter = getters[k]
+        if getter then
+            return getter(self)
+        end
+    end
+end
+
 function Comment:cloneNode()
     return setmetatable({data = self.data}, Comment)
 end
