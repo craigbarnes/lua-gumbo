@@ -1,4 +1,5 @@
 local yield, wrap = coroutine.yield, coroutine.wrap
+local tremove, error = table.remove, error
 local _ENV = nil
 
 local Node = {
@@ -38,6 +39,21 @@ end
 
 function Node:hasChildNodes()
     return self.childNodes[1] and true or false
+end
+
+function Node:removeChild(child)
+    if child.parentNode ~= self then
+        error "NotFoundError"
+    end
+    local childNodes = self.childNodes
+    for i = 1, #childNodes do
+        if childNodes[i] == child then
+            tremove(childNodes, i)
+            child.parentNode = nil
+            return child
+        end
+    end
+    error "NotFoundError"
 end
 
 return Node
