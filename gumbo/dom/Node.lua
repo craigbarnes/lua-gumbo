@@ -96,4 +96,13 @@ function getters:parentElement()
     end
 end
 
+function getters:firstChild()
+    return self.childNodes[1]
+end
+
+function getters:lastChild()
+    local cnodes = self.childNodes
+    return cnodes[#cnodes]
+end
+
 return Node

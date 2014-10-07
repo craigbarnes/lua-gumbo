@@ -77,15 +77,6 @@ function getters:documentURI()
     return self.URL
 end
 
-function getters:firstChild()
-    return self.childNodes[1]
-end
-
-function getters:lastChild()
-    local cnodes = self.childNodes
-    return cnodes[#cnodes]
-end
-
 function getters:compatMode()
     if self.quirksMode == "quirks" then
         return "BackCompat"

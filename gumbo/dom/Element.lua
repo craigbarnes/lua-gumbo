@@ -125,15 +125,6 @@ function Element:cloneNode(deep)
     return setmetatable(clone, Element)
 end
 
-function getters:firstChild()
-    return self.childNodes[1]
-end
-
-function getters:lastChild()
-    local cnodes = self.childNodes
-    return cnodes[#cnodes]
-end
-
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
 function getters:tagName()
     if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
