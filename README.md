@@ -144,6 +144,14 @@ Testing
 * `make check-html5lib`: Runs just the html5lib [tree-construction tests].
 * `make check-install`: Runs `make check` within a temporary, isolated
   installation, to ensure all modules are installed correctly.
+* `make coverage.txt`: Generates a test coverage report with [luacov].
+* `make check-spelling`: Spell checks `README.md` using [Hunspell] and a
+  custom word list.
+* `make bench-parse BENCHFILE=test/${size}MiB.html`: Parses an automatically
+  generated document of `${size}` MiB, then prints CPU time and memory usage
+  stats.
+* `make githooks`: Installs a pre-commit hook to `.git/hooks/pre-commit`
+  that only allows commits if `make check` exits cleanly.
 
 [License]
 ---------
@@ -185,3 +193,5 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [DOM4]: http://www.w3.org/TR/dom/
 [MDN DOM Documentation]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [issue #4]: https://github.com/craigbarnes/lua-gumbo/issues/4
+[luacov]: https://keplerproject.github.io/luacov/
+[Hunspell]: https://en.wikipedia.org/wiki/Hunspell
