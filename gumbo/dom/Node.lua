@@ -56,4 +56,22 @@ function Node:removeChild(child)
     error "NotFoundError"
 end
 
+function Node:contains(other)
+    if not other then
+        return false
+    elseif other == self then
+        return true
+    elseif self:hasChildNodes() == false then
+        return false
+    end
+    local node = other
+    while node.parentNode do
+        if node.parentNode == self then
+            return true
+        end
+        node = node.parentNode
+    end
+    return false
+end
+
 return Node
