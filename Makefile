@@ -99,26 +99,29 @@ export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
 check: export QUIET = yes
-check: check-serialize-ns check-serialize-t1 check-misc check-html5lib
+check: check-unit check-html5lib check-serialize
+
+check-serialize: check-serialize-ns check-serialize-t1
+	@printf "%10s: %s\n" Serialize OK
 
 check-serialize-ns check-serialize-t1: \
 check-serialize-%: all test/data/%.html test/data/%.out.html test/data/%.table
 	@$(TOTABLE) test/data/$*.html | diff -u2 test/data/$*.table -
 	@$(TOHTML) test/data/$*.html | diff -u2 test/data/$*.out.html -
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
-	@printf "%18s: %s\n" $@ OK
 
-check-misc: all
-	@$(LUA) test/misc.lua
+check-unit: all
 	@$(LUA) test/dom.lua
-	@printf "%18s: %s\n" $@ OK
+	@printf "%10s: %s\n" DOM OK
+	@$(LUA) test/misc.lua
+	@printf "%10s: %s\n" Misc OK
 
 check-html5lib: all | test/html5lib-tests/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
-	@printf "%18s: %s\n" $@ OK
+	@printf "%10s: %s\n" html5lib OK
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
-check-valgrind: check-misc
+check-valgrind: check-unit
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
@@ -160,7 +163,7 @@ clean:
 
 
 .PHONY: all install uninstall clean dist force githooks check
-.PHONY: check-misc check-html5lib check-compat check-valgrind check-install
-.PHONY: check-spelling check-serialize-ns check-serialize-t1
+.PHONY: check-unit check-html5lib check-compat check-valgrind check-install
+.PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
 .PHONY: bench-parse bench-serialize-html bench-serialize-table
 .DELETE_ON_ERROR:
