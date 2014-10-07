@@ -1,4 +1,3 @@
-#!/usr/bin/env lua
 local basemem = collectgarbage("count")
 local document, duration
 

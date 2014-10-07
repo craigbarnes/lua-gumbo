@@ -1,4 +1,3 @@
-#!/usr/bin/env lua
 -- Test runner for the html5lib tree-construction test suite.
 -- Don't run directly, use `make check-html5lib` in the top-level directory.
 
