@@ -2,8 +2,7 @@ lua-gumbo
 =========
 
 [Lua] bindings for the [Gumbo][] [HTML5] parsing library, including a
-minimal, DOM-like API and tree serializers for HTML5, Lua tables
-and html5lib ASTs.
+(growing) set of DOM APIs implemented with metatables.
 
 Requirements
 ------------
