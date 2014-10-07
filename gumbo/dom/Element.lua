@@ -243,6 +243,11 @@ function getters:outerHTML()
     return tostring(buffer)
 end
 
+-- TODO:
+local NYI = function() error "Not yet implemented" end
+setters.innerHTML = NYI
+setters.outerHTML = NYI
+
 function getters:id()
     local id = self.attributes.id
     return id and id.value
