@@ -44,10 +44,22 @@ end
 function Element:getElementsByTagName(localName)
     local collection = {} -- TODO: = setmetatable({}, HTMLCollection)
     local length = 0
-    for node in self:walk() do
-        if node.type == "element" and node.localName == localName then
-            length = length + 1
-            collection[length] = node
+    if not localName or localName == "" then
+        collection.length = 0
+        return collection
+    elseif localName == "*" then
+        for node in self:walk() do
+            if node.type == "element" then
+                length = length + 1
+                collection[length] = node
+            end
+        end
+    else
+        for node in self:walk() do
+            if node.type == "element" and node.localName == localName then
+                length = length + 1
+                collection[length] = node
+            end
         end
     end
     collection.length = length
