@@ -19,6 +19,7 @@ TOHTML       ?= $(LUA) bin/htmlfmt.lua
 TOTABLE      ?= $(LUA) bin/htmltotable.lua
 MDFILTER      = sed 's/`[^`]*`//g;/^    [^*]/d;/^\[/d; s/\[[A-Za-z0-9_-.]*\]//g'
 SPELLCHECK    = hunspell -l -d en_GB,en_US -p $(PWD)/.wordlist
+OK            = printf "%10s: OK\n"
 BENCHFILE    ?= test/data/2MiB.html
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document Element \
@@ -103,7 +104,7 @@ check: export QUIET = yes
 check: check-unit check-html5lib check-serialize
 
 check-serialize: check-serialize-ns check-serialize-t1
-	@printf "%10s: %s\n" Serialize OK
+	@$(OK) Serialize
 
 check-serialize-ns check-serialize-t1: \
 check-serialize-%: all test/data/%.html test/data/%.out.html test/data/%.table
@@ -113,13 +114,13 @@ check-serialize-%: all test/data/%.html test/data/%.out.html test/data/%.table
 
 check-unit: all
 	@$(LUA) test/dom.lua
-	@printf "%10s: %s\n" DOM OK
+	@$(OK) DOM
 	@$(LUA) test/misc.lua
-	@printf "%10s: %s\n" Misc OK
+	@$(OK) Misc
 
 check-html5lib: all | test/html5lib-tests/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
-	@printf "%10s: %s\n" html5lib OK
+	@$(OK) html5lib
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
 check-valgrind: check-unit
@@ -145,7 +146,7 @@ check-spelling: README.md
 	  printf "Add valid words to .wordlist file to ignore\n" >&2; \
 	  exit 1; \
 	fi
-	@printf "%10s: %s\n" Spelling OK
+	@$(OK) Spelling
 
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: gumbo/parse.so gumbo.lua gumbo/Buffer.lua $(DOM_MODULES) \
