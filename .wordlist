@@ -1,4 +1,5 @@
 API
+APIs
 ASTs
 C99
 config
@@ -12,6 +13,7 @@ Lua
 LuaJIT
 Makefile
 MathML
+MDN
 namespace
 namespaces
 serializers
