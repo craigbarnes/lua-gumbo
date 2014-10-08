@@ -19,6 +19,7 @@ local ffi = require "ffi"
 local C = require "gumbo.ffi-cdef"
 local Document = require "gumbo.dom.Document"
 local Element = require "gumbo.dom.Element"
+local Attr = require "gumbo.dom.Attr"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local NodeList = require "gumbo.dom.NodeList"
@@ -41,7 +42,7 @@ local function get_attributes(attrs)
             local attr = cast("GumboAttribute*", attrs.data[i])
             local name = cstring(attr.name)
             local value = cstring(attr.value)
-            t[i+1] = {
+            local a = {
                 name = name,
                 value = value,
                 prefix = attrnsmap[tonumber(attr.attr_namespace)],
@@ -49,7 +50,8 @@ local function get_attributes(attrs)
                 column = attr.name_start.column,
                 offset = attr.name_start.offset
             }
-            t[name] = t[i+1]
+            t[i+1] = setmetatable(a, Attr)
+            t[name] = a
         end
         return t
     end

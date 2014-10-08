@@ -19,7 +19,7 @@ TOHTML       ?= $(LUA) bin/htmlfmt.lua
 TOTABLE      ?= $(LUA) bin/htmltotable.lua
 BENCHFILE    ?= test/data/2MiB.html
 
-DOM_IFACES    = CharacterData ChildNode Comment Document Element \
+DOM_IFACES    = Attr CharacterData ChildNode Comment Document Element \
                 Node NodeList NonElementParentNode ParentNode Text
 SERIALIZERS   = html.lua table.lua
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))

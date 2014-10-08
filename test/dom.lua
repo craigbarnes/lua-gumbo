@@ -148,6 +148,10 @@ assert(commentclone.parentNode == nil)
 assert(heading.parentNode == main)
 assert(heading.ownerDocument == document)
 
+assert(heading.attributes[1].specified == true)
+assert(heading.attributes[1].name == "id")
+-- TODO: assert(heading.attributes[1].localName == "id")
+
 assert(heading.attributes[1].value == "heading")
 assert(heading.attributes.id.value == "heading")
 heading.id = "new-id"

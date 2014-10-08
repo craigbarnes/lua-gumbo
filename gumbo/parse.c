@@ -54,6 +54,10 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             add_integer(L, "offset", attr->name_start.offset);
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
+
+            lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Attr");
+            lua_setmetatable(L, -2);
+
             lua_rawseti(L, -2, i+1);
         }
         lua_setfield(L, -2, "attributes");
@@ -217,6 +221,7 @@ int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.dom.Text");
     require(L, "gumbo.dom.Comment");
     require(L, "gumbo.dom.Element");
+    require(L, "gumbo.dom.Attr");
     require(L, "gumbo.dom.Document");
     require(L, "gumbo.dom.NodeList");
     lua_pushcfunction(L, parse);
