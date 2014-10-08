@@ -149,8 +149,8 @@ Testing
 * `make bench-parse BENCHFILE=test/data/${size}MiB.html`: Parses an
   automatically generated document of `${size}` MiB, then prints CPU time
   and memory usage stats.
-* `make githooks`: Installs a pre-commit hook to `.git/hooks/pre-commit`
-  that only allows commits if `make check` exits cleanly.
+* `make git-hooks`: Installs some git hooks to disallow commits with
+  failing tests or a commit message longer than 72 columns.
 
 [License]
 ---------

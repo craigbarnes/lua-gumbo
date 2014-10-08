@@ -58,11 +58,10 @@ test/data/2MiB.html test/data/5MiB.html test/data/10MiB.html:
 tags: gumbo/parse.c Makefile lualib.mk
 	ctags --c-kinds=+p $(GUMBO_HEADER) $(LUA_HEADERS) $^
 
-githooks: .git/hooks/pre-commit
+git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg
 
-.git/hooks/pre-commit: Makefile
-	printf '#!/bin/sh\n\nmake -s check || exit 1' > $@
-	chmod +x $@
+.git/hooks/%: test/git-hooks/%
+	install -m 755 $< $@
 
 dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
 
@@ -162,7 +161,7 @@ clean:
 	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec coverage.txt
 
 
-.PHONY: all install uninstall clean dist force githooks check
+.PHONY: all install uninstall clean dist force git-hooks check
 .PHONY: check-unit check-html5lib check-compat check-valgrind check-install
 .PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
 .PHONY: bench-parse bench-serialize-html bench-serialize-table
