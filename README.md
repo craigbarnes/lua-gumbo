@@ -29,7 +29,7 @@ to be found is used (yes, these all exist in the wild):
 
 If, for example, your system has both `lua.pc` and `luajit.pc` installed
 then `lua.pc` will be used by default. You can override this default
-behaviour by specifying the `LUA_PC` and `LUA` variables. To build for
+behavior by specifying the `LUA_PC` and `LUA` variables. To build for
 LuaJIT, in this case, use:
 
     make LUA_PC=luajit
