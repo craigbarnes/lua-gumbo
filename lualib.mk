@@ -4,11 +4,14 @@ CC         = gcc
 XLDFLAGS  += -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
-LUA       ?= $(LUA_PC)
 MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
+
+LUA ?= $(if $(shell $(LUA_PC) -e 'print"1"' 2>/dev/null),$(LUA_PC), \
+       $(error Found pkg-config file with name '$(LUA_PC)', but no matching \
+       '$(LUA_PC)' command. Specify manually by defining the LUA= variable))
 
 ifeq "$(shell uname)" "Darwin"
   LDFLAGS ?= -bundle -undefined dynamic_lookup
