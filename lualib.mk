@@ -8,9 +8,9 @@ MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
-PC_EXISTS  = $(shell $(PKGCONFIG) --exists $(1) && echo 1)
+PC_EXISTS  = $(shell $(PKGCONFIG) --exists '$(1)' && echo 1)
 CMD_EXISTS = $(shell which $(1) 2>/dev/null)
-USE_IF     = $(if $(call $(1), $(2)), $(2))
+USE_IF     = $(if $(call $(1), $(2) $(3)), $(2))
 
 ifeq "$(shell uname)" "Darwin"
   LDFLAGS ?= -bundle -undefined dynamic_lookup
@@ -27,14 +27,14 @@ LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
 # - OpenBSD ports uses lua52.pc and lua51.pc
 # - FreeBSD uses lua-5.2.pc and lua-5.1.pc
 LUA_PC ?= $(or \
-    $(call USE_IF, PC_EXISTS, lua), \
+    $(call USE_IF, PC_EXISTS, lua, >= 5.1), \
     $(call USE_IF, PC_EXISTS, lua52), \
     $(call USE_IF, PC_EXISTS, lua5.2), \
     $(call USE_IF, PC_EXISTS, lua-5.2), \
     $(call USE_IF, PC_EXISTS, lua51), \
     $(call USE_IF, PC_EXISTS, lua5.1), \
     $(call USE_IF, PC_EXISTS, lua-5.1), \
-    $(call USE_IF, PC_EXISTS, luajit), \
+    $(call USE_IF, PC_EXISTS, luajit, >= 2.0), \
     $(error No pkg-config file found for Lua) \
 )
 
