@@ -1,13 +1,8 @@
 local Buffer = require "gumbo.Buffer"
+local Set = require "gumbo.Set"
 local Indent = require "gumbo.serialize.Indent"
 local ipairs, iotype, tostring = ipairs, io.type, tostring
 local _ENV = nil
-
-local function Set(t)
-    local set = {}
-    for i = 1, #t do set[t[i]] = true end
-    return set
-end
 
 local void = Set {
     "area", "base", "basefont", "bgsound", "br", "col", "embed",

@@ -83,6 +83,7 @@ install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
 	$(INSTALL) gumbo/Buffer.lua '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
+	$(INSTALL) gumbo/Set.lua '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALL) $(SLZ_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 	$(INSTALL) $(DOM_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
 	$(INSTALL) $(FFI_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
@@ -146,8 +147,8 @@ check-spelling: README.md
 	@$(OK) Spelling
 
 coverage.txt: export LUA_PATH = ./?.lua;;
-coverage.txt: gumbo/parse.so gumbo.lua gumbo/Buffer.lua $(DOM_MODULES) \
-              test/coverage.lua test/misc.lua test/dom.lua .luacov
+coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
+              $(DOM_MODULES) test/coverage.lua test/misc.lua test/dom.lua \
 	@$(LUA) test/coverage.lua
 
 bench-parse: all test/bench.lua $(BENCHFILE)

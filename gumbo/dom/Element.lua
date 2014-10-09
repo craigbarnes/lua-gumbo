@@ -1,5 +1,6 @@
 local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
+local Set = require "gumbo.Set"
 local namePattern = util.namePattern
 local type, ipairs, tostring, error = type, ipairs, tostring, error
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
@@ -137,6 +138,8 @@ function Element:cloneNode(deep)
     return setmetatable(clone, Element)
 end
 
+-- TODO: function Element:isEqualNode(node) end
+
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
 function getters:tagName()
     if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
@@ -160,12 +163,6 @@ function getters:classList()
         list.length = length
         return list
     end
-end
-
-local function Set(t)
-    local set = {}
-    for i = 1, #t do set[t[i]] = true end
-    return set
 end
 
 local void = Set {

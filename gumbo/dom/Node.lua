@@ -1,3 +1,4 @@
+local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tremove, error = table.remove, error
 local _ENV = nil
@@ -27,6 +28,11 @@ local Node = {
 
     childNodes = {length = 0},
     getters = getters
+}
+
+local isTextOrComment = Set{
+    Node.TEXT_NODE,
+    Node.COMMENT_NODE
 }
 
 function Node:walk()
@@ -112,11 +118,6 @@ function getters:lastChild()
     local cnodes = self.childNodes
     return cnodes[#cnodes]
 end
-
-local isTextOrComment = {
-    [Node.TEXT_NODE] = true,
-    [Node.COMMENT_NODE] = true
-}
 
 -- TODO: implement setter
 function getters:nodeValue()
