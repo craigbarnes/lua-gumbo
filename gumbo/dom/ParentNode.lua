@@ -18,9 +18,20 @@ function getters:children()
     end
 end
 
+function getters:childElementCount()
+    local length = 0
+    if self:hasChildNodes() then
+        for i, node in ipairs(self.childNodes) do
+            if node.type == "element" then
+                length = length + 1
+            end
+        end
+    end
+    return length
+end
+
 -- function getters:firstElementChild() end
 -- function getters:lastElementChild() end
--- function getters:childElementCount() end
 
 -- function ParentNode:append(...) end
 -- function ParentNode:prepend(...) end

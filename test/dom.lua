@@ -55,6 +55,11 @@ assert(body.parentElement == html)
 assert(document.parentElement == nil)
 assert(html.parentElement == nil)
 
+assert(html.childElementCount == 2)
+assert(body.childElementCount == 1)
+assert(main.childElementCount == 1)
+assert(heading.childElementCount == 0)
+
 assert(html.localName == "html")
 assert(html.nodeType == document.ELEMENT_NODE)
 assert(html.parentNode == document)
