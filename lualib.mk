@@ -8,6 +8,8 @@ MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
+PC_EXISTS  = $(shell $(PKGCONFIG) --exists $(1) && echo 1)
+USE_IF     = $(if $(call $(1), $(2)), $(2))
 
 LUA ?= $(if $(shell $(LUA_PC) -e 'print"1"' 2>/dev/null),$(LUA_PC), \
        $(error Found pkg-config file with name '$(LUA_PC)', but no matching \
@@ -27,15 +29,17 @@ LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
 # - Debian uses lua5.2.pc and lua5.1.pc
 # - OpenBSD ports uses lua52.pc and lua51.pc
 # - FreeBSD and some others seem to be considering lua-5.2.pc and lua-5.1.pc
-LUA_PC_NAMES  = lua lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 luajit
-
-LUA_PC_FOUND  = $(strip $(foreach PC, $(LUA_PC_NAMES), \
-                $(if $(shell $(PKGCONFIG) --exists $(PC) && echo 1),$(PC),)))
-
-LUA_PC_FIRST  = $(firstword $(LUA_PC_FOUND))
-
-LUA_PC       ?= $(if $(LUA_PC_FIRST),$(LUA_PC_FIRST), \
-                $(error No pkg-config file found for Lua))
+LUA_PC ?= $(or \
+    $(call USE_IF, PC_EXISTS, lua), \
+    $(call USE_IF, PC_EXISTS, lua52), \
+    $(call USE_IF, PC_EXISTS, lua5.2), \
+    $(call USE_IF, PC_EXISTS, lua-5.2), \
+    $(call USE_IF, PC_EXISTS, lua51), \
+    $(call USE_IF, PC_EXISTS, lua5.1), \
+    $(call USE_IF, PC_EXISTS, lua-5.1), \
+    $(call USE_IF, PC_EXISTS, luajit), \
+    $(error No pkg-config file found for Lua) \
+)
 
 # Some distros put the Lua headers in versioned sub-directories
 # and thus require extra CFLAGS
