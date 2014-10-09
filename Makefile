@@ -16,7 +16,6 @@ TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) bin/htmlfmt.lua
-TOTABLE      ?= $(LUA) bin/htmltotable.lua
 MDFILTER      = sed 's/`[^`]*`//g;/^    [^*]/d;/^\[/d; s/\[[A-Za-z0-9_.-]*\]//g'
 SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
 OK            = printf "%10s: OK\n"
@@ -24,9 +23,8 @@ BENCHFILE    ?= test/data/2MiB.html
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document Element \
                 Node NodeList NonElementParentNode ParentNode Text
-SERIALIZERS   = html.lua table.lua
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
-SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua $(SERIALIZERS))
+SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
 
 all: gumbo/parse.so
@@ -107,8 +105,7 @@ check-serialize: check-serialize-ns check-serialize-t1
 	@$(OK) Serialize
 
 check-serialize-ns check-serialize-t1: \
-check-serialize-%: all test/data/%.html test/data/%.out.html test/data/%.table
-	@$(TOTABLE) test/data/$*.html | diff -u2 test/data/$*.table -
+check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | diff -u2 test/data/$*.out.html -
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
@@ -156,13 +153,9 @@ coverage.txt: gumbo/parse.so gumbo.lua gumbo/Buffer.lua $(DOM_MODULES) \
 bench-parse: all test/bench.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
 
-bench-serialize-html: all bin/htmlfmt.lua $(BENCHFILE)
+bench-serialize: all bin/htmlfmt.lua $(BENCHFILE)
 	@echo 'Parsing and serializing $(BENCHFILE) to html...'
 	@$(TIME) $(LUA) bin/htmlfmt.lua $(BENCHFILE) /dev/null
-
-bench-serialize-table: all bin/htmltotable.lua $(BENCHFILE)
-	@echo 'Parsing and serializing $(BENCHFILE) to table...'
-	@$(TIME) $(LUA) bin/htmltotable.lua $(BENCHFILE) /dev/null
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
@@ -172,5 +165,5 @@ clean:
 .PHONY: all install uninstall clean dist force git-hooks check
 .PHONY: check-unit check-html5lib check-compat check-valgrind check-install
 .PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
-.PHONY: bench-parse bench-serialize-html bench-serialize-table
+.PHONY: bench-parse bench-serialize
 .DELETE_ON_ERROR:

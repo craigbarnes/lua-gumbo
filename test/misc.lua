@@ -1,5 +1,4 @@
 local gumbo = require "gumbo"
-local to_table = require "gumbo.serialize.table"
 local assert, type, open, rep = assert, type, io.open, string.rep
 local load = loadstring or load
 local _ENV = nil
@@ -30,14 +29,9 @@ do -- Make sure deeply nested elements don't cause a stack overflow
 end
 
 do -- Check that parse_file works the same with a filename as with a file
-    local a = assert(gumbo.parse_file(open("test/data/t1.html"), 4))
-    local b = assert(gumbo.parse_file("test/data/t1.html", 4))
-    assert(to_table(a) == to_table(b))
-
-    -- Ensure that serialized table syntax is valid
-    local fn = assert(load('return ' .. to_table(a)))
-    local t = assert(fn())
-    assert(type(t) == "table")
+    local a = assert(gumbo.parse_file(open("test/data/t1.html")))
+    local b = assert(gumbo.parse_file("test/data/t1.html"))
+    assert(a.documentElement.innerHTML == b.documentElement.innerHTML)
 end
 
 -- Check that file open/read errors are handled
