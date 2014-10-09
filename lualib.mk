@@ -9,11 +9,8 @@ INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
 PC_EXISTS  = $(shell $(PKGCONFIG) --exists $(1) && echo 1)
+CMD_EXISTS = $(shell which $(1) 2>/dev/null)
 USE_IF     = $(if $(call $(1), $(2)), $(2))
-
-LUA ?= $(if $(shell $(LUA_PC) -e 'print"1"' 2>/dev/null),$(LUA_PC), \
-       $(error Found pkg-config file with name '$(LUA_PC)', but no matching \
-       '$(LUA_PC)' command. Specify manually by defining the LUA= variable))
 
 ifeq "$(shell uname)" "Darwin"
   LDFLAGS ?= -bundle -undefined dynamic_lookup
@@ -28,7 +25,7 @@ LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
 # - Fedora and Arch use lua.pc
 # - Debian uses lua5.2.pc and lua5.1.pc
 # - OpenBSD ports uses lua52.pc and lua51.pc
-# - FreeBSD and some others seem to be considering lua-5.2.pc and lua-5.1.pc
+# - FreeBSD uses lua-5.2.pc and lua-5.1.pc
 LUA_PC ?= $(or \
     $(call USE_IF, PC_EXISTS, lua), \
     $(call USE_IF, PC_EXISTS, lua52), \
@@ -39,6 +36,19 @@ LUA_PC ?= $(or \
     $(call USE_IF, PC_EXISTS, lua-5.1), \
     $(call USE_IF, PC_EXISTS, luajit), \
     $(error No pkg-config file found for Lua) \
+)
+
+LUA ?= $(or \
+    $(call USE_IF, CMD_EXISTS, $(LUA_PC)), \
+    $(call USE_IF, CMD_EXISTS, lua52), \
+    $(call USE_IF, CMD_EXISTS, lua5.2), \
+    $(call USE_IF, CMD_EXISTS, lua-5.2), \
+    $(call USE_IF, CMD_EXISTS, lua51), \
+    $(call USE_IF, CMD_EXISTS, lua5.1), \
+    $(call USE_IF, CMD_EXISTS, lua-5.1), \
+    $(call USE_IF, CMD_EXISTS, lua), \
+    $(call USE_IF, CMD_EXISTS, luajit), \
+    $(error No Lua interpreter found) \
 )
 
 # Some distros put the Lua headers in versioned sub-directories
