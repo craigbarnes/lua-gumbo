@@ -32,9 +32,9 @@ FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h
 
-gumbo/ffi-cdef.lua: $(GUMBO_HEADER) cdef.sed
-	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[' > $@
-	@sed -f cdef.sed $(GUMBO_HEADER) | sed '/^$$/N;/^\n$$/D' >> $@
+gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
+	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@
+	@sed '/^#include/d' $< | $(CC) -E -P - >> $@
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
 
