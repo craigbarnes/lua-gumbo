@@ -15,7 +15,7 @@ TIMEFMT      ?= 'Process time: %es\nProcess peak memory usage: %MKB'
 TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
-TOHTML       ?= $(LUA) bin/htmlfmt.lua
+TOHTML       ?= $(LUA) test/htmlfmt.lua
 MDFILTER      = sed 's/`[^`]*`//g;/^    [^*]/d;/^\[/d; s/\[[A-Za-z0-9_.-]*\]//g'
 SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
 OK            = printf "%10s: OK\n"
@@ -153,9 +153,9 @@ coverage.txt: gumbo/parse.so gumbo.lua gumbo/Buffer.lua $(DOM_MODULES) \
 bench-parse: all test/bench.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
 
-bench-serialize: all bin/htmlfmt.lua $(BENCHFILE)
+bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 	@echo 'Parsing and serializing $(BENCHFILE) to html...'
-	@$(TIME) $(LUA) bin/htmlfmt.lua $(BENCHFILE) /dev/null
+	@$(TIME) $(LUA) test/htmlfmt.lua $(BENCHFILE) /dev/null
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
