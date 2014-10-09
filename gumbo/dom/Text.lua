@@ -26,4 +26,16 @@ function Text:cloneNode()
     return setmetatable({data = self.data}, Text)
 end
 
+function Text:isEqualNode(node)
+    if node
+        and node.nodeType == Text.nodeType
+        and self.nodeType == Text.nodeType
+        and node.data == self.data
+    then
+        return true
+    else
+        return false
+    end
+end
+
 return Text
