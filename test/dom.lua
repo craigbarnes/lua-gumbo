@@ -60,6 +60,12 @@ assert(body.childElementCount == 1)
 assert(main.childElementCount == 1)
 assert(heading.childElementCount == 0)
 
+-- TODO: Test these 2 getters on Elements with many childNodes
+assert(html.firstElementChild == head)
+assert(html.lastElementChild == body)
+assert(body.firstElementChild == main)
+assert(body.lastElementChild == main)
+
 assert(html.localName == "html")
 assert(html.nodeType == document.ELEMENT_NODE)
 assert(html.parentNode == document)
