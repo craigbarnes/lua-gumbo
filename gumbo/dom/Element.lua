@@ -1,6 +1,8 @@
 local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
+local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
+local Attr = require "gumbo.dom.Attr"
 local namePattern = util.namePattern
 local type, ipairs, tostring, error = type, ipairs, tostring, error
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
@@ -11,7 +13,7 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
     type = "element",
     nodeType = 1,
     namespaceURI = "http://www.w3.org/1999/xhtml",
-    attributes = {}
+    attributes = {length = 0}
 })
 
 local getters = Element.getters or {}
@@ -31,13 +33,17 @@ function Element:__index(k)
     end
 end
 
+-- Expand this set to include all readonly property names from the Element
+-- interface and also the ones from inherited/implemented interfaces.
+local readonly = Set{
+    "firstChild", "lastChild"
+}
+
 function Element:__newindex(k, v)
     local setter = setters[k]
     if setter then
         setter(self, v)
-    -- TODO: Create a lookup table of all readonly fields and do a
-    --       single check against that.
-    elseif not getters[k] and not Element[k] and type(k) ~= "number" then
+    elseif not readonly[k] and type(k) ~= "number" then
         rawset(self, k, v)
     end
 end
@@ -88,13 +94,18 @@ function Element:setAttribute(name, value)
         return error("InvalidCharacterError")
     end
     local attributes = self.attributes
-    local attr = attributes[name]
-    if attr then
-        attr.value = value
+    if attributes == Element.attributes then
+        local attr = setmetatable({name = name, value = value}, Attr)
+        self.attributes = setmetatable({attr, [name] = attr}, NamedNodeMap)
     else
-        attr = {name = name, value = value}
-        attributes[#attributes+1] = attr
-        attributes[name] = attr
+        local attr = attributes[name]
+        if attr then
+            attr.value = value
+        else
+            attr = setmetatable({name = name, value = value}, Attr)
+            attributes[#attributes+1] = attr
+            attributes[name] = attr
+        end
     end
 end
 
