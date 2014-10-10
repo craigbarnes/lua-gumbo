@@ -1,3 +1,5 @@
+local _ENV = nil
+
 local function Set(t)
     local set = {}
     for i = 1, #t do

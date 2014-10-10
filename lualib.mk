@@ -8,8 +8,9 @@ MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
+LUA_NAMES  = lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua luajit
+LUA       ?= $(firstword $(shell which $(LUA_PC) $(LUA_NAMES) 2>/dev/null))
 PC_EXISTS  = $(shell $(PKGCONFIG) --exists '$(1)' && echo 1)
-CMD_EXISTS = $(shell which $(1) 2>/dev/null)
 USE_IF     = $(if $(call $(1), $(2) $(3)), $(2))
 
 ifeq "$(shell uname)" "Darwin"
@@ -36,19 +37,6 @@ LUA_PC ?= $(or \
     $(call USE_IF, PC_EXISTS, lua-5.1), \
     $(call USE_IF, PC_EXISTS, luajit, >= 2.0), \
     $(error No pkg-config file found for Lua) \
-)
-
-LUA ?= $(or \
-    $(call USE_IF, CMD_EXISTS, $(LUA_PC)), \
-    $(call USE_IF, CMD_EXISTS, lua52), \
-    $(call USE_IF, CMD_EXISTS, lua5.2), \
-    $(call USE_IF, CMD_EXISTS, lua-5.2), \
-    $(call USE_IF, CMD_EXISTS, lua51), \
-    $(call USE_IF, CMD_EXISTS, lua5.1), \
-    $(call USE_IF, CMD_EXISTS, lua-5.1), \
-    $(call USE_IF, CMD_EXISTS, lua), \
-    $(call USE_IF, CMD_EXISTS, luajit), \
-    $(error No Lua interpreter found) \
 )
 
 # Some distros put the Lua headers in versioned sub-directories
