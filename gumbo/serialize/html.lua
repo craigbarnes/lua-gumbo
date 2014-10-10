@@ -35,21 +35,6 @@ local boolattr = Set {
 --    occurrences of the "<" character by the string "&lt;", and any
 --    occurrences of the ">" character by the string "&gt;".
 
-local escmap = {
-    ["&"] = "&amp;",
-    ["<"] = "&lt;",
-    [">"] = "&gt;",
-    ['"'] = "&quot;"
-}
-
-local function escape_text(text)
-    return (text:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
-end
-
-local function escape_attr(text)
-    return (text:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
-end
-
 local function wrap(text, indent)
     local limit = 78
     local indent_width = #indent
@@ -82,7 +67,7 @@ local function to_html(node, buffer, indent_width)
                     buf:write(" ", name)
                 end
                 if not boolattr[name] or not (val == "" or val == name) then
-                    buf:write('="', escape_attr(val), '"')
+                    buf:write('="', attr.escapedValue, '"')
                 end
             end
             buf:write(">")
@@ -104,7 +89,7 @@ local function to_html(node, buffer, indent_width)
             if parent and raw[parent.localName] then
                 buf:write(indent, node.data, "\n")
             else
-                buf:write(wrap(escape_text(node.data), indent))
+                buf:write(wrap(node.escapedData, indent))
             end
         elseif node.type == "comment" then
             buf:write(indent, "<!--", node.data, "-->\n")

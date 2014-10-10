@@ -21,4 +21,13 @@ function getters:localName()
     return self.name
 end
 
+local escmap = {
+    ["&"] = "&amp;",
+    ['"'] = "&quot;"
+}
+
+function getters:escapedValue()
+    return (self.value:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
+end
+
 return Attr

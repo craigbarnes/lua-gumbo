@@ -38,4 +38,14 @@ function Text:isEqualNode(node)
     end
 end
 
+local escmap = {
+    ["&"] = "&amp;",
+    ["<"] = "&lt;",
+    [">"] = "&gt;",
+}
+
+function getters:escapedData()
+    return (self.data:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
+end
+
 return Text

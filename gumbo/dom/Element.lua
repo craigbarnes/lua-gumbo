@@ -197,21 +197,6 @@ local boolattr = Set {
     "typemustmatch"
 }
 
-local escmap = {
-    ["&"] = "&amp;",
-    ["<"] = "&lt;",
-    [">"] = "&gt;",
-    ['"'] = "&quot;"
-}
-
-local function escape_text(text)
-    return (text:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
-end
-
-local function escape_attr(text)
-    return (text:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
-end
-
 local function serialize(node, buf)
     if node.type == "element" then
         local tag = node.localName
@@ -224,7 +209,7 @@ local function serialize(node, buf)
                 buf:write(" ", name)
             end
             if not boolattr[name] or not (val == "" or val == name) then
-                buf:write('="', escape_attr(val), '"')
+                buf:write('="', attr.escapedValue, '"')
             end
         end
         buf:write(">")
@@ -240,7 +225,7 @@ local function serialize(node, buf)
         if raw[node.parentNode.localName] then
             buf:write(node.data)
         else
-            buf:write(escape_text(node.data))
+            buf:write(node.escapedData)
         end
     elseif node.type == "whitespace" then
         buf:write(node.data)
