@@ -25,16 +25,6 @@ local boolattr = Set {
     "typemustmatch"
 }
 
--- Escaping a string consists of running the following steps:
--- 1. Replace any occurrence of the "&" character by the string "&amp;".
--- 2. Replace any occurrences of the U+00A0 NO-BREAK SPACE character by the
---    string "&nbsp;".
--- 3. If the algorithm was invoked in the attribute mode, replace any
---    occurrences of the """ character by the string "&quot;".
--- 4. If the algorithm was not invoked in the attribute mode, replace any
---    occurrences of the "<" character by the string "&lt;", and any
---    occurrences of the ">" character by the string "&gt;".
-
 local function wrap(text, indent)
     local limit = 78
     local indent_width = #indent
