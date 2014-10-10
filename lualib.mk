@@ -9,7 +9,7 @@ INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
 LUA_NAMES  = lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua luajit
-LUA_FOUND  = $(firstword $(shell which $(LUA_PC) $(LUA_NAMES) 2>/dev/null))
+LUA_FOUND  = $(firstword $(shell which $(_LUA_PC) $(LUA_NAMES) 2>/dev/null))
 LUA       ?= $(or $(LUA_FOUND), $(error No Lua interpreter found))
 PC_EXISTS  = $(shell $(PKGCONFIG) --exists '$(1)' && echo 1)
 USE_IF     = $(if $(call $(1), $(2) $(3)), $(2))
@@ -40,19 +40,26 @@ LUA_PC ?= $(or \
     $(error No pkg-config file found for Lua) \
 )
 
+# The $(LUA_PC) variable may be set to a non-existant name via the
+# command-line, so we must check that it exists (possibly twice).
+_LUA_PC = $(or \
+    $(call USE_IF, PC_EXISTS, $(LUA_PC)), \
+    $(error No pkg-config file found with name '$(LUA_PC)') \
+)
+
 # Some distros put the Lua headers in versioned sub-directories
 # and thus require extra CFLAGS
-LUA_CFLAGS   ?= $(shell $(PKGCONFIG) --cflags $(LUA_PC))
+LUA_CFLAGS   ?= $(shell $(PKGCONFIG) --cflags $(_LUA_PC))
 
 # Some pkg-config files have convenient variables for module paths
-LUA_PC_LMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_LMOD $(LUA_PC))
-LUA_PC_CMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_CMOD $(LUA_PC))
+LUA_PC_LMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_LMOD $(_LUA_PC))
+LUA_PC_CMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_CMOD $(_LUA_PC))
 
 # Others force us to piece them together from parts...
-LUA_PREFIX   ?= $(shell $(PKGCONFIG) --variable=prefix $(LUA_PC))
-LUA_LIBDIR   ?= $(shell $(PKGCONFIG) --variable=libdir $(LUA_PC))
-LUA_INCDIR   ?= $(shell $(PKGCONFIG) --variable=includedir $(LUA_PC))
-LUA_VERSION  ?= $(shell $(PKGCONFIG) --modversion $(LUA_PC) | grep -o '^.\..')
+LUA_PREFIX   ?= $(shell $(PKGCONFIG) --variable=prefix $(_LUA_PC))
+LUA_LIBDIR   ?= $(shell $(PKGCONFIG) --variable=libdir $(_LUA_PC))
+LUA_INCDIR   ?= $(shell $(PKGCONFIG) --variable=includedir $(_LUA_PC))
+LUA_VERSION  ?= $(shell $(PKGCONFIG) --modversion $(_LUA_PC) | grep -o '^.\..')
 
 LUA_LMOD_DIR ?= $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
                 $(LUA_PREFIX)/share/lua/$(LUA_VERSION)))
