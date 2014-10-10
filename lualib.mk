@@ -9,7 +9,8 @@ INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
 LUA_NAMES  = lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua luajit
-LUA       ?= $(firstword $(shell which $(LUA_PC) $(LUA_NAMES) 2>/dev/null))
+LUA_FOUND  = $(firstword $(shell which $(LUA_PC) $(LUA_NAMES) 2>/dev/null))
+LUA       ?= $(or $(LUA_FOUND), $(error No Lua interpreter found))
 PC_EXISTS  = $(shell $(PKGCONFIG) --exists '$(1)' && echo 1)
 USE_IF     = $(if $(call $(1), $(2) $(3)), $(2))
 
