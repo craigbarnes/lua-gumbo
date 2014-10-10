@@ -119,6 +119,30 @@ function getters:lastChild()
     return cnodes[#cnodes]
 end
 
+function getters:previousSibling()
+    local parentNode = self.parentNode
+    if parentNode then
+        local siblings = parentNode.childNodes
+        for i = 1, #siblings do
+            if siblings[i] == self and i > 1 then
+                return siblings[i-1]
+            end
+        end
+    end
+end
+
+function getters:nextSibling()
+    local parentNode = self.parentNode
+    if parentNode then
+        local siblings = parentNode.childNodes
+        for i = 1, #siblings do
+            if siblings[i] == self then
+                return siblings[i+1]
+            end
+        end
+    end
+end
+
 -- TODO: implement setter
 function getters:nodeValue()
     if isTextOrComment[self.nodeType] then

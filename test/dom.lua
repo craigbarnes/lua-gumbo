@@ -6,24 +6,36 @@ local input = [[
 <div id="main" class="foo bar baz etc">
     <h1 id="heading">Title <!--comment --></h1>
 </div>
+<section id="section">
+<h2 id="heading2">Heading 2</h2>
+<p id="p1">p1</p><p id="p2">p2</p><p id="p3">p3</p><p id="p4">p4</p>
+</section>
 ]]
 
 local document = assert(gumbo.parse(input))
 local html = assert(document.documentElement)
 local head = assert(document.head)
 local body = assert(document.body)
+
 local main = assert(document:getElementById("main"))
 local heading = assert(document:getElementById("heading"))
 local text = assert(heading.childNodes[1])
 local comment = assert(heading.childNodes[2])
 
+local section = assert(document:getElementById("section"))
+local heading2 = assert(document:getElementById("heading2"))
+local p1 = assert(document:getElementById("p1"))
+local p2 = assert(document:getElementById("p2"))
+local p3 = assert(document:getElementById("p3"))
+local p4 = assert(document:getElementById("p4"))
+
 assert(document:getElementsByTagName("head")[1] == head)
 assert(document:getElementsByTagName("body")[1] == body)
 assert(document:getElementsByTagName("div")[1] == main)
-assert(document:getElementsByTagName("*").length == 5)
+assert(document:getElementsByTagName("*").length == 11)
 assert(document:getElementsByTagName("").length == 0)
 assert(body:getElementsByTagName("h1")[1] == heading)
-assert(body:getElementsByTagName("*").length == 2)
+assert(body:getElementsByTagName("*").length == 8)
 local tendivs = assert(gumbo.parse(rep("<div>", 10)))
 assert(tendivs:getElementsByTagName("div").length == 10)
 
@@ -74,15 +86,38 @@ assert(document.parentElement == nil)
 assert(html.parentElement == nil)
 
 assert(html.childElementCount == 2)
-assert(body.childElementCount == 1)
+assert(body.childElementCount == 2)
 assert(main.childElementCount == 1)
 assert(heading.childElementCount == 0)
 
--- TODO: Test these 2 getters on Elements with many childNodes
 assert(html.firstElementChild == head)
 assert(html.lastElementChild == body)
 assert(body.firstElementChild == main)
-assert(body.lastElementChild == main)
+assert(body.lastElementChild == section)
+assert(section.firstElementChild == heading2)
+assert(section.lastElementChild == p4)
+
+assert(p1.nextSibling == p2)
+assert(p2.nextSibling == p3)
+assert(p3.nextSibling == p4)
+assert(p4.nextSibling.data == "\n")
+assert(p4.nextSibling.nextSibling == nil)
+assert(p4.previousSibling == p3)
+assert(p3.previousSibling == p2)
+assert(p2.previousSibling == p1)
+assert(p1.previousSibling.previousSibling == heading2)
+assert(heading2.previousSibling.data == "\n")
+assert(heading2.previousSibling.previousSibling == nil)
+assert(document.nextSibling == nil)
+assert(document.previousSibling == nil)
+assert(html.previousSibling == nil)
+assert(body.previousSibling == head)
+assert(body.nextSibling == nil)
+assert(head.previousSibling == nil)
+assert(head.nextSibling == body)
+assert(text.previousSibling == nil)
+assert(text.nextSibling == comment)
+assert(comment.previousSibling == text)
 
 assert(html.localName == "html")
 assert(html.nodeType == document.ELEMENT_NODE)
