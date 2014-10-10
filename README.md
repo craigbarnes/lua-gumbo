@@ -1,7 +1,7 @@
 lua-gumbo
 =========
 
-[Lua][] [C API] bindings and [LuaJIT][] [FFI] bindings for the [Gumbo][]
+[Lua][] [C API] and [LuaJIT][] [FFI] bindings for the [Gumbo][]
 [HTML5] parsing library, including a small (but [growing][issue #4]) set
 of [DOM] APIs implemented in pure Lua.
 
