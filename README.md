@@ -1,8 +1,9 @@
 lua-gumbo
 =========
 
-[Lua] C and FFI bindings for the [Gumbo][] [HTML5] parsing library,
-including a small (but growing) set of DOM APIs implemented in pure Lua.
+[Lua][] [C API] bindings and [LuaJIT][] [FFI] bindings for the [Gumbo][]
+[HTML5] parsing library, including a small (but [growing][issue #4]) set
+of [DOM] APIs implemented in pure Lua.
 
 Requirements
 ------------
@@ -72,10 +73,10 @@ See also: [find_links.lua] and [remove_by_id.lua].
 Output
 ------
 
-**NOTE:** I am currently in the process of implementing the [DOM4] core
-API and hope to eventually replace most of the documentation below with
-a link to the [MDN DOM documentation]. Current progress can be followed
-in [issue #4].
+**NOTE:** I am currently in the process of implementing the [DOM] level
+4 core API and hope to eventually replace most of the documentation
+below with a link to the [MDN DOM documentation]. Current progress can
+be followed in [issue #4].
 
 ### Document
 
@@ -173,8 +174,10 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Lua]: http://www.lua.org/
 [LuaJIT]: http://luajit.org/
+[C API]: http://www.lua.org/manual/5.2/manual.html#4
+[FFI]: http://luajit.org/ext_ffi.html
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
-[DOM4]: https://dom.spec.whatwg.org/
+[DOM]: https://dom.spec.whatwg.org/
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
@@ -189,7 +192,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [find_links.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
 [remove_by_id.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
-[DOM4]: http://www.w3.org/TR/dom/
 [MDN DOM Documentation]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [issue #4]: https://github.com/craigbarnes/lua-gumbo/issues/4
 [luacov]: https://keplerproject.github.io/luacov/
