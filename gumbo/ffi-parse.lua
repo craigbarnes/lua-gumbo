@@ -23,6 +23,7 @@ local Attr = require "gumbo.dom.Attr"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local NodeList = require "gumbo.dom.NodeList"
+local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local GumboStringPiece = ffi.typeof "GumboStringPiece"
 local have_tnew, tnew = pcall(require, "table.new")
 local createtable = have_tnew and tnew or function() return {} end
@@ -53,7 +54,7 @@ local function get_attributes(attrs)
             t[i+1] = setmetatable(a, Attr)
             t[name] = a
         end
-        return t
+        return setmetatable(t, NamedNodeMap)
     end
 end
 

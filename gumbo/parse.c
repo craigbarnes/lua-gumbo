@@ -60,6 +60,8 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
 
             lua_rawseti(L, -2, i+1);
         }
+        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.NamedNodeMap");
+        lua_setmetatable(L, -2);
         lua_setfield(L, -2, "attributes");
     }
 }
@@ -224,6 +226,7 @@ int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.dom.Attr");
     require(L, "gumbo.dom.Document");
     require(L, "gumbo.dom.NodeList");
+    require(L, "gumbo.dom.NamedNodeMap");
     lua_pushcfunction(L, parse);
     return 1;
 }

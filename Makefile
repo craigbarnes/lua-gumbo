@@ -22,7 +22,7 @@ OK            = printf "%10s: OK\n"
 BENCHFILE    ?= test/data/2MiB.html
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document Element \
-                Node NodeList NonElementParentNode ParentNode Text
+                NamedNodeMap Node NodeList NonElementParentNode ParentNode Text
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)

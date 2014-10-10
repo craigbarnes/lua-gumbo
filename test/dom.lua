@@ -176,20 +176,25 @@ assert(heading.attributes[1].specified == true)
 assert(heading.attributes[1].name == "id")
 assert(heading.attributes[1].localName == "id")
 
+assert(heading.attributes.length == 1)
 assert(heading.attributes[1].value == "heading")
 assert(heading.attributes.id.value == "heading")
 heading.id = "new-id"
+assert(heading.attributes.length == 1)
 assert(heading.attributes[1].value == "new-id")
 assert(heading.attributes.id.value == "new-id")
 
 heading:setAttribute("id", "test...")
+assert(heading.attributes.length == 1)
 assert(heading.attributes[1].value == "test...")
 assert(heading.attributes.id.value == "test...")
 heading:setAttribute("new_attr", "new_value")
+assert(heading.attributes.length == 2)
 assert(heading.attributes[2].value == "new_value")
 assert(heading.attributes.new_attr.value == "new_value")
 
 heading.className = "x y z"
+assert(heading.attributes.length == 3)
 assert(heading.className == "x y z")
 assert(heading.attributes[3].value == "x y z")
 assert(heading.attributes.class.value == "x y z")
