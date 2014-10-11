@@ -1,6 +1,7 @@
 -include local.mk
 
 CC         = gcc
+LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
 XLDFLAGS  += -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
@@ -13,12 +14,7 @@ LUA_FOUND  = $(firstword $(shell which $(_LUA_PC) $(LUA_NAMES) 2>/dev/null))
 LUA       ?= $(or $(LUA_FOUND), $(error No Lua interpreter found))
 PC_EXISTS  = $(shell $(PKGCONFIG) --exists '$(1)' && echo 1)
 USE_IF     = $(if $(call $(1), $(2) $(3)), $(2))
-
-ifeq "$(shell uname)" "Darwin"
-  LDFLAGS ?= -bundle -undefined dynamic_lookup
-else
-  LDFLAGS ?= -shared
-endif
+ISDARWIN   = $(call EQUAL, $(shell uname), Darwin)
 
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
