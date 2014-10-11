@@ -54,14 +54,10 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             add_integer(L, "offset", attr->name_start.offset);
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
-
-            lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Attr");
-            lua_setmetatable(L, -2);
-
+            luaL_setmetatable(L, "gumbo.dom.Attr");
             lua_rawseti(L, -2, i+1);
         }
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.NamedNodeMap");
-        lua_setmetatable(L, -2);
+        luaL_setmetatable(L, "gumbo.dom.NamedNodeMap");
         lua_setfield(L, -2, "attributes");
     }
 }
@@ -97,8 +93,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
 
 static void create_text_node(lua_State *L, const GumboText *t, const char *m) {
     lua_createtable(L, 0, 5);
-    lua_getfield(L, LUA_REGISTRYINDEX, m);
-    lua_setmetatable(L, -2);
+    luaL_setmetatable(L, m);
     add_string(L, "data", t->text);
     add_integer(L, "line", t->start_pos.line);
     add_integer(L, "column", t->start_pos.column);
@@ -112,8 +107,7 @@ static void add_children(lua_State *L, const GumboVector *children) {
     const unsigned int length = children->length;
     if (length > 0) {
         lua_createtable(L, length, 0);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.NodeList");
-        lua_setmetatable(L, -2);
+        luaL_setmetatable(L, "gumbo.dom.NodeList");
         for (unsigned int i = 0; i < length; i++) {
             push_node(L, (const GumboNode *)children->data[i]);
 
@@ -144,8 +138,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
         }
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Element");
-        lua_setmetatable(L, -2);
+        luaL_setmetatable(L, "gumbo.dom.Element");
         return;
     }
     case GUMBO_NODE_TEXT:
@@ -196,9 +189,7 @@ static int parse(lua_State *L) {
         lua_setfield(L, -3, "documentElement");
         lua_pop(L, 1);
 
-        lua_getfield(L, LUA_REGISTRYINDEX, "gumbo.dom.Document");
-        lua_setmetatable(L, -2);
-
+        luaL_setmetatable(L, "gumbo.dom.Document");
         gumbo_destroy_output(&options, output);
         return 1;
     } else {
