@@ -21,6 +21,10 @@ function getters:localName()
     return self.name
 end
 
+function getters:textContent()
+    return self.value
+end
+
 local escmap = {
     ["&"] = "&amp;",
     ['"'] = "&quot;"

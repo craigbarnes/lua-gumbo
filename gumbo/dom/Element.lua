@@ -137,14 +137,15 @@ function Element:cloneNode(deep)
     if self:hasAttributes() then
         local attrs = {}
         for i, attr in ipairs(self.attributes) do
-            attrs[i] = {
+            local t = {
                 name = attr.name,
                 value = attr.value,
                 prefix = attr.prefix
             }
-            attrs[attr.name] = attrs[i]
+            attrs[i] = setmetatable(t, Attr)
+            attrs[attr.name] = t
         end
-        clone.attributes = attrs
+        clone.attributes = setmetatable(attrs, NamedNodeMap)
     end
     return setmetatable(clone, Element)
 end
