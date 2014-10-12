@@ -42,10 +42,9 @@ local function get_attributes(attrs)
         for i = 0, length - 1 do
             local attr = cast("GumboAttribute*", attrs.data[i])
             local name = cstring(attr.name)
-            local value = cstring(attr.value)
             local a = {
                 name = name,
-                value = value,
+                value = cstring(attr.value),
                 prefix = attrnsmap[tonumber(attr.attr_namespace)],
                 line = attr.name_start.line,
                 column = attr.name_start.column,
@@ -77,17 +76,16 @@ local function get_tag_name(element)
     end
 end
 
-local function add_children(t, list)
-    local length = list.length
+local function add_children(parent, children)
+    local length = children.length
     if length > 0 then
-        local nodes = createtable(length, 0)
+        local childNodes = createtable(length, 0)
         for i = 0, length - 1 do
-            local node = create_node(cast("GumboNode*", list.data[i]))
-            node.parentNode = t
-            nodes[i+1] = node
+            local node = create_node(cast("GumboNode*", children.data[i]))
+            node.parentNode = parent
+            childNodes[i+1] = node
         end
-        setmetatable(nodes, NodeList)
-        t.childNodes = nodes
+        parent.childNodes = setmetatable(childNodes, NodeList)
     end
 end
 
