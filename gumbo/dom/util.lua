@@ -1,4 +1,5 @@
 local type, select, pairs, require = type, select, pairs, require
+local assert = assert
 local _ENV = nil
 
 local util = {
@@ -18,7 +19,7 @@ function util.merge(...)
         elseif argtype == "table" then
             m = arg
         else
-            error "Invalid argument type"
+            assert(false, "Invalid argument type")
         end
         for k, v in pairs(m) do
             if k ~= "getters" and k ~= "setters" then

@@ -4,7 +4,7 @@ local Set = require "gumbo.Set"
 local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
 local namePattern = util.namePattern
-local type, ipairs, tostring, error = type, ipairs, tostring, error
+local type, ipairs, tostring, assert = type, ipairs, tostring, assert
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
 local _ENV = nil
 local setters = {}
@@ -90,9 +90,7 @@ function Element:getAttribute(name)
 end
 
 function Element:setAttribute(name, value)
-    if not name:find(namePattern) then
-        return error("InvalidCharacterError")
-    end
+    assert(name:find(namePattern), "InvalidCharacterError")
     local attributes = self.attributes
     if attributes == Element.attributes then
         local attr = setmetatable({name = name, value = value}, Attr)
@@ -128,7 +126,7 @@ function Element:hasAttributes()
 end
 
 function Element:cloneNode(deep)
-    if deep then error "NYI" end -- << TODO
+    if deep then assert(false, "NYI") end -- << TODO
     local clone = {
         localName = self.localName,
         namespaceURI = self.namespaceURI,
@@ -264,7 +262,7 @@ function getters:tagHTML()
 end
 
 -- TODO:
-local NYI = function() error "Not yet implemented" end
+local NYI = function() assert(false, "Not yet implemented") end
 setters.innerHTML = NYI
 setters.outerHTML = NYI
 

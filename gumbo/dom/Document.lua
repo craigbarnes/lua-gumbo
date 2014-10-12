@@ -4,6 +4,7 @@ local Comment = require "gumbo.dom.Comment"
 local util = require "gumbo.dom.util"
 local namePattern = util.namePattern
 local type, rawset, ipairs, setmetatable = type, rawset, ipairs, setmetatable
+local assert = assert
 local _ENV = nil
 
 local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
@@ -42,11 +43,8 @@ function Document:__newindex(k, v)
 end
 
 function Document:createElement(localName)
-    if localName:find(namePattern) then
-        return setmetatable({localName = localName:lower()}, Element)
-    else
-        return error("InvalidCharacterError")
-    end
+    assert(localName:find(namePattern), "InvalidCharacterError")
+    return setmetatable({localName = localName:lower()}, Element)
 end
 
 function Document:createTextNode(data)

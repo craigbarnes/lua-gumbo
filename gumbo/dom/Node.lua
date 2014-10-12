@@ -1,6 +1,6 @@
 local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
-local tremove, error = table.remove, error
+local tremove, assert = table.remove, assert
 local _ENV = nil
 local getters = {}
 
@@ -58,9 +58,7 @@ function Node:hasChildNodes()
 end
 
 function Node:removeChild(child)
-    if child.parentNode ~= self then
-        error "NotFoundError"
-    end
+    assert(child.parentNode == self, "NotFoundError")
     local childNodes = self.childNodes
     for i = 1, #childNodes do
         if childNodes[i] == child then
@@ -69,7 +67,7 @@ function Node:removeChild(child)
             return child
         end
     end
-    error "NotFoundError"
+    assert(false, "NotFoundError")
 end
 
 function Node:contains(other)
