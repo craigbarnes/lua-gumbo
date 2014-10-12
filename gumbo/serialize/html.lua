@@ -1,18 +1,7 @@
 local Buffer = require "gumbo.Buffer"
-local Set = require "gumbo.Set"
 local Indent = require "gumbo.serialize.Indent"
 local ipairs, tostring = ipairs, tostring
 local _ENV = nil
-
-local boolattr = Set {
-    "allowfullscreen", "async", "autofocus", "autoplay", "checked",
-    "compact", "controls", "declare", "default", "defer", "disabled",
-    "formnovalidate", "hidden", "inert", "ismap", "itemscope", "loop",
-    "multiple", "multiple", "muted", "nohref", "noresize", "noshade",
-    "novalidate", "nowrap", "open", "readonly", "required", "reversed",
-    "scoped", "seamless", "selected", "sortable", "truespeed",
-    "typemustmatch"
-}
 
 local function wrap(text, indent)
     local limit = 78
