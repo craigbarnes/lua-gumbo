@@ -198,6 +198,14 @@ local boolattr = Set {
     "typemustmatch"
 }
 
+function getters:isRaw()
+    return raw[self.localName]
+end
+
+function getters:isVoid()
+    return void[self.localName]
+end
+
 local function serialize(node, buf)
     local type = node.type
     if type == "element" then

@@ -4,17 +4,6 @@ local Indent = require "gumbo.serialize.Indent"
 local ipairs, tostring = ipairs, tostring
 local _ENV = nil
 
-local void = Set {
-    "area", "base", "basefont", "bgsound", "br", "col", "embed",
-    "frame", "hr", "img", "input", "keygen", "link", "menuitem", "meta",
-    "param", "source", "track", "wbr"
-}
-
-local raw = Set {
-    "style", "script", "xmp", "iframe", "noembed", "noframes",
-    "plaintext"
-}
-
 local boolattr = Set {
     "allowfullscreen", "async", "autofocus", "autoplay", "checked",
     "compact", "controls", "declare", "default", "defer", "disabled",
@@ -52,7 +41,7 @@ local function to_html(node, buffer, indent_width)
             buf:write(indent, node.tagHTML)
             local children = node.childNodes
             local length = #children
-            if void[tag] then
+            if node.isVoid then
                 buf:write("\n")
             elseif length == 0 then
                 buf:write("</", tag, ">\n")
@@ -65,7 +54,7 @@ local function to_html(node, buffer, indent_width)
             end
         elseif type == "text" then
             local parent = node.parentNode
-            if parent and raw[parent.localName] then
+            if parent and parent.isRaw then
                 buf:write(indent, node.data, "\n")
             else
                 buf:write(wrap(node.escapedData, indent))
