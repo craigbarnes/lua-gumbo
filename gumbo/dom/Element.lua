@@ -62,10 +62,17 @@ function Element:getElementsByTagName(localName)
             end
         end
     else
+        local htmlns = "http://www.w3.org/1999/xhtml"
+        local localNameLower = localName:lower()
         for node in self:walk() do
-            if node.type == "element" and node.localName == localName then
-                length = length + 1
-                collection[length] = node
+            if node.type == "element" then
+                local ns = node.namespaceURI
+                if (ns == htmlns and node.localName == localNameLower)
+                or (ns ~= htmlns and node.localName == localName)
+                then
+                    length = length + 1
+                    collection[length] = node
+                end
             end
         end
     end
