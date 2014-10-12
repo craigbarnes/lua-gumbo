@@ -28,11 +28,13 @@ local GumboStringPiece = ffi.typeof "GumboStringPiece"
 local have_tnew, tnew = pcall(require, "table.new")
 local createtable = have_tnew and tnew or function() return {} end
 local cstring, cast, new = ffi.string, ffi.cast, ffi.new
-local tonumber, setmetatable = tonumber, setmetatable
+local tonumber, setmetatable, format = tonumber, setmetatable, string.format
+local function oob(t, k) error(format("Index out of bounds: %s", k), 2) end
+local function LookupTable(t) return setmetatable(t, {__index = oob}) end
 local w3 = "http://www.w3.org/"
-local tagnsmap = {w3.."2000/svg", w3.."1998/Math/MathML"}
-local attrnsmap = {"xlink", "xml", "xmlns"}
-local quirksmap = {[0] = "no-quirks", "quirks", "limited-quirks"}
+local tagnsmap = LookupTable{w3.."2000/svg", w3.."1998/Math/MathML"}
+local attrnsmap = LookupTable{"xlink", "xml", "xmlns"}
+local quirksmap = LookupTable{[0] = "no-quirks", "quirks", "limited-quirks"}
 local create_node
 
 local function get_attributes(attrs)
@@ -45,11 +47,13 @@ local function get_attributes(attrs)
             local a = {
                 name = name,
                 value = cstring(attr.value),
-                prefix = attrnsmap[tonumber(attr.attr_namespace)],
                 line = attr.name_start.line,
                 column = attr.name_start.column,
                 offset = attr.name_start.offset
             }
+            if attr.attr_namespace ~= C.GUMBO_ATTR_NAMESPACE_NONE then
+                a.prefix = attrnsmap[tonumber(attr.attr_namespace)]
+            end
             t[i+1] = setmetatable(a, Attr)
             t[name] = a
         end
@@ -108,13 +112,15 @@ end
 local function create_element(node)
     local element = node.v.element
     local t = {
-        namespaceURI = tagnsmap[tonumber(element.tag_namespace)],
         localName = get_tag_name(element),
         attributes = get_attributes(element.attributes),
         line = element.start_pos.line,
         column = element.start_pos.column,
         offset = element.start_pos.offset
     }
+    if element.tag_namespace ~= C.GUMBO_NAMESPACE_HTML then
+        t.namespaceURI = tagnsmap[tonumber(element.tag_namespace)]
+    end
     local parseFlags = tonumber(node.parse_flags)
     if parseFlags ~= 0 then
         t.parseFlags = parseFlags
@@ -155,13 +161,13 @@ local function create_comment(node)
     return setmetatable(n, Comment)
 end
 
-local typemap = setmetatable({
+local typemap = LookupTable {
     create_element,
     create_text,
     create_cdata,
     create_comment,
     create_whitespace,
-}, {__index = function() error "Error: invalid node type" end})
+}
 
 create_node = function(node)
     return typemap[tonumber(node.type)](node)
