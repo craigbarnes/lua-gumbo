@@ -154,7 +154,7 @@ assert(body.outerHTML == "<body>" .. input .. "</body>")
 
 assert(main.childElementCount == 1)
 assert(main:getElementsByTagName("*").length == 1)
-assert(main == body[1])
+assert(main == body.childNodes[1])
 assert(main:getElementsByTagName("div").length == 0)
 assert(main.nodeName == "DIV")
 assert(main.nodeName == main.tagName)
