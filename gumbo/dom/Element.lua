@@ -199,38 +199,26 @@ local boolattr = Set {
 }
 
 local function serialize(node, buf)
-    if node.type == "element" then
+    local type = node.type
+    if type == "element" then
         local tag = node.localName
-        buf:write("<", tag)
-        for i, attr in ipairs(node.attributes) do
-            local ns, name, val = attr.prefix, attr.name, attr.value
-            if ns and not (ns == "xmlns" and name == "xmlns") then
-                buf:write(" ", ns, ":", name)
-            else
-                buf:write(" ", name)
-            end
-            if not boolattr[name] or not (val == "" or val == name) then
-                buf:write('="', attr.escapedValue, '"')
-            end
-        end
-        buf:write(">")
-        local children = node.childNodes
-        local length = #children
+        buf:write(node.tagHTML)
         if not void[tag] then
-            for i = 1, length do
+            local children = node.childNodes
+            for i = 1, #children do
                 serialize(children[i], buf)
             end
             buf:write("</", tag, ">")
         end
-    elseif node.type == "text" then
+    elseif type == "text" then
         if raw[node.parentNode.localName] then
             buf:write(node.data)
         else
             buf:write(node.escapedData)
         end
-    elseif node.type == "whitespace" then
+    elseif type == "whitespace" then
         buf:write(node.data)
-    elseif node.type == "comment" then
+    elseif type == "comment" then
         buf:write("<!--", node.data, "-->")
     end
 end
@@ -246,6 +234,24 @@ end
 function getters:outerHTML()
     local buffer = Buffer()
     serialize(self, buffer)
+    return tostring(buffer)
+end
+
+function getters:tagHTML()
+    local buffer = Buffer()
+    buffer:write("<", self.localName)
+    for i, attr in ipairs(self.attributes) do
+        local ns, name, val = attr.prefix, attr.name, attr.value
+        if ns and not (ns == "xmlns" and name == "xmlns") then
+            buffer:write(" ", ns, ":", name)
+        else
+            buffer:write(" ", name)
+        end
+        if not boolattr[name] or not (val == "" or val == name) then
+            buffer:write('="', attr.escapedValue, '"')
+        end
+    end
+    buffer:write(">")
     return tostring(buffer)
 end
 

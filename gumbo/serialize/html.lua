@@ -1,7 +1,7 @@
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local Indent = require "gumbo.serialize.Indent"
-local ipairs, iotype, tostring = ipairs, io.type, tostring
+local ipairs, tostring = ipairs, tostring
 local _ENV = nil
 
 local void = Set {
@@ -45,22 +45,11 @@ local function to_html(node, buffer, indent_width)
     local buf = buffer or Buffer()
     local get_indent = Indent(indent_width)
     local function serialize(node, depth)
+        local type = node.type
         local indent = get_indent[depth]
-        if node.type == "element" then
+        if type == "element" then
             local tag = node.localName
-            buf:write(indent, "<", tag)
-            for i, attr in ipairs(node.attributes) do
-                local ns, name, val = attr.prefix, attr.name, attr.value
-                if ns and not (ns == "xmlns" and name == "xmlns") then
-                    buf:write(" ", ns, ":", name)
-                else
-                    buf:write(" ", name)
-                end
-                if not boolattr[name] or not (val == "" or val == name) then
-                    buf:write('="', attr.escapedValue, '"')
-                end
-            end
-            buf:write(">")
+            buf:write(indent, node.tagHTML)
             local children = node.childNodes
             local length = #children
             if void[tag] then
@@ -74,16 +63,16 @@ local function to_html(node, buffer, indent_width)
                 end
                 buf:write(indent, "</", tag, ">\n")
             end
-        elseif node.type == "text" then
+        elseif type == "text" then
             local parent = node.parentNode
             if parent and raw[parent.localName] then
                 buf:write(indent, node.data, "\n")
             else
                 buf:write(wrap(node.escapedData, indent))
             end
-        elseif node.type == "comment" then
+        elseif type == "comment" then
             buf:write(indent, "<!--", node.data, "-->\n")
-        elseif node.type == "document" then
+        elseif type == "document" then
             if node.doctype then
                 buf:write("<!DOCTYPE ", node.doctype.name, ">\n")
             end
@@ -94,7 +83,9 @@ local function to_html(node, buffer, indent_width)
         end
     end
     serialize(node, 0)
-    return iotype(buf) and true or tostring(buf)
+    if buf ~= buffer then
+        return tostring(buf)
+    end
 end
 
 return to_html
