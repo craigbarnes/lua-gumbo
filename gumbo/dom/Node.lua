@@ -27,7 +27,12 @@ local Node = {
     -- TODO: function Node:compareDocumentPosition(other)
 
     childNodes = {length = 0},
-    getters = getters
+    getters = getters,
+
+    readonly = Set{
+        "nodeType", "nodeName", "ownerDocument", "parentElement",
+        "firstChild", "lastChild", "previousSibling", "nextSibling"
+    }
 }
 
 local isTextOrComment = Set{

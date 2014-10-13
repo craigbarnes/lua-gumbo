@@ -13,10 +13,12 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
     type = "element",
     nodeType = 1,
     namespaceURI = "http://www.w3.org/1999/xhtml",
-    attributes = {length = 0}
+    attributes = {length = 0},
+    readonly = Set{"tagName", "classList"}
 })
 
-local getters = Element.getters or {}
+local getters = Element.getters
+local readonly = Element.readonly
 
 function Element:__index(k)
     if type(k) == "number" then
@@ -32,12 +34,6 @@ function Element:__index(k)
         end
     end
 end
-
--- Expand this set to include all readonly property names from the Element
--- interface and also the ones from inherited/implemented interfaces.
-local readonly = Set{
-    "firstChild", "lastChild"
-}
 
 function Element:__newindex(k, v)
     local setter = setters[k]

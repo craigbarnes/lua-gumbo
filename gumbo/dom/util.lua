@@ -10,6 +10,7 @@ local util = {
 function util.merge(...)
     local t = {}
     local g = {}
+    local r = {}
     for i = 1, select("#", ...) do
         local arg = select(i, ...)
         local argtype = type(arg)
@@ -31,8 +32,14 @@ function util.merge(...)
                 g[k] = v
             end
         end
+        if m.readonly then
+            for k, v in pairs(m.readonly) do
+                r[k] = v
+            end
+        end
     end
     t.getters = g
+    t.readonly = r
     t.__index = t
     return t
 end

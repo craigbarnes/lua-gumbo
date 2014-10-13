@@ -166,7 +166,11 @@ assert(main:getElementsByTagName("*").length == 1)
 assert(main == body.childNodes[1])
 assert(main:getElementsByTagName("div").length == 0)
 assert(main.nodeName == "DIV")
-assert(main.nodeName == main.tagName)
+main.nodeName = "newname"
+assert(main.nodeName == "DIV")
+assert(main.tagName == "DIV")
+main.tagName = "newname"
+assert(main.tagName == "DIV")
 assert(main:hasAttributes() == true)
 assert(main.attributes.length == 2)
 assert(main:hasAttribute("class") == true)
