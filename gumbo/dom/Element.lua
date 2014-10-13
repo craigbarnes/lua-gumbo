@@ -21,17 +21,16 @@ local getters = Element.getters
 local readonly = Element.readonly
 
 function Element:__index(k)
-    if type(k) == "number" then
-        return self.childNodes[k]
-    end
     local field = Element[k]
     if field then
         return field
-    else
-        local getter = getters[k]
-        if getter then
-            return getter(self)
-        end
+    end
+    local getter = getters[k]
+    if getter then
+        return getter(self)
+    end
+    if type(k) == "number" then
+        return self.childNodes[k]
     end
 end
 
