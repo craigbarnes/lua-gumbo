@@ -1,12 +1,10 @@
-#!/usr/bin/env lua
 local gumbo = require "gumbo"
 local document = assert(gumbo.parse_file(arg[1] or io.stdin))
+local elements = document:getElementsByTagName("a")
 
-for node in document:walk() do
-    if node.type == "element" and node.localName == "a" then
-        local href = node.attributes.href
-        if href then
-            print(href.value)
-        end
+for i, element in ipairs(elements) do
+    local href = element:getAttribute("href")
+    if href then
+        print(href)
     end
 end
