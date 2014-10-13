@@ -9,8 +9,6 @@ local util = {
 
 function util.merge(...)
     local t = {}
-    local g = {}
-    local r = {}
     for i = 1, select("#", ...) do
         local arg = select(i, ...)
         local argtype = type(arg)
@@ -23,23 +21,16 @@ function util.merge(...)
             assert(false, "Invalid argument type")
         end
         for k, v in pairs(m) do
-            if k ~= "getters" and k ~= "setters" then
+            local tk = t[k]
+            if type(v) == "table" and type(tk) == "table" then
+                for k2, v2 in pairs(v) do
+                    tk[k2] = v2
+                end
+            else
                 t[k] = v
             end
         end
-        if m.getters then
-            for k, v in pairs(m.getters) do
-                g[k] = v
-            end
-        end
-        if m.readonly then
-            for k, v in pairs(m.readonly) do
-                r[k] = v
-            end
-        end
     end
-    t.getters = g
-    t.readonly = r
     t.__index = t
     return t
 end
