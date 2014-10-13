@@ -22,6 +22,10 @@ function Text:__index(k)
     end
 end
 
+function Text:new(data)
+    return setmetatable({data = data}, Text)
+end
+
 function Text:cloneNode()
     return setmetatable({data = self.data}, Text)
 end
@@ -48,4 +52,4 @@ function getters:escapedData()
     return (self.data:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
 end
 
-return Text
+return setmetatable(Text, {__call = Text.new})

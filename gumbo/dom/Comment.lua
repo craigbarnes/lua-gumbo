@@ -22,6 +22,10 @@ function Comment:__index(k)
     end
 end
 
+function Comment:new(data)
+    return setmetatable({data = data}, Comment)
+end
+
 function Comment:cloneNode()
     return setmetatable({data = self.data}, Comment)
 end
@@ -38,4 +42,4 @@ function Comment:isEqualNode(node)
     end
 end
 
-return Comment
+return setmetatable(Comment, {__call = Comment.new})
