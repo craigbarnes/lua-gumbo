@@ -35,6 +35,14 @@ static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 #define add_string(L, k, v) add_field(string, L, k, v)
 #define add_integer(L, k, v) add_field(integer, L, k, v)
 
+static inline void add_position(lua_State *L, const GumboSourcePosition pos) {
+    if (pos.line != 0) {
+        add_integer(L, "line", pos.line);
+        add_integer(L, "column", pos.column);
+        add_integer(L, "offset", pos.offset);
+    }
+}
+
 static void add_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length > 0) {
@@ -49,9 +57,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             }
             add_string(L, "name", attr->name);
             add_string(L, "value", attr->value);
-            add_integer(L, "line", attr->name_start.line);
-            add_integer(L, "column", attr->name_start.column);
-            add_integer(L, "offset", attr->name_start.offset);
+            add_position(L, attr->name_start);
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
             luaL_setmetatable(L, "gumbo.dom.Attr");
@@ -93,11 +99,9 @@ static void add_tag(lua_State *L, const GumboElement *element) {
 
 static void create_text_node(lua_State *L, const GumboText *t, const char *m) {
     lua_createtable(L, 0, 5);
-    luaL_setmetatable(L, m);
     add_string(L, "data", t->text);
-    add_integer(L, "line", t->start_pos.line);
-    add_integer(L, "column", t->start_pos.column);
-    add_integer(L, "offset", t->start_pos.offset);
+    add_position(L, t->start_pos);
+    luaL_setmetatable(L, m);
 }
 
 // Forward declaration, to allow mutual recursion with add_children()
@@ -130,9 +134,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, 0, 7);
         add_tag(L, element);
-        add_integer(L, "line", element->start_pos.line);
-        add_integer(L, "column", element->start_pos.column);
-        add_integer(L, "offset", element->start_pos.offset);
+        add_position(L, element->start_pos);
         if (node->parse_flags != GUMBO_INSERTION_NORMAL) {
             add_integer(L, "parseFlags", node->parse_flags);
         }
