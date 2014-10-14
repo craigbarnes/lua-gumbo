@@ -12,9 +12,11 @@ function Buffer:write(...)
     self.length = length
 end
 
-function Buffer:__tostring()
+function Buffer:tostring()
     return tconcat(self)
 end
+
+Buffer.__tostring = Buffer.tostring
 
 return function()
     return setmetatable({length = 0}, Buffer)

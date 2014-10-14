@@ -1,6 +1,6 @@
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
-local ipairs, tostring = ipairs, tostring
+local ipairs = ipairs
 local _ENV = nil
 
 local function wrap(text, indent)
@@ -62,7 +62,7 @@ local function to_html(node, buffer, indent_width)
     end
     serialize(node, 0)
     if buf ~= buffer then
-        return tostring(buf)
+        return buf:tostring()
     end
 end
 

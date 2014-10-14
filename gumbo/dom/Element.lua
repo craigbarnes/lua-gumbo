@@ -4,7 +4,7 @@ local Set = require "gumbo.Set"
 local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
 local namePattern = util.namePattern
-local type, ipairs, tostring, assert = type, ipairs, tostring, assert
+local type, ipairs, assert = type, ipairs, assert
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
 local _ENV = nil
 local setters = {}
@@ -236,13 +236,13 @@ function getters:innerHTML()
     for i, node in ipairs(self.childNodes) do
         serialize(node, buffer)
     end
-    return tostring(buffer)
+    return buffer:tostring()
 end
 
 function getters:outerHTML()
     local buffer = Buffer()
     serialize(self, buffer)
-    return tostring(buffer)
+    return buffer:tostring()
 end
 
 function getters:tagHTML()
@@ -260,7 +260,7 @@ function getters:tagHTML()
         end
     end
     buffer:write(">")
-    return tostring(buffer)
+    return buffer:tostring()
 end
 
 -- TODO:

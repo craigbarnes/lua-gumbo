@@ -5,7 +5,7 @@ assert(arg[1], "No test files specified")
 local gumbo = require "gumbo"
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
-local open, write, assert, tostring = io.open, io.write, assert, tostring
+local open, write, assert = io.open, io.write, assert
 local format, clock, sort, exit = string.format, os.clock, table.sort, os.exit
 local arg = {...}
 local verbose = os.getenv "VERBOSE"
@@ -84,7 +84,7 @@ local function serialize(document)
     for i = 1, #childNodes do
         write_node(childNodes[i], 0)
     end
-    return tostring(buf)
+    return buf:tostring()
 end
 
 local function parse_testdata(filename)
@@ -98,7 +98,7 @@ local function parse_testdata(filename)
     for line in text:gmatch "([^\n]*)\n" do
         linenum = linenum + 1
         if line:sub(1, 1) == "#" then
-            tests[testnum][field] = tostring(buffer):sub(1, -2)
+            tests[testnum][field] = buffer:tostring():sub(1, -2)
             buffer = Buffer()
             field = line:sub(2, -1)
             if field == "data" then
@@ -109,7 +109,7 @@ local function parse_testdata(filename)
             buffer:write(line, "\n")
         end
     end
-    tests[testnum][field] = tostring(buffer)
+    tests[testnum][field] = buffer:tostring()
     if testnum > 0 then
         return tests
     else
