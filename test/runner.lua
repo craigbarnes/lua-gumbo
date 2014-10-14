@@ -1,13 +1,14 @@
 -- Test runner for the html5lib tree-construction test suite.
 -- Don't run directly, use `make check-html5lib` in the top-level directory.
 
-assert(arg[1], "No test files specified")
+assert(..., "No test files specified")
 local gumbo = require "gumbo"
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
-local open, write, assert = io.open, io.write, assert
+local parse = gumbo.parse
+local open, write, ipairs, assert = io.open, io.write, ipairs, assert
 local format, clock, sort, exit = string.format, os.clock, table.sort, os.exit
-local arg = {...}
+local filenames = {...}
 local verbose = os.getenv "VERBOSE"
 local quiet = os.getenv "QUIET"
 local hrule = string.rep("=", 76)
@@ -117,36 +118,40 @@ local function parse_testdata(filename)
     end
 end
 
-for i = 1, #arg do
-    local filename = arg[i]
+local function warn(filename, line, testnum, input, expected, received)
+    write(
+        hrule, "\n",
+        filename, ":", line, ": Test ", testnum, " failed\n",
+        hrule, "\n\n",
+        "Input:\n", input, "\n\n",
+        "Expected:\n", expected, "\n",
+        "Received:\n", received, "\n"
+    )
+end
+
+for _, filename in ipairs(filenames) do
     local tests = assert(parse_testdata(filename))
     local passed, failed, skipped = 0, 0, 0
-    for i = 1, #tests do
-        local test = tests[i]
+    for i, test in ipairs(tests) do
+        local input = assert(test.data)
         if
             -- Gumbo can't parse document fragments yet
             test["document-fragment"]
             -- See line 134 of python/gumbo/html5lib_adapter_test.py
-            or test.data:find("<noscript>", 1, true)
-            or test.data:find("<command>", 1, true)
+            or input:find("<noscript>", 1, true)
+            or input:find("<command>", 1, true)
         then
             skipped = skipped + 1
         else
-            local document = assert(gumbo.parse(test.data))
-            local serialized = assert(serialize(document))
-            if serialized == test.document then
+            local expected = assert(test.document)
+            local parsed = assert(parse(input))
+            local serialized = assert(serialize(parsed))
+            if serialized == expected then
                 passed = passed + 1
             else
                 failed = failed + 1
                 if verbose then
-                    write(
-                        hrule, "\n",
-                        filename, ":", test.line, ": Test ", i, " failed\n",
-                        hrule, "\n\n",
-                        "Input:\n", test.data, "\n\n",
-                        "Expected:\n", test.document, "\n",
-                        "Received:\n", serialized, "\n"
-                    )
+                    warn(filename, test.line, i, input, expected, serialized)
                 end
             end
         end
