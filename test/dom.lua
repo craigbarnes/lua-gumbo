@@ -332,3 +332,8 @@ assert(value:find("NotFoundError", 1, true))
 assert(html.parentNode == document)
 assert(document:removeChild(html) == html)
 assert(html.parentNode == nil)
+
+do
+    local document = assert(gumbo.parse("<!doctype html><p>no-quirks!</p>"))
+    assert(document.compatMode == "CSS1Compat")
+end

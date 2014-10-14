@@ -21,6 +21,14 @@ do
     assert(document[1].line == 1)
     assert(document[1].column == 32)
     assert(document[1].offset == 2)
+
+    -- Check that adding new fields isn't prevented by __newindex metamethods
+    assert(document.nonExistantField == nil)
+    document.nonExistantField = "new-value"
+    assert(document.nonExistantField == "new-value")
+    assert(html.nonExistantField == nil)
+    html.nonExistantField = "new-value"
+    assert(html.nonExistantField == "new-value")
 end
 
 do -- Check that Attr.escapedValue works correctly
@@ -38,7 +46,6 @@ do -- Check that Text.escapedData works correctly
     assert(text.data == [[x &foo bar><<  ]])
     assert(text.escapedData == [[x&nbsp;&amp;foo bar&gt;&lt;&lt; &nbsp;]])
 end
-
 
 do -- Make sure deeply nested elements don't cause a stack overflow
     local input = rep("<div>", 500)
