@@ -19,21 +19,21 @@ local document = assert(gumbo.parse(input))
 
 do -- Empty string should not be in the collection
     local c = assert(document:getElementsByTagName("*"))
-    --assert(not c[""], "Named getter should return nil for empty string")
+    assert(not c[""], "Named getter should return nil for empty string")
     assert(not c:namedItem(""), "namedItem should return nil for empty string")
 end
 
 do -- Empty string as a name for Element.getElementsByTagName
     local div = assert(document:getElementById("test"))
     local c = assert(div:getElementsByTagName("*"))
-    --assert(not c[""], "Named getter should return nil for empty string")
+    assert(not c[""], "Named getter should return nil for empty string")
     assert(not c:namedItem(""), "namedItem should return nil for empty string")
 end
 
 do -- Empty string as a name for Element.children
     local div = assert(document:getElementById("test"))
     local c = assert(div.children)
-    --assert(not c[""], "Named getter should return nil for empty string")
+    assert(not c[""], "Named getter should return nil for empty string")
     assert(not c:namedItem(""), "namedItem should return nil for empty string")
 end
 
