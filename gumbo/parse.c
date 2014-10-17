@@ -21,9 +21,9 @@
 #include <gumbo.h>
 #include "compat.h"
 
-// Enum-to-string maps (fixed in size, to allow storage in .rodata)
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
+enum upval {Text=1, Comment, Element, Attr, Document, NodeList, NamedNodeMap};
 
 #define add_field(T, L, k, v) ( \
     lua_pushliteral(L, k), \
@@ -34,6 +34,11 @@ static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 #define add_literal(L, k, v) add_field(literal, L, k, v)
 #define add_string(L, k, v) add_field(string, L, k, v)
 #define add_integer(L, k, v) add_field(integer, L, k, v)
+
+static inline void setmetatable(lua_State *L, enum upval index) {
+    lua_pushvalue(L, lua_upvalueindex(index));
+    lua_setmetatable(L, -2);
+}
 
 static inline void add_position(lua_State *L, const GumboSourcePosition pos) {
     if (pos.line != 0) {
@@ -60,10 +65,10 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             add_position(L, attr->name_start);
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
-            luaL_setmetatable(L, "gumbo.dom.Attr");
+            setmetatable(L, Attr);
             lua_rawseti(L, -2, i+1);
         }
-        luaL_setmetatable(L, "gumbo.dom.NamedNodeMap");
+        setmetatable(L, NamedNodeMap);
         lua_setfield(L, -2, "attributes");
     }
 }
@@ -97,11 +102,11 @@ static void add_tag(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "localName");
 }
 
-static void create_text_node(lua_State *L, const GumboText *t, const char *m) {
+static void create_text_node(lua_State *L, const GumboText *t, enum upval i) {
     lua_createtable(L, 0, 5);
     add_string(L, "data", t->text);
     add_position(L, t->start_pos);
-    luaL_setmetatable(L, m);
+    setmetatable(L, i);
 }
 
 // Forward declaration, to allow mutual recursion with add_children()
@@ -111,7 +116,7 @@ static void add_children(lua_State *L, const GumboVector *children) {
     const unsigned int length = children->length;
     if (length > 0) {
         lua_createtable(L, length, 0);
-        luaL_setmetatable(L, "gumbo.dom.NodeList");
+        setmetatable(L, NodeList);
         for (unsigned int i = 0; i < length; i++) {
             push_node(L, (const GumboNode *)children->data[i]);
 
@@ -140,21 +145,21 @@ static void push_node(lua_State *L, const GumboNode *node) {
         }
         add_attributes(L, &element->attributes);
         add_children(L, &element->children);
-        luaL_setmetatable(L, "gumbo.dom.Element");
+        setmetatable(L, Element);
         return;
     }
     case GUMBO_NODE_TEXT:
-        create_text_node(L, &node->v.text, "gumbo.dom.Text");
+        create_text_node(L, &node->v.text, Text);
         return;
     case GUMBO_NODE_WHITESPACE:
-        create_text_node(L, &node->v.text, "gumbo.dom.Text");
+        create_text_node(L, &node->v.text, Text);
         add_literal(L, "type", "whitespace");
         return;
     case GUMBO_NODE_COMMENT:
-        create_text_node(L, &node->v.text, "gumbo.dom.Comment");
+        create_text_node(L, &node->v.text, Comment);
         return;
     case GUMBO_NODE_CDATA:
-        create_text_node(L, &node->v.text, "gumbo.dom.Text");
+        create_text_node(L, &node->v.text, Text);
         add_literal(L, "type", "cdata");
         return;
     case GUMBO_NODE_DOCUMENT:
@@ -191,7 +196,7 @@ static int parse(lua_State *L) {
         lua_setfield(L, -3, "documentElement");
         lua_pop(L, 1);
 
-        luaL_setmetatable(L, "gumbo.dom.Document");
+        setmetatable(L, Document);
         gumbo_destroy_output(&options, output);
         return 1;
     } else {
@@ -205,9 +210,7 @@ static inline void require(lua_State *L, const char *modname) {
     lua_getglobal(L, "require");
     lua_pushstring(L, modname);
     lua_call(L, 1, 1);
-    if (lua_istable(L, -1)) {
-        lua_setfield(L, LUA_REGISTRYINDEX, modname);
-    } else {
+    if (!lua_istable(L, -1)) {
         luaL_error(L, "require('%s') returned invalid module table", modname);
     }
 }
@@ -220,6 +223,6 @@ int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.dom.Document");
     require(L, "gumbo.dom.NodeList");
     require(L, "gumbo.dom.NamedNodeMap");
-    lua_pushcfunction(L, parse);
+    lua_pushcclosure(L, parse, 7);
     return 1;
 }
