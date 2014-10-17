@@ -18,7 +18,7 @@ RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) test/htmlfmt.lua
 MDFILTER      = sed 's/`[^`]*`//g;/^    [^*]/d;/^\[/d; s/\[[A-Za-z0-9_.-]*\]//g'
 SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
-OK            = printf "%10s: OK\n"
+TEST          = $(LUA) $(1) && echo 'PASS:$(1)'
 BENCHFILE    ?= test/data/2MiB.html
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document Element \
@@ -104,7 +104,7 @@ check: export QUIET = yes
 check: check-unit check-html5lib check-serialize
 
 check-serialize: check-serialize-ns check-serialize-t1
-	@$(OK) Serialize
+	@echo 'PASS: Serialize'
 
 check-serialize-ns check-serialize-t1: \
 check-serialize-%: all test/data/%.html test/data/%.out.html
@@ -112,14 +112,13 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
 check-unit: all
-	@$(LUA) test/dom.lua
-	@$(OK) DOM
-	@$(LUA) test/misc.lua
-	@$(OK) Misc
+	@$(call TEST, test/dom.lua)
+	@$(call TEST, test/misc.lua)
+	@$(call TEST, test/dom/HTMLCollection-empty-name.lua)
 
 check-html5lib: all | test/html5lib-tests/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
-	@$(OK) html5lib
+	@echo 'PASS: html5lib'
 
 check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
 check-valgrind: check-unit
@@ -145,7 +144,7 @@ check-spelling: README.md
 	  printf "Add valid words to .wordlist file to ignore\n" >&2; \
 	  exit 1; \
 	fi
-	@$(OK) Spelling
+	@echo 'PASS: Spelling'
 
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \

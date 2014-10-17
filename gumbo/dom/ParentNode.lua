@@ -1,4 +1,5 @@
-local ipairs = ipairs
+local HTMLCollection = require "gumbo.dom.HTMLCollection"
+local ipairs, setmetatable = ipairs, setmetatable
 local _ENV = nil
 local getters = {}
 local ParentNode = {getters = getters}
@@ -14,7 +15,7 @@ function getters:children()
             end
         end
         collection.length = length
-        return collection
+        return setmetatable(collection, HTMLCollection)
     end
 end
 
