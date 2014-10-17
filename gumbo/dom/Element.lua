@@ -3,6 +3,7 @@ local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
+local HTMLCollection = require "gumbo.dom.HTMLCollection"
 local namePattern = util.namePattern
 local type, ipairs, assert = type, ipairs, assert
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
@@ -44,35 +45,35 @@ function Element:__newindex(k, v)
 end
 
 function Element:getElementsByTagName(localName)
-    local collection = {} -- TODO: = setmetatable({}, HTMLCollection)
+    assert(type(localName) == "string")
+    local collection = {}
     local length = 0
-    if not localName or localName == "" then
-        collection.length = 0
-        return collection
-    elseif localName == "*" then
-        for node in self:walk() do
-            if node.type == "element" then
-                length = length + 1
-                collection[length] = node
-            end
-        end
-    else
-        local htmlns = "http://www.w3.org/1999/xhtml"
-        local localNameLower = localName:lower()
-        for node in self:walk() do
-            if node.type == "element" then
-                local ns = node.namespaceURI
-                if (ns == htmlns and node.localName == localNameLower)
-                or (ns ~= htmlns and node.localName == localName)
-                then
+    if localName ~= "" then
+        if localName == "*" then
+            for node in self:walk() do
+                if node.type == "element" then
                     length = length + 1
                     collection[length] = node
+                end
+            end
+        else
+            local htmlns = "http://www.w3.org/1999/xhtml"
+            local localNameLower = localName:lower()
+            for node in self:walk() do
+                if node.type == "element" then
+                    local ns = node.namespaceURI
+                    if (ns == htmlns and node.localName == localNameLower)
+                    or (ns ~= htmlns and node.localName == localName)
+                    then
+                        length = length + 1
+                        collection[length] = node
+                    end
                 end
             end
         end
     end
     collection.length = length
-    return collection
+    return setmetatable(collection, HTMLCollection)
 end
 
 function Element:getAttribute(name)
