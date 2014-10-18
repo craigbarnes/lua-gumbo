@@ -134,7 +134,15 @@ position in the original input text.
 ### Element
 
 * [x] **localName**
-* [x] **attributes**
+* [x] **attributes** (A [`NamedNodeMap`] of [`Attr`]s)
+  * [x] length
+  * [ ] item()
+  * [ ] getNamedItem()
+  * [ ] getNamedItemNS()
+  * [ ] setNamedItem()
+  * [ ] setNamedItemNS()
+  * [ ] removeNamedItem()
+  * [ ] removeNamedItemNS()
 * [x] namespaceURI
 * [ ] prefix
 * [x] tagName
@@ -165,7 +173,7 @@ position in the original input text.
 
 ### Node
 
-* [x] **childNodes** (A [`NodeList`] of `Node`s)
+* [x] **childNodes** (A [`NodeList`] of [`ChildNode`]s)
   * [x] length
   * [x] item()
 * [x] **parentNode**
@@ -213,26 +221,12 @@ position in the original input text.
 * [ ] ownerElement
 * [x] specified
 
-### NamedNodeMap
-
-* [x] length
-* [ ] item()
-* [ ] getNamedItem()
-* [ ] getNamedItemNS()
-* [ ] setNamedItem()
-* [ ] setNamedItemNS()
-* [ ] removeNamedItem()
-* [ ] removeNamedItemNS()
-
-### HTMLCollection
-
-* [x] length
-* [x] item()
-* [x] namedItem()
-
 ### ParentNode
 
-* [x] children
+* [x] children (A [`HTMLCollection`] of child [`Element`]s)
+  * [x] length
+  * [x] item()
+  * [x] namedItem()
 * [x] childElementCount
 * [x] firstElementChild
 * [x] lastElementChild
@@ -283,7 +277,13 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
-[`NodeList`]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Summary
+[`Element`]: https://developer.mozilla.org/en-US/docs/Web/API/Node
+[`NodeList`]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList
+[`HTMLCollection`]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection
+[`NamedNodeMap`]: https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap
+[`Attr`]: https://developer.mozilla.org/en-US/docs/Web/API/Attr
+[`Node`]: https://developer.mozilla.org/en-US/docs/Web/API/Node
+[`ChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/ChildNode
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
