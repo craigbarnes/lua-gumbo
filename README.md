@@ -101,45 +101,45 @@ position in the original input text.
 
 Inherits from [`Node`]. Implements [`ParentNode`].
 
-* [x] **documentElement**
-* [x] **doctype**
-   * [x] **name**
-   * [x] **publicId**
-   * [x] **systemId**
-* [ ] implementation
-* [x] URL
-* [x] documentURI
-* [ ] origin
-* [x] compatMode
-* [x] characterSet
-* [x] contentType
+* [x] [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
+* [x] [`doctype`](https://developer.mozilla.org/en-US/docs/Web/API/document.doctype)
+   * [x] [`name`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentType#Properties)
+   * [x] [`publicId`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentType#Properties)
+   * [x] [`systemId`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentType#Properties)
+* [ ] `implementation`
+* [x] `URL`
+* [x] `documentURI`
+* [ ] `origin`
+* [x] `compatMode`
+* [x] `characterSet`
+* [x] `contentType`
 * [ ] `[Constructor]`
-* [x] [getElementsByTagName()](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
-* [ ] getElementsByTagNameNS()
-* [ ] getElementsByClassName()
-* [x] createElement()
-* [ ] createElementNS()
-* [ ] createDocumentFragment()
-* [x] createTextNode()
-* [x] createComment()
-* [ ] createProcessingInstruction()
-* [ ] importNode()
-* [ ] adoptNode()
-* [ ] createAttribute()
-* [ ] createAttributeNS()
-* [ ] createEvent()
-* [ ] createRange()
-* [ ] createNodeIterator()
-* [ ] createTreeWalker()
-* [x] [getElementById()](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
+* [x] [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
+* [ ] `getElementsByTagNameNS()`
+* [ ] `getElementsByClassName()`
+* [x] `createElement()`
+* [ ] `createElementNS()`
+* [ ] `createDocumentFragment()`
+* [x] `createTextNode()`
+* [x] `createComment()`
+* [ ] `createProcessingInstruction()`
+* [ ] `importNode()`
+* [ ] `adoptNode()`
+* [ ] `createAttribute()`
+* [ ] `createAttributeNS()`
+* [ ] `createEvent()`
+* [ ] `createRange()`
+* [ ] `createNodeIterator()`
+* [ ] `createTreeWalker()`
+* [x] [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 
 ### Element
 
 Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
 
-* [x] **localName**
-* [x] **attributes** (A [`NamedNodeMap`] of [`Attr`]s)
+* [x] `localName`
+* [x] `attributes` (A [`NamedNodeMap`] of [`Attr`]s)
   * [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Properties)
   * [ ] [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
   * [ ] [`getNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
@@ -148,40 +148,40 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
   * [ ] [`setNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
   * [ ] [`removeNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
   * [ ] [`removeNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
-* [x] namespaceURI
-* [ ] prefix
-* [x] tagName
-* [x] id
-* [x] className
-* [x] classList
-* [ ] innerHTML
+* [x] `namespaceURI`
+* [ ] `prefix`
+* [x] `tagName`
+* [x] `id`
+* [x] `className`
+* [x] `classList`
+* [ ] `innerHTML`
   * [x] getter
   * [ ] setter
-* [ ] outerHTML
+* [ ] `outerHTML`
   * [x] getter
   * [ ] setter
-* [x] hasAttributes()
-* [x] getAttribute()
-* [ ] getAttributeNS()
-* [x] setAttribute()
-* [ ] setAttributeNS()
-* [x] removeAttribute()
-* [ ] removeAttributeNS()
-* [x] hasAttribute()
-* [ ] hasAttributeNS()
-* [ ] closest()
-* [ ] matches()
-* [x] getElementsByTagName()
-* [ ] getElementsByTagNameNS()
-* [ ] getElementsByClassName()
-* [ ] insertAdjacentHTML()
+* [x] `hasAttributes()`
+* [x] `getAttribute()`
+* [ ] `getAttributeNS()`
+* [x] `setAttribute()`
+* [ ] `setAttributeNS()`
+* [x] `removeAttribute()`
+* [ ] `removeAttributeNS()`
+* [x] `hasAttribute()`
+* [ ] `hasAttributeNS()`
+* [ ] `closest()`
+* [ ] `matches()`
+* [x] `getElementsByTagName()`
+* [ ] `getElementsByTagNameNS()`
+* [ ] `getElementsByClassName()`
+* [ ] `insertAdjacentHTML()`
 
 ### Text
 
 Inherits from [`CharacterData`].
 
-* [ ] wholeText
-* [ ] splitText()
+* [ ] `wholeText`
+* [ ] `splitText()`
 
 ### Comment
 
@@ -194,77 +194,77 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 
 * [x] [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 * [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
-* [ ] substringData()
-* [ ] appendData()
-* [ ] insertData()
-* [ ] deleteData()
-* [ ] replaceData()
+* [ ] `substringData()`
+* [ ] `appendData()`
+* [ ] `insertData()`
+* [ ] `deleteData()`
+* [ ] `replaceData()`
 
 ### Node
 
-* [x] **childNodes** (A [`NodeList`] of [`ChildNode`]s)
+* [x] `childNodes` (A [`NodeList`] of [`ChildNode`]s)
   * [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Properties)
   * [x] [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Methods)
-* [x] **parentNode**
-* [x] parentElement
-* [x] ownerDocument
-* [x] nodeType
-* [x] nodeName
-* [ ] baseURI
-* [x] firstChild
-* [x] lastChild
-* [x] previousSibling
-* [x] nextSibling
-* [ ] nodeValue
-   * [x] getter
-   * [ ] setter
-* [ ] textContent
-* [x] ELEMENT_NODE
-* [x] TEXT_NODE
-* [x] COMMENT_NODE
-* [x] DOCUMENT_NODE
-* [x] DOCUMENT_TYPE_NODE
-* [x] DOCUMENT_FRAGMENT_NODE
-* [x] hasChildNodes()
-* [ ] normalize()
-* [ ] cloneNode()
-* [ ] isEqualNode()
-* [ ] compareDocumentPosition()
-* [x] contains()
-* [ ] lookupPrefix()
-* [ ] lookupNamespaceURI()
-* [ ] isDefaultNamespace()
-* [ ] insertBefore()
-* [ ] appendChild()
-* [ ] replaceChild()
-* [x] removeChild()
+* [x] `parentNode`
+* [x] `parentElement`
+* [x] `ownerDocument`
+* [x] `nodeType`
+* [x] `nodeName`
+* [ ] `baseURI`
+* [x] `firstChild`
+* [x] `lastChild`
+* [x] `previousSibling`
+* [x] `nextSibling`
+* [ ] `nodeValue`
+   * [x] `getter`
+   * [ ] `setter`
+* [ ] `textContent`
+* [x] `ELEMENT_NODE`
+* [x] `TEXT_NODE`
+* [x] `COMMENT_NODE`
+* [x] `DOCUMENT_NODE`
+* [x] `DOCUMENT_TYPE_NODE`
+* [x] `DOCUMENT_FRAGMENT_NODE`
+* [x] `hasChildNodes()`
+* [ ] `normalize()`
+* [ ] `cloneNode()`
+* [ ] `isEqualNode()`
+* [ ] `compareDocumentPosition()`
+* [x] `contains()`
+* [ ] `lookupPrefix()`
+* [ ] `lookupNamespaceURI()`
+* [ ] `isDefaultNamespace()`
+* [ ] `insertBefore()`
+* [ ] `appendChild()`
+* [ ] `replaceChild()`
+* [x] `removeChild()`
 
 ### Attr
 
-* [x] **name**
-* [x] **value**
-* [x] **prefix**
-* [x] localName
-* [x] textContent
-* [ ] namespaceURI
-* [ ] ownerElement
-* [x] specified
+* [x] `name`
+* [x] `value`
+* [x] `prefix`
+* [x] `localName`
+* [x] `textContent`
+* [ ] `namespaceURI`
+* [ ] `ownerElement`
+* [x] `specified`
 
 ### ParentNode
 
-* [x] children (A [`HTMLCollection`] of child [`Element`]s)
+* [x] `children` (A [`HTMLCollection`] of child [`Element`]s)
   * [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Properties)
   * [x] [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
   * [x] [`namedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
-* [x] childElementCount
-* [x] firstElementChild
-* [x] lastElementChild
-* [ ] append()
-* [ ] prepend()
-* [ ] query()
-* [ ] queryAll()
-* [ ] querySelector()
-* [ ] querySelectorAll()
+* [x] `childElementCount`
+* [x] `firstElementChild`
+* [x] `lastElementChild`
+* [ ] `append()`
+* [ ] `prepend()`
+* [ ] `query()`
+* [ ] `queryAll()`
+* [ ] `querySelector()`
+* [ ] `querySelectorAll()`
 
 Testing
 -------
