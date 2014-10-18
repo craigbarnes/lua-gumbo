@@ -1,9 +1,9 @@
 lua-gumbo
 =========
 
-[Lua][] [C API] and [LuaJIT][] [FFI] bindings for the [Gumbo][]
-[HTML5] parsing library, including a small (but [growing][issue #4]) set
-of [DOM] APIs implemented in pure Lua.
+[Lua][] [C API] and [LuaJIT][] [FFI] bindings for the [Gumbo][] [HTML5]
+parsing library, including a small set of core [DOM] APIs implemented in
+pure Lua.
 
 Requirements
 ------------
@@ -294,8 +294,6 @@ Testing
 * `make check-install`: Runs `make check` within a temporary, isolated
   installation, to ensure all modules are installed correctly.
 * `make coverage.txt`: Generates a test coverage report with [luacov].
-* `make check-spelling`: Spell checks `README.md` using [Hunspell] and a
-  custom word list.
 * `make bench-parse BENCHFILE=test/data/${size}MiB.html`: Parses an
   automatically generated document of `${size}` MiB, then prints CPU time
   and memory usage stats.
@@ -333,16 +331,9 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [GNU Make]: https://www.gnu.org/software/make/
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
 [file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
-[doctype declaration]: http://en.wikipedia.org/wiki/Document_type_declaration
-[root element]: http://en.wikipedia.org/wiki/Root_element
-[public identifier]: http://dom.spec.whatwg.org/#concept-doctype-publicid
-[system identifier]: http://dom.spec.whatwg.org/#concept-doctype-systemid
-[quirks mode]: http://dom.spec.whatwg.org/#concept-document-quirks
-[namespace URI]: https://html.spec.whatwg.org/multipage/infrastructure.html#namespaces
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [find_links.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
 [remove_by_id.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
-[issue #4]: https://github.com/craigbarnes/lua-gumbo/issues/4
 [luacov]: https://keplerproject.github.io/luacov/
 [Hunspell]: https://en.wikipedia.org/wiki/Hunspell
