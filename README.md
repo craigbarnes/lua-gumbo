@@ -140,14 +140,14 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 
 * [x] **localName**
 * [x] **attributes** (A [`NamedNodeMap`] of [`Attr`]s)
-  * [x] length
-  * [ ] item()
-  * [ ] getNamedItem()
-  * [ ] getNamedItemNS()
-  * [ ] setNamedItem()
-  * [ ] setNamedItemNS()
-  * [ ] removeNamedItem()
-  * [ ] removeNamedItemNS()
+  * [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Properties)
+  * [ ] [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+  * [ ] [`getNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+  * [ ] [`getNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+  * [ ] [`setNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+  * [ ] [`setNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+  * [ ] [`removeNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+  * [ ] [`removeNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * [x] namespaceURI
 * [ ] prefix
 * [x] tagName
@@ -192,20 +192,19 @@ Inherits from [`CharacterData`].
 Inherits from [`Node`]. Implements [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
 
-* [x] **data**
-* [x] length
+* [x] [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
+* [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 * [ ] substringData()
 * [ ] appendData()
 * [ ] insertData()
 * [ ] deleteData()
 * [ ] replaceData()
 
-
 ### Node
 
 * [x] **childNodes** (A [`NodeList`] of [`ChildNode`]s)
-  * [x] length
-  * [x] item()
+  * [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Properties)
+  * [x] [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Methods)
 * [x] **parentNode**
 * [x] parentElement
 * [x] ownerDocument
@@ -254,9 +253,9 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 ### ParentNode
 
 * [x] children (A [`HTMLCollection`] of child [`Element`]s)
-  * [x] length
-  * [x] item()
-  * [x] namedItem()
+  * [x] [`length`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Properties)
+  * [x] [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
+  * [x] [`namedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
 * [x] childElementCount
 * [x] firstElementChild
 * [x] lastElementChild
