@@ -92,10 +92,9 @@ the [MDN DOM reference] should suffice for now.
 DOM API
 -------
 
-Fields marked in **bold** are part of the tree itself, while the others
-are implemented via shared metatables. All nodes originating from the
-parser also have `line`, `column` and `offset` fields indicating their
-position in the original input text.
+**Note:** When referring to external DOM documentation, don't forget to
+translate any JavaScript examples to use Lua's `object:method()` call
+syntax.
 
 ### Document
 
