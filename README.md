@@ -254,6 +254,17 @@ position in the original input text.
 
 * [ ] item()
 
+### HTMLCollection
+
+**Properties:**
+
+* [x] length
+
+**Methods:**
+
+* [x] item()
+* [x] namedItem()
+
 ### ParentNode
 
 **Properties:**
