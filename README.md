@@ -73,69 +73,218 @@ See also: [find_links.lua] and [remove_by_id.lua].
 Output
 ------
 
-**NOTE:** I am currently in the process of implementing the [DOM] level
-4 core API and hope to eventually replace most of the documentation
-below with a link to the [MDN DOM documentation]. Current progress can
-be followed in [issue #4].
+The `parse` and `parse_file` functions both return a `Document` node,
+containing a tree of [descendant] nodes. The structure and API of this
+tree is *almost* a subset of the [DOM] Level 4 Core API, with the
+following (intentional) exceptions:
+
+* `DOMString` types are encoded as UTF-8 instead of UTF-16.
+* Lists begin at index 1 instead of 0.
+* `readonly` is not fully enforced.
+
+The following sections list the supported properties and methods,
+grouped by the DOM interface in which the are specified. No
+lua-gumbo specific documentation currently exists, but since it's
+an implementation of a standard API, cross-checking the list with
+the [MDN DOM reference] should suffice for now.
+
+Fields marked in **bold** are part of the tree itself. All other fields
+are implemented via shared metatables. Nodes originating from the
+parser also have `line`, `column` and `offset` fields indicating their
+position in the original input text.
+
+DOM API
+-------
 
 ### Document
 
-The document node is the top-level table returned by the parse functions
-and contains all other nodes as descendants.
+**Properties:**
 
-**Fields:**
+* [x] **documentElement**
+* [x] **doctype**
+   * [x] **name**
+   * [x] **publicId**
+   * [x] **systemId**
+* [ ] implementation
+* [x] URL
+* [x] documentURI
+* [ ] origin
+* [x] compatMode
+* [x] characterSet
+* [x] contentType
 
-* `type`: Always has a value of `"document"` for document nodes.
-* `doctype`: A table of fields parsed from the [doctype declaration], or `nil`:
-  * `name`: The [root element] name.
-  * `publicId`: The [public identifier], or `""`.
-  * `systemId`: The [system identifier], or `""`.
-* `quirksMode`: One of `"quirks"`, `"no-quirks"` or `"limited-quirks"`.
-* `documentElement`: A reference to the child `<html>` element.
-* `childNodes`: An ordered table of child nodes. According to the HTML5
-  parsing specification, this always contains exactly 1 `Element` node
-  (the `documentElement`) and 0 or more `Comment` nodes.
+**Methods:**
+
+* [ ] `[Constructor]`
+* [x] getElementsByTagName()
+* [ ] getElementsByTagNameNS()
+* [ ] getElementsByClassName()
+* [x] createElement()
+* [ ] createElementNS()
+* [ ] createDocumentFragment()
+* [x] createTextNode()
+* [x] createComment()
+* [ ] createProcessingInstruction()
+* [ ] importNode()
+* [ ] adoptNode()
+* [ ] createAttribute()
+* [ ] createAttributeNS()
+* [ ] createEvent()
+* [ ] createRange()
+* [ ] createNodeIterator()
+* [ ] createTreeWalker()
+* [x] getElementById() (from `NonElementParentNode` interface)
 
 ### Element
 
-**Fields:**
+**Properties:**
 
-* `type`: Always has a value of `"element"` for element nodes.
-* `localName`: The tag name, normalized to lower case.
-* `namespaceURI`: The canonical [namespace URI] for either HTML, MathML or SVG.
-* `attributes`: A table of attributes (may be empty but never `nil`).
-  * `[1..n]`: Tables, each representing a single attribute, in source order:
-    * `name`: The name of the attribute (normalized to lower case).
-    * `value`: The attribute value.
-    * `prefix`: Either `"xlink"`, `"xml"`, `"xmlns"` or `nil`.
-    * `line`
-    * `column`
-    * `offset`
-  * `["xyz"]`: A reference to the attribute with `name` `"xyz"`, or `nil`.
-* `childNodes`: An ordered table of child nodes.
-* `line`
-* `column`
-* `offset`
+* [x] **localName**
+* [x] **attributes**
+* [x] namespaceURI
+* [ ] prefix
+* [x] tagName
+* [x] id
+* [x] className
+* [x] classList
+* [ ] innerHTML
+  * [x] getter
+  * [ ] setter
+* [ ] outerHTML
+  * [x] getter
+  * [ ] setter
 
-### Text
+**Methods:**
 
-**Fields:**
+* [x] hasAttributes()
+* [x] getAttribute()
+* [ ] getAttributeNS()
+* [x] setAttribute()
+* [ ] setAttributeNS()
+* [x] removeAttribute()
+* [ ] removeAttributeNS()
+* [x] hasAttribute()
+* [ ] hasAttributeNS()
+* [ ] closest()
+* [ ] matches()
+* [x] getElementsByTagName()
+* [ ] getElementsByTagNameNS()
+* [ ] getElementsByClassName()
+* [ ] insertAdjacentHTML()
 
-* `type`: Either `"text"` or `"whitespace"`.
-* `data`: The text contents.
-* `line`
-* `column`
-* `offset`
+### Node
 
-### Comment
+**Properties:**
 
-**Fields:**
+* [x] **childNodes**
+* [x] **parentNode**
+* [x] parentElement
+* [x] ownerDocument
+* [x] nodeType
+* [x] nodeName
+* [ ] baseURI
+* [x] firstChild
+* [x] lastChild
+* [x] previousSibling
+* [x] nextSibling
+* [ ] nodeValue
+   * [x] getter
+   * [ ] setter
+* [ ] textContent
 
-* `type`: Always has a value of `"comment"` for comment nodes.
-* `data`: The comment contents, not including delimiters.
-* `line`
-* `column`
-* `offset`
+**Methods:**
+
+* [x] hasChildNodes()
+* [ ] normalize()
+* [ ] cloneNode()
+* [ ] isEqualNode()
+* [ ] compareDocumentPosition()
+* [x] contains()
+* [ ] lookupPrefix()
+* [ ] lookupNamespaceURI()
+* [ ] isDefaultNamespace()
+* [ ] insertBefore()
+* [ ] appendChild()
+* [ ] replaceChild()
+* [x] removeChild()
+
+**Constants:**
+
+* [x] ELEMENT_NODE
+* [x] ATTRIBUTE_NODE
+* [x] TEXT_NODE
+* [x] CDATA_SECTION_NODE
+* [x] ENTITY_REFERENCE_NODE
+* [x] ENTITY_NODE
+* [x] PROCESSING_INSTRUCTION_NODE
+* [x] COMMENT_NODE
+* [x] DOCUMENT_NODE
+* [x] DOCUMENT_TYPE_NODE
+* [x] DOCUMENT_FRAGMENT_NODE
+* [x] NOTATION_NODE
+* [x] DOCUMENT_POSITION_DISCONNECTED
+* [x] DOCUMENT_POSITION_PRECEDING
+* [x] DOCUMENT_POSITION_FOLLOWING
+* [x] DOCUMENT_POSITION_CONTAINS
+* [x] DOCUMENT_POSITION_CONTAINED_BY
+* [x] DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC
+
+### Attr
+
+**Properties:**
+
+* [x] **name**
+* [x] **value**
+* [x] **prefix**
+* [x] localName
+* [x] textContent
+* [ ] namespaceURI
+* [ ] ownerElement
+* [x] specified
+
+### NamedNodeMap
+
+**Properties:**
+
+* [x] length
+
+**Methods:**
+
+* [ ] item()
+* [ ] getNamedItem()
+* [ ] getNamedItemNS()
+* [ ] setNamedItem()
+* [ ] setNamedItemNS()
+* [ ] removeNamedItem()
+* [ ] removeNamedItemNS()
+
+### NodeList
+
+**Properties:**
+
+* [x] length
+
+**Methods:**
+
+* [ ] item()
+
+### ParentNode
+
+**Properties:**
+
+* [x] children
+* [x] childElementCount
+* [x] firstElementChild
+* [x] lastElementChild
+
+**Methods:**
+
+* [ ] append()
+* [ ] prepend()
+* [ ] query()
+* [ ] queryAll()
+* [ ] querySelector()
+* [ ] querySelectorAll()
 
 Testing
 -------
@@ -178,6 +327,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [FFI]: http://luajit.org/ext_ffi.html
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
+[descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
@@ -192,7 +342,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [find_links.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
 [remove_by_id.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
-[MDN DOM Documentation]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
+[MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [issue #4]: https://github.com/craigbarnes/lua-gumbo/issues/4
 [luacov]: https://keplerproject.github.io/luacov/
 [Hunspell]: https://en.wikipedia.org/wiki/Hunspell
