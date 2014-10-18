@@ -122,7 +122,7 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
 
 * `localName`
-* [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes) (A [`NamedNodeMap`] of [`Attr`]s)
+* [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Properties)
   * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * `namespaceURI`
@@ -161,7 +161,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 
 ### Node
 
-* [`childNodes`](https://developer.mozilla.org/en-US/docs/Web/API/Node.childNodes) (A [`NodeList`] of [`ChildNode`]s)
+* [`childNodes`](https://developer.mozilla.org/en-US/docs/Web/API/Node.childNodes)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Properties)
   * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Methods)
 * [`parentNode`](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentNode)
@@ -196,7 +196,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 
 ### ParentNode
 
-* [`children`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children) (A [`HTMLCollection`] of child [`Element`]s)
+* [`children`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Properties)
   * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
   * [`namedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
@@ -314,9 +314,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [`Element`]: https://developer.mozilla.org/en-US/docs/Web/API/Node
-[`NodeList`]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList
-[`HTMLCollection`]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection
-[`NamedNodeMap`]: https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap
 [`Attr`]: https://developer.mozilla.org/en-US/docs/Web/API/Attr
 [`Node`]: https://developer.mozilla.org/en-US/docs/Web/API/Node
 [`ParentNode`]: https://developer.mozilla.org/en-US/docs/Web/API/ParentNode
