@@ -99,8 +99,6 @@ position in the original input text.
 
 ### Document
 
-**Properties:**
-
 * [x] **documentElement**
 * [x] **doctype**
    * [x] **name**
@@ -113,9 +111,6 @@ position in the original input text.
 * [x] compatMode
 * [x] characterSet
 * [x] contentType
-
-**Methods:**
-
 * [ ] `[Constructor]`
 * [x] [getElementsByTagName()](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
 * [ ] getElementsByTagNameNS()
@@ -138,8 +133,6 @@ position in the original input text.
 
 ### Element
 
-**Properties:**
-
 * [x] **localName**
 * [x] **attributes**
 * [x] namespaceURI
@@ -154,9 +147,6 @@ position in the original input text.
 * [ ] outerHTML
   * [x] getter
   * [ ] setter
-
-**Methods:**
-
 * [x] hasAttributes()
 * [x] getAttribute()
 * [ ] getAttributeNS()
@@ -174,8 +164,6 @@ position in the original input text.
 * [ ] insertAdjacentHTML()
 
 ### Node
-
-**Properties:**
 
 * [x] **childNodes**
 * [x] **parentNode**
@@ -198,9 +186,6 @@ position in the original input text.
 * [x] DOCUMENT_NODE
 * [x] DOCUMENT_TYPE_NODE
 * [x] DOCUMENT_FRAGMENT_NODE
-
-**Methods:**
-
 * [x] hasChildNodes()
 * [ ] normalize()
 * [ ] cloneNode()
@@ -217,8 +202,6 @@ position in the original input text.
 
 ### Attr
 
-**Properties:**
-
 * [x] **name**
 * [x] **value**
 * [x] **prefix**
@@ -230,12 +213,7 @@ position in the original input text.
 
 ### NamedNodeMap
 
-**Properties:**
-
 * [x] length
-
-**Methods:**
-
 * [ ] item()
 * [ ] getNamedItem()
 * [ ] getNamedItemNS()
@@ -246,36 +224,21 @@ position in the original input text.
 
 ### NodeList
 
-**Properties:**
-
 * [x] length
-
-**Methods:**
-
 * [ ] item()
 
 ### HTMLCollection
 
-**Properties:**
-
 * [x] length
-
-**Methods:**
-
 * [x] item()
 * [x] namedItem()
 
 ### ParentNode
 
-**Properties:**
-
 * [x] children
 * [x] childElementCount
 * [x] firstElementChild
 * [x] lastElementChild
-
-**Methods:**
-
 * [ ] append()
 * [ ] prepend()
 * [ ] query()
