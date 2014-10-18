@@ -220,9 +220,6 @@ Implement:
 * `Document.createAttributeNS()`
 * `Document.createEvent()`
 * `Document.createRange()`
-* `Document.createNodeIterator()`
-* `Document.createTreeWalker()`
-
 * `Element.prefix`
 * `Element.getAttributeNS()`
 * `Element.setAttributeNS()`
@@ -233,10 +230,8 @@ Implement:
 * `Element.getElementsByTagNameNS()`
 * `Element.getElementsByClassName()`
 * `Element.insertAdjacentHTML()`
-
 * `Text.wholeText`
 * `Text.splitText()`
-
 * `Node.textContent`
 * `Node.baseURI`
 * `Node.normalize()`
@@ -249,29 +244,36 @@ Implement:
 * `Node.insertBefore()`
 * `Node.appendChild()`
 * `Node.replaceChild()`
-
 * `CharacterData.substringData()`
 * `CharacterData.appendData()`
 * `CharacterData.insertData()`
 * `CharacterData.deleteData()`
 * `CharacterData.replaceData()`
-
 * `ParentNode.append()`
 * `ParentNode.prepend()`
 * `ParentNode.query()`
 * `ParentNode.queryAll()`
 * `ParentNode.querySelector()`
 * `ParentNode.querySelectorAll()`
-
 * `Attr.namespaceURI`
 * `Attr.ownerElement`
-
 * [`NamedNodeMap.getNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * [`NamedNodeMap.getNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * [`NamedNodeMap.setNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * [`NamedNodeMap.setNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * [`NamedNodeMap.removeNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * [`NamedNodeMap.removeNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+
+Not Implemented
+---------------
+
+Many parts of the DOM have a suboptimal API due to the specification
+being closely aligned with JavaScript and it's many failings as a
+language. Some of the simpler APIs I just implemented anyway, flawed or
+not, but I had to draw the line at these. Lua can do so much better.
+
+* [`Document.createNodeIterator()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.createNodeIterator)
+* [`Document.createTreeWalker()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.createTreeWalker)
 
 Testing
 -------
