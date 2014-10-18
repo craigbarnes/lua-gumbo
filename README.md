@@ -88,13 +88,14 @@ lua-gumbo specific documentation currently exists, but since it's
 an implementation of a standard API, cross-checking the list with
 the [MDN DOM reference] should suffice for now.
 
-Fields marked in **bold** are part of the tree itself. All other fields
-are implemented via shared metatables. Nodes originating from the
-parser also have `line`, `column` and `offset` fields indicating their
-position in the original input text.
 
 DOM API
 -------
+
+Fields marked in **bold** are part of the tree itself, while the others
+are implemented via shared metatables. All nodes originating from the
+parser also have `line`, `column` and `offset` fields indicating their
+position in the original input text.
 
 ### Document
 
@@ -116,7 +117,7 @@ DOM API
 **Methods:**
 
 * [ ] `[Constructor]`
-* [x] getElementsByTagName()
+* [x] [getElementsByTagName()](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
 * [ ] getElementsByTagNameNS()
 * [ ] getElementsByClassName()
 * [x] createElement()
@@ -133,7 +134,7 @@ DOM API
 * [ ] createRange()
 * [ ] createNodeIterator()
 * [ ] createTreeWalker()
-* [x] getElementById() (from `NonElementParentNode` interface)
+* [x] [getElementById()](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 
 ### Element
 
