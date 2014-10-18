@@ -98,7 +98,7 @@ syntax.
 
 ### Document
 
-Inherits from [`Node`]. Implements [`ParentNode`].
+Inherits from [`Node`](#node). Implements [`ParentNode`](#parentnode).
 
 * [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
 * [`doctype`](https://developer.mozilla.org/en-US/docs/Web/API/document.doctype)
@@ -118,8 +118,8 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 
 ### Element
 
-Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
-[`NonDocumentTypeChildNode`].
+Inherits from [`Node`](#node). Implements [`ParentNode`](#parentnode),
+[`ChildNode`] and [`NonDocumentTypeChildNode`].
 
 * `localName`
 * [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes)
@@ -145,15 +145,15 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 
 ### Text
 
-Inherits from [`CharacterData`].
+Inherits from [`CharacterData`](#characterdata).
 
 ### Comment
 
-Inherits from [`CharacterData`].
+Inherits from [`CharacterData`](#characterdata).
 
 ### CharacterData
 
-Inherits from [`Node`]. Implements [`ChildNode`] and
+Inherits from [`Node`](#node). Implements [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
 
 * [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
