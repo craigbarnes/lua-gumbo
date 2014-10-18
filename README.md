@@ -165,7 +165,9 @@ position in the original input text.
 
 ### Node
 
-* [x] **childNodes**
+* [x] **childNodes** (A [`NodeList`] of `Node`s)
+  * [x] length
+  * [x] item()
 * [x] **parentNode**
 * [x] parentElement
 * [x] ownerDocument
@@ -221,11 +223,6 @@ position in the original input text.
 * [ ] setNamedItemNS()
 * [ ] removeNamedItem()
 * [ ] removeNamedItemNS()
-
-### NodeList
-
-* [x] length
-* [ ] item()
 
 ### HTMLCollection
 
@@ -286,6 +283,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
+[`NodeList`]: https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Summary
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/

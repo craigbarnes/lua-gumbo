@@ -7,4 +7,9 @@ function NodeList:__index(k)
     end
 end
 
+-- TODO: Add tests
+function NodeList:item(index)
+    return self[index]
+end
+
 return NodeList
