@@ -107,13 +107,13 @@ Inherits from [`Node`]. Implements [`ParentNode`].
    * [`systemId`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentType#Properties)
 * `URL`
 * `documentURI`
-* `compatMode`
+* [`compatMode`](https://developer.mozilla.org/en-US/docs/Web/API/document.compatMode)
 * `characterSet`
 * `contentType`
 * [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
-* `createElement()`
-* `createTextNode()`
-* `createComment()`
+* [`createElement()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createElement)
+* [`createTextNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createTextNode)
+* [`createComment()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment)
 * [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 
 ### Element
@@ -122,26 +122,26 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
 
 * `localName`
-* `attributes` (A [`NamedNodeMap`] of [`Attr`]s)
+* [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes) (A [`NamedNodeMap`] of [`Attr`]s)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Properties)
   * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * `namespaceURI`
-* `tagName`
-* `id`
-* `className`
-* `classList`
-* `innerHTML`
+* [`tagName`](https://developer.mozilla.org/en-US/docs/Web/API/Element.tagName)
+* [`id`](https://developer.mozilla.org/en-US/docs/Web/API/Element.id)
+* [`className`](https://developer.mozilla.org/en-US/docs/Web/API/Element.className)
+* [`classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element.classList)
+* [`innerHTML`](https://developer.mozilla.org/en-US/docs/Web/API/Element.innerHTML)
   * [x] getter
   * [ ] setter
-* `outerHTML`
+* [`outerHTML`](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML)
   * [x] getter
   * [ ] setter
-* `hasAttributes()`
-* `getAttribute()`
-* `setAttribute()`
-* `removeAttribute()`
-* `hasAttribute()`
-* `getElementsByTagName()`
+* [`hasAttributes()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttributes)
+* [`getAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getAttribute)
+* [`setAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.setAttribute)
+* [`removeAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.removeAttribute)
+* [`hasAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute)
+* [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName)
 
 ### Text
 
@@ -161,19 +161,19 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 
 ### Node
 
-* `childNodes` (A [`NodeList`] of [`ChildNode`]s)
+* [`childNodes`](https://developer.mozilla.org/en-US/docs/Web/API/Node.childNodes) (A [`NodeList`] of [`ChildNode`]s)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Properties)
   * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Methods)
-* `parentNode`
-* `parentElement`
-* `ownerDocument`
-* `nodeType`
-* `nodeName`
-* `firstChild`
-* `lastChild`
-* `previousSibling`
-* `nextSibling`
-* `nodeValue`
+* [`parentNode`](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentNode)
+* [`parentElement`](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentElement)
+* [`ownerDocument`](https://developer.mozilla.org/en-US/docs/Web/API/Node.ownerDocument)
+* [`nodeType`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeType)
+* [`nodeName`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeName)
+* [`firstChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node.firstChild)
+* [`lastChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node.lastChild)
+* [`previousSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.previousSibling)
+* [`nextSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nextSibling)
+* [`nodeValue`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeValue)
    * [x] `getter`
    * [ ] `setter`
 * `ELEMENT_NODE`
@@ -182,28 +182,27 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * `DOCUMENT_NODE`
 * `DOCUMENT_TYPE_NODE`
 * `DOCUMENT_FRAGMENT_NODE`
-* `hasChildNodes()`
-* `contains()`
-* `removeChild()`
+* [`hasChildNodes()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.hasChildNodes)
+* [`contains()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains)
+* [`removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild)
 
 ### Attr
 
-* `name`
-* `value`
+* [`name`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
+* [`value`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
 * `prefix`
 * `localName`
-* `textContent`
-* `specified`
+* [`specified`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
 
 ### ParentNode
 
-* `children` (A [`HTMLCollection`] of child [`Element`]s)
+* [`children`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children) (A [`HTMLCollection`] of child [`Element`]s)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Properties)
   * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
   * [`namedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
-* `childElementCount`
-* `firstElementChild`
-* `lastElementChild`
+* [`childElementCount`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.childElementCount)
+* [`firstElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.firstElementChild)
+* [`lastElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild)
 
 TODO
 ----
