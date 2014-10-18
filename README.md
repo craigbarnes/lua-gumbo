@@ -99,6 +99,8 @@ position in the original input text.
 
 ### Document
 
+Inherits from [`Node`]. Implements [`ParentNode`].
+
 * [x] **documentElement**
 * [x] **doctype**
    * [x] **name**
@@ -132,6 +134,9 @@ position in the original input text.
 * [x] [getElementById()](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 
 ### Element
+
+Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
+[`NonDocumentTypeChildNode`].
 
 * [x] **localName**
 * [x] **attributes** (A [`NamedNodeMap`] of [`Attr`]s)
@@ -170,6 +175,31 @@ position in the original input text.
 * [ ] getElementsByTagNameNS()
 * [ ] getElementsByClassName()
 * [ ] insertAdjacentHTML()
+
+### Text
+
+Inherits from [`CharacterData`].
+
+* [ ] wholeText
+* [ ] splitText()
+
+### Comment
+
+Inherits from [`CharacterData`].
+
+### CharacterData
+
+Inherits from [`Node`]. Implements [`ChildNode`] and
+[`NonDocumentTypeChildNode`].
+
+* [x] **data**
+* [x] length
+* [ ] substringData()
+* [ ] appendData()
+* [ ] insertData()
+* [ ] deleteData()
+* [ ] replaceData()
+
 
 ### Node
 
@@ -283,7 +313,10 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [`NamedNodeMap`]: https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap
 [`Attr`]: https://developer.mozilla.org/en-US/docs/Web/API/Attr
 [`Node`]: https://developer.mozilla.org/en-US/docs/Web/API/Node
+[`ParentNode`]: https://developer.mozilla.org/en-US/docs/Web/API/ParentNode
 [`ChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/ChildNode
+[`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
+[`CharacterData`]: https://developer.mozilla.org/en-US/docs/Web/API/CharacterData
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
