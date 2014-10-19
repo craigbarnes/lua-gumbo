@@ -65,8 +65,6 @@ git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg
 .git/hooks/%: test/git-hooks/%
 	install -m 755 $< $@
 
-dist: lua-gumbo-$(shell git rev-parse --verify --short master).tar.gz
-
 lua-gumbo-%.tar.gz lua-gumbo-%.zip: force
 	git archive --prefix=lua-gumbo-$*/ -o $@ $*
 
@@ -159,7 +157,7 @@ clean:
 	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec coverage.txt
 
 
-.PHONY: all install uninstall clean dist force git-hooks check
+.PHONY: all install uninstall clean force git-hooks check
 .PHONY: check-unit check-html5lib check-compat check-valgrind check-install
 .PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
 .PHONY: bench-parse bench-serialize
