@@ -75,10 +75,6 @@ gumbo-%-1.rockspec: rockspec.in | .git/refs/tags/%
 	@LUA_PATH=';;' luarocks lint $@
 	@echo 'Generated: $@'
 
-test/html5lib-tests/%:
-	git submodule init
-	git submodule update
-
 install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
@@ -116,7 +112,7 @@ check-unit: all
 	@$(call TEST, test/misc.lua)
 	@$(call TEST, test/dom/HTMLCollection-empty-name.lua)
 
-check-html5lib: all | test/html5lib-tests/tree-construction
+check-html5lib: all | test/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
 	@echo 'PASS: html5lib'
 
