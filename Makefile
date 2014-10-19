@@ -65,8 +65,14 @@ git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg
 .git/hooks/%: test/git-hooks/%
 	install -m 755 $< $@
 
-lua-gumbo-%.tar.gz lua-gumbo-%.zip: force
-	git archive --prefix=lua-gumbo-$*/ -o $@ $*
+dist: VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
+dist:
+	@$(MAKE) --no-print-directory lua-gumbo-$(VERSION).tar.gz
+	@$(MAKE) --no-print-directory gumbo-$(VERSION)-1.rockspec
+
+lua-gumbo-%.tar.gz lua-gumbo-%.zip:
+	@git archive --prefix=lua-gumbo-$*/ -o $@ $*
+	@echo 'Generated: $@'
 
 gumbo-%-1.rockspec: rockspec.in | .git/refs/tags/%
 	@sed 's/%VERSION%/$*/' $< > $@
@@ -157,7 +163,7 @@ clean:
 	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec coverage.txt
 
 
-.PHONY: all install uninstall clean force git-hooks check
+.PHONY: all install uninstall clean git-hooks dist check
 .PHONY: check-unit check-html5lib check-compat check-valgrind check-install
 .PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
 .PHONY: bench-parse bench-serialize
