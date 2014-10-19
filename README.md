@@ -107,6 +107,7 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 * `characterSet`
 * `contentType`
 * [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
+* [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementsByClassName)
 * [`createElement()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createElement)
 * [`createTextNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createTextNode)
 * [`createComment()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment)
@@ -138,6 +139,7 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 * [`removeAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.removeAttribute)
 * [`hasAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute)
 * [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName)
+* [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName)
 
 ### Text
 
@@ -209,7 +211,6 @@ TODO
 
 Implement:
 
-* `Document.getElementsByClassName()`
 * `Document.getElementsByTagNameNS()`
 * `Document.createElementNS()`
 * `Document.createDocumentFragment()`
@@ -228,7 +229,6 @@ Implement:
 * `Element.closest()`
 * `Element.matches()`
 * `Element.getElementsByTagNameNS()`
-* `Element.getElementsByClassName()`
 * `Element.insertAdjacentHTML()`
 * `Text.wholeText`
 * `Text.splitText()`

@@ -76,6 +76,38 @@ function Element:getElementsByTagName(localName)
     return setmetatable(collection, HTMLCollection)
 end
 
+function Element:getElementsByClassName(classNames)
+    assert(type(classNames) == "string")
+    local classes = {}
+    local collection = {}
+    local length = 0
+    do
+        local length = 0
+        for class in classNames:gmatch("%S+") do
+            length = length + 1
+            classes[length] = class
+        end
+        classes.length = length
+    end
+    for node in self:walk() do
+        if node.type == "element" then
+            local classList = node.classList
+            local matches = 0
+            for i, class in ipairs(classes) do
+                if classList[class] then
+                    matches = matches + 1
+                end
+            end
+            if matches == classes.length then
+                length = length + 1
+                collection[length] = node
+            end
+        end
+    end
+    collection.length = length
+    return setmetatable(collection, HTMLCollection)
+end
+
 function Element:getAttribute(name)
     if type(name) == "string" then
         -- If the context object is in the HTML namespace and its node document
@@ -172,6 +204,7 @@ function getters:classList()
         for s in class.value:gmatch "%S+" do
             length = length + 1
             list[length] = s
+            list[s] = length
         end
         list.length = length
         return list

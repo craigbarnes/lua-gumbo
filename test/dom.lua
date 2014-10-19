@@ -347,3 +347,26 @@ do
     assert(p.innerHTML == "a = 1 &lt;&lt; 4;")
     assert(p.outerHTML == '<p class="&amp;&quot;">a = 1 &lt;&lt; 4;</p>')
 end
+
+do
+    local input = [[
+        <div id="example">
+            <p id="p1" class="aaa bbb"/>
+            <p id="p2" class="aaa ccc"/>
+            <p id="p3" class="bbb ccc"/>
+        </div>
+    ]]
+    local document = assert(gumbo.parse(input))
+    local example = assert(document:getElementById('example'))
+    local aaa = assert(example:getElementsByClassName('aaa'))
+    local ccc_bbb = assert(example:getElementsByClassName('ccc bbb'))
+    local bbb_ccc = assert(example:getElementsByClassName('bbb ccc '))
+    assert(aaa.length == 2)
+    assert(aaa[1].id == "p1")
+    assert(aaa[2].id == "p2")
+    assert(ccc_bbb.length == 1)
+    assert(ccc_bbb[1].id == "p3")
+    assert(bbb_ccc.length == 1)
+    assert(bbb_ccc[1].id == "p3")
+    assert(example:getElementsByClassName('aaa,bbb').length == 0)
+end

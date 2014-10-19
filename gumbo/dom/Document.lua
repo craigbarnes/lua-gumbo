@@ -14,7 +14,8 @@ local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     contentType = "text/html",
     characterSet = "UTF-8",
     URL = "about:blank",
-    getElementsByTagName = Element.getElementsByTagName
+    getElementsByTagName = Element.getElementsByTagName,
+    getElementsByClassName = Element.getElementsByClassName
 })
 
 local getters = Document.getters or {}
