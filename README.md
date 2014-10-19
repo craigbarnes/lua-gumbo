@@ -56,8 +56,8 @@ The `gumbo` module provides two functions:
 
 `parse(html [, tab_stop])`
 
-Parses a string of UTF-8 encoded HTML and returns a `Document` node. The
-optional `tab_stop` parameter specifies the size to use for tab
+Parses a string of UTF-8 encoded HTML and returns a [`Document`] node.
+The optional `tab_stop` parameter specifies the size to use for tab
 characters when computing source positions (default: `8`).
 
 `parse_file(path_or_file [, tab_stop])`
@@ -73,7 +73,7 @@ See also: [find_links.lua] and [remove_by_id.lua].
 Output
 ------
 
-The `parse` and `parse_file` functions both return a `Document` node,
+The `parse` and `parse_file` functions both return a [`Document`] node,
 containing a tree of [descendant] nodes. The structure and API of this
 tree is *almost* a subset of the [DOM] Level 4 Core API, with the
 following (intentional) exceptions:
@@ -92,13 +92,9 @@ the [MDN DOM reference] should suffice for now.
 DOM API
 -------
 
-**Note:** When referring to external DOM documentation, don't forget to
-translate any JavaScript examples to use Lua's `object:method()` call
-syntax.
-
 ### Document
 
-Inherits from [`Node`](#node). Implements [`ParentNode`](#parentnode).
+Inherits from [`Node`]. Implements [`ParentNode`].
 
 * [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
 * [`doctype`](https://developer.mozilla.org/en-US/docs/Web/API/document.doctype)
@@ -118,8 +114,8 @@ Inherits from [`Node`](#node). Implements [`ParentNode`](#parentnode).
 
 ### Element
 
-Inherits from [`Node`](#node). Implements [`ParentNode`](#parentnode),
-[`ChildNode`] and [`NonDocumentTypeChildNode`].
+Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
+[`NonDocumentTypeChildNode`].
 
 * `localName`
 * [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes)
@@ -145,15 +141,15 @@ Inherits from [`Node`](#node). Implements [`ParentNode`](#parentnode),
 
 ### Text
 
-Inherits from [`CharacterData`](#characterdata).
+Inherits from [`CharacterData`].
 
 ### Comment
 
-Inherits from [`CharacterData`](#characterdata).
+Inherits from [`CharacterData`].
 
 ### CharacterData
 
-Inherits from [`Node`](#node). Implements [`ChildNode`] and
+Inherits from [`Node`]. Implements [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
 
 * [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
@@ -203,6 +199,10 @@ Inherits from [`Node`](#node). Implements [`ChildNode`] and
 * [`childElementCount`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.childElementCount)
 * [`firstElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.firstElementChild)
 * [`lastElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild)
+
+*Note:* When referring to external DOM documentation, don't forget to
+translate any JavaScript examples to use Lua's `object:method()` call
+syntax.
 
 TODO
 ----
@@ -257,20 +257,20 @@ Implement:
 * `ParentNode.querySelectorAll()`
 * `Attr.namespaceURI`
 * `Attr.ownerElement`
-* [`NamedNodeMap.getNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
-* [`NamedNodeMap.getNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
-* [`NamedNodeMap.setNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
-* [`NamedNodeMap.setNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
-* [`NamedNodeMap.removeNamedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
-* [`NamedNodeMap.removeNamedItemNS()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
+* `NamedNodeMap.getNamedItem()`
+* `NamedNodeMap.getNamedItemNS()`
+* `NamedNodeMap.setNamedItem()`
+* `NamedNodeMap.setNamedItemNS()`
+* `NamedNodeMap.removeNamedItem()`
+* `NamedNodeMap.removeNamedItemNS()`
 
 Not Implemented
 ---------------
 
 Many parts of the DOM have a suboptimal API due to the specification
-being closely aligned with JavaScript and it's many failings as a
-language. Some of the simpler APIs I just implemented anyway, flawed or
-not, but I had to draw the line at these. Lua can do so much better.
+being closely aligned with JavaScript and it's various flaws. Some of
+the flawed but relatively simple APIs I implemented anyway, but I had to
+draw the line at these:
 
 * [`Document.createNodeIterator()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.createNodeIterator)
 * [`Document.createTreeWalker()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.createTreeWalker)
@@ -315,13 +315,13 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
-[`Element`]: https://developer.mozilla.org/en-US/docs/Web/API/Node
-[`Attr`]: https://developer.mozilla.org/en-US/docs/Web/API/Attr
-[`Node`]: https://developer.mozilla.org/en-US/docs/Web/API/Node
-[`ParentNode`]: https://developer.mozilla.org/en-US/docs/Web/API/ParentNode
+[`Element`]: #element
+[`CharacterData`]: #characterdata
+[`Attr`]: #attr
+[`Node`]: #node
+[`ParentNode`]: #parentnode
 [`ChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/ChildNode
 [`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
-[`CharacterData`]: https://developer.mozilla.org/en-US/docs/Web/API/CharacterData
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
