@@ -58,6 +58,21 @@ function Node:walk()
     return wrap(function() iter(self) end)
 end
 
+function Node:reverseWalk()
+    local function iter(node)
+        local childNodes = node.childNodes
+        local length = #childNodes
+        if length > 0 then
+            for index = length, 1, -1 do
+                local child = childNodes[index]
+                yield(child)
+                iter(child)
+            end
+        end
+    end
+    return wrap(function() iter(self) end)
+end
+
 function Node:hasChildNodes()
     return self.childNodes[1] and true or false
 end
