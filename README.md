@@ -106,12 +106,12 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 * [`compatMode`](https://developer.mozilla.org/en-US/docs/Web/API/document.compatMode)
 * `characterSet`
 * `contentType`
+* [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 * [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
 * [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementsByClassName)
 * [`createElement()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createElement)
 * [`createTextNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createTextNode)
 * [`createComment()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment)
-* [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 
 ### `Element`
 
@@ -314,6 +314,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
+[`Document`]: #document
 [`Element`]: #element
 [`CharacterData`]: #characterdata
 [`Attr`]: #attr
