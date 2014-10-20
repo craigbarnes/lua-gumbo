@@ -2,8 +2,8 @@ local.mk
 *.so
 *.o
 lua-gumbo-*.tar.gz
-lua-gumbo-*.zip
 gumbo-*.rockspec
+gumbo-*.rock
 coverage.txt
 tags
 README.html

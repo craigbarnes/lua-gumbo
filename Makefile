@@ -70,7 +70,7 @@ dist:
 	@$(MAKE) --no-print-directory lua-gumbo-$(VERSION).tar.gz
 	@$(MAKE) --no-print-directory gumbo-$(VERSION)-1.rockspec
 
-lua-gumbo-%.tar.gz lua-gumbo-%.zip:
+lua-gumbo-%.tar.gz:
 	@git archive --prefix=lua-gumbo-$*/ -o $@ $*
 	@echo 'Generated: $@'
 
@@ -160,7 +160,7 @@ bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
-	      lua-gumbo-*.tar.gz lua-gumbo-*.zip gumbo-*.rockspec coverage.txt
+	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
 
 
 .PHONY: all install uninstall clean git-hooks dist check
