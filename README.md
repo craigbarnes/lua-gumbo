@@ -92,7 +92,7 @@ the [MDN DOM reference] should suffice for now.
 DOM API
 -------
 
-### Document
+### `Document`
 
 Inherits from [`Node`]. Implements [`ParentNode`].
 
@@ -113,7 +113,7 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 * [`createComment()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment)
 * [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 
-### Element
+### `Element`
 
 Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
@@ -141,15 +141,15 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 * [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName)
 * [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName)
 
-### Text
+### `Text`
 
 Inherits from [`CharacterData`].
 
-### Comment
+### `Comment`
 
 Inherits from [`CharacterData`].
 
-### CharacterData
+### `CharacterData`
 
 Inherits from [`Node`]. Implements [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
@@ -157,7 +157,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 
-### Node
+### `Node`
 
 * [`childNodes`](https://developer.mozilla.org/en-US/docs/Web/API/Node.childNodes)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Properties)
@@ -184,7 +184,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * [`contains()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains)
 * [`removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild)
 
-### Attr
+### `Attr`
 
 * [`name`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
 * [`value`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
@@ -192,7 +192,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * `localName`
 * [`specified`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
 
-### ParentNode
+### `ParentNode`
 
 * [`children`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children)
   * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Properties)
@@ -203,8 +203,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * [`lastElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild)
 
 *Note:* When referring to external DOM documentation, don't forget to
-translate any JavaScript examples to use Lua's `object:method()` call
-syntax.
+translate JavaScript examples to use Lua `object:method()` call syntax.
 
 TODO
 ----

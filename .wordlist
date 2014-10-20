@@ -6,6 +6,7 @@ config
 doctype
 DOM
 filename
+getter
 HTML5
 html5lib
 lua
@@ -19,7 +20,10 @@ MiB
 namespace
 namespaces
 serializers
+setter
+suboptimal
 SVG
+TODO
 TORTIOUS
 URI
 UTF
