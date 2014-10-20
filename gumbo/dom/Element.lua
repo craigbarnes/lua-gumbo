@@ -198,17 +198,17 @@ getters.nodeName = getters.tagName
 
 function getters:classList()
     local class = self.attributes.class
+    local list = {}
+    local length = 0
     if class then
-        local list = {}
-        local length = 0
         for s in class.value:gmatch "%S+" do
             length = length + 1
             list[length] = s
             list[s] = length
         end
-        list.length = length
-        return list
     end
+    list.length = length
+    return list
 end
 
 local void = Set {
