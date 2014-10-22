@@ -112,11 +112,11 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
 check-unit: all
-	@$(call TEST, test/dom.lua)
-	@$(call TEST, test/misc.lua)
+	@$(call TEST, test/dom/interfaces.lua)
 	@$(call TEST, test/dom/HTMLCollection-empty-name.lua)
 	@$(call TEST, test/dom/getElementsByClassName-01.lua)
 	@$(call TEST, test/dom/getElementsByClassName-02.lua)
+	@$(call TEST, test/misc.lua)
 
 check-html5lib: all | test/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
