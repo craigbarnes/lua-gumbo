@@ -31,7 +31,6 @@ function util.merge(...)
             end
         end
     end
-    t.__index = t
     return t
 end
 

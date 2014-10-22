@@ -15,30 +15,32 @@ local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     characterSet = "UTF-8",
     URL = "about:blank",
     getElementsByTagName = Element.getElementsByTagName,
-    getElementsByClassName = Element.getElementsByClassName
+    getElementsByClassName = Element.getElementsByClassName,
+    readonly = {
+        "characterSet", "compatMode", "contentType", "doctype",
+        "documentElement", "documentURI", "implementation", "origin", "URL"
+    }
 })
 
-local getters = Document.getters or {}
+local getters = Document.getters
+local readonly = Document.readonly
 
 function Document:__index(k)
-    if type(k) == "number" then
-        return self.childNodes[k]
-    end
     local field = Document[k]
     if field then
         return field
-    else
-        local getter = getters[k]
-        if getter then
-            return getter(self)
-        end
+    end
+    local getter = getters[k]
+    if getter then
+        return getter(self)
+    end
+    if type(k) == "number" then
+        return self.childNodes[k]
     end
 end
 
 function Document:__newindex(k, v)
-    -- TODO: Create a lookup table of all readonly fields and do a
-    --       single check against that.
-    if not getters[k] and not Document[k] then
+    if not readonly[k] and type(k) ~= "number" then
         rawset(self, k, v)
     end
 end
