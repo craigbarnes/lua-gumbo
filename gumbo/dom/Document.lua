@@ -1,6 +1,7 @@
 local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
+local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
 local namePattern = util.namePattern
 local type, rawset, ipairs, setmetatable = type, rawset, ipairs, setmetatable
@@ -16,7 +17,7 @@ local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     URL = "about:blank",
     getElementsByTagName = Element.getElementsByTagName,
     getElementsByClassName = Element.getElementsByClassName,
-    readonly = {
+    readonly = Set {
         "characterSet", "compatMode", "contentType", "doctype",
         "documentElement", "documentURI", "implementation", "origin", "URL"
     }

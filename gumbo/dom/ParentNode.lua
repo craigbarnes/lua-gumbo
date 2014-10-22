@@ -1,10 +1,17 @@
 local HTMLCollection = require "gumbo.dom.HTMLCollection"
+local Set = require "gumbo.Set"
 local ipairs, setmetatable = ipairs, setmetatable
 local _ENV = nil
-local getters = {}
-local ParentNode = {getters = getters}
 
-function getters:children()
+local ParentNode = {
+    getters = {},
+    readonly = Set {
+        "children", "firstElementChild", "lastElementChild",
+        "childElementCount"
+    }
+}
+
+function ParentNode.getters:children()
     if self:hasChildNodes() then
         local collection = {}
         local length = 0
@@ -19,7 +26,7 @@ function getters:children()
     end
 end
 
-function getters:childElementCount()
+function ParentNode.getters:childElementCount()
     local length = 0
     if self:hasChildNodes() then
         for i, node in ipairs(self.childNodes) do
@@ -31,7 +38,7 @@ function getters:childElementCount()
     return length
 end
 
-function getters:firstElementChild()
+function ParentNode.getters:firstElementChild()
     if self:hasChildNodes() then
         for i, node in ipairs(self.childNodes) do
             if node.type == "element" then
@@ -41,7 +48,7 @@ function getters:firstElementChild()
     end
 end
 
-function getters:lastElementChild()
+function ParentNode.getters:lastElementChild()
     if self:hasChildNodes() then
         local childNodes = self.childNodes
         for i = #childNodes, 1, -1 do
