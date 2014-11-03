@@ -116,6 +116,7 @@ check-unit: all
 	@$(call TEST, test/dom/HTMLCollection-empty-name.lua)
 	@$(call TEST, test/dom/getElementsByClassName-01.lua)
 	@$(call TEST, test/dom/getElementsByClassName-02.lua)
+	@$(call TEST, test/dom/Element-childElementCount.lua)
 	@$(call TEST, test/misc.lua)
 
 check-html5lib: all | test/tree-construction

@@ -29,13 +29,13 @@ local Node = {
     childNodes = {length = 0},
     getters = getters,
 
-    readonly = Set{
+    readonly = Set {
         "nodeType", "nodeName", "ownerDocument", "parentElement",
         "firstChild", "lastChild", "previousSibling", "nextSibling"
     }
 }
 
-local isTextOrComment = Set{
+local isTextOrComment = Set {
     Node.TEXT_NODE,
     Node.COMMENT_NODE
 }
