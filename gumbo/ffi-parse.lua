@@ -93,7 +93,7 @@ local function add_children(parent, children)
     end
 end
 
-local function create_document(node)
+local function create_document(node, rootIndex)
     local document = node.v.document
     local t = {
         quirksMode = quirksmap[tonumber(document.doc_type_quirks_mode)]
@@ -106,6 +106,7 @@ local function create_document(node)
         }
     end
     add_children(t, document.children)
+    t.documentElement = assert(t.childNodes[rootIndex])
     return setmetatable(t, Document)
 end
 
@@ -179,9 +180,8 @@ local function parse(input, tab_stop)
     local options = new("GumboOptions", C.kGumboDefaultOptions)
     options.tab_stop = tab_stop or 8
     local output = C.gumbo_parse_with_options(options, input, #input)
-    local document = create_document(output.document)
-    local rootIndex = tonumber(output.root.index_within_parent) + 1
-    document.documentElement = document.childNodes[rootIndex]
+    local rootIndex = assert(tonumber(output.root.index_within_parent))
+    local document = create_document(output.document, rootIndex + 1)
     C.gumbo_destroy_output(options, output)
     return document
 end
