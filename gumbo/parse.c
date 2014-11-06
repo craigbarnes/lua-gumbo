@@ -173,7 +173,7 @@ static int parse(lua_State *L) {
     size_t length;
     const char *input = luaL_checklstring(L, 1, &length);
     GumboOptions options = kGumboDefaultOptions;
-    options.tab_stop = luaL_optint(L, 2, 8);
+    options.tab_stop = (int) luaL_optinteger(L, 2, 8);
     GumboOutput *output = gumbo_parse_with_options(&options, input, length);
     if (output) {
         const GumboDocument *document = &output->document->v.document;
