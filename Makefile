@@ -129,6 +129,7 @@ check-valgrind: check-unit
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=luajit CC=gcc LUA_PC=luajit
+	$(MAKE) -sB check LUA='luajit -joff' CC=gcc LUA_PC=luajit
 	$(MAKE) -sB check LUA=lua CC=clang
 
 check-install: DESTDIR = TMP

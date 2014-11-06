@@ -1,6 +1,6 @@
 local parse
 
-if jit then
+if jit and jit.status() then
     local have_ffi, ffi = pcall(require, "ffi")
     if have_ffi then
         parse = require "gumbo.ffi-parse"
