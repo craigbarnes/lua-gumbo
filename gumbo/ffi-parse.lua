@@ -35,7 +35,7 @@ local w3 = "http://www.w3.org/"
 local tagnsmap = LookupTable{w3.."2000/svg", w3.."1998/Math/MathML"}
 local attrnsmap = LookupTable{"xlink", "xml", "xmlns"}
 local quirksmap = LookupTable{[0] = "no-quirks", "quirks", "limited-quirks"}
-local create_node
+local constructors
 
 local function get_attributes(attrs)
     local length = attrs.length
@@ -85,9 +85,11 @@ local function add_children(parent, children)
     if length > 0 then
         local childNodes = createtable(length, 0)
         for i = 0, length - 1 do
-            local node = create_node(cast("GumboNode*", children.data[i]))
-            node.parentNode = parent
-            childNodes[i+1] = node
+            local node = cast("GumboNode*", children.data[i])
+            local construct = constructors[tonumber(node.type)]
+            local t = construct(node)
+            t.parentNode = parent
+            childNodes[i+1] = t
         end
         parent.childNodes = setmetatable(childNodes, NodeList)
     end
@@ -145,17 +147,13 @@ local function create_comment(node)
     return setmetatable(n, Comment)
 end
 
-local typemap = LookupTable {
+constructors = LookupTable {
     create_element,
     create_text,
     create_cdata,
     create_comment,
     create_whitespace,
 }
-
-create_node = function(node)
-    return typemap[tonumber(node.type)](node)
-end
 
 local function parse(input, tab_stop)
     assert(type(input) == "string")
