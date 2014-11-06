@@ -186,7 +186,7 @@ end
 -- TODO: function Element:isEqualNode(node) end
 
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
-function getters:tagName()
+function Element.getters:tagName()
     if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
         return self.localName:upper()
     else
@@ -194,9 +194,9 @@ function getters:tagName()
     end
 end
 
-getters.nodeName = getters.tagName
+Element.getters.nodeName = Element.getters.tagName
 
-function getters:classList()
+function Element.getters:classList()
     local class = self.attributes.class
     local list = {}
     local length = 0
@@ -232,11 +232,11 @@ local boolattr = Set {
     "typemustmatch"
 }
 
-function getters:isRaw()
+function Element.getters:isRaw()
     return raw[self.localName]
 end
 
-function getters:isVoid()
+function Element.getters:isVoid()
     return void[self.localName]
 end
 
@@ -265,7 +265,7 @@ local function serialize(node, buf)
     end
 end
 
-function getters:innerHTML()
+function Element.getters:innerHTML()
     local buffer = Buffer()
     for i, node in ipairs(self.childNodes) do
         serialize(node, buffer)
@@ -273,13 +273,13 @@ function getters:innerHTML()
     return buffer:tostring()
 end
 
-function getters:outerHTML()
+function Element.getters:outerHTML()
     local buffer = Buffer()
     serialize(self, buffer)
     return buffer:tostring()
 end
 
-function getters:tagHTML()
+function Element.getters:tagHTML()
     local buffer = Buffer()
     buffer:write("<", self.localName)
     for i, attr in ipairs(self.attributes) do
@@ -302,12 +302,12 @@ local NYI = function() assert(false, "Not yet implemented") end
 setters.innerHTML = NYI
 setters.outerHTML = NYI
 
-function getters:id()
+function Element.getters:id()
     local id = self.attributes.id
     return id and id.value
 end
 
-function getters:className()
+function Element.getters:className()
     local class = self.attributes.class
     return class and class.value
 end

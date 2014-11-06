@@ -2,7 +2,6 @@ local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tremove, assert = table.remove, assert
 local _ENV = nil
-local getters = {}
 
 local Node = {
     ELEMENT_NODE = 1,
@@ -27,13 +26,15 @@ local Node = {
     -- TODO: function Node:compareDocumentPosition(other)
 
     childNodes = {length = 0},
-    getters = getters,
+    getters = {},
 
     readonly = Set {
         "nodeType", "nodeName", "ownerDocument", "parentElement",
         "firstChild", "lastChild", "previousSibling", "nextSibling"
     }
 }
+
+--local getters = {}
 
 local isTextOrComment = Set {
     Node.TEXT_NODE,
@@ -108,7 +109,7 @@ function Node:contains(other)
     return false
 end
 
-function getters:ownerDocument()
+function Node.getters:ownerDocument()
     if self.type == "document" then
         return nil
     end
@@ -121,23 +122,23 @@ function getters:ownerDocument()
     end
 end
 
-function getters:parentElement()
+function Node.getters:parentElement()
     local parentNode = self.parentNode
     if parentNode and parentNode.type == "element" then
         return parentNode
     end
 end
 
-function getters:firstChild()
+function Node.getters:firstChild()
     return self.childNodes[1]
 end
 
-function getters:lastChild()
+function Node.getters:lastChild()
     local cnodes = self.childNodes
     return cnodes[#cnodes]
 end
 
-function getters:previousSibling()
+function Node.getters:previousSibling()
     local parentNode = self.parentNode
     if parentNode then
         local siblings = parentNode.childNodes
@@ -149,7 +150,7 @@ function getters:previousSibling()
     end
 end
 
-function getters:nextSibling()
+function Node.getters:nextSibling()
     local parentNode = self.parentNode
     if parentNode then
         local siblings = parentNode.childNodes
@@ -162,7 +163,7 @@ function getters:nextSibling()
 end
 
 -- TODO: implement setter
-function getters:nodeValue()
+function Node.getters:nodeValue()
     if isTextOrComment[self.nodeType] then
         return self.data
     end

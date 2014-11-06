@@ -8,7 +8,7 @@ local Text = util.merge("CharacterData", {
     nodeType = 3
 })
 
-local getters = Text.getters or {}
+local getters = Text.getters
 
 function Text:__index(k)
     local field = Text[k]
@@ -48,7 +48,7 @@ local escmap = {
     [">"] = "&gt;",
 }
 
-function getters:escapedData()
+function Text.getters:escapedData()
     return (self.data:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
 end
 

@@ -8,7 +8,7 @@ local Comment = util.merge("CharacterData", {
     nodeType = 8
 })
 
-local getters = Comment.getters or {}
+local getters = Comment.getters
 
 function Comment:__index(k)
     local field = Comment[k]

@@ -1,9 +1,11 @@
 local _ENV = nil
-local getters = {}
 
 local Attr = {
-    specified = true
+    specified = true,
+    getters = {}
 }
+
+local getters = Attr.getters
 
 function Attr:__index(k)
     local field = Attr[k]
@@ -17,11 +19,11 @@ function Attr:__index(k)
     end
 end
 
-function getters:localName()
+function Attr.getters:localName()
     return self.name
 end
 
-function getters:textContent()
+function Attr.getters:textContent()
     return self.value
 end
 
@@ -30,7 +32,7 @@ local escmap = {
     ['"'] = "&quot;"
 }
 
-function getters:escapedValue()
+function Attr.getters:escapedValue()
     return (self.value:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
 end
 

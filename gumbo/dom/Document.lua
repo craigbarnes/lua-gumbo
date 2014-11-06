@@ -59,7 +59,7 @@ function Document:createComment(data)
     return setmetatable({data = data}, Comment)
 end
 
-function getters:body()
+function Document.getters:body()
     for i, node in ipairs(self.documentElement.childNodes) do
         if node.type == "element" and node.localName == "body" then
             return node
@@ -67,7 +67,7 @@ function getters:body()
     end
 end
 
-function getters:head()
+function Document.getters:head()
     for i, node in ipairs(self.documentElement.childNodes) do
         if node.type == "element" and node.localName == "head" then
             return node
@@ -75,11 +75,11 @@ function getters:head()
     end
 end
 
-function getters:documentURI()
+function Document.getters:documentURI()
     return self.URL
 end
 
-function getters:compatMode()
+function Document.getters:compatMode()
     if self.quirksMode == "quirks" then
         return "BackCompat"
     else
