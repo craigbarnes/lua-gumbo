@@ -1,6 +1,6 @@
 local gumbo = require "gumbo"
 local parse, parse_file = gumbo.parse, gumbo.parse_file
-local assert, type, open = assert, type, io.open
+local assert, type, open, pcall = assert, type, io.open, pcall
 local load = loadstring or load
 local _ENV = nil
 
@@ -53,6 +53,11 @@ do -- Make sure deeply nested elements don't cause a stack overflow
     local document = assert(parse(input), "stack check failed")
     assert(document.body[1][1][1][1][1][1][1][1][1][1][1].localName == "div")
     assert(document.body.innerHTML == input .. ("</div>"):rep(n))
+end
+
+do -- Make sure maximum tree depth limit is enforced
+    local input = ("<div>"):rep(801)
+    assert(not pcall(parse, input))
 end
 
 do -- Check that parse_file works the same with a filename as with a file
