@@ -61,7 +61,7 @@ local function to_html(node, buffer, indent_width)
         end
     end
     serialize(node, 0)
-    if buf ~= buffer then
+    if buf.tostring then
         return buf:tostring()
     end
 end
