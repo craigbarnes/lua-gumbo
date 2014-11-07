@@ -16,10 +16,13 @@
 */
 
 #include <stddef.h>
+#include <stdint.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <gumbo.h>
 #include "compat.h"
+
+typedef uint_fast16_t uint16;
 
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
@@ -110,15 +113,16 @@ static void create_text_node(lua_State *L, const GumboText *t, enum upval i) {
 }
 
 // Forward declaration, to allow mutual recursion with add_children()
-static void push_node(lua_State *L, const GumboNode *node);
+static void push_node(lua_State *L, const GumboNode *node, uint16 depth);
 
-static void add_children(lua_State *L, const GumboVector *children) {
-    const unsigned int length = children->length;
+static void add_children(lua_State *L, const GumboVector *vec, uint16 depth) {
+    const unsigned int length = vec->length;
     if (length > 0) {
+        if (depth >= 800) luaL_error(L, "Tree depth limit of 800 exceeded");
         lua_createtable(L, length, 0);
         setmetatable(L, NodeList);
         for (unsigned int i = 0; i < length; i++) {
-            push_node(L, (const GumboNode *)children->data[i]);
+            push_node(L, (const GumboNode *)vec->data[i], depth + 1);
 
             // child.parentNode = parent
             lua_pushliteral(L, "parentNode");
@@ -132,8 +136,8 @@ static void add_children(lua_State *L, const GumboVector *children) {
     }
 }
 
-static void push_node(lua_State *L, const GumboNode *node) {
-    luaL_checkstack(L, 10, "element nesting too deep");
+static void push_node(lua_State *L, const GumboNode *node, uint16 depth) {
+    luaL_checkstack(L, 10, "Unable to allocate Lua stack space");
     switch (node->type) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
@@ -144,7 +148,7 @@ static void push_node(lua_State *L, const GumboNode *node) {
             add_integer(L, "parseFlags", node->parse_flags);
         }
         add_attributes(L, &element->attributes);
-        add_children(L, &element->children);
+        add_children(L, &element->children, depth);
         setmetatable(L, Element);
         return;
     }
@@ -187,7 +191,7 @@ static int parse(lua_State *L) {
             add_string(L, "systemId", document->system_identifier);
             lua_rawset(L, -3);
         }
-        add_children(L, &document->children);
+        add_children(L, &document->children, 0);
 
         // document.documentElement = document.childNodes[root_index]
         const size_t root_index = output->root->index_within_parent + 1;
