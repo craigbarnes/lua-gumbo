@@ -123,9 +123,6 @@ check-html5lib: all | test/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
 	@echo 'PASS: html5lib'
 
-check-valgrind: LUA = valgrind -q --leak-check=full --error-exitcode=1 lua
-check-valgrind: check-unit
-
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=luajit CC=gcc LUA_PC=luajit
@@ -169,7 +166,7 @@ clean:
 
 
 .PHONY: all install uninstall clean git-hooks dist check
-.PHONY: check-unit check-html5lib check-compat check-valgrind check-install
+.PHONY: check-unit check-html5lib check-compat check-install
 .PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
 .PHONY: bench-parse bench-serialize
 .DELETE_ON_ERROR:
