@@ -80,14 +80,15 @@ local function get_tag_name(element)
     end
 end
 
-local function add_children(parent, children)
+local function add_children(parent, children, depth)
     local length = children.length
     if length > 0 then
+        assert(depth < 800, "Tree depth limit of 800 exceeded")
         local childNodes = createtable(length, 0)
         for i = 0, length - 1 do
             local node = cast("GumboNode*", children.data[i])
             local construct = constructors[tonumber(node.type)]
-            local t = construct(node)
+            local t = construct(node, depth + 1)
             t.parentNode = parent
             childNodes[i+1] = t
         end
@@ -95,7 +96,7 @@ local function add_children(parent, children)
     end
 end
 
-local function create_element(node)
+local function create_element(node, depth)
     local element = node.v.element
     local t = {
         localName = get_tag_name(element),
@@ -111,7 +112,7 @@ local function create_element(node)
     if parseFlags ~= 0 then
         t.parseFlags = parseFlags
     end
-    add_children(t, element.children)
+    add_children(t, element.children, depth)
     return setmetatable(t, Element)
 end
 
@@ -173,7 +174,7 @@ local function parse(input, tab_stop)
             systemId = cstring(document.system_identifier)
         }
     end
-    add_children(t, document.children)
+    add_children(t, document.children, 0)
     t.documentElement = assert(t.childNodes[rootIndex])
     C.gumbo_destroy_output(options, output)
     return setmetatable(t, Document)
