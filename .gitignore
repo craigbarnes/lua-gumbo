@@ -7,5 +7,4 @@ gumbo-*.rock
 coverage.txt
 tags
 README.html
-gh.css
 test/data/*MiB.html

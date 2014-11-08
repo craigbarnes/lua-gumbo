@@ -37,10 +37,7 @@ gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
 
-gh.css:
-	curl -o $@ https://raw.githubusercontent.com/craigbarnes/showdown/89a861cdea62331e8c3187a294f300818a005d09/gh.css
-
-README.html: README.md template.html gh.css
+README.html: README.md template.html
 	discount-theme -t template.html -o $@ $<
 
 test/data/1MiB.html: test/data/4KiB.html
