@@ -13,7 +13,7 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
     type = "element",
     nodeType = 1,
     namespaceURI = "http://www.w3.org/1999/xhtml",
-    attributes = {length = 0},
+    attributes = setmetatable({length = 0}, NamedNodeMap),
     readonly = Set{"tagName", "classList"}
 })
 

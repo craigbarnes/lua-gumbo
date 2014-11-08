@@ -1,6 +1,7 @@
+local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
-local tremove, assert = table.remove, assert
+local tremove, assert, setmetatable = table.remove, assert, setmetatable
 local _ENV = nil
 
 local Node = {
@@ -25,10 +26,9 @@ local Node = {
     DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20,
     -- TODO: function Node:compareDocumentPosition(other)
 
-    childNodes = {length = 0},
+    childNodes = setmetatable({length = 0}, NodeList),
     getters = {},
     setters = {},
-
     readonly = Set {
         "nodeType", "nodeName", "ownerDocument", "parentElement",
         "firstChild", "lastChild", "previousSibling", "nextSibling"
