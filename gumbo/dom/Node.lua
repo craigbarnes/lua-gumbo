@@ -34,8 +34,6 @@ local Node = {
     }
 }
 
---local getters = {}
-
 local isTextOrComment = Set {
     Node.TEXT_NODE,
     Node.COMMENT_NODE
@@ -167,6 +165,18 @@ function Node.getters:nodeValue()
     if isTextOrComment[self.nodeType] then
         return self.data
     end
+end
+
+local function hasbit(flags, bit)
+  return (flags and flags % (bit * 2) >= bit) and true or false
+end
+
+function Node.getters:insertedByParser()
+    return hasbit(self.parseFlags, 1)
+end
+
+function Node.getters:implicitEndTag()
+    return hasbit(self.parseFlags, 2)
 end
 
 return Node
