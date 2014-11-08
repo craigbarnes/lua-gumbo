@@ -1,5 +1,5 @@
 local type, select, pairs, require = type, select, pairs, require
-local assert = assert
+local assert, rawset = assert, rawset
 local _ENV = nil
 
 local util = {
@@ -32,6 +32,34 @@ function util.merge(...)
         end
     end
     return t
+end
+
+function util.indexFactory(t)
+    local getters = assert(t.getters)
+    return function(self, k)
+        local field = t[k]
+        if field then
+            return field
+        else
+            local getter = getters[k]
+            if getter then
+                return getter(self)
+            end
+        end
+    end
+end
+
+function util.newindexFactory(t)
+    local setters = assert(t.setters)
+    local readonly = assert(t.readonly)
+    return function(self, k, v)
+        local setter = setters[k]
+        if setter then
+            setter(self, v)
+        elseif not readonly[k] then
+            rawset(self, k, v)
+        end
+    end
 end
 
 return util

@@ -12,15 +12,15 @@ do
     -- Check that document structure is as expected
     assert(document.childNodes.length == 3)
     assert(#document.childNodes == 3)
-    assert(html == document[3])
-    assert(document[1].data == "one")
-    assert(document[2].data == "two")
+    assert(html == document.childNodes[3])
+    assert(document.childNodes[1].data == "one")
+    assert(document.childNodes[2].data == "two")
     assert(html.innerHTML == "<head></head><body><h1>Hi</h1></body>")
 
     -- Check that tab_stop parameter is used
-    assert(document[1].line == 1)
-    assert(document[1].column == 32)
-    assert(document[1].offset == 2)
+    assert(document.childNodes[1].line == 1)
+    assert(document.childNodes[1].column == 32)
+    assert(document.childNodes[1].offset == 2)
 
     -- Check that adding new fields isn't prevented by __newindex metamethods
     assert(document.nonExistantField == nil)
@@ -51,7 +51,7 @@ do -- Make sure deeply nested elements don't cause a stack overflow
     local n = 500
     local input = ("<div>"):rep(n)
     local document = assert(parse(input), "stack check failed")
-    assert(document.body[1][1][1][1][1][1][1][1][1][1][1].localName == "div")
+    assert(document.body.childNodes[1].childNodes[1].localName == "div")
     assert(document.body.innerHTML == input .. ("</div>"):rep(n))
 end
 

@@ -8,7 +8,6 @@ local namePattern = util.namePattern
 local type, ipairs, assert = type, ipairs, assert
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
 local _ENV = nil
-local setters = {}
 
 local Element = util.merge("Node", "ChildNode", "ParentNode", {
     type = "element",
@@ -18,31 +17,8 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
     readonly = Set{"tagName", "classList"}
 })
 
-local getters = Element.getters
-local readonly = Element.readonly
-
-function Element:__index(k)
-    local field = Element[k]
-    if field then
-        return field
-    end
-    local getter = getters[k]
-    if getter then
-        return getter(self)
-    end
-    if type(k) == "number" then
-        return self.childNodes[k]
-    end
-end
-
-function Element:__newindex(k, v)
-    local setter = setters[k]
-    if setter then
-        setter(self, v)
-    elseif not readonly[k] and type(k) ~= "number" then
-        rawset(self, k, v)
-    end
-end
+Element.__index = util.indexFactory(Element)
+Element.__newindex = util.newindexFactory(Element)
 
 function Element:getElementsByTagName(localName)
     assert(type(localName) == "string")
@@ -299,8 +275,8 @@ end
 
 -- TODO:
 local NYI = function() assert(false, "Not yet implemented") end
-setters.innerHTML = NYI
-setters.outerHTML = NYI
+Element.setters.innerHTML = NYI
+Element.setters.outerHTML = NYI
 
 function Element.getters:id()
     local id = self.attributes.id
@@ -312,11 +288,11 @@ function Element.getters:className()
     return class and class.value
 end
 
-function setters:id(value)
+function Element.setters:id(value)
     self:setAttribute("id", value)
 end
 
-function setters:className(value)
+function Element.setters:className(value)
     self:setAttribute("class", value)
 end
 

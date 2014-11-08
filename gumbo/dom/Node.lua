@@ -27,6 +27,7 @@ local Node = {
 
     childNodes = {length = 0},
     getters = {},
+    setters = {},
 
     readonly = Set {
         "nodeType", "nodeName", "ownerDocument", "parentElement",

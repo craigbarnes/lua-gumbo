@@ -4,8 +4,8 @@ local Comment = require "gumbo.dom.Comment"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
 local namePattern = util.namePattern
-local type, rawset, ipairs, setmetatable = type, rawset, ipairs, setmetatable
-local assert = assert
+local rawset, ipairs, assert = rawset, ipairs, assert
+local setmetatable = setmetatable
 local _ENV = nil
 
 local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
@@ -23,28 +23,8 @@ local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     }
 })
 
-local getters = Document.getters
-local readonly = Document.readonly
-
-function Document:__index(k)
-    local field = Document[k]
-    if field then
-        return field
-    end
-    local getter = getters[k]
-    if getter then
-        return getter(self)
-    end
-    if type(k) == "number" then
-        return self.childNodes[k]
-    end
-end
-
-function Document:__newindex(k, v)
-    if not readonly[k] and type(k) ~= "number" then
-        rawset(self, k, v)
-    end
-end
+Document.__index = util.indexFactory(Document)
+Document.__newindex = util.newindexFactory(Document)
 
 function Document:createElement(localName)
     assert(localName:find(namePattern), "InvalidCharacterError")

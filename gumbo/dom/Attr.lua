@@ -1,3 +1,4 @@
+local util = require "gumbo.dom.util"
 local _ENV = nil
 
 local Attr = {
@@ -5,19 +6,7 @@ local Attr = {
     getters = {}
 }
 
-local getters = Attr.getters
-
-function Attr:__index(k)
-    local field = Attr[k]
-    if field then
-        return field
-    else
-        local getter = getters[k]
-        if getter then
-            return getter(self)
-        end
-    end
-end
+Attr.__index = util.indexFactory(Attr)
 
 function Attr.getters:localName()
     return self.name
