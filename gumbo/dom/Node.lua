@@ -169,7 +169,7 @@ function Node.getters:nodeValue()
 end
 
 local function hasbit(flags, bit)
-  return (flags and flags % (bit * 2) >= bit) and true or false
+    return (flags and flags % (bit * 2) >= bit) and true or false
 end
 
 function Node.getters:insertedByParser()
