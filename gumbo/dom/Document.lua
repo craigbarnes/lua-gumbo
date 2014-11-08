@@ -87,4 +87,8 @@ function Document.getters:compatMode()
     end
 end
 
-return Document
+local constructor = {
+    __call = function() return setmetatable({}, Document) end
+}
+
+return setmetatable(Document, constructor)

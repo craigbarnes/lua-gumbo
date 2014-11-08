@@ -1,4 +1,5 @@
 local gumbo = require "gumbo"
+local Document = require "gumbo.dom.Document"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local assert, rep, pcall = assert, string.rep, pcall
@@ -68,6 +69,7 @@ assert(document:createComment("........"):isEqualNode(comment) == false)
 assert(document:createTextNode("Title "):isEqualNode(text) == true)
 assert(document:createTextNode("......"):isEqualNode(text) == false)
 
+assert(Document().nodeName == "#document")
 assert(Text("xyz..").data == "xyz..")
 assert(Comment(" etc ").data == " etc ")
 assert(Comment("comment "):isEqualNode(comment) == true)
