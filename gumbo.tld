@@ -1,14 +1,16 @@
 -- typedlua description file for the gumbo module
 
+interface DocumentType
+    name: string -- The root element name.
+    publicId: string -- The public identifier.
+    systemId: string -- The system identifier.
+end
+
 interface Document
     type: string -- Always has a value of "document" for Document nodes.
     quirksMode: string -- "quirks", "no-quirks" or "limited-quirks".
     documentElement: Element -- The root <html> element.
-    doctype: { -- Fields parsed from the doctype declaration, if present.
-        "name": string, -- The root element name.
-        "publicId": string, -- The public identifier.
-        "systemId": string -- The system identifier.
-    }?
+    doctype: DocumentType?
     childNodes: {Element|Comment}
 end
 
