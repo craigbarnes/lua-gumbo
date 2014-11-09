@@ -1,4 +1,6 @@
 local util = require "gumbo.dom.util"
+local Text = require "gumbo.dom.Text"
+local constructor = assert(getmetatable(Text))
 local setmetatable = setmetatable
 local _ENV = nil
 
@@ -9,10 +11,6 @@ local Comment = util.merge("CharacterData", {
 })
 
 Comment.__index = util.indexFactory(Comment)
-
-function Comment:new(data)
-    return setmetatable({data = data}, Comment)
-end
 
 function Comment:cloneNode()
     return setmetatable({data = self.data}, Comment)
@@ -30,4 +28,4 @@ function Comment:isEqualNode(node)
     end
 end
 
-return setmetatable(Comment, {__call = Comment.new})
+return setmetatable(Comment, constructor)

@@ -1,5 +1,5 @@
 local util = require "gumbo.dom.util"
-local setmetatable = setmetatable
+local type, assert, setmetatable = type, assert, setmetatable
 local _ENV = nil
 
 local Text = util.merge("CharacterData", {
@@ -9,10 +9,6 @@ local Text = util.merge("CharacterData", {
 })
 
 Text.__index = util.indexFactory(Text)
-
-function Text:new(data)
-    return setmetatable({data = data}, Text)
-end
 
 function Text:cloneNode()
     return setmetatable({data = self.data}, Text)
@@ -40,4 +36,11 @@ function Text.getters:escapedData()
     return (self.data:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
 end
 
-return setmetatable(Text, {__call = Text.new})
+local constructor = {
+    __call = function(self, data)
+        assert(data == nil or type(data) == "string", "Invalid argument type")
+        return setmetatable({data = data}, self)
+    end
+}
+
+return setmetatable(Text, constructor)
