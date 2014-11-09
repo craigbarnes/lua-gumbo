@@ -14,19 +14,26 @@ interface Document
     childNodes: {Element|Comment}
 end
 
+interface Attr
+    name: string -- The attribute name (case-normalized).
+    value: string -- The attribute value.
+    prefix: string? -- "xlink", "xml", "xmlns" or nil.
+    localName: string
+    textContent: string -- An alias of the value field.
+    specified: boolean -- Historical baggage from the DOM spec; always true.
+    line: number?
+    column: number?
+    offset: number?
+end
+
 interface Element
     type: string -- Always has a value of "element" for Element nodes.
     localName: string -- The tag name, normalized to lower case.
     namespaceURI: string?
-    attributes: { -- Ordered list of attributes.
-        {
-            "name": string, -- The attribute name, normalized to lower case.
-            "value": string, -- The attribute value.
-            "prefix": string?, -- "xlink", "xml", "xmlns" or nil.
-            "line": number?,
-            "column": number?,
-            "offset": number?
-        }?
+    attributes: { -- NamedNodeMap
+        "length": number,
+        "item": (number) -> (Attr?),
+        number: Attr?
     }
     childNodes: {Element|Text|Comment}
     line: number?
