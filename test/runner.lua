@@ -11,8 +11,9 @@ local format, clock, sort, exit = string.format, os.clock, table.sort, os.exit
 local filenames = {...}
 local verbose = os.getenv "VERBOSE"
 local quiet = os.getenv "QUIET"
-local hrule = string.rep("=", 76)
 local _ENV = nil
+local hrule = ("="):rep(76)
+local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
 local total_passed, total_failed, total_skipped = 0, 0, 0
 local start = clock()
 
@@ -27,7 +28,8 @@ local function serialize(document)
     local buf = Buffer()
     local indent = Indent(2)
     local function write_node(node, depth)
-        if node.type == "element" then
+        local type = node.nodeType
+        if type == ELEMENT_NODE then
             local i1, i2 = indent[depth], indent[depth+1]
             local namespace = nsmap[node.namespaceURI] or ""
             buf:write("| ", i1, "<", namespace, node.localName, ">\n")
@@ -66,9 +68,9 @@ local function serialize(document)
                     write_node(children[i], depth + 1)
                 end
             end
-        elseif node.type == "text" or node.type == "whitespace" then
+        elseif type == TEXT_NODE then
             buf:write("| ", indent[depth], '"', node.data, '"\n')
-        elseif node.type == "comment" then
+        elseif type == COMMENT_NODE then
             buf:write("| ", indent[depth], "<!-- ", node.data, " -->\n")
         end
     end
