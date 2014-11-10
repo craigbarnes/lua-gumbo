@@ -202,6 +202,10 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * [`firstElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.firstElementChild)
 * [`lastElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild)
 
+### `ChildNode`
+
+* [`remove()`](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode.remove)
+
 *Note:* When referring to external DOM documentation, don't forget to
 translate JavaScript examples to use Lua `object:method()` call syntax.
 
@@ -254,6 +258,9 @@ Implement:
 * `ParentNode.queryAll()`
 * `ParentNode.querySelector()`
 * `ParentNode.querySelectorAll()`
+* `ChildNode.before()`
+* `ChildNode.after()`
+* `ChildNode.replace()`
 * `Attr.namespaceURI`
 * `Attr.ownerElement`
 * `NamedNodeMap.getNamedItem()`
@@ -320,7 +327,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [`Attr`]: #attr
 [`Node`]: #node
 [`ParentNode`]: #parentnode
-[`ChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/ChildNode
+[`ChildNode`]: #childnode
 [`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
