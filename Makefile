@@ -37,7 +37,7 @@ amalg: CFLAGS := -g -O2 -Wall
 amalg: libgumbo/ gumbo/parse.so
 
 libgumbo/:
-	test -d $@ || git clone git://github.com/google/gumbo-parser.git $@
+	@test -d $@ || git clone git://github.com/google/gumbo-parser.git $@
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@
@@ -171,8 +171,10 @@ clean:
 	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
 
 
-.PHONY: all amalg install uninstall clean git-hooks dist check
-.PHONY: check-unit check-html5lib check-compat check-install
-.PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
-.PHONY: bench-parse bench-serialize
+.PHONY: \
+    all amalg install uninstall clean git-hooks dist check \
+    check-unit check-html5lib check-compat check-install \
+    check-spelling check-serialize check-serialize-ns check-serialize-t1 \
+    bench-parse bench-serialize
+
 .DELETE_ON_ERROR:
