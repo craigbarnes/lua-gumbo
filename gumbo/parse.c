@@ -19,8 +19,13 @@
 #include <stdint.h>
 #include <lua.h>
 #include <lauxlib.h>
-#include <gumbo.h>
 #include "compat.h"
+
+#ifdef AMALGAMATE
+# include "amalg.h"
+#else
+# include <gumbo.h>
+#endif
 
 typedef uint_fast16_t uint16;
 

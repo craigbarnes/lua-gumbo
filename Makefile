@@ -29,7 +29,15 @@ SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
 
 all: gumbo/parse.so
-gumbo/parse.o: gumbo/parse.c gumbo/compat.h
+gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
+
+amalg: XCFLAGS := -std=c99 -fpic -DAMALGAMATE -Ilibgumbo/src
+amalg: XLDFLAGS :=
+amalg: CFLAGS := -g -O2 -Wall
+amalg: libgumbo/ gumbo/parse.so
+
+libgumbo/:
+	test -d $@ || git clone git://github.com/google/gumbo-parser.git libgumbo
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@
@@ -124,6 +132,7 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=luajit CC=gcc LUA_PC=luajit
 	$(MAKE) -sB check LUA='luajit -joff' CC=gcc LUA_PC=luajit
+	$(MAKE) -sB amalg check
 	$(MAKE) -sB check LUA=lua CC=clang
 
 check-install: DESTDIR = TMP
@@ -162,7 +171,7 @@ clean:
 	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
 
 
-.PHONY: all install uninstall clean git-hooks dist check
+.PHONY: all amalg install uninstall clean git-hooks dist check
 .PHONY: check-unit check-html5lib check-compat check-install
 .PHONY: check-spelling check-serialize check-serialize-ns check-serialize-t1
 .PHONY: bench-parse bench-serialize
