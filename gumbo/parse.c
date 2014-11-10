@@ -31,7 +31,17 @@ typedef uint_fast16_t uint16;
 
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
-enum upval {Text=1, Comment, Element, Attr, Document, NodeList, NamedNodeMap};
+
+typedef enum {
+    Text = 1,
+    Comment,
+    Element,
+    Attr,
+    Document,
+    DocumentType,
+    NodeList,
+    NamedNodeMap
+} Upvalue;
 
 #define add_field(T, L, k, v) ( \
     lua_pushliteral(L, k), \
@@ -43,7 +53,7 @@ enum upval {Text=1, Comment, Element, Attr, Document, NodeList, NamedNodeMap};
 #define add_string(L, k, v) add_field(string, L, k, v)
 #define add_integer(L, k, v) add_field(integer, L, k, v)
 
-static inline void setmetatable(lua_State *L, enum upval index) {
+static inline void setmetatable(lua_State *L, Upvalue index) {
     lua_pushvalue(L, lua_upvalueindex(index));
     lua_setmetatable(L, -2);
 }
@@ -110,7 +120,7 @@ static void add_tag(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "localName");
 }
 
-static void create_text_node(lua_State *L, const GumboText *t, enum upval i) {
+static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
     lua_createtable(L, 0, 5);
     add_string(L, "data", t->text);
     add_position(L, t->start_pos);
@@ -194,6 +204,7 @@ static int parse(lua_State *L) {
             add_string(L, "name", document->name);
             add_string(L, "publicId", document->public_identifier);
             add_string(L, "systemId", document->system_identifier);
+            setmetatable(L, DocumentType);
             lua_rawset(L, -3);
         }
         add_children(L, &document->children, 0);
@@ -230,8 +241,9 @@ int luaopen_gumbo_parse(lua_State *L) {
     require(L, "gumbo.dom.Element");
     require(L, "gumbo.dom.Attr");
     require(L, "gumbo.dom.Document");
+    require(L, "gumbo.dom.DocumentType");
     require(L, "gumbo.dom.NodeList");
     require(L, "gumbo.dom.NamedNodeMap");
-    lua_pushcclosure(L, parse, 7);
+    lua_pushcclosure(L, parse, 8);
     return 1;
 }

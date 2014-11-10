@@ -8,7 +8,7 @@ local util = {
 }
 
 function util.merge(...)
-    local t = {}
+    local t = {getters={}}
     for i = 1, select("#", ...) do
         local arg = select(i, ...)
         local argtype = type(arg)

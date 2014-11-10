@@ -346,6 +346,16 @@ assert(html.parentNode == nil)
 do
     local document = assert(gumbo.parse("<!doctype html><p>no-quirks!</p>"))
     assert(document.compatMode == "CSS1Compat")
+    local doctype = assert(document.doctype)
+    assert(doctype.nodeType == document.DOCUMENT_TYPE_NODE)
+    assert(doctype.nodeName == doctype.name)
+    assert(doctype.name == "html")
+    assert(doctype.publicId == "")
+    assert(doctype.systemId == "")
+    doctype.publicId = nil
+    assert(doctype.publicId == "")
+    doctype.systemId = nil
+    assert(doctype.systemId == "")
 end
 
 do

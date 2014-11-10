@@ -18,6 +18,7 @@
 local ffi = require "ffi"
 local C = require "gumbo.ffi-cdef"
 local Document = require "gumbo.dom.Document"
+local DocumentType = require "gumbo.dom.DocumentType"
 local Element = require "gumbo.dom.Element"
 local Attr = require "gumbo.dom.Attr"
 local Text = require "gumbo.dom.Text"
@@ -168,11 +169,12 @@ local function parse(input, tab_stop)
         quirksMode = quirksmap[tonumber(document.doc_type_quirks_mode)]
     }
     if document.has_doctype then
-        t.doctype = {
+        local doctype = {
             name = cstring(document.name),
             publicId = cstring(document.public_identifier),
             systemId = cstring(document.system_identifier)
         }
+        t.doctype = setmetatable(doctype, DocumentType)
     end
     add_children(t, document.children, 0)
     t.documentElement = assert(t.childNodes[rootIndex])

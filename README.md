@@ -97,10 +97,7 @@ DOM API
 Inherits from [`Node`]. Implements [`ParentNode`].
 
 * [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
-* [`doctype`](https://developer.mozilla.org/en-US/docs/Web/API/document.doctype)
-   * [`name`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentType#Properties)
-   * [`publicId`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentType#Properties)
-   * [`systemId`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentType#Properties)
+* [`doctype`](#documenttype)
 * `URL`
 * `documentURI`
 * [`compatMode`](https://developer.mozilla.org/en-US/docs/Web/API/document.compatMode)
@@ -183,6 +180,14 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * [`hasChildNodes()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.hasChildNodes)
 * [`contains()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains)
 * [`removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild)
+
+### `DocumentType`
+
+Inherits from [`Node`]. Implements [`ChildNode`].
+
+* `name`
+* `publicId`
+* `systemId`
 
 ### `Attr`
 
