@@ -37,7 +37,7 @@ amalg: CFLAGS := -g -O2 -Wall
 amalg: libgumbo/ gumbo/parse.so
 
 libgumbo/:
-	test -d $@ || git clone git://github.com/google/gumbo-parser.git libgumbo
+	test -d $@ || git clone git://github.com/google/gumbo-parser.git $@
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@
