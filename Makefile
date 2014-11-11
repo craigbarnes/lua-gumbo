@@ -21,8 +21,8 @@ SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
 TEST          = $(LUA) $(1) && echo 'PASS:$(1)'
 BENCHFILE    ?= test/data/2MiB.html
 
-DOM_IFACES    = Attr CharacterData ChildNode Comment Document Element \
-                HTMLCollection NamedNodeMap Node NodeList \
+DOM_IFACES    = Attr CharacterData ChildNode Comment Document DocumentType \
+                Element HTMLCollection NamedNodeMap Node NodeList \
                 NonElementParentNode ParentNode Text
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, util $(DOM_IFACES)))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
