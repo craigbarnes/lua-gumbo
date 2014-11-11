@@ -12,6 +12,10 @@ local Comment = util.merge("CharacterData", {
 
 Comment.__index = util.indexFactory(Comment)
 
+function Comment:__tostring()
+    return "<!--" .. self.data .. "-->"
+end
+
 function Comment:cloneNode()
     return setmetatable({data = self.data}, Comment)
 end

@@ -124,6 +124,7 @@ check-unit: all
 	@$(call TEST, test/dom/Element-childElementCount.lua)
 	@$(call TEST, test/dom/Comment-constructor.lua)
 	@$(call TEST, test/misc.lua)
+	@$(call TEST, test/tostring.lua)
 
 check-html5lib: all | test/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
@@ -133,7 +134,6 @@ check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
 	$(MAKE) -sB check LUA=luajit CC=gcc LUA_PC=luajit
 	$(MAKE) -sB check LUA='luajit -joff' CC=gcc LUA_PC=luajit
-	$(MAKE) -sB amalg check
 	$(MAKE) -sB check LUA=lua CC=clang
 
 check-install: DESTDIR = TMP

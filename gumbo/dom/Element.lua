@@ -20,6 +20,10 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
 Element.__index = util.indexFactory(Element)
 Element.__newindex = util.newindexFactory(Element)
 
+function Element:__tostring()
+    return self.tagHTML
+end
+
 function Element:getElementsByTagName(localName)
     assert(type(localName) == "string")
     local collection = {}
