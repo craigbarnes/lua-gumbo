@@ -10,6 +10,10 @@ local Text = util.merge("CharacterData", {
 
 Text.__index = util.indexFactory(Text)
 
+function Text:__tostring()
+    return '#text "' .. self.data .. '"'
+end
+
 function Text:cloneNode()
     return setmetatable({data = self.data}, Text)
 end

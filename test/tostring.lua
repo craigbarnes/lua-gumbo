@@ -3,7 +3,8 @@ local tostring, assert = tostring, assert
 local _ENV = nil
 
 local input = [[
-<!-- comment -->
+<!-- comment node -->
+text node
 <div id=div1 class=block>text</div>
 <div id=div2 class='"quotes" & amps'>text</div>
 ]]
@@ -37,10 +38,20 @@ do -- Element:__tostring() with attributes containing special characters
     assert(div2 ~= expected)
 end
 
+do -- Text:__tostring()
+    local text = assert(document.body.childNodes[1])
+    local expected = '#text "text node\n"'
+    assert(text.type == "text")
+    assert(text.data == "text node\n")
+    assert(tostring(text) == expected)
+    assert(text ~= expected)
+end
+
 do -- Comment:__tostring()
     local comment = assert(document.childNodes[1])
-    local expected = "<!-- comment -->"
+    local expected = "<!-- comment node -->"
     assert(comment.type == "comment")
+    assert(comment.data == " comment node ")
     assert(tostring(comment) == expected)
     assert(comment ~= expected)
 end
