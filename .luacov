@@ -6,8 +6,7 @@ return {
     include = {},
     exclude = {
         "luacov",
-        "test/coverage",
-        "test/misc",
-        "test/dom"
+        "test/",
+        "runtests"
     }
 }

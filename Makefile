@@ -148,9 +148,8 @@ check-spelling: README.md
 
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
-              $(DOM_MODULES) test/coverage.lua test/misc.lua \
-              test/dom/interfaces.lua
-	@$(LUA) test/coverage.lua
+              $(DOM_MODULES) test/misc.lua test/dom/interfaces.lua runtests.lua
+	@$(LUA) -lluacov runtests.lua >/dev/null
 
 bench-parse: all test/bench.lua $(BENCHFILE)
 	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
