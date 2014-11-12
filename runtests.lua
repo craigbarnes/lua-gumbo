@@ -1,7 +1,11 @@
-local write, format, ipairs = io.write, string.format, ipairs
-local loadfile, pcall, exit = loadfile, pcall, os.exit
+local write, ipairs, loadfile = io.write, ipairs, loadfile
+local pcall, exit = pcall, os.exit
+local yield, wrap = coroutine.yield, coroutine.wrap
 local _ENV = nil
-local boldred, green, bold, reset = "\27[1;31m", "\27[32m", "\27[1m", "\27[0m"
+local colorize = function(text, color) return color .. text .. "\27[0m" end
+local green = function(s) return colorize(s, "\27[32m") end
+local boldred = function(s) return colorize(s, "\27[1;31m") end
+local bold = function(s) return colorize(s, "\27[1m") end
 local passed, failed = 0, 0
 
 local tests = {
@@ -15,41 +19,41 @@ local tests = {
     "test/tostring.lua",
 }
 
-local function printf(...)
-    write(format(...), "\n")
-end
-
-local function pass(filename)
-    printf(" %sPASSED%s  %s", green, reset, filename)
-end
-
-local function fail(errmsg)
-    printf(" %sFAILED%s  %s", boldred, reset, errmsg)
+local function run(tests)
+    local function iterate()
+        for i, filename in ipairs(tests) do
+            local loaded, load_error = loadfile(filename, "t")
+            if loaded then
+                local ok, run_error = pcall(loaded)
+                if ok then
+                    yield(true, filename)
+                else
+                    yield(false, filename, run_error)
+                end
+            else
+                yield(false, filename, load_error)
+            end
+        end
+    end
+    return wrap(function() iterate() end)
 end
 
 write("\n")
 
-for i, filename in ipairs(tests) do
-    local loaded, load_error = loadfile(filename, "t")
-    if loaded then
-        local ok, run_error = pcall(loaded)
-        if ok then
-            passed = passed + 1
-            pass(filename)
-        else
-            failed = failed + 1
-            fail(run_error)
-        end
+for ok, filename, err in run(tests) do
+    if ok then
+        passed = passed + 1
+        write(" ", green "PASSED", "  ", filename, "\n")
     else
         failed = failed + 1
-        fail(load_error)
+        write(" ", boldred "FAILED", "  ", err, "\n")
     end
 end
 
-printf("\n %sPassed:%s %d", bold, reset, passed)
+write("\n ", bold "Passed:", " ", passed, "\n")
 
 if failed > 0 then
-    printf(" %sFailed:%s %s%d%s\n", bold, reset, boldred, failed, reset)
+    write(" ", bold "Failed:", " ", boldred(failed), "\n\n")
     exit(1)
 else
     write "\n"
