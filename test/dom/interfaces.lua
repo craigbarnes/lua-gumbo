@@ -2,7 +2,7 @@ local gumbo = require "gumbo"
 local Document = require "gumbo.dom.Document"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
-local assert, rep, pcall = assert, string.rep, pcall
+local assert, pcall = assert, pcall
 local _ENV = nil
 
 local input = [[
@@ -38,8 +38,12 @@ assert(document:getElementsByTagName("div")[1] == main)
 assert(document:getElementsByTagName("*").length == 11)
 assert(document:getElementsByTagName("").length == 0)
 assert(body:getElementsByTagName("h1")[1] == heading)
-local tendivs = assert(gumbo.parse(rep("<div>", 10)))
-assert(tendivs:getElementsByTagName("div").length == 10)
+
+do
+    local tendivs = assert(("<div>"):rep(10))
+    local document = assert(gumbo.parse(tendivs))
+    assert(document:getElementsByTagName("div").length == 10)
+end
 
 assert(document.nodeName == "#document")
 assert(#document.childNodes == 1)
