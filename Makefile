@@ -18,7 +18,6 @@ RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) test/htmlfmt.lua
 MDFILTER      = sed 's/`[^`]*`//g;/^    [^*]/d;/^\[/d; s/\[[A-Za-z0-9_.-]*\]//g'
 SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
-TEST          = $(LUA) $(1) && echo 'PASS:$(1)'
 BENCHFILE    ?= test/data/2MiB.html
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document DocumentType \
@@ -116,15 +115,8 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | diff -u2 test/data/$*.out.html -
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
-check-unit: all
-	@$(call TEST, test/dom/interfaces.lua)
-	@$(call TEST, test/dom/HTMLCollection-empty-name.lua)
-	@$(call TEST, test/dom/getElementsByClassName-01.lua)
-	@$(call TEST, test/dom/getElementsByClassName-02.lua)
-	@$(call TEST, test/dom/Element-childElementCount.lua)
-	@$(call TEST, test/dom/Comment-constructor.lua)
-	@$(call TEST, test/misc.lua)
-	@$(call TEST, test/tostring.lua)
+check-unit: all runtests.lua
+	@$(LUA) runtests.lua
 
 check-html5lib: all | test/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
