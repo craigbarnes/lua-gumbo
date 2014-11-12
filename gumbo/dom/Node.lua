@@ -77,6 +77,10 @@ function Node:hasChildNodes()
     return self.childNodes[1] and true or false
 end
 
+-- TODO: function Node:insertBefore(node, child)
+-- TODO: function Node:appendChild(node)
+-- TODO: function Node:replaceChild(node, child)
+
 function Node:removeChild(child)
     assert(child.parentNode == self, "NotFoundError")
     local childNodes = self.childNodes
@@ -161,12 +165,13 @@ function Node.getters:nextSibling()
     end
 end
 
--- TODO: implement setter
 function Node.getters:nodeValue()
     if isTextOrComment[self.nodeType] then
         return self.data
     end
 end
+
+-- TODO: function Node.setters:nodeValue(value)
 
 local function hasbit(flags, bit)
     return (flags and flags % (bit * 2) >= bit) and true or false

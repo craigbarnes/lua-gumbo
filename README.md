@@ -249,9 +249,6 @@ Implement:
 * `Node.lookupPrefix()`
 * `Node.lookupNamespaceURI()`
 * `Node.isDefaultNamespace()`
-* `Node.insertBefore()`
-* `Node.appendChild()`
-* `Node.replaceChild()`
 * `CharacterData.substringData()`
 * `CharacterData.appendData()`
 * `CharacterData.insertData()`
