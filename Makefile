@@ -17,6 +17,7 @@ TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) test/htmlfmt.lua
 MDFILTER      = sed 's/`[^`]*`//g;/^    [^*]/d;/^\[/d; s/\[[A-Za-z0-9_.-]*\]//g'
+PRINTVAR     = printf '\e[1m%-14s\e[0m= %s\n' '$(1)' '$(strip $($(1)))'
 SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
 BENCHFILE    ?= test/data/2MiB.html
 
@@ -158,13 +159,25 @@ bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 	@echo 'Parsing and serializing $(BENCHFILE) to html...'
 	@$(TIME) $(LUA) test/htmlfmt.lua $(BENCHFILE) /dev/null
 
+env:
+	@$(call PRINTVAR,CFLAGS)
+	@$(call PRINTVAR,LDFLAGS)
+	@$(call PRINTVAR,GUMBO_CFLAGS)
+	@$(call PRINTVAR,GUMBO_LDFLAGS)
+	@$(call PRINTVAR,GUMBO_LDLIBS)
+	@$(call PRINTVAR,LUA_PC)
+	@$(call PRINTVAR,LUA_CFLAGS)
+	@$(call PRINTVAR,LUA_LMOD_DIR)
+	@$(call PRINTVAR,LUA_CMOD_DIR)
+	@$(call PRINTVAR,LUA)
+
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
 	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
 
 
 .PHONY: \
-    all amalg install uninstall clean git-hooks dist check \
+    all amalg install uninstall clean git-hooks dist check env \
     check-unit check-html5lib check-compat check-install \
     check-spelling check-serialize check-serialize-ns check-serialize-t1 \
     bench-parse bench-serialize
