@@ -3,6 +3,7 @@ local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
+local Buffer = require "gumbo.Buffer"
 local namePattern = util.namePattern
 local rawset, ipairs, assert = rawset, ipairs, assert
 local setmetatable = setmetatable
@@ -53,6 +54,24 @@ function Document.getters:head()
             return node
         end
     end
+end
+
+function Document.getters:title()
+	local title_element -- The title element of a document is the first title element in the document (in tree order), if there is one, or null otherwise.
+	for node in self.documentElement:walk() do
+		if node.type == "element" and node.localName == "title" then
+			-- Otherwise, let value be a concatenation of the data of all the child Text nodes of the title element, in tree order
+			local buffer = Buffer()
+			for i, node in ipairs(node.childNodes) do
+				if node.type == "text" then
+					buffer:write(node.data)
+				end
+			end
+			return buffer:tostring()
+		end
+	end
+	-- or the empty string if the title element is null.
+	return ""
 end
 
 function Document.getters:documentURI()
