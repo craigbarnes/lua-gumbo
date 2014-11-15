@@ -109,6 +109,8 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 * [`createElement()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createElement)
 * [`createTextNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createTextNode)
 * [`createComment()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment)
+* [`head`](https://developer.mozilla.org/en-US/docs/Web/API/Document.head)
+* [`body`](https://developer.mozilla.org/en-US/docs/Web/API/Document.body)
 
 ### `Element`
 
