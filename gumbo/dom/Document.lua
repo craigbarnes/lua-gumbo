@@ -1,4 +1,6 @@
 local Element = require "gumbo.dom.Element"
+local NodeList = require "gumbo.dom.NodeList"
+local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local Set = require "gumbo.Set"
@@ -28,7 +30,11 @@ Document.__newindex = util.newindexFactory(Document)
 
 function Document:createElement(localName)
     assert(localName:find(namePattern), "InvalidCharacterError")
-    return setmetatable({localName = localName:lower()}, Element)
+    return setmetatable({
+      childNodes = setmetatable({}, NodeList),
+      attributes = setmetatable({}, NamedNodeMap),
+      localName = localName:lower()
+    }, Element)
 end
 
 function Document:createTextNode(data)
