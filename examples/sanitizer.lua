@@ -45,8 +45,9 @@ for node in body:reverseWalk() do
                 local attr = attributes[i].name
                 if not attribute_whitelist[attr]
                 and not (tag == "div" and div_attribute_whitelist[attr])
-                -- TODO: Check href/src URI scheme
+                -- TODO: Accept only http:, https:, mailto: and relative URLs
                 and not (tag == "a" and attr == "href")
+                -- TODO: Accept only http:, https: and relative URLs
                 and not (tag == "img" and attr == "src")
                 then
                     node:removeAttribute(attr)
