@@ -26,7 +26,7 @@ local Node = {
     DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20,
     -- TODO: function Node:compareDocumentPosition(other)
 
-    childNodes = setmetatable({length = 0}, NodeList),
+    childNodes = setmetatable({}, NodeList),
     getters = {},
     setters = {},
     readonly = Set {
