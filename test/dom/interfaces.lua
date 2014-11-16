@@ -1,7 +1,10 @@
 local gumbo = require "gumbo"
-local Document = require "gumbo.dom.Document"
-local Text = require "gumbo.dom.Text"
-local Comment = require "gumbo.dom.Comment"
+local Document = assert(require "gumbo.dom.Document")
+local Text = assert(require "gumbo.dom.Text")
+local Comment = assert(require "gumbo.dom.Comment")
+local Element = assert(require "gumbo.dom.Element")
+local NodeList = assert(require "gumbo.dom.NodeList")
+local NamedNodeMap = assert(require "gumbo.dom.NamedNodeMap")
 local assert, pcall = assert, pcall
 local _ENV = nil
 
@@ -64,6 +67,7 @@ assert(document.nodeValue == nil)
 document.nodeName = "this-is-readonly"
 assert(document.nodeName == "#document")
 
+
 assert(document:createElement("p").localName == "p")
 assert(pcall(document.createElement, document, "Inv@lidName") == false)
 assert(document:createTextNode("xyz..").data == "xyz..")
@@ -90,6 +94,10 @@ assert(not pcall(Text, 100))
 assert(not pcall(Comment, 100))
 
 local newelem = assert(document:createElement("div"))
+assert(newelem.childNodes ~= Element.childNodes)
+assert(getmetatable(newelem.childNodes) == NodeList)
+assert(newelem.attributes ~= Element.attributes)
+assert(getmetatable(newelem.attributes) == NamedNodeMap)
 assert(newelem.localName == "div")
 assert(newelem.namespaceURI == "http://www.w3.org/1999/xhtml")
 assert(newelem.attributes.length == 0)
