@@ -124,7 +124,7 @@ check-unit: all runtests.lua
 	@$(LUA) runtests.lua
 
 check-html5lib: all
-	@$(LUA) test/runner.lua
+	@$(LUA) test/tree-construction.lua
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
