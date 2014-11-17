@@ -19,6 +19,6 @@ b">
 
 local document = assert(gumbo.parse(input))
 local elements = assert(document:getElementsByClassName("a\n"))
-assert(elements.length == 2)
+assert(elements.length == 2, elements.length)
 assert(elements[1] == document.documentElement)
 assert(elements[2] == document.body)
