@@ -1,4 +1,6 @@
 -- Test runner for the html5lib tree-construction test suite.
+-- Runs quiet by default to avoid clobbering test runner output.
+-- Run with VERBOSE=1 in the environment for full output.
 
 local gumbo = require "gumbo"
 local Buffer = require "gumbo.Buffer"
@@ -7,7 +9,6 @@ local parse = gumbo.parse
 local open, write, ipairs, assert = io.open, io.write, ipairs, assert
 local format, clock, sort, exit = string.format, os.clock, table.sort, os.exit
 local verbose = os.getenv "VERBOSE"
-local quiet = os.getenv "QUIET"
 local _ENV = nil
 local hrule = ("="):rep(76)
 local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
@@ -188,7 +189,7 @@ for _, filename in ipairs(filenames) do
     total_skipped = total_skipped + skipped
 end
 
-if not quiet or total_failed > 0 then
+if verbose or total_failed > 0 then
     write(
         "\nRan ", total_passed + total_failed + total_skipped, " tests in ",
         format("%.2fs", clock() - start), "\n\n",

@@ -108,8 +108,7 @@ uninstall:
 export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
-check: export QUIET = yes
-check: check-unit check-html5lib check-serialize
+check: check-unit check-serialize
 	@echo
 
 check-serialize: check-serialize-ns check-serialize-t1
@@ -123,6 +122,7 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 check-unit: all runtests.lua
 	@$(LUA) runtests.lua
 
+check-html5lib: export VERBOSE = 1
 check-html5lib: all
 	@$(LUA) test/tree-construction.lua
 
