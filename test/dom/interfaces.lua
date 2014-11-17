@@ -429,3 +429,30 @@ do
     assert(parent.innerHTML == '<a class="a class name"></a>')
     assert(parent.outerHTML == '<div id="parent"><a class="a class name"></a></div>')
 end
+
+do
+    local input = [[<div id=parent><div id=oldchild></div></div>]]
+    local document = assert(gumbo.parse(input))
+    local parent = assert(document:getElementById('parent'))
+    local child = assert(document:getElementById('oldchild'))
+    assert(#(parent.childNodes) == 1)
+    assert(parent.childNodes.length == 1)
+    child:remove()
+    assert(#(parent.childNodes) == 0)
+    assert(parent.childNodes.length == 0)
+
+    local child = assert(document:createElement('a'))
+    child.className = 'a class name'
+    assert(child.className == 'a class name')
+    parent:appendChild(child)
+    assert(Element)
+    assert(NodeList)
+    assert(Element.childNodes)
+    assert(parent.childNodes ~= Element.childNodes)
+    assert(getmetatable(parent.childNodes) == NodeList)
+    assert(#(parent.childNodes) == 1)
+    assert(parent.childNodes[1] == child)
+    assert(parent.childNodes.length == 1)
+    assert(parent.innerHTML == '<a class="a class name"></a>')
+    assert(parent.outerHTML == '<div id="parent"><a class="a class name"></a></div>')
+end
