@@ -1,7 +1,7 @@
 local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
-local tremove, assert, setmetatable = table.remove, assert, setmetatable
+local tremove, tinsert, assert, setmetatable = table.remove, table.insert, assert, setmetatable
 local _ENV = nil
 
 local Node = {
@@ -26,12 +26,12 @@ local Node = {
     DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20,
     -- TODO: function Node:compareDocumentPosition(other)
 
-    childNodes = setmetatable({}, NodeList),
     getters = {},
     setters = {},
     readonly = Set {
         "nodeType", "nodeName", "ownerDocument", "parentElement",
-        "firstChild", "lastChild", "previousSibling", "nextSibling"
+        "firstChild", "lastChild", "previousSibling", "nextSibling",
+        "childNodes"
     }
 }
 
@@ -44,8 +44,8 @@ function Node:walk()
     local level = 0
     local function iter(node)
         local childNodes = node.childNodes
-        local length = #childNodes
-        if length > 0 then
+        local length = childNodes and #childNodes
+        if length and length > 0 then
             level = level + 1
             for index = 1, length do
                 local child = childNodes[index]
@@ -74,12 +74,24 @@ function Node:reverseWalk()
 end
 
 function Node:hasChildNodes()
-    return self.childNodes[1] and true or false
+    return rawget(self, 'childNodes') and self.childNodes[1] and true or false
 end
 
 -- TODO: function Node:insertBefore(node, child)
--- TODO: function Node:appendChild(node)
 -- TODO: function Node:replaceChild(node, child)
+
+function Node:appendChild(child)
+    -- TODO check same document restriction
+    assert(child, "NoArgumentError")
+    assert(self ~= child, "SelfReferenceError")
+    local oldParent = child.parentNode
+    if oldParent then
+        child = oldParent:removeChild(child)
+    end
+    assert(child, "RemoveChildError")
+    local childNodes = self.childNodes
+    table.insert(childNodes, child)
+end
 
 function Node:removeChild(child)
     assert(child.parentNode == self, "NotFoundError")
@@ -132,13 +144,23 @@ function Node.getters:parentElement()
     end
 end
 
+function Node.getters:childNodes()
+    local cnodes = rawget(self, 'childNodes')
+    if not cnodes then
+        cnodes = set
+        cnodes = setmetatable({}, assert(NodeList))
+        rawset(self, 'childNodes', cnodes)
+    end
+    return cnodes
+end
+
 function Node.getters:firstChild()
-    return self.childNodes[1]
+    return self.childNodes and self.childNodes[1]
 end
 
 function Node.getters:lastChild()
     local cnodes = self.childNodes
-    return cnodes[#cnodes]
+    return cnodes and cnodes[#cnodes]
 end
 
 function Node.getters:previousSibling()
