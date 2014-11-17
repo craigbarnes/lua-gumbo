@@ -15,6 +15,7 @@ local tests = {
     "test/dom/getElementsByClassName-02.lua",
     "test/dom/Element-childElementCount.lua",
     "test/dom/Comment-constructor.lua",
+    "test/dom/walk.lua",
     "test/misc.lua",
     "test/tostring.lua",
     "test/tree-construction.lua",
