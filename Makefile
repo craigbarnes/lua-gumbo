@@ -123,9 +123,8 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 check-unit: all runtests.lua
 	@$(LUA) runtests.lua
 
-check-html5lib: all | test/tree-construction
-	@$(LUA) test/runner.lua $|/*.dat
-	@printf ' \33[32mPASSED\33[0m  make $@\n'
+check-html5lib: all
+	@$(LUA) test/runner.lua
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc

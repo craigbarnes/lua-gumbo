@@ -17,6 +17,7 @@ local tests = {
     "test/dom/Comment-constructor.lua",
     "test/misc.lua",
     "test/tostring.lua",
+    "test/runner.lua",
 }
 
 local function run(tests)
