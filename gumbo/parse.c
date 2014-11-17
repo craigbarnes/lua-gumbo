@@ -196,7 +196,7 @@ static int parse(lua_State *L) {
     GumboOutput *output = gumbo_parse_with_options(&options, input, length);
     if (output) {
         const GumboDocument *document = &output->document->v.document;
-        lua_createtable(L, 0, 4);
+        lua_createtable(L, 0, 5);
         add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
             lua_pushliteral(L, "doctype");
@@ -208,6 +208,11 @@ static int parse(lua_State *L) {
             lua_rawset(L, -3);
         }
         add_children(L, &document->children, 0);
+
+        lua_pushliteral(L, "attributes");
+        lua_createtable(L, 0, 0);
+        setmetatable(L, Attr);
+        lua_rawset(L, -3);
 
         // document.documentElement = document.childNodes[root_index]
         const size_t root_index = output->root->index_within_parent + 1;
