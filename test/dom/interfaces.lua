@@ -4,6 +4,7 @@ local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local Element = require "gumbo.dom.Element"
 local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
+local NodeList = require "gumbo.dom.NodeList"
 local assert, pcall = assert, pcall
 local _ENV = nil
 
@@ -417,10 +418,11 @@ do
     child.className = 'a class name'
     assert(child.className == 'a class name')
     parent:appendChild(child)
-		assert(Element)
-		assert(Element.childNodes)
-		assert(parent.childNodes ~= Element.childNodes)
-		assert(getmetatable(parent.childNodes) == NodeList)
+    assert(Element)
+    assert(NodeList)
+    assert(Element.childNodes)
+    assert(parent.childNodes ~= Element.childNodes)
+    assert(getmetatable(parent.childNodes) == NodeList)
     assert(#(parent.childNodes) == 1)
     assert(parent.childNodes[1] == child)
     assert(parent.childNodes.length == 1)
