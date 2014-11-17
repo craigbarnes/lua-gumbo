@@ -13,7 +13,6 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
     type = "element",
     nodeType = 1,
     namespaceURI = "http://www.w3.org/1999/xhtml",
-    attributes = setmetatable({}, NamedNodeMap),
     readonly = Set{"tagName", "classList"}
 })
 
@@ -89,6 +88,8 @@ function Element:getElementsByClassName(classNames)
 end
 
 function Element:getAttribute(name)
+    assert(self ~= Element, "InstanceError")
+    assert(self.attributes ~= Element.attributes, "InstancePropertyError")
     if type(name) == "string" then
         -- If the context object is in the HTML namespace and its node document
         -- is an HTML document, let name be converted to ASCII lowercase.
@@ -106,6 +107,8 @@ end
 
 function Element:setAttribute(name, value)
     assert(name:find(namePattern), "InvalidCharacterError")
+    assert(self ~= Element, "InstanceError")
+    assert(self.attributes ~= Element.attributes, "InstancePropertyError")
     local attributes = self.attributes
     if attributes == Element.attributes then
         local attr = setmetatable({name = name, value = value}, Attr)
@@ -177,17 +180,23 @@ end
 Element.getters.nodeName = Element.getters.tagName
 
 function Element.getters:classList()
-    local class = self.attributes.class
+    assert(self ~= Element, "InstanceError")
     local list = {}
     local length = 0
-    if class then
-        for s in class.value:gmatch "%S+" do
-            length = length + 1
-            list[length] = s
-            list[s] = length
+
+    local attributes = self.attributes
+    if attributes then
+        assert(attributes ~= Element.attributes, "InstancePropertyError" .. tostring(self))
+        local class = self.attributes.class
+        if class then
+            for s in class.value:gmatch "%S+" do
+                length = length + 1
+                list[length] = s
+                list[s] = length
+            end
         end
+        list.length = length
     end
-    list.length = length
     return list
 end
 
@@ -227,8 +236,10 @@ local function serialize(node, buf)
         buf:write(node.tagHTML)
         if not void[tag] then
             local children = node.childNodes
-            for i = 1, #children do
-                serialize(children[i], buf)
+            if children then
+                for i = 1, #children do
+                    serialize(children[i], buf)
+                end
             end
             buf:write("</", tag, ">")
         end
@@ -262,15 +273,18 @@ end
 function Element.getters:tagHTML()
     local buffer = Buffer()
     buffer:write("<", self.localName)
-    for i, attr in ipairs(self.attributes) do
-        local ns, name, val = attr.prefix, attr.name, attr.value
-        if ns and not (ns == "xmlns" and name == "xmlns") then
-            buffer:write(" ", ns, ":", name)
-        else
-            buffer:write(" ", name)
-        end
-        if not boolattr[name] or not (val == "" or val == name) then
-            buffer:write('="', attr.escapedValue, '"')
+    local attributes = self.attributes
+    if attributes then
+        for i, attr in ipairs(self.attributes) do
+            local ns, name, val = attr.prefix, attr.name, attr.value
+            if ns and not (ns == "xmlns" and name == "xmlns") then
+                buffer:write(" ", ns, ":", name)
+            else
+                buffer:write(" ", name)
+            end
+            if not boolattr[name] or not (val == "" or val == name) then
+                buffer:write('="', attr.escapedValue, '"')
+            end
         end
     end
     buffer:write(">")
@@ -288,6 +302,7 @@ function Element.getters:id()
 end
 
 function Element.getters:className()
+    assert(self.attributes ~= Element.attributes)
     local class = self.attributes.class
     return class and class.value
 end
@@ -297,6 +312,7 @@ function Element.setters:id(value)
 end
 
 function Element.setters:className(value)
+    assert(self.attributes ~= Element.attributes)
     self:setAttribute("class", value)
 end
 
