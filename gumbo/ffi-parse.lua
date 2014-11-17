@@ -177,6 +177,9 @@ local function parse(input, tab_stop)
         t.doctype = setmetatable(doctype, DocumentType)
     end
     add_children(t, document.children, 0)
+
+    t.attributes = setmetatable({}, Attr)
+
     t.documentElement = assert(t.childNodes[rootIndex])
     C.gumbo_destroy_output(options, output)
     return setmetatable(t, Document)

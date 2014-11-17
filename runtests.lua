@@ -10,6 +10,7 @@ local passed, failed = 0, 0
 
 local tests = {
     "test/dom/interfaces.lua",
+    "test/dom/walk.lua",
     "test/dom/HTMLCollection-empty-name.lua",
     "test/dom/getElementsByClassName-01.lua",
     "test/dom/getElementsByClassName-02.lua",
