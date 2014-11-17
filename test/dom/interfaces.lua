@@ -3,8 +3,11 @@ local Document = assert(require "gumbo.dom.Document")
 local Text = assert(require "gumbo.dom.Text")
 local Comment = assert(require "gumbo.dom.Comment")
 local Element = assert(require "gumbo.dom.Element")
+local Node = assert(require "gumbo.dom.Node")
 local NodeList = assert(require "gumbo.dom.NodeList")
 local NamedNodeMap = assert(require "gumbo.dom.NamedNodeMap")
+local NonElementParentNode = assert(require "gumbo.dom.NonElementParentNode")
+local ParentNode = assert(require "gumbo.dom.ParentNode")
 local assert, pcall = assert, pcall
 local _ENV = nil
 
@@ -19,6 +22,19 @@ local input = [[
 ]]
 
 local document = assert(gumbo.parse(input))
+assert(Node)
+assert(document ~= Node)
+assert(NonElementParentNode)
+assert(document ~= NonElementParentNode)
+assert(ParentNode)
+assert(document ~= ParentNode)
+assert(Document)
+assert(document ~= Document)
+assert(document.attributes)
+assert(document.attributes ~= Node.attributes)
+assert(document.childNodes)
+assert(document.childNodes ~= Node.childNodes)
+
 local html = assert(document.documentElement)
 local head = assert(document.head)
 local body = assert(document.body)
@@ -98,6 +114,7 @@ assert(newelem.childNodes ~= Element.childNodes)
 assert(getmetatable(newelem.childNodes) == NodeList)
 assert(newelem.attributes ~= Element.attributes)
 assert(getmetatable(newelem.attributes) == NamedNodeMap)
+assert(newelem.classList ~= Element.classList)
 assert(newelem.localName == "div")
 assert(newelem.namespaceURI == "http://www.w3.org/1999/xhtml")
 assert(newelem.attributes.length == 0)
@@ -389,10 +406,19 @@ do
         </div>
     ]]
     local document = assert(gumbo.parse(input))
+    assert(nil == document.classList)
     local example = assert(document:getElementById('example'))
+    assert(example.classList)
+    assert(example.classList ~= Element.classList)
+    assert(#(example.classList) == 0)
     local aaa = assert(example:getElementsByClassName('aaa'))
     local ccc_bbb = assert(example:getElementsByClassName('ccc bbb'))
     local bbb_ccc = assert(example:getElementsByClassName('bbb ccc '))
+
+    assert(aaa[1].classList)
+    assert(aaa[1].classList ~= Element.classList)
+    assert(#(aaa[1].classList) == 2)
+
     assert(aaa.length == 2)
     assert(aaa[1].id == "p1")
     assert(aaa[2].id == "p2")
@@ -401,4 +427,21 @@ do
     assert(bbb_ccc.length == 1)
     assert(bbb_ccc[1].id == "p3")
     assert(example:getElementsByClassName('aaa,bbb').length == 0)
+end
+
+do
+    local input = [[<div id=parent></div>]]
+    local document = assert(gumbo.parse(input))
+    local parent = assert(document:getElementById('parent'))
+    assert(#(parent.childNodes) == 0)
+    assert(parent.childNodes.length == 0)
+    local child = assert(document:createElement('a'))
+    child.className = 'a class name'
+    assert(child.className == 'a class name')
+    parent:appendChild(child)
+    assert(#(parent.childNodes) == 1)
+    assert(parent.childNodes[1] == child)
+    assert(parent.childNodes.length == 1)
+    assert(parent.innerHTML == '<a class="a class name"></a>')
+    assert(parent.outerHTML == '<div id="parent"><a class="a class name"></a></div>')
 end
