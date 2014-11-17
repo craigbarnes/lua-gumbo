@@ -48,6 +48,11 @@ end
 function Document.getters:body()
     for i, node in ipairs(self.documentElement.childNodes) do
         if node.type == "element" and node.localName == "body" then
+            -- gumbo parser does not initialize empty properties;
+            -- empty childNodes are initialized on first get in Node
+            if not node.attributes then
+                node.attributes = setmetatable({}, assert(NamedNodeMap))
+            end
             return node
         end
     end
@@ -56,6 +61,11 @@ end
 function Document.getters:head()
     for i, node in ipairs(self.documentElement.childNodes) do
         if node.type == "element" and node.localName == "head" then
+            -- gumbo parser does not initialize empty properties
+            -- empty childNodes are initialized on first get in Node
+            if not node.attributes then
+                node.attributes = setmetatable({}, assert(NamedNodeMap))
+            end
             return node
         end
     end
@@ -74,7 +84,12 @@ function Document.getters:compatMode()
 end
 
 local constructor = {
-    __call = function(self) return setmetatable({}, Document) end
+    __call = function(self)
+        return setmetatable({
+            attributes = setmetatable({}, assert(NamedNodeMap)),
+            childNodes = setmetatable({}, assert(NodeList))
+        }, Document)
+    end
 }
 
 return setmetatable(Document, constructor)
