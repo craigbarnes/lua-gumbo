@@ -40,8 +40,20 @@ typedef enum {
     Document,
     DocumentType,
     NodeList,
-    NamedNodeMap
+    NamedNodeMap,
+    nupvalues = NamedNodeMap
 } Upvalue;
+
+static const char *const modules[] = {
+    [Text] = "gumbo.dom.Text",
+    [Comment] = "gumbo.dom.Comment",
+    [Element] = "gumbo.dom.Element",
+    [Attr] = "gumbo.dom.Attr",
+    [Document] = "gumbo.dom.Document",
+    [DocumentType] = "gumbo.dom.DocumentType",
+    [NodeList] = "gumbo.dom.NodeList",
+    [NamedNodeMap] = "gumbo.dom.NamedNodeMap"
+};
 
 #define add_field(T, L, k, v) ( \
     lua_pushliteral(L, k), \
@@ -231,24 +243,16 @@ static int parse(lua_State *L) {
     }
 }
 
-static inline void require(lua_State *L, const char *modname) {
-    lua_getglobal(L, "require");
-    lua_pushstring(L, modname);
-    lua_call(L, 1, 1);
-    if (!lua_istable(L, -1)) {
-        luaL_error(L, "require('%s') returned invalid module table", modname);
-    }
-}
-
 int luaopen_gumbo_parse(lua_State *L) {
-    require(L, "gumbo.dom.Text");
-    require(L, "gumbo.dom.Comment");
-    require(L, "gumbo.dom.Element");
-    require(L, "gumbo.dom.Attr");
-    require(L, "gumbo.dom.Document");
-    require(L, "gumbo.dom.DocumentType");
-    require(L, "gumbo.dom.NodeList");
-    require(L, "gumbo.dom.NamedNodeMap");
-    lua_pushcclosure(L, parse, 8);
+    for (unsigned int i = 1; i <= nupvalues; i++) {
+        const char *modname = modules[i];
+        lua_getglobal(L, "require");
+        lua_pushstring(L, modname);
+        lua_call(L, 1, 1);
+        if (!lua_istable(L, -1)) {
+            luaL_error(L, "require('%s') returned invalid module", modname);
+        }
+    }
+    lua_pushcclosure(L, parse, nupvalues);
     return 1;
 }
