@@ -110,9 +110,10 @@ export LUA_CPATH = ./?.so
 
 check: export QUIET = yes
 check: check-unit check-html5lib check-serialize
+	@echo
 
 check-serialize: check-serialize-ns check-serialize-t1
-	@echo 'PASS: Serialize'
+	@printf ' \33[32mPASSED\33[0m  make $@\n'
 
 check-serialize-ns check-serialize-t1: \
 check-serialize-%: all test/data/%.html test/data/%.out.html
@@ -124,7 +125,7 @@ check-unit: all runtests.lua
 
 check-html5lib: all | test/tree-construction
 	@$(LUA) test/runner.lua $|/*.dat
-	@echo 'PASS: html5lib'
+	@printf ' \33[32mPASSED\33[0m  make $@\n'
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
