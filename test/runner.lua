@@ -38,18 +38,20 @@ local function serialize(document)
             -- name, in lexicographic order. Instead of sorting in-place or
             -- copying the entire table, we build a lightweight, sorted index.
             local attr = node.attributes
-            local attr_length = #attr
-            local attr_index = {}
-            for i = 1, attr_length do
-                attr_index[i] = i
-            end
-            sort(attr_index, function(a, b)
-                return attr[a].name < attr[b].name
-            end)
-            for i = 1, attr_length do
-                local a = attr[attr_index[i]]
-                local prefix = a.prefix and (a.prefix .. " ") or ""
-                buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
+            if attr then
+                local attr_length = #attr
+                local attr_index = {}
+                for i = 1, attr_length do
+                    attr_index[i] = i
+                end
+                sort(attr_index, function(a, b)
+                    return attr[a].name < attr[b].name
+                end)
+                for i = 1, attr_length do
+                    local a = attr[attr_index[i]]
+                    local prefix = a.prefix and (a.prefix .. " ") or ""
+                    buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
+                end
             end
 
             local children = node.childNodes
