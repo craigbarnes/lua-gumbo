@@ -1,4 +1,6 @@
 local gumbo = require "gumbo"
+local assert, pcall = assert, pcall
+local _ENV = nil
 
 local input = [[
 <header id=header></header>
@@ -59,5 +61,5 @@ assert(not pcall(body.appendChild, body, true))
 assert(not pcall(body.appendChild, body, false))
 assert(not pcall(body.appendChild, body, nil))
 assert(not pcall(body.appendChild, body, body))
-assert(not pcall(body.appendChild, body, html))
 assert(not pcall(body.appendChild, body, document))
+assert(not pcall(main.appendChild, main, body))
