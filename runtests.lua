@@ -16,6 +16,7 @@ local tests = {
     "test/dom/Element-childElementCount.lua",
     "test/dom/Comment-constructor.lua",
     "test/dom/Node-appendChild.lua",
+    "test/dom/Node-insertBefore.lua",
     "test/misc.lua",
     "test/tostring.lua",
     "test/tree-construction.lua",
