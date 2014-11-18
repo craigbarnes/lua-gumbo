@@ -2,7 +2,7 @@ local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tinsert, tremove = table.insert, table.remove
-local assert, setmetatable = assert, setmetatable
+local ipairs, assert, setmetatable = ipairs, assert, setmetatable
 local type = type
 local _ENV = nil
 
