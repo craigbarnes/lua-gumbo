@@ -37,7 +37,7 @@ local escmap = {
 }
 
 function Text.getters:escapedData()
-    return (self.data:gsub("[&<>]", escmap):gsub("\xC2\xA0", "&nbsp;"))
+    return (self.data:gsub("[&<>]", escmap):gsub("\194\160", "&nbsp;"))
 end
 
 local constructor = {
