@@ -22,7 +22,7 @@ local escmap = {
 }
 
 function Attr.getters:escapedValue()
-    return (self.value:gsub('[&"]', escmap):gsub("\xC2\xA0", "&nbsp;"))
+    return (self.value:gsub('[&"]', escmap):gsub("\194\160", "&nbsp;"))
 end
 
 return Attr

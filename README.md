@@ -109,6 +109,7 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 * [`createElement()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createElement)
 * [`createTextNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createTextNode)
 * [`createComment()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment)
+* [`adoptNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.adoptNode)
 
 ### `Element`
 
@@ -179,6 +180,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * `DOCUMENT_FRAGMENT_NODE`
 * [`hasChildNodes()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.hasChildNodes)
 * [`contains()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains)
+* [`appendChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.appendChild)
 * [`removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild)
 
 ### `DocumentType`
@@ -224,7 +226,6 @@ Implement:
 * `Document.createDocumentFragment()`
 * `Document.createProcessingInstruction()`
 * `Document.importNode()`
-* `Document.adoptNode()`
 * `Document.createAttribute()`
 * `Document.createAttributeNS()`
 * `Document.createEvent()`
