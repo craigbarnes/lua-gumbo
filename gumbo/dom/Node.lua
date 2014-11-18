@@ -81,7 +81,6 @@ function Node:hasChildNodes()
     return self.childNodes[1] and true or false
 end
 
--- TODO: function Node:insertBefore(node, child)
 -- TODO: function Node:replaceChild(node, child)
 
 local isValidParentNode = Set {
@@ -219,6 +218,23 @@ function Node:appendChild(node)
     assert(type(node) == "table", "TypeError: Argument is not a Node")
     assert(node.childNodes, "TypeError: Argument is not a Node")
     return preInsert(node, self)
+end
+
+-- https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore
+function Node:insertBefore(node, child)
+    assert(type(node) == "table",
+        "TypeError: Argument node is not a Node")
+    assert(node.childNodes, "TypeError: Argument node is not a Node")
+    -- "If referenceElement is null, or undefined, newElement is
+    -- inserted at the end of the list of child nodes"
+    -- (i.e. same as appendChild)
+    if nil ~= child then
+        assert(type(child) == "table",
+            "TypeError: Argument child is not a Node")
+        assert(child.childNodes,
+            "TypeError: Argument child is not a Node")
+    end
+    return preInsert(node, self, child)
 end
 
 function Node:removeChild(child)

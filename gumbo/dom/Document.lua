@@ -28,15 +28,18 @@ Document.__newindex = util.newindexFactory(Document)
 
 function Document:createElement(localName)
     assert(localName:find(namePattern), "InvalidCharacterError")
-    return setmetatable({localName = localName:lower()}, Element)
+    return setmetatable({
+        localName = localName:lower(),
+        ownerDocument = self
+    }, Element)
 end
 
 function Document:createTextNode(data)
-    return setmetatable({data = data}, Text)
+    return setmetatable({data = data, ownerDocument = self}, Text)
 end
 
 function Document:createComment(data)
-    return setmetatable({data = data}, Comment)
+    return setmetatable({data = data, ownerDocument = self}, Comment)
 end
 
 -- https://dom.spec.whatwg.org/#concept-node-adopt
