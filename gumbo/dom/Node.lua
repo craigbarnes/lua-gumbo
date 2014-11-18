@@ -78,7 +78,35 @@ function Node:hasChildNodes()
 end
 
 -- TODO: function Node:insertBefore(node, child)
--- TODO: function Node:appendChild(node)
+
+function Node:appendChild(child)
+    -- TODO: check same document restriction
+    assert(child, "NoArgumentError")
+    assert(self ~= child, "SelfReferenceError")
+
+    local oldParent = child.parentNode
+    if oldParent then
+        child = oldParent:removeChild(child)
+    end
+    assert(child, "RemoveChildError")
+
+    local childNodes = self.childNodes
+
+    -- first condition holds after last child deleted,
+    -- second condition for empty node before first insert
+    if (not childNodes) or (childNodes == Node.childNodes) then
+        childNodes = setmetatable({}, NodeList)
+        self.childNodes = childNodes
+    end
+
+    -- set parent on child node before inserting to avoid
+    -- temporary duplicate child positions (race)
+    child.parentNode = self
+
+    local length = 1 + childNodes.length
+    childNodes[length] = child
+end
+
 -- TODO: function Node:replaceChild(node, child)
 
 function Node:removeChild(child)

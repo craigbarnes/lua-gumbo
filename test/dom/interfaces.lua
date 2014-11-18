@@ -2,6 +2,9 @@ local gumbo = require "gumbo"
 local Document = require "gumbo.dom.Document"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
+local Element = require "gumbo.dom.Element"
+local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
+local NodeList = require "gumbo.dom.NodeList"
 local assert, pcall = assert, pcall
 local _ENV = nil
 
@@ -94,6 +97,11 @@ assert(newelem.localName == "div")
 assert(newelem.namespaceURI == "http://www.w3.org/1999/xhtml")
 assert(newelem.attributes.length == 0)
 newelem:setAttribute("test", "...")
+assert(Element)
+assert(NamedNodeMap)
+assert(Element.attributes)
+assert(newelem.attributes ~= Element.attributes)
+assert(getmetatable(newelem.attributes) == NamedNodeMap)
 assert(newelem.attributes.length == 1)
 newelem:setAttribute("test", "---")
 assert(newelem.attributes.length == 1)
@@ -193,6 +201,11 @@ assert(main.id == "main")
 assert(main.id == main.attributes.id.value)
 assert(main.id == main.attributes.id.textContent)
 assert(main.className == "foo bar baz etc")
+assert(Element)
+assert(NamedNodeMap)
+assert(Element.attributes)
+assert(main.attributes ~= Element.attributes)
+assert(getmetatable(main.attributes) == NamedNodeMap)
 assert(main.className == main.attributes.class.value)
 assert(main.className == main.attributes.class.textContent)
 assert(main.classList[1] == "foo")
@@ -393,4 +406,53 @@ do
     assert(bbb_ccc.length == 1)
     assert(bbb_ccc[1].id == "p3")
     assert(example:getElementsByClassName('aaa,bbb').length == 0)
+end
+
+do
+    local input = [[<div id=parent></div>]]
+    local document = assert(gumbo.parse(input))
+    local parent = assert(document:getElementById('parent'))
+    assert(#(parent.childNodes) == 0)
+    assert(parent.childNodes.length == 0)
+    local child = assert(document:createElement('a'))
+    child.className = 'a class name'
+    assert(child.className == 'a class name')
+    parent:appendChild(child)
+    assert(Element)
+    assert(NodeList)
+    assert(Element.childNodes)
+    assert(parent.childNodes ~= Element.childNodes)
+    assert(getmetatable(parent.childNodes) == NodeList)
+    assert(#(parent.childNodes) == 1)
+    assert(parent.childNodes[1] == child)
+    assert(parent.childNodes.length == 1)
+    assert(parent.innerHTML == '<a class="a class name"></a>')
+    assert(parent.outerHTML == '<div id="parent"><a class="a class name"></a></div>')
+end
+
+do
+    local input = [[<div id=parent><div id=oldchild></div></div>]]
+    local document = assert(gumbo.parse(input))
+    local parent = assert(document:getElementById('parent'))
+    local child = assert(document:getElementById('oldchild'))
+    assert(#(parent.childNodes) == 1)
+    assert(parent.childNodes.length == 1)
+    child:remove()
+    assert(#(parent.childNodes) == 0)
+    assert(parent.childNodes.length == 0)
+
+    local child = assert(document:createElement('a'))
+    child.className = 'a class name'
+    assert(child.className == 'a class name')
+    parent:appendChild(child)
+    assert(Element)
+    assert(NodeList)
+    assert(Element.childNodes)
+    assert(parent.childNodes ~= Element.childNodes)
+    assert(getmetatable(parent.childNodes) == NodeList)
+    assert(#(parent.childNodes) == 1)
+    assert(parent.childNodes[1] == child)
+    assert(parent.childNodes.length == 1)
+    assert(parent.innerHTML == '<a class="a class name"></a>')
+    assert(parent.outerHTML == '<div id="parent"><a class="a class name"></a></div>')
 end
