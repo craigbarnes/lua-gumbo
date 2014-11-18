@@ -325,7 +325,10 @@ heading.lastChild = "bla"
 assert(heading.firstChild == heading.childNodes[1])
 assert(heading.lastChild == heading.childNodes[2])
 
-heading.childNodes[2]:remove()
+assert(comment == heading.childNodes[2])
+assert(comment.parentNode == heading)
+comment:remove()
+assert(comment.parentNode == nil)
 assert(heading:hasChildNodes() == true)
 assert(heading.childNodes.length == 1)
 assert(heading.firstChild == heading.childNodes[1])

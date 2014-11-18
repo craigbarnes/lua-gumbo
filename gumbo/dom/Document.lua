@@ -39,6 +39,29 @@ function Document:createComment(data)
     return setmetatable({data = data}, Comment)
 end
 
+-- https://dom.spec.whatwg.org/#concept-node-adopt
+local function adopt(document, node)
+    -- 1. Let oldDocument be node's node document.
+    -- 2. If node's parent is not null, remove node from its parent.
+    if node.parentNode ~= nil then
+        node:remove()
+    end
+    -- 3. Set node's inclusive descendants's node document to document.
+    --    (done dynamically and automatically by Node.getters.ownerDocument)
+    -- 4. Run any adopting steps defined for node in other applicable
+    --    specifications and pass node and oldDocument as parameters.
+end
+
+-- https://dom.spec.whatwg.org/#dom-document-adoptnode
+function Document:adoptNode(node)
+    -- 1. If node is a document, throw a NotSupportedError exception.
+    assert(node.type ~= "document", "NotSupportedError")
+    -- 2. Adopt node into the context object.
+    adopt(self, node)
+    -- 3. Return node.
+    return node
+end
+
 function Document.getters:body()
     for i, node in ipairs(self.documentElement.childNodes) do
         if node.type == "element" and node.localName == "body" then

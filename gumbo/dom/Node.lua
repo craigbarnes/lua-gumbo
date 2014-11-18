@@ -1,7 +1,9 @@
 local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
-local tremove, assert, setmetatable = table.remove, assert, setmetatable
+local tinsert, tremove = table.insert, table.remove
+local assert, setmetatable = assert, setmetatable
+local type = type
 local _ENV = nil
 
 local Node = {
@@ -78,8 +80,144 @@ function Node:hasChildNodes()
 end
 
 -- TODO: function Node:insertBefore(node, child)
--- TODO: function Node:appendChild(node)
 -- TODO: function Node:replaceChild(node, child)
+
+local isValidParentNode = Set {
+    Node.DOCUMENT_NODE,
+    Node.DOCUMENT_FRAGMENT_NODE,
+    Node.ELEMENT_NODE
+}
+
+local isValidChildNode = Set {
+    Node.DOCUMENT_FRAGMENT_NODE,
+    Node.DOCUMENT_TYPE_NODE,
+    Node.ELEMENT_NODE,
+    Node.TEXT_NODE,
+    Node.PROCESSING_INSTRUCTION_NODE,
+    Node.COMMENT_NODE
+}
+
+local function getChildIndex(parent, child)
+    for i, node in ipairs(parent.childNodes) do
+        if node == child then
+            return i
+        end
+    end
+    return nil, "NotFoundError"
+end
+
+-- https://dom.spec.whatwg.org/#concept-node-ensure-pre-insertion-validity
+local function ensurePreInsertionValidity(node, parent, child)
+    -- 1. If parent is not a Document, DocumentFragment, or Element
+    --    node, throw a HierarchyRequestError.
+    assert(isValidParentNode[parent.nodeType] == true, "HierarchyRequestError")
+
+    -- 2. If node is a host-including inclusive ancestor of parent,
+    --    throw a HierarchyRequestError.
+    assert(parent ~= node, "HierarchyRequestError")
+    assert(node:contains(parent) == false, "HierarchyRequestError")
+
+    -- 3. If child is not null and its parent is not parent, throw a
+    --    NotFoundError exception.
+    assert(child == nil or child.parentNode == parent, "NotFoundError")
+
+    -- 4. If node is not a DocumentFragment, DocumentType, Element,
+    --    Text, ProcessingInstruction, or Comment node, throw a
+    --    HierarchyRequestError.
+    assert(isValidChildNode[node.nodeType] == true, "HierarchyRequestError")
+
+    -- 5. If either node is a Text node and parent is a document, or
+    --    node is a doctype and parent is not a document, throw a
+    --    HierarchyRequestError.
+    if parent.type == "document" then
+        assert(node.nodeName ~= "#text", "HierarchyRequestError")
+    else
+        assert(node.type ~= "doctype", "HierarchyRequestError")
+    end
+
+    -- 6. If parent is a document ...
+    if parent.type == "document" then
+        -- and any of the statements below, switched on node, are true,
+        -- throw a HierarchyRequestError.
+
+        -- TODO: Implement this when DocumentFragment types are supported
+        -- >> DocumentFragment node
+        -- * If node has more than one element child or has a Text node child.
+        -- * Otherwise, if node has one element child and either parent has
+        --   an element child, child is a doctype, or child is not null and
+        --   a doctype is following child.
+
+        local parentHasElementChild = parent.firstElementChild and true or false
+
+        -- >> element
+        if node.type == "element" then
+            -- parent has an element child,
+            if parentHasElementChild == true
+            -- child is a doctype,
+            or child.type == "doctype"
+            -- or child is not null and a doctype is following child.
+            -- TODO
+            then
+                assert(false, "HierarchyRequestError")
+            end
+        end
+
+        -- >> doctype
+        if node.type == "doctype" then
+            -- parent has a doctype child,
+            if parent.doctype
+            -- an element is preceding child,
+            -- TODO
+            -- or child is null and parent has an element child.
+            or (child == nil and parentHasElementChild == true)
+            then
+                assert(false, "HierarchyRequestError")
+            end
+        end
+    end
+end
+
+-- https://dom.spec.whatwg.org/#concept-node-pre-insert
+local function preInsert(node, parent, child)
+    -- 1. Ensure pre-insertion validity of node into parent before child.
+    ensurePreInsertionValidity(node, parent, child)
+
+    -- 2. Let reference child be child.
+    local referenceChild = child
+
+    -- 3. If reference child is node, set it to node's next sibling.
+    if referenceChild == node then
+        referenceChild = node.nextSibling
+    end
+
+    -- 4. Adopt node into parent's node document.
+    parent.ownerDocument:adoptNode(node)
+
+    -- 5. Insert node into parent before reference child.
+    -- TODO: Implement https://dom.spec.whatwg.org/#concept-node-insert
+    local childNodes = parent.childNodes
+    if childNodes == Node.childNodes then
+        parent.childNodes = setmetatable({node}, NodeList)
+    else
+        local index
+        if referenceChild == nil then
+            index = childNodes.length + 1
+        else
+            index = assert(getChildIndex(parent, referenceChild))
+        end
+        tinsert(childNodes, index, node)
+    end
+    node.parentNode = parent
+
+    -- 6. Return node.
+    return node
+end
+
+function Node:appendChild(node)
+    assert(type(node) == "table", "TypeError: Argument is not a Node")
+    assert(node.childNodes, "TypeError: Argument is not a Node")
+    return preInsert(node, self)
+end
 
 function Node:removeChild(child)
     assert(child.parentNode == self, "NotFoundError")
