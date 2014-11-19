@@ -7,7 +7,7 @@ function NonElementParentNode:getElementById(elementId)
     for node in self:walk() do
         if node.type == "element" then
             local attr = node.attributes
-            if attr.id and attr.id.value == elementId then
+            if attr and attr.id and attr.id.value == elementId then
                 return node
             end
         end

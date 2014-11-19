@@ -10,12 +10,14 @@ local passed, failed = 0, 0
 
 local tests = {
     "test/dom/interfaces.lua",
+    "test/dom/walk.lua",
     "test/dom/HTMLCollection-empty-name.lua",
     "test/dom/getElementsByClassName-01.lua",
     "test/dom/getElementsByClassName-02.lua",
     "test/dom/Element-childElementCount.lua",
     "test/dom/Comment-constructor.lua",
     "test/dom/Node-appendChild.lua",
+    "test/dom/Node-insertBefore.lua",
     "test/misc.lua",
     "test/tostring.lua",
     "test/tree-construction.lua",

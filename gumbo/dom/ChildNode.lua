@@ -1,4 +1,3 @@
-local remove = table.remove
 local _ENV = nil
 local ChildNode = {}
 
