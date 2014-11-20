@@ -5,7 +5,6 @@ local yield, wrap = coroutine.yield, coroutine.wrap
 local _ENV = nil
 local colorize = function(text, color) return color .. text .. "\27[0m" end
 local green = function(s) return colorize(s, "\27[32m") end
-local red = function(s) return colorize(s, "\27[31m") end
 local yellow = function(s) return colorize(s, "\27[33m") end
 local boldred = function(s) return colorize(s, "\27[1;31m") end
 local bold = function(s) return colorize(s, "\27[1m") end
@@ -46,7 +45,7 @@ local function handler(err)
         if not line then return err end
     end
     line = line:match("^%s*(.-)%s*$")
-    return err .. "\n" .. (" "):rep(9) .. red "Line:" .. " " .. yellow(line)
+    return err .. "\n   --->  " .. yellow(line)
 end
 
 local function run(tests)
