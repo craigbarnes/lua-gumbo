@@ -3,6 +3,7 @@
 
 local COMMIT_EDITMSG = assert(arg[1])
 local lines, write, exit = io.lines, io.write, os.exit
+local boldred = function(s) return ("\27[1;31m%s\27[0m"):format(s) end
 io.output(io.stderr)
 local _ENV = nil
 local i = 0
@@ -10,7 +11,10 @@ local i = 0
 for line in lines(COMMIT_EDITMSG) do
     i = i + 1
     if line:sub(1, 1) ~= "#" and line:len() > 72 then
-        write("Error: line ", i ," of commit message exceeds 72 columns\n")
+        write(
+            " ", boldred "ERROR", "   ", COMMIT_EDITMSG, ":", i,
+            ": Line exceeds 72 columns\n\n"
+        )
         exit(1)
     end
 end

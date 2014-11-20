@@ -3,12 +3,11 @@ local xpcall, assert, tonumber = xpcall, assert, tonumber
 local open, exit, debuginfo = io.open, os.exit, debug.getinfo
 local yield, wrap = coroutine.yield, coroutine.wrap
 local _ENV = nil
--- TODO: if not isatty(stdout) then colorize = function(s) return s end
-local function colorize(s, c) return "\27[" .. c .. "m" .. s .. "\27[0m" end
-local function green(s) return colorize(s, "32") end
-local function yellow(s) return colorize(s, "33") end
-local function boldred(s) return colorize(s, "1;31") end
-local function bold(s) return colorize(s, "1") end
+local termfmt = function(s, c) return ("\27[%sm%s\27[0m"):format(c, s) end
+local green = function(s) return termfmt(s, "32") end
+local yellow = function(s) return termfmt(s, "33") end
+local boldred = function(s) return termfmt(s, "1;31") end
+local bold = function(s) return termfmt(s, "1") end
 
 local tests = {
     "test/dom/interfaces.lua",
