@@ -181,6 +181,7 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * [`hasChildNodes()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.hasChildNodes)
 * [`contains()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains)
 * [`appendChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.appendChild)
+* [`insertBefore()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore)
 * [`removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild)
 
 ### `DocumentType`
