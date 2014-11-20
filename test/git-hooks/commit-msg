@@ -2,16 +2,15 @@
 -- Prevent over-length commit messages
 
 local COMMIT_EDITMSG = assert(arg[1])
+local lines, write, exit = io.lines, io.write, os.exit
+io.output(io.stderr)
+local _ENV = nil
 local i = 0
 
-local function fail(...)
-    io.stderr:write("Error: ", string.format(...))
-    os.exit(1)
-end
-
-for line in io.lines(COMMIT_EDITMSG) do
+for line in lines(COMMIT_EDITMSG) do
     i = i + 1
     if line:sub(1, 1) ~= "#" and line:len() > 72 then
-        fail("line %d of commit message exceeds 72 columns\n", i)
+        write("Error: line ", i ," of commit message exceeds 72 columns\n")
+        exit(1)
     end
 end
