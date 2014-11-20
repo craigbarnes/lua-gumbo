@@ -3,12 +3,12 @@ local xpcall, assert, tonumber = xpcall, assert, tonumber
 local open, exit, debuginfo = io.open, os.exit, debug.getinfo
 local yield, wrap = coroutine.yield, coroutine.wrap
 local _ENV = nil
-local colorize = function(text, color) return color .. text .. "\27[0m" end
-local green = function(s) return colorize(s, "\27[32m") end
-local yellow = function(s) return colorize(s, "\27[33m") end
-local boldred = function(s) return colorize(s, "\27[1;31m") end
-local bold = function(s) return colorize(s, "\27[1m") end
-local passed, failed = 0, 0
+-- TODO: if not isatty(stdout) then colorize = function(s) return s end
+local function colorize(s, c) return "\27[" .. c .. "m" .. s .. "\27[0m" end
+local function green(s) return colorize(s, "32") end
+local function yellow(s) return colorize(s, "33") end
+local function boldred(s) return colorize(s, "1;31") end
+local function bold(s) return colorize(s, "1") end
 
 local tests = {
     "test/dom/interfaces.lua",
@@ -67,23 +67,25 @@ local function run(tests)
     return wrap(function() iterate() end)
 end
 
-write("\n")
-
-for ok, filename, err in run(tests) do
-    if ok then
-        passed = passed + 1
-        write(" ", green "PASSED", "  ", filename, "\n")
+local function main()
+    local passed, failed = 0, 0
+    write "\n"
+    for ok, filename, err in run(tests) do
+        if ok then
+            passed = passed + 1
+            write(" ", green "PASSED", "  ", filename, "\n")
+        else
+            failed = failed + 1
+            write(" ", boldred "FAILED", "  ", err, "\n")
+        end
+    end
+    write("\n ", bold "Passed:", " ", passed, "\n")
+    if failed > 0 then
+        write(" ", bold "Failed:", " ", boldred(failed), "\n\n")
+        exit(1)
     else
-        failed = failed + 1
-        write(" ", boldred "FAILED", "  ", err, "\n")
+        write "\n"
     end
 end
 
-write("\n ", bold "Passed:", " ", passed, "\n")
-
-if failed > 0 then
-    write(" ", bold "Failed:", " ", boldred(failed), "\n\n")
-    exit(1)
-else
-    write "\n"
-end
+main()
