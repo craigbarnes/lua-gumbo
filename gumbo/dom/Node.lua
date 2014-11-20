@@ -2,7 +2,8 @@ local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tinsert, tremove = table.insert, table.remove
-local ipairs, type, assert, setmetatable = ipairs, type, assert, setmetatable
+local ipairs, type, error, assert = ipairs, type, error, assert
+local setmetatable = setmetatable
 local _ENV = nil
 
 local Node = {
@@ -43,6 +44,12 @@ local isTextOrComment = Set {
     Node.TEXT_NODE,
     Node.COMMENT_NODE
 }
+
+local function assertNode(v)
+    if not (v and type(v) == "table" and v.nodeType) then
+        error("TypeError: Argument is not a Node", 3)
+    end
+end
 
 function Node:walk()
     local level = 0
@@ -215,24 +222,16 @@ local function preInsert(node, parent, child)
 end
 
 function Node:appendChild(node)
-    assert(type(node) == "table", "TypeError: Argument is not a Node")
-    assert(node.childNodes, "TypeError: Argument is not a Node")
+    assertNode(self)
+    assertNode(node)
     return preInsert(node, self)
 end
 
--- https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore
 function Node:insertBefore(node, child)
-    assert(type(node) == "table",
-        "TypeError: Argument node is not a Node")
-    assert(node.childNodes, "TypeError: Argument node is not a Node")
-    -- "If referenceElement is null, or undefined, newElement is
-    -- inserted at the end of the list of child nodes"
-    -- (i.e. same as appendChild)
-    if nil ~= child then
-        assert(type(child) == "table",
-            "TypeError: Argument child is not a Node")
-        assert(child.childNodes,
-            "TypeError: Argument child is not a Node")
+    assertNode(self)
+    assertNode(node)
+    if child ~= nil then
+        assertNode(child)
     end
     return preInsert(node, self, child)
 end
