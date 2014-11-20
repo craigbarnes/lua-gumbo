@@ -1,9 +1,12 @@
 local write, ipairs, loadfile = io.write, ipairs, loadfile
-local pcall, exit = pcall, os.exit
+local xpcall, assert, tonumber = xpcall, assert, tonumber
+local open, exit, debuginfo = io.open, os.exit, debug.getinfo
 local yield, wrap = coroutine.yield, coroutine.wrap
 local _ENV = nil
 local colorize = function(text, color) return color .. text .. "\27[0m" end
 local green = function(s) return colorize(s, "\27[32m") end
+local red = function(s) return colorize(s, "\27[31m") end
+local yellow = function(s) return colorize(s, "\27[33m") end
 local boldred = function(s) return colorize(s, "\27[1;31m") end
 local bold = function(s) return colorize(s, "\27[1m") end
 local passed, failed = 0, 0
@@ -22,12 +25,36 @@ local tests = {
     "test/tree-construction.lua",
 }
 
+local function handler(err)
+    local filename, linenumber = err:match("^(.*):([0-9]+): ")
+    if not filename then return err end
+    linenumber = assert(tonumber(linenumber))
+    local level, info = 2
+    while true do
+        level = level + 1
+        info = debuginfo(level, "Sl")
+        if not info then return err end
+        if info.short_src == filename and info.currentline == linenumber then
+            break
+        end
+    end
+    local file = open(filename)
+    if not file then return err end
+    local line
+    for i = 1, linenumber do
+        line = file:read()
+        if not line then return err end
+    end
+    line = line:match("^%s*(.-)%s*$")
+    return err .. "\n" .. (" "):rep(9) .. red "Line:" .. " " .. yellow(line)
+end
+
 local function run(tests)
     local function iterate()
         for i, filename in ipairs(tests) do
             local loaded, load_error = loadfile(filename, "t")
             if loaded then
-                local ok, run_error = pcall(loaded)
+                local ok, run_error = xpcall(loaded, handler)
                 if ok then
                     yield(true, filename)
                 else
