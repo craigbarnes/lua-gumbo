@@ -50,7 +50,10 @@ local function adopt(document, node)
         node:remove()
     end
     -- 3. Set node's inclusive descendants's node document to document.
-    --    (done dynamically and automatically by Node.getters.ownerDocument)
+    --    (instead of following this step as stated, we just remove any
+    --    temporary ownerDocument value (e.g. as set by createElement())
+    --    to allow Node.getters.ownerDocument to take effect)
+    node.ownerDocument = nil
     -- 4. Run any adopting steps defined for node in other applicable
     --    specifications and pass node and oldDocument as parameters.
 end

@@ -102,6 +102,13 @@ assert(newelem.attributes.length == 2)
 assert(newelem:getAttribute("test") == "---")
 assert(newelem:getAttribute("xyz") == "+++")
 assert(newelem:getAttribute("xyz") == newelem.attributes[2].value)
+assert(newelem.ownerDocument == document)
+assert(newelem.parentNode == nil)
+
+local newdoc = assert(gumbo.parse(""))
+newdoc.body:appendChild(newelem)
+assert(newelem.ownerDocument == newdoc)
+assert(newelem.parentNode == newdoc.body)
 
 assert(p1.nextSibling == p2)
 assert(p2.nextSibling == p3)
