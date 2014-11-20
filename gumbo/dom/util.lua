@@ -2,10 +2,7 @@ local type, select, pairs, require = type, select, pairs, require
 local assert, rawset = assert, rawset
 local _ENV = nil
 
-local util = {
-    -- TODO: Implement full Name pattern from http://www.w3.org/TR/xml/#NT-Name
-    namePattern = "^[A-Za-z:_][A-Za-z0-9:_.-]*$"
-}
+local util = {}
 
 function util.merge(...)
     local t = {getters={}}

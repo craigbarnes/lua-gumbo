@@ -1,5 +1,7 @@
 local util = require "gumbo.dom.util"
-local type, assert, setmetatable = type, assert, setmetatable
+local assertions = require "gumbo.dom.assertions"
+local assertNilableString = assertions.assertNilableString
+local setmetatable = setmetatable
 local _ENV = nil
 
 local Text = util.merge("CharacterData", {
@@ -42,7 +44,7 @@ end
 
 local constructor = {
     __call = function(self, data)
-        assert(data == nil or type(data) == "string", "Invalid argument type")
+        assertNilableString(data)
         return setmetatable({data = data}, self)
     end
 }

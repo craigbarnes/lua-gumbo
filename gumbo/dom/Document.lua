@@ -3,7 +3,10 @@ local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
-local namePattern = util.namePattern
+local assertions = require "gumbo.dom.assertions"
+local assertString = assertions.assertString
+local assertNilableString = assertions.assertNilableString
+local assertName = assertions.assertName
 local rawset, ipairs, assert = rawset, ipairs, assert
 local setmetatable = setmetatable
 local _ENV = nil
@@ -27,44 +30,28 @@ Document.__index = util.indexFactory(Document)
 Document.__newindex = util.newindexFactory(Document)
 
 function Document:createElement(localName)
-    assert(localName:find(namePattern), "InvalidCharacterError")
-    return setmetatable({
-        localName = localName:lower(),
-        ownerDocument = self
-    }, Element)
+    assertName(localName)
+    local t = {localName = localName:lower(), ownerDocument = self}
+    return setmetatable(t, Element)
 end
 
 function Document:createTextNode(data)
+    assertNilableString(data)
     return setmetatable({data = data, ownerDocument = self}, Text)
 end
 
 function Document:createComment(data)
+    assertNilableString(data)
     return setmetatable({data = data, ownerDocument = self}, Comment)
-end
-
--- https://dom.spec.whatwg.org/#concept-node-adopt
-local function adopt(document, node)
-    -- 1. Let oldDocument be node's node document.
-    -- 2. If node's parent is not null, remove node from its parent.
-    if node.parentNode ~= nil then
-        node:remove()
-    end
-    -- 3. Set node's inclusive descendants's node document to document.
-    --    (instead of following this step as stated, we just remove any
-    --    temporary ownerDocument value (e.g. as set by createElement())
-    --    to allow Node.getters.ownerDocument to take effect)
-    node.ownerDocument = nil
-    -- 4. Run any adopting steps defined for node in other applicable
-    --    specifications and pass node and oldDocument as parameters.
 end
 
 -- https://dom.spec.whatwg.org/#dom-document-adoptnode
 function Document:adoptNode(node)
-    -- 1. If node is a document, throw a NotSupportedError exception.
     assert(node.type ~= "document", "NotSupportedError")
-    -- 2. Adopt node into the context object.
-    adopt(self, node)
-    -- 3. Return node.
+    if node.parentNode ~= nil then
+        node:remove()
+    end
+    node.ownerDocument = nil
     return node
 end
 

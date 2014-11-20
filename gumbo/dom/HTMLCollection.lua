@@ -1,4 +1,6 @@
-local type, ipairs, assert = type, ipairs, assert
+local assertions = require "gumbo.dom.assertions"
+local assertString = assertions.assertString
+local type, ipairs = type, ipairs
 local _ENV = nil
 local HTMLCollection = {}
 
@@ -16,7 +18,7 @@ function HTMLCollection:item(index)
 end
 
 function HTMLCollection:namedItem(name)
-    assert(type(name) == "string")
+    assertString(name)
     if name ~= "" then
         for i, element in ipairs(self) do
             if element.id == name or element:getAttribute("name") == name then

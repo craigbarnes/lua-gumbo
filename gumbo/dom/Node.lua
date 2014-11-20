@@ -1,5 +1,7 @@
 local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
+local assertions = require "gumbo.dom.assertions"
+local assertNode = assertions.assertNode
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tinsert, tremove = table.insert, table.remove
 local ipairs, type, error, assert = ipairs, type, error, assert
@@ -44,12 +46,6 @@ local isTextOrComment = Set {
     Node.TEXT_NODE,
     Node.COMMENT_NODE
 }
-
-local function assertNode(v)
-    if not (v and type(v) == "table" and v.nodeType) then
-        error("TypeError: Argument is not a Node", 3)
-    end
-end
 
 function Node:walk()
     local level = 0

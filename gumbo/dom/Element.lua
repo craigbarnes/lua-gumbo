@@ -4,8 +4,11 @@ local Set = require "gumbo.Set"
 local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
 local HTMLCollection = require "gumbo.dom.HTMLCollection"
-local namePattern = util.namePattern
-local type, ipairs, assert = type, ipairs, assert
+local assertions = require "gumbo.dom.assertions"
+local assertName = assertions.assertName
+local assertString = assertions.assertString
+local NYI = assertions.NYI
+local type, ipairs = type, ipairs
 local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
 local _ENV = nil
 
@@ -25,7 +28,7 @@ function Element:__tostring()
 end
 
 function Element:getElementsByTagName(localName)
-    assert(type(localName) == "string")
+    assertString(localName)
     local collection = {}
     local length = 0
     if localName ~= "" then
@@ -57,7 +60,7 @@ function Element:getElementsByTagName(localName)
 end
 
 function Element:getElementsByClassName(classNames)
-    assert(type(classNames) == "string")
+    assertString(classNames)
     local classes = {}
     local collection = {}
     local length = 0
@@ -105,7 +108,8 @@ function Element:getAttribute(name)
 end
 
 function Element:setAttribute(name, value)
-    assert(name:find(namePattern), "InvalidCharacterError")
+    assertName(name)
+    assertString(value)
     local attributes = self.attributes
     if attributes == Element.attributes then
         local attr = setmetatable({name = name, value = value}, Attr)
@@ -141,7 +145,7 @@ function Element:hasAttributes()
 end
 
 function Element:cloneNode(deep)
-    if deep then assert(false, "NYI") end -- << TODO
+    if deep then NYI() end -- << TODO
     local clone = {
         localName = self.localName,
         namespaceURI = self.namespaceURI,
@@ -278,7 +282,6 @@ function Element.getters:tagHTML()
 end
 
 -- TODO:
-local NYI = function() assert(false, "Not yet implemented") end
 Element.setters.innerHTML = NYI
 Element.setters.outerHTML = NYI
 
