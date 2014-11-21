@@ -23,6 +23,18 @@ local function assertElement(v)
     end
 end
 
+local function assertTextNode(v)
+    if not (v and type(v) == "table" and v.nodeName == "#text") then
+        error("TypeError: Argument is not a Text node", 3)
+    end
+end
+
+local function assertComment(v)
+    if not (v and type(v) == "table" and v.type == "comment") then
+        error("TypeError: Argument is not a Comment", 3)
+    end
+end
+
 local function assertString(v)
     if type(v) ~= "string" then
         error("TypeError: Argument is not a string", 3)
@@ -51,6 +63,8 @@ return {
     assertNode = assertNode,
     assertDocument = assertDocument,
     assertElement = assertElement,
+    assertTextNode = assertTextNode,
+    assertComment = assertComment,
     assertString = assertString,
     assertNilableString = assertNilableString,
     assertName = assertName,

@@ -48,6 +48,7 @@ local isTextOrComment = Set {
 }
 
 function Node:walk()
+    assertNode(self)
     local level = 0
     local function iter(node)
         local childNodes = node.childNodes
@@ -66,6 +67,7 @@ function Node:walk()
 end
 
 function Node:reverseWalk()
+    assertNode(self)
     local function iter(node)
         local childNodes = node.childNodes
         local length = #childNodes
@@ -81,6 +83,7 @@ function Node:reverseWalk()
 end
 
 function Node:hasChildNodes()
+    assertNode(self)
     return self.childNodes[1] and true or false
 end
 
@@ -233,6 +236,8 @@ function Node:insertBefore(node, child)
 end
 
 function Node:removeChild(child)
+    assertNode(self)
+    assertNode(child)
     assert(child.parentNode == self, "NotFoundError")
     local childNodes = self.childNodes
     for i = 1, #childNodes do
@@ -246,6 +251,7 @@ function Node:removeChild(child)
 end
 
 function Node:contains(other)
+    assertNode(self)
     if not other or not other.nodeType then
         return false
     elseif other == self then
