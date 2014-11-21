@@ -52,21 +52,36 @@ variables declared within take precedence over the defaults.
 Usage
 -----
 
-The `gumbo` module provides two functions:
+The `gumbo` module provides 2 functions:
 
-`parse(html [, tabStop])`
+### parse
 
-Parses a string of UTF-8 encoded HTML and returns a [`Document`] node.
-The optional `tabStop` parameter specifies the size to use for tab
-characters when computing source positions (default: `8`).
+    local document = gumbo.parse(html, tabStop)
 
-`parseFile(pathOrFile [, tabStop])`
+**Parameters:**
 
-As above, but first reading input from an open [file handle] or opening
-and reading input from a filename specified as a string.
+1. `html`: A *string* of UTF-8 encoded HTML.
+2. `tabStop`: The *number* of columns to count for tab characters
+   when computing source positions (*optional*; defaults to `8`).
 
-Either function may return `nil` and an error message on failure, which
-can either be handled explicitly or wrapped with `assert()`.
+**Returns:**
+
+Either a [`Document`] node on success, or `nil` and an error message on
+failure.
+
+### parseFile
+
+    local document = gumbo.parseFile(pathOrFile, tabStop)
+
+**Parameters:**
+
+1. `pathOrFile`: Either a [file handle] or filename *string* that refers
+   to a file containing UTF-8 encoded HTML.
+2. `tabStop`: As above.
+
+**Returns:**
+
+As above.
 
 See also: [find_links.lua] and [remove_by_id.lua].
 
