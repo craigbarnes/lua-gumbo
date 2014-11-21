@@ -54,13 +54,13 @@ Usage
 
 The `gumbo` module provides two functions:
 
-`parse(html [, tab_stop])`
+`parse(html [, tabStop])`
 
 Parses a string of UTF-8 encoded HTML and returns a [`Document`] node.
-The optional `tab_stop` parameter specifies the size to use for tab
+The optional `tabStop` parameter specifies the size to use for tab
 characters when computing source positions (default: `8`).
 
-`parse_file(path_or_file [, tab_stop])`
+`parseFile(pathOrFile [, tabStop])`
 
 As above, but first reading input from an open [file handle] or opening
 and reading input from a filename specified as a string.
@@ -73,7 +73,7 @@ See also: [find_links.lua] and [remove_by_id.lua].
 Output
 ------
 
-The `parse` and `parse_file` functions both return a [`Document`] node,
+The `parse` and `parseFile` functions both return a [`Document`] node,
 containing a tree of [descendant] nodes. The structure and API of this
 tree is *almost* a subset of the [DOM] Level 4 Core API, with the
 following (intentional) exceptions:

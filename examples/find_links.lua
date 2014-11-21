@@ -1,5 +1,5 @@
 local gumbo = require "gumbo"
-local document = assert(gumbo.parse_file(arg[1] or io.stdin))
+local document = assert(gumbo.parseFile(arg[1] or io.stdin))
 local elements = document:getElementsByTagName("a")
 
 for i, element in ipairs(elements) do

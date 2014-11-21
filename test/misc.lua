@@ -1,5 +1,5 @@
 local gumbo = require "gumbo"
-local parse, parse_file = gumbo.parse, gumbo.parse_file
+local parse, parseFile = gumbo.parse, gumbo.parseFile
 local assert, type, open, pcall = assert, type, io.open, pcall
 local load = loadstring or load
 local _ENV = nil
@@ -60,13 +60,16 @@ do -- Make sure maximum tree depth limit is enforced
     assert(not pcall(parse, input))
 end
 
-do -- Check that parse_file works the same with a filename as with a file
-    local a = assert(parse_file(open("test/data/t1.html")))
-    local b = assert(parse_file("test/data/t1.html"))
+do -- Check that parseFile works the same with a filename as with a file
+    local a = assert(parseFile(open("test/data/t1.html")))
+    local b = assert(parseFile("test/data/t1.html"))
     assert(a.documentElement.innerHTML == b.documentElement.innerHTML)
 end
 
 -- Check that file open/read errors are handled
-assert(not parse_file(0), "Passing invalid argument type should fail")
-assert(not parse_file".", "Passing a directory name should fail")
-assert(not parse_file"_", "Passing a non-existant filename should fail")
+assert(not parseFile(0), "Passing invalid argument type should fail")
+assert(not parseFile".", "Passing a directory name should fail")
+assert(not parseFile"_", "Passing a non-existant filename should fail")
+
+-- Check that parse_file alias is present (for API backwards compatibility)
+assert(gumbo.parse_file == gumbo.parseFile)

@@ -58,4 +58,4 @@ interface Comment
 end
 
 parse: (string, number?) -> (Document) | (nil, string)
-parse_file: (file|string, number?) -> (Document) | (nil, string)
+parseFile: (file|string, number?) -> (Document) | (nil, string)

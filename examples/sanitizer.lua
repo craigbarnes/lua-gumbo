@@ -33,7 +33,7 @@ local div_attribute_whitelist = Set {
     "itemscope", "itemtype"
 }
 
-local document = assert(gumbo.parse_file(input))
+local document = assert(gumbo.parseFile(input))
 local body = assert(document.body)
 
 for node in body:reverseWalk() do
