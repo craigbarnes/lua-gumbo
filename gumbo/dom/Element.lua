@@ -5,6 +5,7 @@ local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
 local HTMLCollection = require "gumbo.dom.HTMLCollection"
 local assertions = require "gumbo.dom.assertions"
+local assertElement = assertions.assertElement
 local assertName = assertions.assertName
 local assertString = assertions.assertString
 local NYI = assertions.NYI
@@ -24,10 +25,12 @@ Element.__index = util.indexFactory(Element)
 Element.__newindex = util.newindexFactory(Element)
 
 function Element:__tostring()
+    assertElement(self)
     return self.tagHTML
 end
 
 function Element:getElementsByTagName(localName)
+    --TODO: should use assertElement(self), but method is shared with Document
     assertString(localName)
     local collection = {}
     local length = 0
@@ -60,6 +63,7 @@ function Element:getElementsByTagName(localName)
 end
 
 function Element:getElementsByClassName(classNames)
+    --TODO: should use assertElement(self), but method is shared with Document
     assertString(classNames)
     local classes = {}
     local collection = {}
@@ -92,6 +96,7 @@ function Element:getElementsByClassName(classNames)
 end
 
 function Element:getAttribute(name)
+    assertElement(self)
     if type(name) == "string" then
         -- If the context object is in the HTML namespace and its node document
         -- is an HTML document, let name be converted to ASCII lowercase.
@@ -108,6 +113,7 @@ function Element:getAttribute(name)
 end
 
 function Element:setAttribute(name, value)
+    assertElement(self)
     assertName(name)
     assertString(value)
     local attributes = self.attributes
@@ -127,6 +133,8 @@ function Element:setAttribute(name, value)
 end
 
 function Element:removeAttribute(name)
+    assertElement(self)
+    assertString(name)
     local attributes = self.attributes
     for i, attr in ipairs(attributes) do
         if attr.name == name then
@@ -137,14 +145,17 @@ function Element:removeAttribute(name)
 end
 
 function Element:hasAttribute(name)
+    assertElement(self)
     return self:getAttribute(name) and true or false
 end
 
 function Element:hasAttributes()
+    assertElement(self)
     return self.attributes[1] and true or false
 end
 
 function Element:cloneNode(deep)
+    assertElement(self)
     if deep then NYI() end -- << TODO
     local clone = {
         localName = self.localName,

@@ -4,6 +4,8 @@ local Comment = require "gumbo.dom.Comment"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
 local assertions = require "gumbo.dom.assertions"
+local assertDocument = assertions.assertDocument
+local assertNode = assertions.assertNode
 local assertString = assertions.assertString
 local assertNilableString = assertions.assertNilableString
 local assertName = assertions.assertName
@@ -30,23 +32,28 @@ Document.__index = util.indexFactory(Document)
 Document.__newindex = util.newindexFactory(Document)
 
 function Document:createElement(localName)
+    assertDocument(self)
     assertName(localName)
     local t = {localName = localName:lower(), ownerDocument = self}
     return setmetatable(t, Element)
 end
 
 function Document:createTextNode(data)
+    assertDocument(self)
     assertNilableString(data)
     return setmetatable({data = data, ownerDocument = self}, Text)
 end
 
 function Document:createComment(data)
+    assertDocument(self)
     assertNilableString(data)
     return setmetatable({data = data, ownerDocument = self}, Comment)
 end
 
 -- https://dom.spec.whatwg.org/#dom-document-adoptnode
 function Document:adoptNode(node)
+    assertDocument(self)
+    assertNode(node)
     assert(node.type ~= "document", "NotSupportedError")
     if node.parentNode ~= nil then
         node:remove()

@@ -11,6 +11,18 @@ local function assertNode(v)
     end
 end
 
+local function assertDocument(v)
+    if not (v and type(v) == "table" and v.type == "document") then
+        error("TypeError: Argument is not a Document", 3)
+    end
+end
+
+local function assertElement(v)
+    if not (v and type(v) == "table" and v.type == "element") then
+        error("TypeError: Argument is not an Element", 3)
+    end
+end
+
 local function assertString(v)
     if type(v) ~= "string" then
         error("TypeError: Argument is not a string", 3)
@@ -37,6 +49,8 @@ end
 
 return {
     assertNode = assertNode,
+    assertDocument = assertDocument,
+    assertElement = assertElement,
     assertString = assertString,
     assertNilableString = assertNilableString,
     assertName = assertName,
