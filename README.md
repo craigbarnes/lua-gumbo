@@ -56,7 +56,9 @@ The `gumbo` module provides 2 functions:
 
 ### parse
 
-    local document = gumbo.parse(html, tabStop)
+```lua
+local document = gumbo.parse(html, tabStop)
+```
 
 **Parameters:**
 
@@ -71,7 +73,9 @@ failure.
 
 ### parseFile
 
-    local document = gumbo.parseFile(pathOrFile, tabStop)
+```lua
+local document = gumbo.parseFile(pathOrFile, tabStop)
+```
 
 **Parameters:**
 
