@@ -50,16 +50,16 @@ end
 local function run(tests)
     local function iterate()
         for i, filename in ipairs(tests) do
-            local loaded, load_error = loadfile(filename, "t")
+            local loaded, loadError = loadfile(filename, "t")
             if loaded then
-                local ok, run_error = xpcall(loaded, handler)
+                local ok, runError = xpcall(loaded, handler)
                 if ok then
                     yield(true, filename)
                 else
-                    yield(false, filename, run_error)
+                    yield(false, filename, runError)
                 end
             else
-                yield(false, filename, load_error)
+                yield(false, filename, loadError)
             end
         end
     end

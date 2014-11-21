@@ -12,7 +12,7 @@ local verbose = os.getenv "VERBOSE"
 local _ENV = nil
 local hrule = ("="):rep(76)
 local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
-local total_passed, total_failed, total_skipped = 0, 0, 0
+local totalPassed, totalFailed, totalSkipped = 0, 0, 0
 local start = clock()
 
 local nsmap = {
@@ -53,7 +53,7 @@ local function serialize(document)
     assert(document and document.type == "document")
     local buf = Buffer()
     local indent = Indent(2)
-    local function write_node(node, depth)
+    local function writeNode(node, depth)
         local type = node.nodeType
         if type == ELEMENT_NODE then
             local i1, i2 = indent[depth], indent[depth+1]
@@ -64,16 +64,16 @@ local function serialize(document)
             -- name, in lexicographic order. Instead of sorting in-place or
             -- copying the entire table, we build a lightweight, sorted index.
             local attr = node.attributes
-            local attr_length = #attr
-            local attr_index = {}
-            for i = 1, attr_length do
-                attr_index[i] = i
+            local attrLength = #attr
+            local attrIndex = {}
+            for i = 1, attrLength do
+                attrIndex[i] = i
             end
-            sort(attr_index, function(a, b)
+            sort(attrIndex, function(a, b)
                 return attr[a].name < attr[b].name
             end)
-            for i = 1, attr_length do
-                local a = attr[attr_index[i]]
+            for i = 1, attrLength do
+                local a = attr[attrIndex[i]]
                 local prefix = a.prefix and (a.prefix .. " ") or ""
                 buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
             end
@@ -91,7 +91,7 @@ local function serialize(document)
                     children[i+1] = children[i]
                     children[i+1].data = children[i+1].data .. text
                 else
-                    write_node(children[i], depth + 1)
+                    writeNode(children[i], depth + 1)
                 end
             end
         elseif type == TEXT_NODE then
@@ -111,12 +111,12 @@ local function serialize(document)
     end
     local childNodes = document.childNodes
     for i = 1, #childNodes do
-        write_node(childNodes[i], 0)
+        writeNode(childNodes[i], 0)
     end
     return buf:tostring()
 end
 
-local function parse_testdata(filename)
+local function parseTestData(filename)
     local file = assert(open(filename, "rb"))
     local text = assert(file:read("*a"))
     file:close()
@@ -158,7 +158,7 @@ local function warn(filename, line, testnum, input, expected, received)
 end
 
 for _, filename in ipairs(filenames) do
-    local tests = assert(parse_testdata(filename))
+    local tests = assert(parseTestData(filename))
     local passed, failed, skipped = 0, 0, 0
     for i, test in ipairs(tests) do
         local input = assert(test.data)
@@ -184,22 +184,22 @@ for _, filename in ipairs(filenames) do
             end
         end
     end
-    total_passed = total_passed + passed
-    total_failed = total_failed + failed
-    total_skipped = total_skipped + skipped
+    totalPassed = totalPassed + passed
+    totalFailed = totalFailed + failed
+    totalSkipped = totalSkipped + skipped
 end
 
-if verbose or total_failed > 0 then
+if verbose or totalFailed > 0 then
     write(
-        "\nRan ", total_passed + total_failed + total_skipped, " tests in ",
+        "\nRan ", totalPassed + totalFailed + totalSkipped, " tests in ",
         format("%.2fs", clock() - start), "\n\n",
-        "Passed: ", total_passed, "\n",
-        "Failed: ", total_failed, "\n",
-        "Skipped: ", total_skipped, "\n\n"
+        "Passed: ", totalPassed, "\n",
+        "Failed: ", totalFailed, "\n",
+        "Skipped: ", totalSkipped, "\n\n"
     )
 end
 
-if total_failed > 0 then
+if totalFailed > 0 then
     if not verbose then
         write "Re-run with VERBOSE=1 for a full report\n"
     end

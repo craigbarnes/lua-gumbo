@@ -5,12 +5,12 @@ local _ENV = nil
 
 local function wrap(text, indent)
     local limit = 78
-    local indent_width = #indent
-    local pos = 1 - indent_width
+    local indentWidth = #indent
+    local pos = 1 - indentWidth
     text = text:gsub("^%s*(.-)%s*$", "%1")
     local function reflow(start, word, stop)
         if stop - pos > limit then
-            pos = start - indent_width
+            pos = start - indentWidth
             return "\n" .. indent .. word
         else
             return " " .. word
@@ -19,12 +19,12 @@ local function wrap(text, indent)
     return indent, text:gsub("%s+()(%S+)()", reflow), "\n"
 end
 
-local function to_html(node, buffer, indent_width)
+return function(node, buffer, indentWidth)
     local buf = buffer or Buffer()
-    local get_indent = Indent(indent_width)
+    local getIndent = Indent(indentWidth)
     local function serialize(node, depth)
         local type = node.type
-        local indent = get_indent[depth]
+        local indent = getIndent[depth]
         if type == "element" then
             local tag = node.localName
             buf:write(indent, node.tagHTML)
@@ -65,5 +65,3 @@ local function to_html(node, buffer, indent_width)
         return buf:tostring()
     end
 end
-
-return to_html

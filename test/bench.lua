@@ -1,27 +1,28 @@
-local basemem = collectgarbage("count")
+local gumbo = require "gumbo"
+local parse = gumbo.parse
+local open, write, stderr = io.open, io.write, io.stderr
+local clock, assert, collectgarbage = os.clock, assert, collectgarbage
+local filename = assert(arg[1], "arg[1] is nil; expecting filename")
+local _ENV = nil
 local document, duration
 
-do
-    local gumbo = require "gumbo"
-    local parse = gumbo.parse
-    local have_socket, socket = pcall(require, "socket")
-    local clock = have_socket and socket.gettime or os.clock
+collectgarbage()
+local basemem = collectgarbage("count")
 
-    local filename = assert(arg[1], "arg[1] is nil; expecting filename")
-    local file = assert(io.open(filename))
+do
+    local file = assert(open(filename))
     local text = assert(file:read("*a"))
     file:close()
-    io.stderr:write("Parsing ", filename, "...\n")
+    stderr:write("Parsing ", filename, "...\n")
 
     local start_time = clock()
     document = parse(text)
     local stop_time = clock()
-    assert(document and document.documentElement)
+    assert(document and document.body)
     duration = stop_time - start_time
 end
 
 collectgarbage()
 local memory = collectgarbage("count") - basemem
 
-local s = "Parse time: %.2fs\nLua memory usage: %dKB\n"
-io.write(string.format(s, duration, memory))
+write(("Parse time: %.2fs\nLua memory usage: %dKB\n"):format(duration, memory))
