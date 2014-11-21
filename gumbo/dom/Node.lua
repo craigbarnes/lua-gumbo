@@ -47,6 +47,21 @@ local isTextOrComment = Set {
     Node.COMMENT_NODE
 }
 
+local isValidParent = Set {
+    Node.DOCUMENT_NODE,
+    Node.DOCUMENT_FRAGMENT_NODE,
+    Node.ELEMENT_NODE
+}
+
+local isValidChild = Set {
+    Node.DOCUMENT_FRAGMENT_NODE,
+    Node.DOCUMENT_TYPE_NODE,
+    Node.ELEMENT_NODE,
+    Node.TEXT_NODE,
+    Node.PROCESSING_INSTRUCTION_NODE,
+    Node.COMMENT_NODE
+}
+
 function Node:walk()
     assertNode(self)
     local level = 0
@@ -89,21 +104,6 @@ end
 
 -- TODO: function Node:replaceChild(node, child)
 
-local isValidParentNode = Set {
-    Node.DOCUMENT_NODE,
-    Node.DOCUMENT_FRAGMENT_NODE,
-    Node.ELEMENT_NODE
-}
-
-local isValidChildNode = Set {
-    Node.DOCUMENT_FRAGMENT_NODE,
-    Node.DOCUMENT_TYPE_NODE,
-    Node.ELEMENT_NODE,
-    Node.TEXT_NODE,
-    Node.PROCESSING_INSTRUCTION_NODE,
-    Node.COMMENT_NODE
-}
-
 local function getChildIndex(parent, child)
     for i, node in ipairs(parent.childNodes) do
         if node == child then
@@ -117,7 +117,7 @@ end
 local function ensurePreInsertionValidity(node, parent, child)
     -- 1. If parent is not a Document, DocumentFragment, or Element
     --    node, throw a HierarchyRequestError.
-    assert(isValidParentNode[parent.nodeType] == true, "HierarchyRequestError")
+    assert(isValidParent[parent.nodeType] == true, "HierarchyRequestError")
 
     -- 2. If node is a host-including inclusive ancestor of parent,
     --    throw a HierarchyRequestError.
@@ -131,7 +131,7 @@ local function ensurePreInsertionValidity(node, parent, child)
     -- 4. If node is not a DocumentFragment, DocumentType, Element,
     --    Text, ProcessingInstruction, or Comment node, throw a
     --    HierarchyRequestError.
-    assert(isValidChildNode[node.nodeType] == true, "HierarchyRequestError")
+    assert(isValidChild[node.nodeType] == true, "HierarchyRequestError")
 
     -- 5. If either node is a Text node and parent is a document, or
     --    node is a doctype and parent is not a document, throw a
