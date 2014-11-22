@@ -66,6 +66,28 @@ do -- Check that parseFile works the same with a filename as with a file
     assert(a.documentElement.innerHTML == b.documentElement.innerHTML)
 end
 
+do -- Check that childNodes field is the same table after appendChild()
+    local document = assert(parse(""))
+    local body = assert(document.body)
+    local childNodes = assert(body.childNodes)
+    assert(childNodes.length == 0)
+    local div = assert(document:createElement("div"))
+    assert(body:appendChild(div))
+    assert(body.childNodes.length == 1)
+    assert(childNodes.length == 1)
+    assert(body.childNodes == childNodes)
+end
+
+do -- Check that writing to default, shared childNodes table throws an error
+    local document = assert(parse("..."))
+    local body = assert(document.body)
+    local text = assert(body.childNodes[1])
+    assert(text.childNodes.length == 0)
+    local div = assert(document:createElement("div"))
+    assert(not pcall(function() text.childNodes[1] = div end))
+    assert(not pcall(text.appendChild, text, div))
+end
+
 -- Check that file open/read errors are handled
 assert(not parseFile(0), "Passing invalid argument type should fail")
 assert(not parseFile".", "Passing a directory name should fail")

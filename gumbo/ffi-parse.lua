@@ -83,18 +83,16 @@ end
 
 local function add_children(parent, children, depth)
     local length = children.length
-    if length > 0 then
-        assert(depth < 800, "Tree depth limit of 800 exceeded")
-        local childNodes = createtable(length, 0)
-        for i = 0, length - 1 do
-            local node = cast("GumboNode*", children.data[i])
-            local construct = constructors[tonumber(node.type)]
-            local t = construct(node, depth + 1)
-            t.parentNode = parent
-            childNodes[i+1] = t
-        end
-        parent.childNodes = setmetatable(childNodes, NodeList)
+    assert(depth < 800, "Tree depth limit of 800 exceeded")
+    local childNodes = createtable(length, 0)
+    for i = 0, length - 1 do
+        local node = cast("GumboNode*", children.data[i])
+        local construct = constructors[tonumber(node.type)]
+        local t = construct(node, depth + 1)
+        t.parentNode = parent
+        childNodes[i+1] = t
     end
+    parent.childNodes = setmetatable(childNodes, NodeList)
 end
 
 local function create_element(node, depth)

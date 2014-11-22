@@ -1,6 +1,7 @@
 local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
+local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
 local assertions = require "gumbo.dom.assertions"
@@ -34,7 +35,11 @@ Document.__newindex = util.newindexFactory(Document)
 function Document:createElement(localName)
     assertDocument(self)
     assertName(localName)
-    local t = {localName = localName:lower(), ownerDocument = self}
+    local t = {
+        localName = localName:lower(),
+        ownerDocument = self,
+        childNodes = setmetatable({}, NodeList)
+    }
     return setmetatable(t, Element)
 end
 

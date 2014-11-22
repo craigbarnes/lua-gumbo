@@ -33,7 +33,11 @@ local Node = {
     DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20,
     -- TODO: function Node:compareDocumentPosition(other)
 
-    childNodes = setmetatable({length = 0}, NodeList),
+    childNodes = setmetatable({length = 0}, {
+        __index = NodeList,
+        __newindex = function() error("childNodes field is read-only", 2) end
+    }),
+
     getters = {},
     setters = {},
     readonly = Set {
@@ -202,18 +206,14 @@ local function preInsert(node, parent, child)
 
     -- 5. Insert node into parent before reference child.
     -- TODO: Implement https://dom.spec.whatwg.org/#concept-node-insert
-    local childNodes = parent.childNodes
-    if childNodes == Node.childNodes then
-        parent.childNodes = setmetatable({node}, NodeList)
+    local childNodes = assert(parent.childNodes)
+    local index
+    if referenceChild == nil then
+        index = childNodes.length + 1
     else
-        local index
-        if referenceChild == nil then
-            index = childNodes.length + 1
-        else
-            index = assert(getChildIndex(parent, referenceChild))
-        end
-        tinsert(childNodes, index, node)
+        index = assert(getChildIndex(parent, referenceChild))
     end
+    tinsert(childNodes, index, node)
     node.parentNode = parent
 
     -- 6. Return node.
