@@ -1,11 +1,10 @@
-local write, ipairs, loadfile = io.write, ipairs, loadfile
-local xpcall, assert, tonumber = xpcall, assert, tonumber
-local open, exit, debuginfo = io.open, os.exit, debug.getinfo
+local open, write, ipairs, loadfile = io.open, io.write, ipairs, loadfile
+local xpcall, assert, tonumber, exit = xpcall, assert, tonumber, os.exit
 local yield, wrap = coroutine.yield, coroutine.wrap
+local debuginfo, traceback = debug.getinfo, debug.traceback
 local _ENV = nil
 local termfmt = function(s, c) return ("\27[%sm%s\27[0m"):format(c, s) end
 local green = function(s) return termfmt(s, "32") end
-local yellow = function(s) return termfmt(s, "33") end
 local boldred = function(s) return termfmt(s, "1;31") end
 local bold = function(s) return termfmt(s, "1") end
 
@@ -45,8 +44,8 @@ local function handler(err)
         line = file:read()
         if not line then return err end
     end
-    line = line:match("^%s*(.-)%s*$")
-    return err .. "\n   --->  " .. yellow(line)
+    local s = "%s\n   --->  \27[33m%s\27[0m\n     %s"
+    return s:format(err, line:match("^%s*(.-)%s*$"), traceback())
 end
 
 local function run(tests)
