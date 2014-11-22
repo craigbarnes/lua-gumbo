@@ -259,8 +259,6 @@ Implement:
 * `Element.matches()`
 * `Element.getElementsByTagNameNS()`
 * `Element.insertAdjacentHTML()`
-* `Text.wholeText`
-* `Text.splitText()`
 * `Node.textContent`
 * `Node.baseURI`
 * `Node.normalize()`
@@ -270,28 +268,8 @@ Implement:
 * `Node.lookupPrefix()`
 * `Node.lookupNamespaceURI()`
 * `Node.isDefaultNamespace()`
-* `CharacterData.substringData()`
-* `CharacterData.appendData()`
-* `CharacterData.insertData()`
-* `CharacterData.deleteData()`
-* `CharacterData.replaceData()`
-* `ParentNode.append()`
-* `ParentNode.prepend()`
-* `ParentNode.query()`
-* `ParentNode.queryAll()`
-* `ParentNode.querySelector()`
-* `ParentNode.querySelectorAll()`
-* `ChildNode.before()`
-* `ChildNode.after()`
-* `ChildNode.replace()`
 * `Attr.namespaceURI`
 * `Attr.ownerElement`
-* `NamedNodeMap.getNamedItem()`
-* `NamedNodeMap.getNamedItemNS()`
-* `NamedNodeMap.setNamedItem()`
-* `NamedNodeMap.setNamedItemNS()`
-* `NamedNodeMap.removeNamedItem()`
-* `NamedNodeMap.removeNamedItemNS()`
 
 Not Implemented
 ---------------

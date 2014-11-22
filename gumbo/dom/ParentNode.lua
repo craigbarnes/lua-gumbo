@@ -60,11 +60,11 @@ function ParentNode.getters:lastElementChild()
     end
 end
 
--- function ParentNode:append(...) end
--- function ParentNode:prepend(...) end
--- function ParentNode:query(relativeSelectors) end
--- function ParentNode:queryAll(relativeSelectors) end
--- function ParentNode:querySelector(selectors) end
--- function ParentNode:querySelectorAll(selectors) end
+-- TODO: function ParentNode:append(...)
+-- TODO: function ParentNode:prepend(...)
+-- TODO: function ParentNode:query(relativeSelectors)
+-- TODO: function ParentNode:queryAll(relativeSelectors)
+-- TODO: function ParentNode:querySelector(selectors)
+-- TODO: function ParentNode:querySelectorAll(selectors)
 
 return ParentNode

@@ -12,4 +12,8 @@ function ChildNode:remove()
     end
 end
 
+-- TODO: function ChildNode:before(...)
+-- TODO: function ChildNode:after(...)
+-- TODO: function ChildNode:replace(...)
+
 return ChildNode

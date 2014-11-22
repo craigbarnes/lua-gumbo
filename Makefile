@@ -166,13 +166,16 @@ bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 env:
 	@$(foreach VAR, $(USERVARS), $(call PRINTVAR,$(VAR));)
 
+todo:
+	git grep --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
+
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
 	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
 
 
 .PHONY: \
-    all amalg install uninstall clean git-hooks dist check env \
+    all amalg install uninstall clean git-hooks dist check env todo \
     check-unit check-html5lib check-compat check-install \
     check-spelling check-serialize check-serialize-ns check-serialize-t1 \
     bench-parse bench-serialize

@@ -36,6 +36,9 @@ function Text:isEqualNode(node)
     end
 end
 
+-- TODO: function Text:splitText(offset)
+-- TODO: function Text.getters:wholeText()
+
 local escmap = {
     ["&"] = "&amp;",
     ["<"] = "&lt;",
