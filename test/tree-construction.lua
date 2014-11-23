@@ -12,8 +12,6 @@ local verbose = os.getenv "VERBOSE"
 local _ENV = nil
 local hrule = ("="):rep(76)
 local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
-local totalPassed, totalFailed, totalSkipped = 0, 0, 0
-local start = clock()
 
 local nsmap = {
     ["http://www.w3.org/1999/xhtml"] = "",
@@ -146,62 +144,64 @@ local function parseTestData(filename)
     end
 end
 
-local function warn(filename, line, testnum, input, expected, received)
-    write(
-        hrule, "\n",
-        filename, ":", line, ": Test ", testnum, " failed\n",
-        hrule, "\n\n",
-        "Input:\n", input, "\n\n",
-        "Expected:\n", expected, "\n",
-        "Received:\n", received, "\n"
-    )
-end
-
-for _, filename in ipairs(filenames) do
-    local tests = assert(parseTestData(filename))
-    local passed, failed, skipped = 0, 0, 0
-    for i, test in ipairs(tests) do
-        local input = assert(test.data)
-        if
-            -- Gumbo can't parse document fragments yet
-            test["document-fragment"]
-            -- See line 134 of python/gumbo/html5lib_adapter_test.py
-            or input:find("<noscript>", 1, true)
-            or input:find("<command>", 1, true)
-        then
-            skipped = skipped + 1
-        else
-            local expected = assert(test.document)
-            local parsed = assert(parse(input))
-            local serialized = assert(serialize(parsed))
-            if serialized == expected then
-                passed = passed + 1
+local function main()
+    local totalPassed, totalFailed, totalSkipped = 0, 0, 0
+    local start = clock()
+    for _, filename in ipairs(filenames) do
+        local tests = assert(parseTestData(filename))
+        local passed, failed, skipped = 0, 0, 0
+        for i, test in ipairs(tests) do
+            local input = assert(test.data)
+            if
+                -- Gumbo can't parse document fragments yet
+                test["document-fragment"]
+                -- See line 134 of python/gumbo/html5lib_adapter_test.py
+                or input:find("<noscript>", 1, true)
+                or input:find("<command>", 1, true)
+            then
+                skipped = skipped + 1
             else
-                failed = failed + 1
-                if verbose then
-                    warn(filename, test.line, i, input, expected, serialized)
+                local expected = assert(test.document)
+                local parsed = assert(parse(input))
+                local serialized = assert(serialize(parsed))
+                if serialized == expected then
+                    passed = passed + 1
+                else
+                    failed = failed + 1
+                    if verbose then
+                        write (
+                            hrule, "\n",
+                            filename, ":", test.line,
+                            ": Test ", i, " failed\n",
+                            hrule, "\n\n",
+                            "Input:\n", input, "\n\n",
+                            "Expected:\n", expected, "\n",
+                            "Received:\n", serialized, "\n"
+                        )
+                    end
                 end
             end
         end
+        totalPassed = totalPassed + passed
+        totalFailed = totalFailed + failed
+        totalSkipped = totalSkipped + skipped
     end
-    totalPassed = totalPassed + passed
-    totalFailed = totalFailed + failed
-    totalSkipped = totalSkipped + skipped
+    local stop = clock()
+    if verbose or totalFailed > 0 then
+        write (
+            "\nRan ", totalPassed + totalFailed + totalSkipped, " tests in ",
+            format("%.2fs", stop - start), "\n\n",
+            "Passed: ", totalPassed, "\n",
+            "Failed: ", totalFailed, "\n",
+            "Skipped: ", totalSkipped, "\n\n"
+        )
+    end
+    if totalFailed > 0 then
+        if not verbose then
+            write "Re-run with VERBOSE=1 for a full report\n"
+        end
+        exit(1)
+    end
 end
 
-if verbose or totalFailed > 0 then
-    write(
-        "\nRan ", totalPassed + totalFailed + totalSkipped, " tests in ",
-        format("%.2fs", clock() - start), "\n\n",
-        "Passed: ", totalPassed, "\n",
-        "Failed: ", totalFailed, "\n",
-        "Skipped: ", totalSkipped, "\n\n"
-    )
-end
-
-if totalFailed > 0 then
-    if not verbose then
-        write "Re-run with VERBOSE=1 for a full report\n"
-    end
-    exit(1)
-end
+main()
