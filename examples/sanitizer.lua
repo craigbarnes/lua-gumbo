@@ -33,6 +33,36 @@ local allowedDivAttributes = Set {
     "itemscope", "itemtype"
 }
 
+local allowedHrefSchemes = {
+    ["http://"] = "allow",
+    ["https://"] = "allow",
+    ["mailto:"] = "allow"
+}
+
+local allowedImgSrcSchemes = {
+    ["http://"] = "allow",
+    ["https://"] = "allow"
+}
+
+-- TODO: Allow relative URLs for a[href] and img[src]
+local function isAllowedAttribute(tag, attr)
+    local name = assert(attr.name)
+    if allowedAttributes[name] then
+        return true
+    elseif tag == "div" and allowedDivAttributes[name] then
+        return true
+    else
+        local value = assert(attr.value)
+        if tag == "a" and name == "href" then
+            local s, n = value:gsub("^[a-z]+:/?/?", allowedHrefSchemes)
+            return s ~= value
+        elseif tag == "img" and name == "src" then
+            local s, n = value:gsub("^[a-z]+://", allowedImgSrcSchemes)
+            return s ~= value
+        end
+    end
+end
+
 local document = assert(gumbo.parseFile(input))
 local body = assert(document.body)
 
@@ -42,15 +72,9 @@ for node in body:reverseWalk() do
         if allowedElements[tag] then
             local attributes = node.attributes
             for i = #attributes, 1, -1 do
-                local attr = attributes[i].name
-                if not allowedAttributes[attr]
-                and not (tag == "div" and allowedDivAttributes[attr])
-                -- TODO: Accept only http:, https:, mailto: and relative URLs
-                and not (tag == "a" and attr == "href")
-                -- TODO: Accept only http:, https: and relative URLs
-                and not (tag == "img" and attr == "src")
-                then
-                    node:removeAttribute(attr)
+                local attr = attributes[i]
+                if not isAllowedAttribute(tag, attr) then
+                    node:removeAttribute(attr.name)
                 end
             end
         else
