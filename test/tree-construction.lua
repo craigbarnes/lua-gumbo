@@ -10,7 +10,6 @@ local open, write, ipairs, assert = io.open, io.write, ipairs, assert
 local format, clock, sort, exit = string.format, os.clock, table.sort, os.exit
 local verbose = os.getenv "VERBOSE"
 local _ENV = nil
-local hrule = ("="):rep(76)
 local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
 
 local nsmap = {
@@ -144,7 +143,8 @@ local function parseTestData(filename)
     end
 end
 
-local function main()
+do
+    local hrule = ("="):rep(76)
     local totalPassed, totalFailed, totalSkipped = 0, 0, 0
     local start = clock()
     for _, filename in ipairs(filenames) do
@@ -203,5 +203,3 @@ local function main()
         exit(1)
     end
 end
-
-main()

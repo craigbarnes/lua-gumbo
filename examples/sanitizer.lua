@@ -63,24 +63,24 @@ local function isAllowedAttribute(tag, attr)
     end
 end
 
-local document = assert(gumbo.parseFile(input))
-local body = assert(document.body)
-
-for node in body:reverseWalk() do
-    if node.type == "element" then
-        local tag = node.localName
-        if allowedElements[tag] then
-            local attributes = node.attributes
-            for i = #attributes, 1, -1 do
-                local attr = attributes[i]
-                if not isAllowedAttribute(tag, attr) then
-                    node:removeAttribute(attr.name)
+do
+    local document = assert(gumbo.parseFile(input))
+    local body = assert(document.body)
+    for node in body:reverseWalk() do
+        if node.type == "element" then
+            local tag = node.localName
+            if allowedElements[tag] then
+                local attributes = node.attributes
+                for i = #attributes, 1, -1 do
+                    local attr = attributes[i]
+                    if not isAllowedAttribute(tag, attr) then
+                        node:removeAttribute(attr.name)
+                    end
                 end
+            else
+                node:remove()
             end
-        else
-            node:remove()
         end
     end
+    write(body.outerHTML, "\n")
 end
-
-write(body.outerHTML, "\n")
