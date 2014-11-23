@@ -109,8 +109,12 @@ uninstall:
 export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
-check: check-unit check-serialize
-	@echo
+check: all
+	@$(LUA) runtests.lua
+
+check-html5lib: export VERBOSE = 1
+check-html5lib: all
+	@$(LUA) test/tree-construction.lua
 
 check-serialize: check-serialize-ns check-serialize-t1
 	@printf ' \33[32mPASSED\33[0m  make $@\n'
@@ -119,13 +123,6 @@ check-serialize-ns check-serialize-t1: \
 check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | diff -u2 test/data/$*.out.html -
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
-
-check-unit: all runtests.lua
-	@$(LUA) runtests.lua
-
-check-html5lib: export VERBOSE = 1
-check-html5lib: all
-	@$(LUA) test/tree-construction.lua
 
 check-compat:
 	$(MAKE) -sB check LUA=lua CC=gcc
@@ -175,9 +172,9 @@ clean:
 
 
 .PHONY: \
-    all amalg install uninstall clean git-hooks dist check env todo \
-    check-unit check-html5lib check-compat check-install \
-    check-spelling check-serialize check-serialize-ns check-serialize-t1 \
+    all amalg install uninstall clean git-hooks dist env todo \
+    check check-html5lib check-compat check-install check-spelling \
+    check-serialize check-serialize-ns check-serialize-t1 \
     bench-parse bench-serialize
 
 .DELETE_ON_ERROR:
