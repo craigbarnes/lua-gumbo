@@ -183,6 +183,15 @@ end
 
 -- TODO: function Element:isEqualNode(node) end
 
+-- TODO: Element.prefix
+-- TODO: function Element.getAttributeNS(namespace, localName)
+-- TODO: function Element.setAttributeNS(namespace, name, value)
+-- TODO: function Element.removeAttributeNS(namespace, localName)
+-- TODO: function Element.hasAttributeNS(namespace, localName)
+-- TODO: function Element.closest(selectors)
+-- TODO: function Element.matches(selectors)
+-- TODO: function Element.getElementsByTagNameNS(namespace, localName)
+
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
 function Element.getters:tagName()
     if self.namespaceURI == "http://www.w3.org/1999/xhtml" then

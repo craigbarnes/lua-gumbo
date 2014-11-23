@@ -31,7 +31,6 @@ local Node = {
     DOCUMENT_POSITION_CONTAINS = 0x08,
     DOCUMENT_POSITION_CONTAINED_BY = 0x10,
     DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20,
-    -- TODO: function Node:compareDocumentPosition(other)
 
     childNodes = setmetatable({length = 0}, {
         __index = NodeList,
@@ -106,7 +105,17 @@ function Node:hasChildNodes()
     return self.childNodes[1] and true or false
 end
 
+-- TODO: Node.textContent
+-- TODO: function Node:cloneNode(deep)
+-- TODO: function Node:isEqualNode(other)
+
+-- TODO: Node.baseURI
 -- TODO: function Node:replaceChild(node, child)
+-- TODO: function Node:normalize()
+-- TODO: function Node:compareDocumentPosition(other)
+-- TODO: function Node:lookupPrefix(namespace)
+-- TODO: function Node:lookupNamespaceURI(prefix)
+-- TODO: function Node:isDefaultNamespace(namespace)
 
 local function getChildIndex(parent, child)
     for i, node in ipairs(parent.childNodes) do

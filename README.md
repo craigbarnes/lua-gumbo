@@ -107,6 +107,8 @@ lua-gumbo specific documentation currently exists, but since it's
 an implementation of a standard API, cross-checking the list with
 the [MDN DOM reference] should suffice for now.
 
+*Note:* When referring to external DOM documentation, don't forget to
+translate JavaScript examples to use Lua `object:method()` call syntax.
 
 DOM API
 -------
@@ -233,57 +235,6 @@ Inherits from [`Node`]. Implements [`ChildNode`].
 
 * [`remove()`](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode.remove)
 
-*Note:* When referring to external DOM documentation, don't forget to
-translate JavaScript examples to use Lua `object:method()` call syntax.
-
-TODO
-----
-
-Implement:
-
-* `Document.getElementsByTagNameNS()`
-* `Document.createElementNS()`
-* `Document.createDocumentFragment()`
-* `Document.createProcessingInstruction()`
-* `Document.importNode()`
-* `Document.createAttribute()`
-* `Document.createAttributeNS()`
-* `Document.createEvent()`
-* `Document.createRange()`
-* `Element.prefix`
-* `Element.getAttributeNS()`
-* `Element.setAttributeNS()`
-* `Element.removeAttributeNS()`
-* `Element.hasAttributeNS()`
-* `Element.closest()`
-* `Element.matches()`
-* `Element.getElementsByTagNameNS()`
-* `Element.insertAdjacentHTML()`
-* `Node.textContent`
-* `Node.baseURI`
-* `Node.normalize()`
-* `Node.cloneNode()`
-* `Node.isEqualNode()`
-* `Node.compareDocumentPosition()`
-* `Node.lookupPrefix()`
-* `Node.lookupNamespaceURI()`
-* `Node.isDefaultNamespace()`
-* `Attr.namespaceURI`
-* `Attr.ownerElement`
-
-Run `make todo` to see a list of `TODO:` comments in the code.
-
-Not Implemented
----------------
-
-Many parts of the DOM have a suboptimal API due to the specification
-being closely aligned with JavaScript and it's various flaws. Some of
-the flawed but relatively simple APIs I implemented anyway, but I had to
-draw the line at these:
-
-* [`Document.createNodeIterator()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.createNodeIterator)
-* [`Document.createTreeWalker()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.createTreeWalker)
-
 Testing
 -------
 
@@ -297,6 +248,7 @@ Testing
   and memory usage stats.
 * `make git-hooks`: Installs some git hooks to disallow commits with
   failing tests or a commit message longer than 72 columns.
+* `make todo`: Lists all `TODO:` comments found in the code.
 
 [License]
 ---------

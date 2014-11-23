@@ -1,6 +1,8 @@
 local util = require "gumbo.dom.util"
 local _ENV = nil
 
+-- TODO: Implement namespaceURI and ownerElement properties
+
 local Attr = {
     specified = true,
     getters = {}
