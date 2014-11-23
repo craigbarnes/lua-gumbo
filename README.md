@@ -271,6 +271,8 @@ Implement:
 * `Attr.namespaceURI`
 * `Attr.ownerElement`
 
+Run `make todo` to see a list of `TODO:` comments in the code.
+
 Not Implemented
 ---------------
 

@@ -6,6 +6,7 @@ local Attr = require "gumbo.dom.Attr"
 local HTMLCollection = require "gumbo.dom.HTMLCollection"
 local assertions = require "gumbo.dom.assertions"
 local assertElement = assertions.assertElement
+local assertNode = assertions.assertNode
 local assertName = assertions.assertName
 local assertString = assertions.assertString
 local NYI = assertions.NYI
@@ -31,6 +32,7 @@ end
 
 function Element:getElementsByTagName(localName)
     --TODO: should use assertElement(self), but method is shared with Document
+    assertNode(self)
     assertString(localName)
     local collection = {}
     local length = 0
@@ -64,6 +66,7 @@ end
 
 function Element:getElementsByClassName(classNames)
     --TODO: should use assertElement(self), but method is shared with Document
+    assertNode(self)
     assertString(classNames)
     local classes = {}
     local collection = {}
@@ -163,7 +166,7 @@ function Element:cloneNode(deep)
         prefix = self.prefix
     }
     if self:hasAttributes() then
-        local attrs = {}
+        local attrs = {} -- TODO: attrs = createtable(#self.attributes, 0)
         for i, attr in ipairs(self.attributes) do
             local t = {
                 name = attr.name,
