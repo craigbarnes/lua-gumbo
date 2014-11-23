@@ -89,9 +89,9 @@ do -- Check that writing to default, shared childNodes table throws an error
 end
 
 -- Check that file open/read errors are handled
-assert(not parseFile(0), "Passing invalid argument type should fail")
-assert(not parseFile".", "Passing a directory name should fail")
-assert(not parseFile"_", "Passing a non-existant filename should fail")
+assert(not parseFile(0), "Passing an invalid argument type should return nil")
+assert(not parseFile".", "Passing a directory name should return nil")
+assert(not parseFile"_", "Passing a non-existant filename should return nil")
 
 -- Check that parse_file alias is present (for API backwards compatibility)
 assert(gumbo.parse_file == gumbo.parseFile)
