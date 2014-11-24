@@ -24,17 +24,4 @@ function Comment:cloneNode()
     return setmetatable({data = self.data}, Comment)
 end
 
-function Comment:isEqualNode(node)
-    assertComment(self)
-    if node
-        and node.nodeType == Comment.nodeType
-        and self.nodeType == Comment.nodeType
-        and node.data == self.data
-    then
-        return true
-    else
-        return false
-    end
-end
-
 return setmetatable(Comment, constructor)

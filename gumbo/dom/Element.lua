@@ -181,8 +181,6 @@ function Element:cloneNode(deep)
     return setmetatable(clone, Element)
 end
 
--- TODO: function Element:isEqualNode(node) end
-
 -- TODO: Element.prefix
 -- TODO: function Element.getAttributeNS(namespace, localName)
 -- TODO: function Element.setAttributeNS(namespace, name, value)

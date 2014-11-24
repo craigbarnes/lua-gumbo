@@ -218,6 +218,7 @@ assert(mainclone.attributes[1].textContent == "main")
 assert(mainclone.attributes.length == 2)
 assert(mainclone.classList.length == 4)
 assert(mainclone:hasChildNodes() == false)
+-- TODO: cloneNode() needs to support deep==true for these 2:
 -- TODO: assert(mainclone:isEqualNode(main) == true)
 -- TODO: assert(mainclone:isEqualNode(body) == false)
 

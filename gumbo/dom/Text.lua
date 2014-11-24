@@ -23,19 +23,6 @@ function Text:cloneNode()
     return setmetatable({data = self.data}, Text)
 end
 
-function Text:isEqualNode(node)
-    assertTextNode(self)
-    if node
-        and node.nodeType == Text.nodeType
-        and self.nodeType == Text.nodeType
-        and node.data == self.data
-    then
-        return true
-    else
-        return false
-    end
-end
-
 -- TODO: function Text:splitText(offset)
 -- TODO: function Text.getters:wholeText()
 

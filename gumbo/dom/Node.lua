@@ -105,9 +105,80 @@ function Node:hasChildNodes()
     return self.childNodes[1] and true or false
 end
 
+local comparators = {}
+
+comparators[Node.ELEMENT_NODE] = function(self, other)
+    local selfAttrs = self.attributes
+    local otherAttrs = other.attributes
+    if
+        self.namespaceURI ~= other.namespaceURI
+        -- TODO: namespace prefix
+        or self.localName ~= other.localName
+        or selfAttrs.length ~= otherAttrs.length
+    then
+        return false
+    end
+    for i, attrA in ipairs(selfAttrs) do
+        local attrB = otherAttrs[i]
+        if
+            -- TODO: namespace
+            attrA.localName ~= attrB.localName
+            or attrA.value ~= attrB.value
+        then
+            return false
+        end
+    end
+    return true
+end
+
+comparators[Node.DOCUMENT_TYPE_NODE] = function(self, other)
+    return
+        self.name == other.name
+        and self.publicID == other.publicID
+        and self.systemID == other.systemID
+end
+
+comparators[Node.TEXT_NODE] = function(self, other)
+    return other.data == self.data
+end
+
+comparators[Node.COMMENT_NODE] = comparators[Node.TEXT_NODE]
+
+-- https://dom.spec.whatwg.org/#dom-node-isequalnode
+function Node:isEqualNode(other)
+    assertNode(self)
+    if other == self then
+        -- This step does not appear in the spec, but if two tables compare
+        -- equal by identity, we can just return true here, since they
+        -- certainly compare equal according to the remaining steps.
+        return true
+    end
+    if not other or type(other) ~= "table" then
+        return false
+    end
+    if other.nodeType ~= self.nodeType then
+        return false
+    end
+    local comparator = comparators[self.nodeType]
+    if comparator and comparator(self, other) == false then
+        return false
+    end
+    local selfChildNodes = self.childNodes
+    local otherChildNodes = other.childNodes
+    if otherChildNodes.length ~= selfChildNodes.length then
+        return false
+    end
+    for i, childA in ipairs(selfChildNodes) do
+        local childB = otherChildNodes[i]
+        if childA:isEqualNode(childB) == false then
+            return false
+        end
+    end
+    return true
+end
+
 -- TODO: Node.textContent
 -- TODO: function Node:cloneNode(deep)
--- TODO: function Node:isEqualNode(other)
 
 -- TODO: Node.baseURI
 -- TODO: function Node:replaceChild(node, child)
