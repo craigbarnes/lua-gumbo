@@ -101,11 +101,11 @@ local text = foo.childNodes[1].data
 print(text)
 ```
 
-*Note:* This example omits error handling for the sake of simplicity.
+Note: this example omits error handling for the sake of simplicity.
 Production code should wrap each step with `assert()` or some other,
 application-specific error handling.
 
-*See also:*
+See also:
 
 * [find_links.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua)
 * [remove_by_id.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua)

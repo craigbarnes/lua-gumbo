@@ -1,4 +1,4 @@
 #!/bin/sh
 # Ensure all tests pass before allowing a commit
 
-make -s check check-spelling || exit 1
+make -s check || exit 1
