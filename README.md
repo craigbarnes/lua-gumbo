@@ -87,7 +87,28 @@ local document = gumbo.parseFile(pathOrFile, tabStop)
 
 As above.
 
-See also: [find_links.lua] and [remove_by_id.lua].
+Example
+-------
+
+The following is a simple demonstration of how to find an element by ID
+and then print the contents of it's first child text node.
+
+```lua
+local gumbo = require "gumbo"
+local document = gumbo.parse('<div id="foo">Hello World</div>')
+local foo = document:getElementById("foo")
+local text = foo.childNodes[1].data
+print(text)
+```
+
+*Note:* This example omits error handling for the sake of simplicity.
+Production code should wrap each step with `assert()` or some other,
+application-specific error handling.
+
+*See also:*
+
+* [find_links.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua)
+* [remove_by_id.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua)
 
 Output
 ------
@@ -290,8 +311,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
 [file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
-[find_links.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua
-[remove_by_id.lua]: https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
 [Hunspell]: https://en.wikipedia.org/wiki/Hunspell
