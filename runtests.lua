@@ -20,6 +20,7 @@ local tests = {
     "test/dom/Node-appendChild.lua",
     "test/dom/Node-insertBefore.lua",
     "test/dom/Node-constants.lua",
+    "test/dom/outerHTML.lua",
     "test/misc.lua",
     "test/tostring.lua",
     "test/tree-construction.lua",
