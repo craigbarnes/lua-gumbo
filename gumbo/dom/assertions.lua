@@ -1,8 +1,6 @@
 local type, error = type, error
 local _ENV = nil
-local namePattern = "^[A-Za-z:_][A-Za-z0-9:_.-]*$"
 
--- TODO: Implement full Name pattern from http://www.w3.org/TR/xml/#NT-Name
 -- TODO: Better error messages
 
 local function assertNode(v)
@@ -50,7 +48,10 @@ end
 local function assertName(v)
     if type(v) ~= "string" then
         error("TypeError: Argument is not a string", 3)
-    elseif not v:find(namePattern) then
+    elseif not v:find("^[A-Za-z:_][A-Za-z0-9:_.-]*$") then
+        -- TODO: If ASCII name pattern isn't found, try full Unicode match
+        --       before throwing an error.
+        --       See: http://www.w3.org/TR/xml/#NT-Name
         error("InvalidCharacterError", 3)
     end
 end
