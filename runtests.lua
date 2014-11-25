@@ -3,10 +3,6 @@ local xpcall, assert, tonumber, exit = xpcall, assert, tonumber, os.exit
 local yield, wrap = coroutine.yield, coroutine.wrap
 local debuginfo, traceback = debug.getinfo, debug.traceback
 local _ENV = nil
-local termfmt = function(s, c) return ("\27[%sm%s\27[0m"):format(c, s) end
-local green = function(s) return termfmt(s, "32") end
-local boldred = function(s) return termfmt(s, "1;31") end
-local bold = function(s) return termfmt(s, "1") end
 
 local tests = {
     "test/dom/interfaces.lua",
@@ -69,7 +65,12 @@ local function run(tests)
     return wrap(function() iterate() end)
 end
 
-local function main()
+local termfmt = function(s, c) return ("\27[%sm%s\27[0m"):format(c, s) end
+local green = function(s) return termfmt(s, "32") end
+local boldred = function(s) return termfmt(s, "1;31") end
+local bold = function(s) return termfmt(s, "1") end
+
+do
     local passed, failed = 0, 0
     write "\n"
     for ok, filename, err in run(tests) do
@@ -89,5 +90,3 @@ local function main()
         write "\n"
     end
 end
-
-main()
