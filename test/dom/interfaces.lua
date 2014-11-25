@@ -73,6 +73,14 @@ assert(document:createComment("........"):isEqualNode(comment) == false)
 assert(document:createTextNode("Title "):isEqualNode(text) == true)
 assert(document:createTextNode("......"):isEqualNode(text) == false)
 
+-- Should all throw InvalidCharacterError
+assert(not pcall(document.createElement, document, "xy\tz"))
+assert(not pcall(document.createElement, document, "xy\0z"))
+assert(not pcall(document.createElement, document, ".xyz"))
+assert(not pcall(document.createElement, document, "-xyz"))
+assert(not pcall(document.createElement, document, "123"))
+assert(not pcall(document.createElement, document, "\205\190"))
+
 assert(Document().nodeName == "#document")
 assert(Text("xyz..").data == "xyz..")
 assert(Comment(" etc ").data == " etc ")
