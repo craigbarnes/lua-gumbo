@@ -2,7 +2,8 @@
 
 CC         = gcc
 LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
-XLDFLAGS  += -Wl,--no-as-needed
+XLDFLAGS  += $(if $(ISUBUNTU), $(NOASNEEDED))
+NOASNEEDED = -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 MKDIR     ?= mkdir -p
@@ -14,7 +15,11 @@ LUA_FOUND  = $(firstword $(shell which $(_LUA_PC) $(LUA_NAMES) 2>/dev/null))
 LUA       ?= $(or $(LUA_FOUND), $(error No Lua interpreter found))
 PC_EXISTS  = $(shell $(PKGCONFIG) --exists '$(1)' && echo 1)
 USE_IF     = $(if $(call $(1), $(2) $(3)), $(2))
-ISDARWIN   = $(call EQUAL, $(shell uname), Darwin)
+UNAME      = $(shell uname)
+RELEASEID  = $(shell awk '/^ID=/ {print substr($$0, 4)}' /etc/os-release)
+ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
+ISLINUX    = $(call EQUAL, $(UNAME), Linux)
+ISUBUNTU   = $(and $(ISLINUX), $(call EQUAL, $(RELEASEID), ubuntu))
 
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
