@@ -11,7 +11,7 @@ interface Document
     quirksMode: string -- "quirks", "no-quirks" or "limited-quirks".
     documentElement: Element -- The root <html> element.
     doctype: DocumentType?
-    childNodes: {Element|Comment}
+    childNodes: {Element|Comment|DocumentType}
 end
 
 interface Attr
