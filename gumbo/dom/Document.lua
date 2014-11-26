@@ -77,6 +77,22 @@ end
 -- TODO: function Document:createEvent(interface)
 -- TODO: function Document:createRange()
 
+function Document.getters:doctype()
+    for i, node in ipairs(self.childNodes) do
+        if node.type == "doctype" then
+            return node
+        end
+    end
+end
+
+function Document.getters:documentElement()
+    for i, node in ipairs(self.childNodes) do
+        if node.type == "element" then
+            return node
+        end
+    end
+end
+
 function Document.getters:body()
     for i, node in ipairs(self.documentElement.childNodes) do
         if node.type == "element" and node.localName == "body" then

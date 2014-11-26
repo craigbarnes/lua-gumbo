@@ -81,7 +81,7 @@ local function get_tag_name(element)
     end
 end
 
-local function add_children(parent, children, depth)
+local function add_children(parent, children, start, depth)
     local length = children.length
     assert(depth < 800, "Tree depth limit of 800 exceeded")
     local childNodes = createtable(length, 0)
@@ -90,7 +90,7 @@ local function add_children(parent, children, depth)
         local construct = constructors[tonumber(node.type)]
         local t = construct(node, depth + 1)
         t.parentNode = parent
-        childNodes[i+1] = t
+        childNodes[i+start] = t
     end
     parent.childNodes = setmetatable(childNodes, NodeList)
 end
@@ -111,7 +111,7 @@ local function create_element(node, depth)
     if parseFlags ~= 0 then
         t.parseFlags = parseFlags
     end
-    add_children(t, element.children, depth)
+    add_children(t, element.children, 1, depth)
     return setmetatable(t, Element)
 end
 
@@ -161,7 +161,6 @@ local function parse(input, tab_stop)
     local options = new("GumboOptions", C.kGumboDefaultOptions)
     options.tab_stop = tab_stop or 8
     local output = C.gumbo_parse_with_options(options, input, #input)
-    local rootIndex = assert(tonumber(output.root.index_within_parent)) + 1
     local document = output.document.v.document
     local t = {
         quirksMode = quirksmap[tonumber(document.doc_type_quirks_mode)]
@@ -172,10 +171,11 @@ local function parse(input, tab_stop)
             publicId = cstring(document.public_identifier),
             systemId = cstring(document.system_identifier)
         }
-        t.doctype = setmetatable(doctype, DocumentType)
+        add_children(t, document.children, 2, 0)
+        t.childNodes[1] = setmetatable(doctype, DocumentType)
+    else
+        add_children(t, document.children, 1, 0)
     end
-    add_children(t, document.children, 0)
-    t.documentElement = assert(t.childNodes[rootIndex])
     C.gumbo_destroy_output(options, output)
     return setmetatable(t, Document)
 end

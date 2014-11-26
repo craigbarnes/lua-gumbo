@@ -64,6 +64,7 @@ static const char *const modules[] = {
 #define add_literal(L, k, v) add_field(literal, L, k, v)
 #define add_string(L, k, v) add_field(string, L, k, v)
 #define add_integer(L, k, v) add_field(integer, L, k, v)
+#define add_value(L, k, v) add_field(value, L, k, (v) < 0 ? (v) - 1 : (v))
 
 static inline void setmetatable(lua_State *L, Upvalue index) {
     lua_pushvalue(L, lua_upvalueindex(index));
@@ -142,21 +143,20 @@ static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
 // Forward declaration, to allow mutual recursion with add_children()
 static void push_node(lua_State *L, const GumboNode *node, uint16 depth);
 
-static void add_children(lua_State *L, const GumboVector *vec, uint16 depth) {
+static inline void add_children (
+    lua_State *L,
+    const GumboVector *vec,
+    const uint16 start,
+    const uint16 depth
+){
     const unsigned int length = vec->length;
     if (depth >= 800) luaL_error(L, "Tree depth limit of 800 exceeded");
     lua_createtable(L, length, 0);
     setmetatable(L, NodeList);
     for (unsigned int i = 0; i < length; i++) {
         push_node(L, (const GumboNode *)vec->data[i], depth + 1);
-
-        // child.parentNode = parent
-        lua_pushliteral(L, "parentNode");
-        lua_pushvalue(L, -4);
-        lua_rawset(L, -3);
-
-        // parent.childNodes[i+1] = child
-        lua_rawseti(L, -2, i + 1);
+        add_value(L, "parentNode", -3); // child.parentNode = parent
+        lua_rawseti(L, -2, i + start); // parent.childNodes[i+start] = child
     }
     lua_setfield(L, -2, "childNodes");
 }
@@ -173,7 +173,7 @@ static void push_node(lua_State *L, const GumboNode *node, uint16 depth) {
             add_integer(L, "parseFlags", node->parse_flags);
         }
         add_attributes(L, &element->attributes);
-        add_children(L, &element->children, depth);
+        add_children(L, &element->children, 1, depth);
         setmetatable(L, Element);
         return;
     }
@@ -209,23 +209,18 @@ static int parse(lua_State *L) {
         lua_createtable(L, 0, 4);
         add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
-            lua_pushliteral(L, "doctype");
-            lua_createtable(L, 0, 3);
+            add_children(L, &document->children, 2, 0);
+            lua_getfield(L, -1, "childNodes");
+            lua_createtable(L, 0, 3); // doctype
             add_string(L, "name", document->name);
             add_string(L, "publicId", document->public_identifier);
             add_string(L, "systemId", document->system_identifier);
             setmetatable(L, DocumentType);
-            lua_rawset(L, -3);
+            lua_rawseti(L, -2, 1); // childNodes[1] = doctype
+            lua_pop(L, 1);
+        } else {
+            add_children(L, &document->children, 1, 0);
         }
-        add_children(L, &document->children, 0);
-
-        // document.documentElement = document.childNodes[root_index]
-        const size_t root_index = output->root->index_within_parent + 1;
-        lua_getfield(L, -1, "childNodes");
-        lua_rawgeti(L, -1, root_index);
-        lua_setfield(L, -3, "documentElement");
-        lua_pop(L, 1);
-
         setmetatable(L, Document);
         gumbo_destroy_output(&options, output);
         return 1;
