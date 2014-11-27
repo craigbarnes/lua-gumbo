@@ -17,6 +17,7 @@ before_install:
   - sudo luarocks install luacov-coveralls --server=http://rocks.moonscript.org/dev
   - sudo luarocks install lunitx
 install:
+  - make dist
   - sudo luarocks make gumbo-0.2-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 script:
   - lua -e "print(require'cURL'.version())"
