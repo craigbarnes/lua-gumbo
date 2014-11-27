@@ -7,6 +7,10 @@ local input = arg[1] or io.stdin
 local ipairs, write, assert = ipairs, io.write, assert
 local _ENV = nil
 
+local allowedHrefSchemes = Set{"http://", "https://", "mailto:"}
+local allowedImgSrcSchemes = Set{"http://", "https://"}
+local allowedDivAttributes = Set{"itemscope", "itemtype"}
+
 local allowedElements = Set {
     "a", "b", "blockquote", "br", "code", "dd", "del", "div", "dl",
     "dt", "em", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "hr",
@@ -29,20 +33,15 @@ local allowedAttributes = Set {
     "valign", "value", "vspace", "width", "itemprop"
 }
 
-local allowedDivAttributes = Set {
-    "itemscope", "itemtype"
-}
+local function isAllowedHref(url)
+    local scheme = url:match("^[a-z]+:/?/?")
+    return (scheme and allowedHrefSchemes[scheme]) and true or false
+end
 
-local allowedHrefSchemes = {
-    ["http://"] = "allow",
-    ["https://"] = "allow",
-    ["mailto:"] = "allow"
-}
-
-local allowedImgSrcSchemes = {
-    ["http://"] = "allow",
-    ["https://"] = "allow"
-}
+local function isAllowedImgSrc(url)
+    local scheme = url:match("^[a-z]+://")
+    return (scheme and allowedImgSrcSchemes[scheme]) and true or false
+end
 
 -- TODO: Allow relative URLs for a[href] and img[src]
 local function isAllowedAttribute(tag, attr)
@@ -53,14 +52,13 @@ local function isAllowedAttribute(tag, attr)
         return true
     else
         local value = assert(attr.value)
-        if tag == "a" and name == "href" then
-            local s, n = value:gsub("^[a-z]+:/?/?", allowedHrefSchemes)
-            return s ~= value
-        elseif tag == "img" and name == "src" then
-            local s, n = value:gsub("^[a-z]+://", allowedImgSrcSchemes)
-            return s ~= value
+        if tag == "a" and name == "href" and isAllowedHref(value) then
+            return true
+        elseif tag == "img" and name == "src" and isAllowedImgSrc(value) then
+            return true
         end
     end
+    return false
 end
 
 do
