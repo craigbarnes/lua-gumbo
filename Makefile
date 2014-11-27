@@ -78,6 +78,7 @@ dist: VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
 dist:
 	@$(MAKE) --no-print-directory lua-gumbo-$(VERSION).tar.gz
 	@$(MAKE) --no-print-directory gumbo-$(VERSION)-1.rockspec
+	@$(MAKE) --no-print-directory .travis.yml
 
 lua-gumbo-%.tar.gz:
 	@git archive --prefix=lua-gumbo-$*/ -o $@ $*
@@ -87,6 +88,11 @@ gumbo-%-1.rockspec: rockspec.in | .git/refs/tags/%
 	@sed 's/%VERSION%/$*/' $< > $@
 	@LUA_PATH=';;' luarocks lint $@
 	@echo 'Generated: $@'
+
+.travis.yml: VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
+.travis.yml: .travis.yml.in
+	@sed 's/%VERSION%/$(VERSION)/' $< > $@
+	@echo 'Generated: $@ $(VERSION)'
 
 install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'

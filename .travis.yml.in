@@ -1,0 +1,27 @@
+language: c
+env:
+global:
+- LUAROCKS=2.2.0
+matrix:
+- LUA=lua5.1
+- LUA=lua5.2
+- LUA=luajit2.0
+- LUA=luajit2.1
+branches:
+only:
+- master
+before_install:
+- bash .travis/setup_lua.sh
+- sudo pip install cpp-coveralls
+- sudo luarocks install Lua-cURL --server=http://rocks.moonscript.org/dev
+- sudo luarocks install luacov-coveralls --server=http://rocks.moonscript.org/dev
+- sudo luarocks install lunitx
+install:
+- sudo luarocks make gumbo-%VERSION%-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
+script:
+- lua -e "print(require'cURL'.version())"
+- make check
+notifications:
+email:
+on_success: change
+on_failure: always
