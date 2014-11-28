@@ -105,9 +105,7 @@ function Node:hasChildNodes()
     return self.childNodes[1] and true or false
 end
 
-local comparators = {}
-
-comparators[Node.ELEMENT_NODE] = function(self, other)
+local function isEqualElement(self, other)
     local selfAttrs = self.attributes
     local otherAttrs = other.attributes
     if
@@ -131,18 +129,23 @@ comparators[Node.ELEMENT_NODE] = function(self, other)
     return true
 end
 
-comparators[Node.DOCUMENT_TYPE_NODE] = function(self, other)
+local function isEqualDoctype(self, other)
     return
         self.name == other.name
         and self.publicID == other.publicID
         and self.systemID == other.systemID
 end
 
-comparators[Node.TEXT_NODE] = function(self, other)
+local function isEqualText(self, other)
     return other.data == self.data
 end
 
-comparators[Node.COMMENT_NODE] = comparators[Node.TEXT_NODE]
+local comparators = {
+    [Node.ELEMENT_NODE] = isEqualElement,
+    [Node.DOCUMENT_TYPE_NODE] = isEqualDoctype,
+    [Node.TEXT_NODE] = isEqualText,
+    [Node.COMMENT_NODE] = isEqualText
+}
 
 -- https://dom.spec.whatwg.org/#dom-node-isequalnode
 function Node:isEqualNode(other)
