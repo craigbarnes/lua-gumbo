@@ -12,9 +12,7 @@ only:
 - master
 before_install:
 - bash .travis/setup_lua.sh
-- sudo pip install cpp-coveralls
 - sudo luarocks install Lua-cURL --server=http://rocks.moonscript.org/dev
-- sudo luarocks install luacov-coveralls --server=http://rocks.moonscript.org/dev
 - sudo luarocks install lunitx
 install:
 - sudo luarocks make gumbo-%VERSION%-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
