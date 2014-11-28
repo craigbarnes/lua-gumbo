@@ -61,10 +61,8 @@ local function isAllowedAttribute(tag, attr)
     return false
 end
 
-do
-    local document = assert(gumbo.parseFile(input))
-    local body = assert(document.body)
-    for node in body:reverseWalk() do
+local function sanitize(root)
+    for node in root:reverseWalk() do
         if node.type == "element" then
             local tag = node.localName
             if allowedElements[tag] then
@@ -80,5 +78,9 @@ do
             end
         end
     end
-    write(body.outerHTML, "\n")
+    return root
 end
+
+local document = assert(gumbo.parseFile(input))
+local body = assert(sanitize(document.body))
+write(body.outerHTML, "\n")
