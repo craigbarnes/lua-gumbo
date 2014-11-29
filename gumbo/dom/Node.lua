@@ -290,13 +290,12 @@ local function preInsert(node, parent, child)
     -- 5. Insert node into parent before reference child.
     -- TODO: Implement https://dom.spec.whatwg.org/#concept-node-insert
     local childNodes = assert(parent.childNodes)
-    local index
     if referenceChild == nil then
-        index = childNodes.length + 1
+        childNodes[childNodes.length + 1] = node
     else
-        index = assert(getChildIndex(parent, referenceChild))
+        local index = assert(getChildIndex(parent, referenceChild))
+        tinsert(childNodes, index, node)
     end
-    tinsert(childNodes, index, node)
     node.parentNode = parent
 
     -- 6. Return node.
