@@ -17,6 +17,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include "compat.h"
@@ -65,6 +66,15 @@ static const char *const modules[] = {
 #define add_string(L, k, v) add_field(string, L, k, v)
 #define add_integer(L, k, v) add_field(integer, L, k, v)
 #define add_value(L, k, v) add_field(value, L, k, (v) < 0 ? (v) - 1 : (v))
+
+static void *xmalloc(void *userdata, size_t size) {
+    (void)userdata;
+    void *ptr = malloc(size);
+    if (ptr == NULL) {
+        abort();
+    }
+    return ptr;
+}
 
 static inline void setmetatable(lua_State *L, Upvalue index) {
     lua_pushvalue(L, lua_upvalueindex(index));
@@ -203,6 +213,7 @@ static int parse(lua_State *L) {
     const char *input = luaL_checklstring(L, 1, &length);
     GumboOptions options = kGumboDefaultOptions;
     options.tab_stop = (int) luaL_optinteger(L, 2, 8);
+    options.allocator = xmalloc;
     GumboOutput *output = gumbo_parse_with_options(&options, input, length);
     if (output) {
         const GumboDocument *document = &output->document->v.document;
