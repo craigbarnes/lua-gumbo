@@ -8,8 +8,7 @@ GUMBO_VERSION=0.9.2
 # bail out on any error
 set -e
 
-mkdir build
-cd build
+cd "$TRAVIS_BUILD_DIR"
 
 wget \
     https://googletest.googlecode.com/files/gtest-1.6.0.zip
