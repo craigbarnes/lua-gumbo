@@ -12,16 +12,15 @@ branches:
         - master
 before_install:
     - bash .travis/setup_lua.sh
-    - sudo luarocks install Lua-cURL --server=http://rocks.moonscript.org/dev
     - sudo luarocks install lunitx
     - sudo apt-get install libgtest-dev
     - bash .travis/setup_gumbo.sh
 install:
     - make dist
     - sudo luarocks make gumbo-0.2-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
+    - make LUA_PC=$(expr "$LUA" : '^\(.[a-z]*\)')
 script:
-    - lua -e "print(require'cURL'.version())"
-    - make check
+    - make check LUA=$(expr "$LUA" : '^\(.[a-z]*\)')
 notifications:
     email:
         on_success: change
