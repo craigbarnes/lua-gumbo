@@ -18,9 +18,9 @@ before_install:
 install:
     - make dist
     - sudo luarocks make gumbo-0.2-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
-    - make LUA_PC=$(expr "$LUA" : '^\(.[a-z]*\)')
+    - make LUA_PC=$(expr match "$LUA" '^\(.[a-z]*\)')
 script:
-    - make check LUA=$(expr "$LUA" : '^\(.[a-z]*\)')
+    - make check LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
 notifications:
     email:
         on_success: change
