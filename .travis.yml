@@ -16,7 +16,7 @@ before_install:
     - sudo apt-get install libgtest-dev
     - bash .travis/setup_gumbo.sh
 install:
-    - make LUA_PC=$(expr match "$LUA" '^\(.[a-z]*\)')
+    - make
     - ldd ./gumbo/parse.so
     - ldconfig -p
 script:
