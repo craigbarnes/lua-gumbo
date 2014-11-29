@@ -10,6 +10,8 @@
 # luajit2.0 - master v2.0
 # luajit2.1 - master v2.1
 
+set -e
+
 LUAJIT_BASE="LuaJIT-2.0.3"
 source .travis/platform.sh
 
