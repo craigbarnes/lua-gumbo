@@ -20,6 +20,7 @@ install:
     - sudo luarocks make gumbo-%VERSION%-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
     - make LUA_PC=$(expr match "$LUA" '^\(.[a-z]*\)')
     - ldd ./gumbo/parse.so
+    - ldconfig -p
 script:
     - make check LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
 notifications:
