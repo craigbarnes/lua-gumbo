@@ -16,8 +16,6 @@ before_install:
     - sudo apt-get install libgtest-dev
     - bash .travis/setup_gumbo.sh
 install:
-    - make dist
-    - sudo luarocks make gumbo-%VERSION%-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
     - make LUA_PC=$(expr match "$LUA" '^\(.[a-z]*\)')
     - ldd ./gumbo/parse.so
     - ldconfig -p
