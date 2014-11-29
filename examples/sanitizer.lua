@@ -11,27 +11,22 @@ local allowedHrefSchemes = Set{"http://", "https://", "mailto:"}
 local allowedImgSrcSchemes = Set{"http://", "https://"}
 local allowedDivAttributes = Set{"itemscope", "itemtype"}
 
-local allowedElements = Set {
-    "a", "b", "blockquote", "br", "code", "dd", "del", "div", "dl",
-    "dt", "em", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "hr",
-    "i", "img", "ins", "kbd", "li", "ol", "p", "pre", "q", "rp", "rt",
-    "ruby", "s", "samp", "strike", "strong", "sub", "sup", "table",
-    "tbody", "td", "tfoot", "th", "thead", "tr", "tt", "ul", "var",
-}
+local allowedElements = Set [[
+    a b blockquote br code dd del div dl dt em h1 h2 h3 h4 h5 h6 hr i
+    img ins kbd li ol p pre q rp rt ruby s samp strike strong sub sup
+    table tbody td tfoot th thead tr tt ul var
+]]
 
-local allowedAttributes = Set {
-    "abbr", "accept", "accept-charset", "accesskey", "action", "align",
-    "alt", "axis", "border", "cellpadding", "cellspacing", "char",
-    "charoff", "charset", "checked", "cite", "clear", "cols", "colspan",
-    "color", "compact", "coords", "datetime", "dir", "disabled",
-    "enctype", "for", "frame", "headers", "height", "hreflang",
-    "hspace", "ismap", "label", "lang", "longdesc", "maxlength",
-    "media", "method", "multiple", "name", "nohref", "noshade",
-    "nowrap", "prompt", "readonly", "rel", "rev", "rows", "rowspan",
-    "rules", "scope", "selected", "shape", "size", "span", "start",
-    "summary", "tabindex", "target", "title", "type", "usemap",
-    "valign", "value", "vspace", "width", "itemprop"
-}
+local allowedAttributes = Set [[
+    abbr accept accept-charset accesskey action align alt axis border
+    cellpadding cellspacing char charoff charset checked cite clear
+    color cols colspan compact coords datetime dir disabled enctype for
+    frame headers height hreflang hspace ismap itemprop label lang
+    longdesc maxlength media method multiple name nohref noshade nowrap
+    prompt readonly rel rev rows rowspan rules scope selected shape size
+    span start summary tabindex target title type usemap valign value
+    vspace width
+]]
 
 local function isAllowedHref(url)
     local scheme = url:match("^[a-z]+:/?/?")
