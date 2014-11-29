@@ -11,7 +11,7 @@ branches:
     only:
         - master
 before_install:
-    - apt-get install pkg-config
+    - sudo apt-get install pkg-config
     - bash .travis/setup_lua.sh
     - sudo luarocks install lunitx
     - sudo apt-get install libgtest-dev
