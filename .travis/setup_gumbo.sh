@@ -33,3 +33,8 @@ ln -s ../gtest-1.6.0 gtest
 make
 make check
 sudo make install
+test -f /usr/lib/libgumbo.so.1.0.0
+sudo ldconfig
+ldconfig -p | grep libgumbo
+
+echo "libgumbo-${GUMBO_VERSION} installed."
