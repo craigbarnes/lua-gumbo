@@ -47,13 +47,13 @@ then
 		then
 				git checkout v2.1
 		fi
-		make && sudo make install
+		make && sudo make install PREFIX=/usr
 		if test "luajit2.1" = "$LUA"
 		then
-				sudo ln -s /usr/local/bin/luajit-2.1.0-alpha /usr/local/bin/luajit
-				sudo ln -s /usr/local/bin/luajit /usr/local/bin/lua
+				sudo ln -s /usr/bin/luajit-2.1.0-alpha /usr/bin/luajit
+				sudo ln -s /usr/bin/luajit /usr/bin/lua
 		else
-				sudo ln -s /usr/local/bin/luajit /usr/local/bin/lua
+				sudo ln -s /usr/bin/luajit /usr/bin/lua
 		fi
 else
 		# plain lua
@@ -66,7 +66,7 @@ else
 				curl http://www.lua.org/ftp/lua-5.2.3.tar.gz | tar xz
 				cd lua-5.2.3
 		fi
-		sudo make "$PLATFORM" install
+		sudo make "$PLATFORM" install INSTALL_TOP=/usr
 fi
 
 cd "$TRAVIS_BUILD_DIR"
@@ -78,13 +78,13 @@ git checkout "v$LUAROCKS"
 
 if test "luajit" = "$LUA"
 then
-		./configure --lua-suffix=jit --with-lua-include=/usr/local/include/luajit-2.0
+		./configure --lua-suffix=jit --with-lua-include=/usr/include/luajit-2.0
 elif test "luajit2.0" = "$LUA"
 then
-		./configure --lua-suffix=jit --with-lua-include=/usr/local/include/luajit-2.0
+		./configure --lua-suffix=jit --with-lua-include=/usr/include/luajit-2.0
 elif test "luajit2.1" = "$LUA"
 then
-		./configure --lua-suffix=jit --with-lua-include=/usr/local/include/luajit-2.1
+		./configure --lua-suffix=jit --with-lua-include=/usr/include/luajit-2.1
 else
 		./configure
 fi
