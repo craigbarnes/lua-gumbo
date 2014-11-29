@@ -1,4 +1,4 @@
-local type, ipairs = type, ipairs
+local type, ipairs, error = type, ipairs, error
 local _ENV = nil
 
 local function Set(members)
