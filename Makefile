@@ -9,7 +9,7 @@ GUMBO_HEADER  ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
 XCFLAGS      += -std=c99 -pedantic-errors -fpic
 XCFLAGS      += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
-XLDFLAGS     += $(GUMBO_LDFLAGS) $(GUMBO_LDLIBS)
+XLDFLAGS     += $(LUA_LDLIBS) $(GUMBO_LDFLAGS) $(GUMBO_LDLIBS)
 
 TIMEFMT      ?= 'Process time: %es\nProcess peak memory usage: %MKB'
 TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
@@ -21,7 +21,7 @@ SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
 BENCHFILE    ?= test/data/2MiB.html
 
 USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
-                LUA_PC LUA_CFLAGS LUA_LMOD_DIR LUA_CMOD_DIR LUA
+                LUA_PC LUA_CFLAGS LUA_LDLIBS LUA_LMOD_DIR LUA_CMOD_DIR LUA
 PRINTVAR      = printf '\e[1m%-14s\e[0m= %s\n' '$(1)' '$(strip $($(1)))'
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document DocumentType \

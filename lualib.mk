@@ -3,7 +3,7 @@
 CC         = gcc
 LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
 XLDFLAGS  += $(if $(ISUBUNTU), $(NOASNEEDED))
-NOASNEEDED = -Wl,--no-as-needed
+NOASNEEDED = -Wl,--no-as-needed,--no-undefined,-no-allow-shlib-undefined
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
@@ -56,6 +56,7 @@ LUA_PREFIX   ?= $(shell $(PKGCONFIG) --variable=prefix $(_LUA_PC))
 LUA_LIBDIR   ?= $(shell $(PKGCONFIG) --variable=libdir $(_LUA_PC))
 LUA_INCDIR   ?= $(shell $(PKGCONFIG) --variable=includedir $(_LUA_PC))
 LUA_VERSION  ?= $(shell $(PKGCONFIG) --modversion $(_LUA_PC) | grep -o '^.\..')
+LUA_LDLIBS   ?= $(or $(shell $(PKGCONFIG) --libs-only-l $(_LUA_PC)), -llua)
 
 LUA_LMOD_DIR ?= $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
                 $(LUA_PREFIX)/share/lua/$(LUA_VERSION)))
