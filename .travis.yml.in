@@ -17,7 +17,7 @@ before_install:
     - sudo apt-get install libgtest-dev
     - bash .travis/setup_gumbo.sh
 install:
-    - make
+    - make LUA_CFLAGS=-I/usr/include/$LUA
     - ldd ./gumbo/parse.so
     - ldconfig -p
 script:
