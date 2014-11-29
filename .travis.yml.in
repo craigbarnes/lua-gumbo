@@ -18,7 +18,7 @@ before_install:
     - bash .travis/setup_gumbo.sh
 install:
     - echo $LUA
-    - ls -lisa /usr/include/$LUA
+    - ls -lisa /usr/include/lua*
     - make LUA_CFLAGS=-I/usr/include/$LUA
     - ldd ./gumbo/parse.so
     - ldconfig -p
