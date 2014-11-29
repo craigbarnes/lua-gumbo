@@ -19,7 +19,7 @@ before_install:
 install:
     - echo $LUA
     - ls -lisa /usr/include/lua*
-    - make LUA_CFLAGS=-I/usr/include/$LUA
+    - make LUA_CFLAGS=-I/usr/include
     - ldd ./gumbo/parse.so
     - ldconfig -p
 script:
