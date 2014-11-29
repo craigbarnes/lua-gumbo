@@ -17,6 +17,7 @@ before_install:
     - sudo apt-get install libgtest-dev
     - bash .travis/setup_gumbo.sh
 install:
+    - make dist
     - sudo luarocks make gumbo-%VERSION%-1.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage"
 script:
     - lua -e "print(require'cURL'.version())"
