@@ -5,6 +5,8 @@ env:
     matrix:
         - LUA=lua5.1
         - LUA=lua5.2
+        - LUA=luajit2.0
+        - LUA=luajit2.1
 branches:
     only:
         - master
@@ -19,6 +21,13 @@ install:
       LUA_INCDIR=/usr/include
       LUA_CFLAGS=-I/usr/include
       LUA_VERSION=$LUA_VERSION
+    - make check-install
+    - make dist
+    - sudo 
+      luarocks make 
+      gumbo-0.2-1.rockspec 
+      CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs"
+      LIBFLAG="-shared --coverage"
 script:
     - make check LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
 notifications:
