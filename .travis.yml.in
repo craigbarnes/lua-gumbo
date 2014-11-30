@@ -3,7 +3,7 @@ env:
     global:
         - LUAROCKS=2.2.0
     matrix:
-        - LUA=lua5.1
+        - LUA=lua5.1 LUA_VERSION=$(expr match "$LUA" '\(.[0-9.]*\)$')
 branches:
     only:
         - master
@@ -14,7 +14,7 @@ install:
     - echo "$LUA $LUA_VERSION"
     - ls -lisad /usr/include/lua*
     - ls -lisa /usr/include/lua*
-    - make LUA_PREFIX=/usr LUA_LIBDIR=/usr/lib/lua/$LUA_VERSION LUA_INCDIR=/usr/include LUA_VERSION=$LUA_VERSION LUA_LDLIBS=-llua
+    - make LUA_PREFIX=/usr LUA_LIBDIR=/usr/lib/lua/$LUA_VERSION LUA_INCDIR=/usr/include LUA_CFLAGS=-I/usr/include LUA_VERSION=$LUA_VERSION LUA_LDLIBS=-llua
     - ldd ./gumbo/parse.so
     - ldconfig -p
 script:
