@@ -14,7 +14,7 @@ before_install:
 install:
     - ls -lisad /usr/include/lua*
     - ls -lisa /usr/include/lua*
-		- ls -lis
+    - ls -lisa /usr/lib/lua*
     - LUA_VERSION=$(expr match "$LUA" '^[a-z]*\([0-9\.]*\)$') make LUA_PREFIX=/usr LUA_LIBDIR=/usr/lib/lua/$LUA_VERSION LUA_INCDIR=/usr/include LUA_CFLAGS=-I/usr/include LUA_VERSION=$LUA_VERSION LUA_LDLIBS="-L /usr/lib -llua"
     - ldd ./gumbo/parse.so
     - ldconfig -p
