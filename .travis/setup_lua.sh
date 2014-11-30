@@ -8,7 +8,7 @@
 #
 # Sets up Lua and Luarocks.
 #
-# LUA must be "lua5.1", "lua5.2", "luajit" 
+# LUA must be "lua5.1", "lua5.2", "luajit"
 # luajit2.0 - master v2.0
 # luajit2.1 - master v2.1
 
@@ -90,7 +90,7 @@ else
 		Name: Lua
 		Description: An Extensible Extension Language
 		Version: ${REVISION}
-		Requires: 
+		Requires:
 		Libs: -L\${libdir} -llua -lm
 		Cflags: -I\${includedir}
 EOF

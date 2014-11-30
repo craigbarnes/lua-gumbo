@@ -16,8 +16,8 @@ before_install:
 install:
     - make
     - make dist
-    - sudo 
-      luarocks make 
+    - sudo
+      luarocks make
       gumbo-0.2-1.rockspec
       CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs"
       LIBFLAG="-shared --coverage"
