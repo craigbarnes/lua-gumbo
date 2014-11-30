@@ -16,8 +16,6 @@ TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) test/htmlfmt.lua
-MDFILTER      = sed 's/`[^`]*`//g;/^    [^*]/d;/^\[/d; s/\[[A-Za-z0-9_.-]*\]//g'
-SPELLCHECK    = hunspell -l -d en_US -p $(PWD)/.wordlist
 BENCHFILE    ?= test/data/2MiB.html
 
 USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
@@ -144,16 +142,6 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
 	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
 
-check-spelling: README.md
-	@OUTPUT="$$($(MDFILTER) $< | $(SPELLCHECK) -)"; \
-	if ! test -z "$$OUTPUT"; then \
-	  printf "Error: unrecognized words found in $<:\n" >&2; \
-	  printf "\n$$OUTPUT\n\n" >&2; \
-	  printf "Add valid words to .wordlist file to ignore\n" >&2; \
-	  exit 1; \
-	fi
-	@echo 'PASS: Spelling'
-
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
               $(DOM_MODULES) test/misc.lua test/dom/interfaces.lua runtests.lua
@@ -179,7 +167,7 @@ clean:
 
 .PHONY: \
     all amalg install uninstall clean git-hooks dist env todo \
-    check check-html5lib check-compat check-install check-spelling \
+    check check-html5lib check-compat check-install \
     check-serialize check-serialize-ns check-serialize-t1 \
     bench-parse bench-serialize
 
