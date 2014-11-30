@@ -8,14 +8,13 @@ branches:
     only:
         - master
 before_install:
-    - sudo apt-get install pkg-config
     - bash .travis/setup_lua.sh
     - bash .travis/setup_gumbo.sh
 install:
-    - echo $LUA
+    - echo "$LUA $LUA_VERSION"
     - ls -lisad /usr/include/lua*
     - ls -lisa /usr/include/lua*
-    - make LUA_CFLAGS=-I/usr/include
+    - make LUA_PREFIX=/usr LUA_LIBDIR=/usr/lib/lua/$LUA_VERSION LUA_INCDIR=/usr/include LUA_VERSION=$LUA_VERSION LUA_LDLIBS=-llua
     - ldd ./gumbo/parse.so
     - ldconfig -p
 script:
