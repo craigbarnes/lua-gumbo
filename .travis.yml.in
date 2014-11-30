@@ -4,9 +4,6 @@ env:
         - LUAROCKS=2.2.0
     matrix:
         - LUA=lua5.1
-        - LUA=lua5.2
-        - LUA=luajit2.0
-        - LUA=luajit2.1
 branches:
     only:
         - master
@@ -14,13 +11,7 @@ before_install:
     - bash .travis/setup_lua.sh
     - bash .travis/setup_gumbo.sh
 install:
-    - LUA_VERSION=$(expr match "$LUA" '^[a-z]*\([0-9\.]*\)$')
-      make
-      LUA_PREFIX=/usr
-      LUA_LIBDIR=/usr/lib/lua/$LUA_VERSION
-      LUA_INCDIR=/usr/include
-      LUA_CFLAGS=-I/usr/include
-      LUA_VERSION=$LUA_VERSION
+    - make
     - make check-install
     - make dist
     - sudo 
