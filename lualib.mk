@@ -2,8 +2,8 @@
 
 CC         = gcc
 LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
-XLDFLAGS  += $(if $(ISUBUNTU), $(NOASNEEDED))
-NOASNEEDED = -Wl,--no-as-needed,--no-undefined,-no-allow-shlib-undefined
+XLDFLAGS  += $(if $(ISLINUX), $(NOASNEEDED))
+NOASNEEDED = -Wl,--no-as-needed,--no-undefined,--no-allow-shlib-undefined
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
