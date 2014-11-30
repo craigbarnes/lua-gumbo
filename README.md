@@ -313,4 +313,3 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
-[Hunspell]: https://en.wikipedia.org/wiki/Hunspell
