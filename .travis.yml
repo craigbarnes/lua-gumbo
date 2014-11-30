@@ -4,20 +4,16 @@ env:
         - LUAROCKS=2.2.0
     matrix:
         - LUA=lua5.1
-        - LUA=lua5.2
-        - LUA=luajit2.0
-        - LUA=luajit2.1
 branches:
     only:
         - master
 before_install:
     - sudo apt-get install pkg-config
     - bash .travis/setup_lua.sh
-    - sudo luarocks install lunitx
-    - sudo apt-get install libgtest-dev
     - bash .travis/setup_gumbo.sh
 install:
     - echo $LUA
+    - ls -lisad /usr/include/lua*
     - ls -lisa /usr/include/lua*
     - make LUA_CFLAGS=-I/usr/include
     - ldd ./gumbo/parse.so
