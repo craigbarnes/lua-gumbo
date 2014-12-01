@@ -10,7 +10,7 @@ branches:
     only:
         - master
 before_install:
-    - apt-get install $LUA
+    - sudo apt-get install $LUA
     - bash .travis/setup_gumbo.sh
 install:
     - make
