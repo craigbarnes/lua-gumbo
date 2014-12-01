@@ -2,7 +2,7 @@
 
 CC         = gcc
 LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
-XLDFLAGS  += $(if $(ISLINUX), $(NOASNEEDED))
+XLDFLAGS  += $(if $(ISUBUNTU), $(NOASNEEDED))
 NOASNEEDED = -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 MKDIR     ?= mkdir -p
