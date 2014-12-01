@@ -141,8 +141,10 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
 	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
 
-check-rockspec: dist
-	LUA_PATH=';;' luarocks lint $@
+check-rockspec: VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
+check-rockspec:
+	@$(MAKE) --no-print-directory gumbo-$(VERSION)-1.rockspec
+	@LUA_PATH=';;' luarocks lint gumbo-$(VERSION)-1.rockspec
 
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
