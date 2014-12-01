@@ -17,7 +17,7 @@ EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 UNAME      = $(shell uname)
 ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
 ISLINUX    = $(call EQUAL, $(UNAME), Linux)
-ISUBUNTU   = $(and $(ISLINUX), $(call EQUAL, $(ld -V | grep -qi ubuntu ; echo $?), 0)
+ISUBUNTU   = $(and $(ISLINUX), $(call EQUAL, $(ld -V | grep -qi ubuntu ; echo $?), 0))
 
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS)
