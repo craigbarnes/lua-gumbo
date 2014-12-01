@@ -110,12 +110,12 @@ See also:
 * [find_links.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua)
 * [remove_by_id.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua)
 
-Output
-------
+DOM API
+-------
 
 The `parse` and `parseFile` functions both return a [`Document`] node,
 containing a tree of [descendant] nodes. The structure and API of this
-tree is *almost* a subset of the [DOM] Level 4 Core API, with the
+tree mostly conforms to the [DOM] Level 4 Core specification, with the
 following (intentional) exceptions:
 
 * `DOMString` types are encoded as UTF-8 instead of UTF-16.
@@ -123,16 +123,13 @@ following (intentional) exceptions:
 * `readonly` is not fully enforced.
 
 The following sections list the supported properties and methods,
-grouped by the DOM interface in which the are specified. No
+grouped by the DOM interface in which they are specified. No
 lua-gumbo specific documentation currently exists, but since it's
 an implementation of a standard API, cross-checking the list with
 the [MDN DOM reference] should suffice for now.
 
 *Note:* When referring to external DOM documentation, don't forget to
 translate JavaScript examples to use Lua `object:method()` call syntax.
-
-DOM API
--------
 
 ### `Document`
 

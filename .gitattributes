@@ -1,1 +1,3 @@
 .git* export-ignore
+test/git-hooks/ export-ignore
+CONTRIBUTING.md export-ignore
