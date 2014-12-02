@@ -16,6 +16,7 @@ before_install:
     - bash .travis/setup_gumbo.sh
 install:
     - make
+    - git fetch -t
     - make dist
     - sudo
       luarocks make
