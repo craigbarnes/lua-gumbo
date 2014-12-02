@@ -2,7 +2,7 @@
 
 CC         = gcc
 LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
-XLDFLAGS  += $(if $(ISUBUNTU), $(NOASNEEDED))
+XLDFLAGS  += $(if $(ISLINUX), $(NOASNEEDED))
 NOASNEEDED = -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 MKDIR     ?= mkdir -p
@@ -17,7 +17,6 @@ EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 UNAME      = $(shell uname)
 ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
 ISLINUX    = $(call EQUAL, $(UNAME), Linux)
-ISUBUNTU   = $(and $(ISLINUX), $(findstring buntu, $(shell ld -V | grep -i ubuntu)))
 
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS)

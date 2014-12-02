@@ -2,7 +2,7 @@ local.mk
 *.so
 *.o
 lua-gumbo-*.tar.gz
-gumbo-*.rockspec
+gumbo-[0-9]*.rockspec
 gumbo-*.rock
 coverage.txt
 tags
