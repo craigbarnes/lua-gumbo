@@ -19,7 +19,7 @@ ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
 ISLINUX    = $(call EQUAL, $(UNAME), Linux)
 
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
-LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
+LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS)
 
 # The naming of Lua pkg-config files across distributions is a mess:
 # - Fedora and Arch use lua.pc

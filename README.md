@@ -1,4 +1,4 @@
-lua-gumbo
+lua-gumbo [![Build Status](https://travis-ci.org/istr/lua-gumbo.png?branch=master)](https://travis-ci.org/istr/lua-gumbo)
 =========
 
 [Lua][] [C API] and [LuaJIT][] [FFI] bindings for the [Gumbo][] [HTML5]

@@ -6,5 +6,6 @@ gumbo-[0-9]*.rockspec
 gumbo-*.rock
 coverage.txt
 tags
+build
 README.html
 test/data/*MiB.html
