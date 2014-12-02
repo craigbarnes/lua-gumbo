@@ -74,7 +74,7 @@ git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg
 
 HOMEURL = https://github.com/craigbarnes/lua-gumbo
 GITURL  = git://github.com/craigbarnes/lua-gumbo.git
-VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
+VERSION = $(or $(shell git describe --always --abbrev=0),$(error No version info))
 
 dist:
 	@$(MAKE) --no-print-directory gumbo-$(VERSION)-1.rockspec
