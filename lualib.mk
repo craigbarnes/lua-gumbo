@@ -2,7 +2,7 @@
 
 CC         = gcc
 LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
-XLDFLAGS  += $(if $(ISUBUNTU), $(NOASNEEDED))
+XLDFLAGS  += $(if $(ISLINUX), $(NOASNEEDED))
 NOASNEEDED = -Wl,--no-as-needed
 PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
 MKDIR     ?= mkdir -p
@@ -15,10 +15,8 @@ PC_EXISTS  = $(PKGCONFIG) --exists $(1) && echo $(1)
 FIND_PC    = $(shell for P in $(1); do $(call PC_EXISTS, $$P) && break; done)
 EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 UNAME      = $(shell uname)
-RELEASEID  = $(shell awk '/^ID=/ {print substr($$0, 4)}' /etc/os-release)
 ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
 ISLINUX    = $(call EQUAL, $(UNAME), Linux)
-ISUBUNTU   = $(and $(ISLINUX), $(call EQUAL, $(RELEASEID), ubuntu))
 
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
