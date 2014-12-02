@@ -3,16 +3,18 @@ env:
     global:
         - LUAROCKS=2.2.0
     matrix:
-        - LUA=lua5.1
-        - LUA=lua5.2
-        - LUA=luajit
+        - LUA_PKG=lua5.1
+        - LUA_PKG=lua5.2
+        - LUA_PKG=luajit
 branches:
     only:
         - master
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y "$LUA" luarocks
-    - test luajit != "$LUA" && sudo apt-get install -y "$LUA-dev" || true
+    - sudo apt-get install -y "${LUA_PKG}" luarocks
+    - test luajit != "${LUA_PKG}" && sudo apt-get install -y "${LUA_PKG}-dev" || true
+    - which lua || true
+    - which luajit || true
     - bash .travis/setup_gumbo.sh
 install:
     - make
