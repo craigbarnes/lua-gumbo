@@ -95,10 +95,6 @@ gumbo-scm-1.rockspec: rockspec.in
 	@sed 's|%VERSION%|scm|;s|%URL%|$(GITURL)|;s|%SRCX%|$(SRCX)|' $< > $@
 	@echo 'Generated: $@'
 
-.travis.yml: .travis.yml.in
-	@sed 's/%VERSION%/$(VERSION)/' $< > $@
-	@echo 'Generated: $@ $(VERSION)'
-
 install: all
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(MKDIR) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
