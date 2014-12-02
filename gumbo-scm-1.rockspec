@@ -1,5 +1,5 @@
 package = "gumbo"
-version = "%VERSION%-1"
+version = "scm-1"
 supported_platforms = {"unix"}
 
 description = {
@@ -9,8 +9,8 @@ description = {
 }
 
 source = {
-    url = "%URL%",
-    %SRCX%
+    url = "git://github.com/craigbarnes/lua-gumbo.git",
+    branch = "master"
 }
 
 dependencies = {

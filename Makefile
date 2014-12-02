@@ -72,18 +72,26 @@ git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg
 .git/hooks/%: test/git-hooks/%
 	install -m 755 $< $@
 
-dist: VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
+HOMEURL = https://github.com/craigbarnes/lua-gumbo
+GITURL  = git://github.com/craigbarnes/lua-gumbo.git
+VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
+
 dist:
-	@$(MAKE) --no-print-directory lua-gumbo-$(VERSION).tar.gz
 	@$(MAKE) --no-print-directory gumbo-$(VERSION)-1.rockspec
 
 lua-gumbo-%.tar.gz:
 	@git archive --prefix=lua-gumbo-$*/ -o $@ $*
 	@echo 'Generated: $@'
 
-gumbo-%-1.rockspec: rockspec.in | .git/refs/tags/%
-	@sed 's/%VERSION%/$*/' $< > $@
-	@LUA_PATH=';;' luarocks lint $@
+gumbo-%-1.rockspec: URL = $(HOMEURL)/releases/download/$*/lua-gumbo-$*.tar.gz
+gumbo-%-1.rockspec: MD5 = `md5sum lua-gumbo-$*.tar.gz | cut -d' ' -f1`
+gumbo-%-1.rockspec: rockspec.in lua-gumbo-%.tar.gz | .git/refs/tags/%
+	@sed "s|%VERSION%|$*|;s|%URL%|$(URL)|;s|%SRCX%|md5 = '$(MD5)'|" $< > $@
+	@echo 'Generated: $@'
+
+gumbo-scm-1.rockspec: SRCX = branch = "master"
+gumbo-scm-1.rockspec: rockspec.in
+	@sed 's|%VERSION%|scm|;s|%URL%|$(GITURL)|;s|%SRCX%|$(SRCX)|' $< > $@
 	@echo 'Generated: $@'
 
 install: all
@@ -136,6 +144,11 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
 	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
 
+check-rockspec: LUA_PATH = ;;
+check-rockspec: dist
+	luarocks lint gumbo-$(VERSION)-1.rockspec
+	luarocks lint gumbo-scm-1.rockspec
+
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
               $(DOM_MODULES) test/misc.lua test/dom/interfaces.lua runtests.lua
@@ -156,12 +169,13 @@ todo:
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
-	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
+	      coverage.txt lua-gumbo-*.tar.gz gumbo-[0-9]*.rockspec \
+	      gumbo-*.rock
 
 
 .PHONY: \
     all amalg install uninstall clean git-hooks dist env todo \
-    check check-html5lib check-compat check-install \
+    check check-html5lib check-compat check-install check-rockspec \
     check-serialize check-serialize-ns check-serialize-t1 \
     bench-parse bench-serialize
 
