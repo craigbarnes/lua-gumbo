@@ -30,11 +30,11 @@ to be found is used (yes, these all exist in the wild):
 
 If, for example, your system has both `lua.pc` and `luajit.pc` installed
 then `lua.pc` will be used by default. You can override this default
-behavior by specifying the `LUA_PC` and `LUA` variables. To build for
-LuaJIT, in this case, use:
+behavior by specifying the `LUA_PC` variable. To build for LuaJIT, in
+this case, use:
 
     make LUA_PC=luajit
-    make check LUA=luajit
+    make check LUA_PC=luajit
     [sudo] make install LUA_PC=luajit
 
 If your Lua installation doesn't include a pkg-config file,
@@ -45,9 +45,9 @@ relevant variables will have to be specified manually, for example:
     make check
     make install LUA_LMOD_DIR=/usr/share/lua/5.2 LUA_CMOD_DIR=/usr/lib/lua/5.2
 
-For convenience, you can store any of the above variables in a file
-named `local.mk`. The Makefile includes this file for each run and any
-variables declared within take precedence over the defaults.
+**Note:** for convenience, variable overrides can be stored persistently
+in a file named `local.mk`. For example, instead of adding `LUA_PC=luajit`
+to every command, as shown above, it can just be added to `local.mk`.
 
 Usage
 -----
