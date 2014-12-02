@@ -18,16 +18,16 @@ before_install:
     - which luajit && luajit -v || true
     - bash .travis/setup_gumbo.sh
 install:
-    - make LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
-    - make dist LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
+    - make LUA=$(expr match "${LUA_PKG}" '^\(.[a-z]*\)')
+    - make dist LUA=$(expr match "${LUA_PKG}" '^\(.[a-z]*\)')
     - sudo
       luarocks make
       gumbo-scm-1.rockspec
       CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs"
       LIBFLAG="-shared --coverage"
 script:
-    - make check LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
-    - make check-install LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
+    - make check LUA=$(expr match "${LUA_PKG}" '^\(.[a-z]*\)')
+    - make check-install LUA=$(expr match "${LUA_PKG}" '^\(.[a-z]*\)')
 notifications:
     email:
         on_success: change
