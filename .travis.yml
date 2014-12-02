@@ -13,7 +13,7 @@ before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y "${LUA_PKG}" luarocks
     - test luajit != "${LUA_PKG}" && sudo apt-get install -y "${LUA_PKG}-dev" || true
-    - test luajit = "${LUA_PKG}" && ln -s /usr/bin/luajit-* /usr/bin/luajit || true
+    - test luajit = "${LUA_PKG}" && sudo ln -s /usr/bin/luajit-* /usr/bin/luajit || true
     - which lua && lua -v || true
     - which luajit && luajit -v || true
     - exit 1
