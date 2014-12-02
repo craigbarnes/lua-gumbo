@@ -10,11 +10,12 @@ branches:
     only:
         - master
 before_install:
-    - git fetch -t
-    - git describe --always --abbrev=0
-    - git describe --tags --abbrev=0
-    - git describe --tags
-    - git describe --all
+    - git --version || true
+    - git fetch -t || true
+    - git describe --always --abbrev=0 || true
+    - git describe --always --tags --abbrev=0 || true
+    - git describe --tags || true
+    - git describe --all || true
     - exit 1
     - sudo apt-get update
     - sudo apt-get install "$LUA" luarocks
