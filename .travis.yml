@@ -15,6 +15,7 @@ before_install:
     - test luajit != "${LUA_PKG}" && sudo apt-get install -y "${LUA_PKG}-dev" || true
     - which lua || true
     - which luajit || true
+    - lua -v
     - bash .travis/setup_gumbo.sh
 install:
     - make
