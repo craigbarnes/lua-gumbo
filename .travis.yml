@@ -11,16 +11,8 @@ branches:
         - master
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y git
     - sudo apt-get install -y "$LUA" luarocks
     - test luajit != "$LUA" && sudo apt-get install -y "$LUA-dev" || true
-    - git --version || true
-    - git fetch -t || true
-    - git describe --always --abbrev=0 || true
-    - git describe --always --tags --abbrev=0 || true
-    - git describe --tags || true
-    - git describe --all || true
-    - exit 1
     - bash .travis/setup_gumbo.sh
 install:
     - make
