@@ -16,11 +16,10 @@ before_install:
     - test luajit = "${LUA_PKG}" && sudo ln -s /usr/bin/luajit-* /usr/bin/luajit || true
     - which lua && lua -v || true
     - which luajit && luajit -v || true
-    - exit 1
     - bash .travis/setup_gumbo.sh
 install:
     - make LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
-    - make LUA=$(expr match "$LUA" '^\(.[a-z]*\)') dist
+    - make dist LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
     - sudo
       luarocks make
       gumbo-scm-1.rockspec
