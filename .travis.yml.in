@@ -11,19 +11,20 @@ branches:
         - master
 before_install:
     - sudo apt-get update
-    - sudo apt-get install $LUA $LUA-dev luarocks
+    - sudo apt-get install "$LUA" luarocks
+    - test lua = $(expr match "$LUA" '^\(.[a-z]*\)') && apt-get install "$LUA-dev"
     - bash .travis/setup_gumbo.sh
 install:
     - make
     - make dist
     - sudo
       luarocks make
-      gumbo-%VERSION%-1.rockspec
+      gumbo-scm-1.rockspec
       CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs"
       LIBFLAG="-shared --coverage"
 script:
-    - make check LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
-    - make check-install LUA=$(expr match "$LUA" '^\(.[a-z]*\)')
+    - make check
+    - make check-install
 notifications:
     email:
         on_success: change
