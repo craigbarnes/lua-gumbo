@@ -11,7 +11,7 @@ env:
     - LUA_PC=luajit PACKAGES="luajit libluajit-5.1-dev" LUA="luajit -joff"
 
 before_install:
-    - test luajit = ${LUA_PC} && sudo add-apt-repository -y ppa:mwild1/ppa || :
+    - if test "${LUA_PC}" = luajit; then sudo add-apt-repository -y ppa:mwild1/ppa; fi
     - sudo apt-get update -qq
 
 install:
