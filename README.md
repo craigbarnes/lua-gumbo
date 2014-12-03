@@ -16,6 +16,15 @@ Requirements
 Installation
 ------------
 
+### Using LuaRocks
+
+To install the latest lua-gumbo release with [LuaRocks], first ensure
+the requirements listed above are installed, then use:
+
+    luarocks install gumbo
+
+### Using GNU Make
+
 By default, the Makefile will consult [pkg-config] for the appropriate
 Lua variables. Usually the following commands will be sufficient:
 
@@ -305,6 +314,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [Gumbo]: https://github.com/google/gumbo-parser
 [Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
+[LuaRocks]: http://luarocks.org/
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
 [file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
