@@ -7,10 +7,11 @@ compiler:
 env:
     - LUA_PC=lua5.1 PACKAGES="lua5.1 liblua5.1-dev"
     - LUA_PC=lua5.2 PACKAGES="lua5.2 liblua5.2-dev"
-    - LUA_PC=luajit PACKAGES="luajit libluajit-5.1-dev" PPA=mwild1/ppa
+    - LUA_PC=luajit PACKAGES="luajit libluajit-5.1-dev"
+    - LUA_PC=luajit PACKAGES="luajit libluajit-5.1-dev" LUA="luajit -joff"
 
 before_install:
-    - if test -n "${PPA}"; then sudo add-apt-repository -y "ppa:${PPA}"; fi
+    - test luajit = ${LUA_PC} && sudo add-apt-repository -y ppa:mwild1/ppa || :
     - sudo apt-get update -qq
 
 install:
