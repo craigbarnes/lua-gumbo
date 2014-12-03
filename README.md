@@ -47,7 +47,7 @@ relevant variables will have to be specified manually, for example:
 
 **Note:** for convenience, variable overrides can be stored persistently
 in a file named `local.mk`. For example, instead of adding `LUA_PC=luajit`
-to every command, as shown above, it can just be added to `local.mk`.
+to every command, as shown above, it can just be added once to `local.mk`.
 
 Usage
 -----
