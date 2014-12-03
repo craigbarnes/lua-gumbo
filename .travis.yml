@@ -27,6 +27,10 @@ script:
     - make check
     - make check-install
 
+branches:
+    only:
+        - master
+
 notifications:
     email:
         on_success: change
