@@ -18,8 +18,8 @@ Installation
 
 ### Using LuaRocks
 
-To install the latest lua-gumbo release with [LuaRocks], first ensure
-the requirements listed above are installed, then use:
+To install the latest lua-gumbo release via [LuaRocks], first ensure
+the requirements listed above are installed, then use the command:
 
     luarocks install gumbo
 
@@ -146,11 +146,11 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 
 * [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
 * [`doctype`](#documenttype)
-* `URL`
-* `documentURI`
+* [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/Document.URL)
+* [`documentURI`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentURI)
 * [`compatMode`](https://developer.mozilla.org/en-US/docs/Web/API/document.compatMode)
-* `characterSet`
-* `contentType`
+* [`characterSet`](https://developer.mozilla.org/en-US/docs/Web/API/document.characterSet)
+* [`contentType`](https://developer.mozilla.org/en-US/docs/Web/API/document.contentType)
 * [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 * [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
 * [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementsByClassName)
