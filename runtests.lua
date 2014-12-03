@@ -1,7 +1,7 @@
 local open, write, ipairs, loadfile = io.open, io.write, ipairs, loadfile
 local xpcall, assert, tonumber, exit = xpcall, assert, tonumber, os.exit
 local yield, wrap = coroutine.yield, coroutine.wrap
-local debuginfo, traceback = debug.getinfo, debug.traceback
+local traceback = debug.traceback
 local _ENV = nil
 
 local tests = {
@@ -22,26 +22,24 @@ local tests = {
     "test/tree-construction.lua",
 }
 
-local function handler(err)
-    local filename, linenumber = err:match("^(.*):([0-9]+): ")
-    if not filename then return err end
-    linenumber = assert(tonumber(linenumber))
-    local level, info = 2
-    while true do
-        level = level + 1
-        info = debuginfo(level, "Sl")
-        if not info then return err end
-        if info.short_src == filename and info.currentline == linenumber then
-            break
-        end
+local function getline(filename, linenumber)
+    local file, err = open(filename)
+    if not file then
+        return nil, err
     end
-    local file = open(filename)
-    if not file then return err end
     local line
     for i = 1, linenumber do
-        line = file:read()
-        if not line then return err end
+        line = assert(file:read())
     end
+    return line
+end
+
+local function handler(err)
+    if not err then return traceback("Unknown error") end
+    local filename, linenumber = err:match("^(.*):([0-9]+): ")
+    if not filename then return traceback(err) end
+    local line = getline(filename, tonumber(linenumber))
+    if not line then return traceback(err) end
     local s = "%s\n   --->  \27[33m%s\27[0m\n     %s"
     return s:format(err, line:match("^%s*(.-)%s*$"), traceback())
 end
