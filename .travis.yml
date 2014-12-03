@@ -1,5 +1,9 @@
 language: c
 
+compiler:
+    - clang
+    - gcc
+
 env:
     - LUA_PC=lua5.1 PACKAGES="lua5.1 liblua5.1-dev"
     - LUA_PC=lua5.2 PACKAGES="lua5.2 liblua5.2-dev"
