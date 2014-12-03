@@ -19,7 +19,9 @@ install:
     - sudo ldconfig
 
 script:
-    - make env check check-install
+    - make env
+    - make check
+    - make check-install
 
 notifications:
     email:
