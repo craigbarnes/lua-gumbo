@@ -20,7 +20,7 @@ BENCHFILE    ?= test/data/2MiB.html
 
 USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
                 LUA_PC LUA_CFLAGS LUA_LMOD_DIR LUA_CMOD_DIR LUA
-PRINTVAR      = printf '\e[1m%-14s\e[0m= %s\n' '$(1)' '$(strip $($(1)))'
+PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document DocumentType \
                 Element HTMLCollection NamedNodeMap Node NodeList \
