@@ -1,5 +1,9 @@
 include lualib.mk
 
+ifeq "$(LUA_PC)" "lua5.2"
+  $(error Just testing Travis for pull requests)
+endif
+
 GUMBO_CFLAGS  ?= $(shell $(PKGCONFIG) --cflags gumbo)
 GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs-only-L gumbo)
 GUMBO_LDLIBS  ?= $(or $(shell $(PKGCONFIG) --libs-only-l gumbo), -lgumbo)
