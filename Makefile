@@ -15,7 +15,7 @@ TIMEFMT      ?= 'Process time: %es\nProcess peak memory usage: %MKB'
 TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
-TOHTML       ?= $(LUA) test/htmlfmt.lua
+TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 BENCHFILE    ?= test/data/2MiB.html
 
 USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
@@ -116,11 +116,11 @@ export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
 check: all
-	@$(LUA) runtests.lua
+	@$(LUA) $(LUAFLAGS) runtests.lua
 
 check-html5lib: export VERBOSE = 1
 check-html5lib: all
-	@$(LUA) test/tree-construction.lua
+	@$(LUA) $(LUAFLAGS) test/tree-construction.lua
 
 check-serialize: check-serialize-ns check-serialize-t1
 	@printf ' \33[32mPASSED\33[0m  make $@\n'
@@ -131,10 +131,10 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
 check-compat:
-	$(MAKE) -sB check LUA=lua CC=gcc
-	$(MAKE) -sB check LUA=luajit CC=gcc LUA_PC=luajit
-	$(MAKE) -sB check LUA='luajit -joff' CC=gcc LUA_PC=luajit
-	$(MAKE) -sB check LUA=lua CC=clang
+	$(MAKE) -sB check
+	$(MAKE) -sB check LUA_PC=luajit
+	$(MAKE) -sB check LUA_PC=luajit LUAFLAGS=-joff
+	$(MAKE) -sB check CC=clang
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
@@ -152,14 +152,14 @@ check-rockspec: dist
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
               $(DOM_MODULES) test/misc.lua test/dom/interfaces.lua runtests.lua
-	@$(LUA) -lluacov runtests.lua >/dev/null
+	@$(LUA) $(LUAFLAGS) -lluacov runtests.lua >/dev/null
 
 bench-parse: all test/bench.lua $(BENCHFILE)
-	@$(TIME) $(LUA) test/bench.lua $(BENCHFILE)
+	@$(TIME) $(LUA) $(LUAFLAGS) test/bench.lua $(BENCHFILE)
 
 bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 	@echo 'Parsing and serializing $(BENCHFILE) to html...'
-	@$(TIME) $(LUA) test/htmlfmt.lua $(BENCHFILE) /dev/null
+	@$(TIME) $(LUA) $(LUAFLAGS) test/htmlfmt.lua $(BENCHFILE) /dev/null
 
 env:
 	@$(foreach VAR, $(USERVARS), $(call PRINTVAR,$(VAR));)
