@@ -265,6 +265,8 @@ Inherits from [`Node`]. Implements [`ChildNode`].
 Testing
 -------
 
+[![Build Status](https://travis-ci.org/craigbarnes/lua-gumbo.png?branch=master)](https://travis-ci.org/craigbarnes/lua-gumbo)
+
 * `make check`: Runs all unit tests.
 * `make check-html5lib`: Runs just the html5lib [tree-construction tests].
 * `make check-install`: Runs `make check` within a temporary, isolated
