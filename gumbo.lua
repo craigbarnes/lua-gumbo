@@ -1,3 +1,4 @@
+local type, open, iotype = type, io.open, io.type
 local parse
 
 if jit and jit.status() then
@@ -11,7 +12,6 @@ if not parse then
     parse = require "gumbo.parse"
 end
 
-local type, open, iotype = type, io.open, io.type
 local _ENV = nil
 
 local function parseFile(pathOrFile, tabStop)
