@@ -18,6 +18,13 @@ before_install:
 
 install:
     - make -f .travis.mk install
+    - pkg-config --exists lua && echo lua || :
+    - pkg-config --exists lua51 && echo lua51 || :
+    - pkg-config --exists lua5.1 && echo lua5.1 || :
+    - pkg-config --exists lua-5.1 && echo lua-5.1 || :
+    - pkg-config --exists lua52 && echo lua52 || :
+    - pkg-config --exists lua5.2 && echo lua5.2 || :
+    - pkg-config --exists lua-5.2 && echo lua-5.2 || :
 
 script:
     - make -f .travis.mk script
