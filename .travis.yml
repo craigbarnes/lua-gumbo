@@ -1,6 +1,7 @@
 language: c
 
 os:
+    - linux
     - osx
 
 compiler:
@@ -8,23 +9,16 @@ compiler:
     - gcc
 
 env:
-    - LUA_VARIANT=Lua5.1
-    - LUA_VARIANT=Lua5.2
-    - LUA_VARIANT=LuaJIT
-    - LUA_VARIANT=LuaJIT LUAFLAGS="-joff"
+    - LUA_PC=lua5.1
+    - LUA_PC=lua5.2
+    - LUA_PC=luajit
+    - LUA_PC=luajit LUAFLAGS="-joff"
 
 before_install:
     - make -f .travis.mk before_install
 
 install:
     - make -f .travis.mk install
-    - pkg-config --exists lua && echo lua || true
-    - pkg-config --exists lua51 && echo lua51 || true
-    - pkg-config --exists lua5.1 && echo lua5.1 || true
-    - pkg-config --exists lua-5.1 && echo lua-5.1 || true
-    - pkg-config --exists lua52 && echo lua52 || true
-    - pkg-config --exists lua5.2 && echo lua5.2 || true
-    - pkg-config --exists lua-5.2 && echo lua-5.2 || true
 
 script:
     - make -f .travis.mk script
