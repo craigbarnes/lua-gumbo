@@ -1,34 +1,27 @@
 language: c
 
+os:
+    - linux
+    - osx
+
 compiler:
     - clang
     - gcc
 
 env:
-    - LUA_PC=lua5.1 PACKAGES="lua5.1 liblua5.1-dev"
-    - LUA_PC=lua5.2 PACKAGES="lua5.2 liblua5.2-dev"
-    - LUA_PC=luajit PACKAGES="luajit libluajit-5.1-dev"
-    - LUA_PC=luajit PACKAGES="luajit libluajit-5.1-dev" LUA="luajit -joff"
+    - LUA_PC=lua5.1
+    - LUA_PC=lua5.2
+    - LUA_PC=luajit
+    - LUA_PC=luajit LUAFLAGS="-joff"
 
 before_install:
-    - if test "${LUA_PC}" = luajit; then sudo add-apt-repository -y ppa:mwild1/ppa; fi
-    - sudo apt-get update -qq
+    - make -f .travis.mk before_install
 
 install:
-    - sudo apt-get -y install pkg-config ${PACKAGES}
-    - git clone git://github.com/google/gumbo-parser.git
-    - cd gumbo-parser
-    - sh autogen.sh
-    - ./configure --prefix=/usr
-    - make
-    - sudo make install
-    - cd ..
-    - sudo ldconfig
+    - make -f .travis.mk install
 
 script:
-    - make env
-    - make check
-    - make check-install
+    - make -f .travis.mk script
 
 branches:
     only:
