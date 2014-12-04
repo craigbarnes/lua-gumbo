@@ -7,7 +7,6 @@ ifeq "$(TRAVIS_OS_NAME)" "linux"
   PACKAGES_luajit = luajit libluajit-5.1-dev
   ifeq "$(LUA_PC)" "luajit"
     PM_ADD_REPO = sudo add-apt-repository -y ppa:mwild1/ppa
-    EXTRA_TESTS = $(MAKE) check LUAFLAGS=-joff
   endif
 endif
 
@@ -17,6 +16,10 @@ ifeq "$(TRAVIS_OS_NAME)" "osx"
   PACKAGES_lua5.1 = lua51
   PACKAGES_lua5.2 = lua
   PACKAGES_luajit = luajit
+endif
+
+ifeq "$(LUA_PC)" "luajit"
+  EXTRA_TESTS = $(MAKE) check LUAFLAGS=-joff
 endif
 
 before_install:
@@ -30,6 +33,7 @@ install:
 	$(MAKE) -C gumbo-parser
 	sudo $(MAKE) -C gumbo-parser install
 	$(LD_UPDATE_CACHE)
+	$(MAKE)
 
 script:
 	$(MAKE) env
