@@ -1,3 +1,5 @@
+MAKEFLAGS += --no-print-directory
+
 ifeq "$(TRAVIS_OS_NAME)" "linux"
   PM_INSTALL = sudo apt-get -y install
   PM_UPDATE_CACHE = sudo apt-get update -qq
