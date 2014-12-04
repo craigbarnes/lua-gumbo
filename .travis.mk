@@ -20,7 +20,8 @@ ifeq "$(TRAVIS_OS_NAME)" "linux"
 endif
 
 ifeq "$(TRAVIS_OS_NAME)" "osx"
-  PM_INSTALL = sudo brew install
+  PM_INSTALL = brew install
+  PM_UPDATE_CACHE = brew update
   ifeq "$(LUA_VARIANT)" "Lua5.1"
     PACKAGES = lua51
     LUA_PC = lua51
