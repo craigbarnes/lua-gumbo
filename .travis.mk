@@ -9,8 +9,7 @@ ifeq "$(TRAVIS_OS_NAME)" "linux"
   PACKAGES_luajit = luajit libluajit-5.1-dev
   ifeq "$(LUA_PC)" "lua5.1"
     EXTRA_TESTS = make clean && sudo luarocks make gumbo-scm-1.rockspec
-  endif
-  ifeq "$(LUA_PC)" "luajit"
+  else ifeq "$(LUA_PC)" "luajit"
     PM_ADD_REPO = sudo add-apt-repository -y ppa:mwild1/ppa
   endif
 endif

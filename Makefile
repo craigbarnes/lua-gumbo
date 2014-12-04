@@ -164,7 +164,7 @@ env:
 	@$(foreach VAR, $(USERVARS), $(call PRINTVAR,$(VAR));)
 
 todo:
-	git grep --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
+	git grep -E --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \

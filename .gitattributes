@@ -2,3 +2,8 @@
 .travis.* export-ignore
 test/git-hooks/ export-ignore
 CONTRIBUTING.md export-ignore
+
+*.lua whitespace=tab-in-indent
+*.c whitespace=tab-in-indent
+*.h whitespace=tab-in-indent
+*.md whitespace=tab-in-indent
