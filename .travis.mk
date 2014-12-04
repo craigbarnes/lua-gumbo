@@ -28,7 +28,7 @@ ifeq "$(TRAVIS_OS_NAME)" "osx"
   endif
   ifeq "$(LUA_VARIANT)" "Lua5.2"
     PACKAGES = lua
-    LUA_PC = lua
+    LUA_PC = lua52
   endif
   ifeq "$(LUA_VARIANT)" "LuaJIT"
     PACKAGES = luajit

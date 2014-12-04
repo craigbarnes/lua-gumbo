@@ -1,7 +1,6 @@
 language: c
 
 os:
-    - linux
     - osx
 
 compiler:
@@ -22,10 +21,6 @@ install:
 
 script:
     - make -f .travis.mk script
-
-matrix:
-    allow_failures:
-        - os: osx
 
 branches:
     only:

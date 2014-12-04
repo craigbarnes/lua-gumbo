@@ -14,7 +14,6 @@ XLDFLAGS     += $(GUMBO_LDFLAGS) $(GUMBO_LDLIBS)
 TIMEFMT      ?= 'Process time: %es\nProcess peak memory usage: %MKB'
 TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
-RMDIRP       ?= rmdir --ignore-fail-on-non-empty -p
 TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 BENCHFILE    ?= test/data/2MiB.html
 
@@ -142,7 +141,7 @@ check-install: export LUA_CPATH = $(DESTDIR)$(LUA_CMOD_DIR)/?.so
 check-install: install check uninstall
 	$(LUA) -e 'assert(package.path == "$(DESTDIR)$(LUA_LMOD_DIR)/?.lua")'
 	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
-	$(RMDIRP) "$(DESTDIR)$(LUA_LMOD_DIR)" "$(DESTDIR)$(LUA_CMOD_DIR)"
+	$(RM) -r '$(DESTDIR)'
 
 check-rockspec: LUA_PATH = ;;
 check-rockspec: dist
