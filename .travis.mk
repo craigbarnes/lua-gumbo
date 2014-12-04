@@ -7,6 +7,7 @@ ifeq "$(TRAVIS_OS_NAME)" "linux"
   PACKAGES_luajit = luajit libluajit-5.1-dev
   ifeq "$(LUA_PC)" "luajit"
     PM_ADD_REPO = sudo add-apt-repository -y ppa:mwild1/ppa
+    EXTRA_TESTS = $(MAKE) check LUAFLAGS=-joff
   endif
 endif
 
@@ -34,6 +35,7 @@ script:
 	$(MAKE) env
 	$(MAKE) check
 	$(MAKE) check-install
+	$(EXTRA_TESTS)
 
 
 .PHONY: before_install install script

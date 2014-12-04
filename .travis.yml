@@ -12,7 +12,6 @@ env:
     - LUA_PC=lua5.1
     - LUA_PC=lua5.2
     - LUA_PC=luajit
-    - LUA_PC=luajit LUAFLAGS="-joff"
 
 before_install:
     - make -f .travis.mk before_install
