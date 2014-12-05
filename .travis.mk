@@ -1,4 +1,7 @@
-MAKEFLAGS += --no-print-directory
+GUMBO_VERSION = 0.9.2
+GUMBO_TARNAME = gumbo-parser-$(GUMBO_VERSION)
+GUMBO_HOME    = https://github.com/google/gumbo-parser
+GUMBO_TARBALL = $(GUMBO_HOME)/archive/v$(GUMBO_VERSION)/$(GUMBO_TARNAME).tar.gz
 
 ifeq "$(TRAVIS_OS_NAME)" "linux"
   PM_INSTALL = sudo apt-get -y install
@@ -35,10 +38,11 @@ before_install:
 
 install:
 	$(PM_INSTALL) $(PACKAGES_$(LUA_PC))
-	git clone git://github.com/google/gumbo-parser.git
-	cd gumbo-parser && sh autogen.sh && ./configure --prefix=/usr
-	$(MAKE) -C gumbo-parser
-	sudo $(MAKE) -C gumbo-parser install
+	wget $(GUMBO_TARBALL)
+	tar -xzf $(GUMBO_TARNAME).tar.gz
+	cd $(GUMBO_TARNAME) && sh autogen.sh && ./configure --prefix=/usr
+	$(MAKE) -C $(GUMBO_TARNAME)
+	sudo $(MAKE) -C $(GUMBO_TARNAME) install
 	$(LD_UPDATE_CACHE)
 	$(MAKE)
 
