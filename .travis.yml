@@ -1,32 +1,10 @@
-language: c
+language:        c
+branches:        {only: master}
 
-os:
-    - linux
-    - osx
+os:              [linux, osx]
+compiler:        [clang, gcc]
+env:             [LUA_PC=lua5.1, LUA_PC=lua5.2, LUA_PC=luajit]
 
-compiler:
-    - clang
-    - gcc
-
-env:
-    - LUA_PC=lua5.1
-    - LUA_PC=lua5.2
-    - LUA_PC=luajit
-
-before_install:
-    - make -f .travis.mk before_install
-
-install:
-    - make -f .travis.mk install
-
-script:
-    - make -f .travis.mk script
-
-branches:
-    only:
-        - master
-
-notifications:
-    email:
-        on_success: change
-        on_failure: always
+before_install:  make -f .travis.mk before_install
+install:         make -f .travis.mk install
+script:          make -f .travis.mk script
