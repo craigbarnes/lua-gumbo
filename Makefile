@@ -139,8 +139,8 @@ check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
 check-install: export LUA_CPATH = $(DESTDIR)$(LUA_CMOD_DIR)/?.so
 check-install: install check uninstall
-	$(LUA) -e 'assert(package.path == "$(DESTDIR)$(LUA_LMOD_DIR)/?.lua")'
-	$(LUA) -e 'assert(package.cpath == "$(DESTDIR)$(LUA_CMOD_DIR)/?.so")'
+	$(LUA) -e 'assert(package.path == "$(LUA_PATH)")'
+	$(LUA) -e 'assert(package.cpath == "$(LUA_CPATH)")'
 	$(RM) -r '$(DESTDIR)'
 
 check-rockspec: LUA_PATH = ;;

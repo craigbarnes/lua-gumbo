@@ -2,6 +2,7 @@ local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local NodeList = require "gumbo.dom.NodeList"
+local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
 local assertions = require "gumbo.dom.assertions"
@@ -65,6 +66,26 @@ function Document:adoptNode(node)
     end
     node.ownerDocument = nil
     return node
+end
+
+function Document:serialize(buffer)
+    assertDocument(self)
+    local buf = buffer or Buffer()
+    for i, node in ipairs(self.childNodes) do
+        local type = node.type
+        if type == "element" then
+            buf:write(node.outerHTML)
+        elseif type == "comment" then
+            buf:write("<!--", node.data, "-->")
+        elseif type == "doctype" then
+            buf:write("<!DOCTYPE ", node.name, ">")
+        end
+    end
+    if buf.tostring then
+        return buf:tostring()
+    else
+        buf:write("\n")
+    end
 end
 
 -- TODO: function Document:getElementsByTagNameNS(namespace, localName)

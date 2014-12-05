@@ -8,11 +8,8 @@ function NonElementParentNode:getElementById(elementId)
     assertNode(self)
     if type(elementId) == "string" then
         for node in self:walk() do
-            if node.type == "element" then
-                local attr = node.attributes
-                if attr.id and attr.id.value == elementId then
-                    return node
-                end
+            if node.type == "element" and node.id == elementId then
+                return node
             end
         end
     end
