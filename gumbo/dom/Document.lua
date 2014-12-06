@@ -91,11 +91,7 @@ end
 -- TODO: function Document:getElementsByTagNameNS(namespace, localName)
 -- TODO: function Document:createElementNS(namespace, qualifiedName)
 -- TODO: function Document:createDocumentFragment()
--- TODO: function Document:createProcessingInstruction(target, data)
 -- TODO: function Document:importNode(node, deep)
--- TODO: function Document:createAttribute(localName)
--- TODO: function Document:createAttributeNS(namespace, name)
--- TODO: function Document:createEvent(interface)
 -- TODO: function Document:createRange()
 
 function Document.getters:doctype()
