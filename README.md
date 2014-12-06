@@ -110,7 +110,7 @@ local text = foo.childNodes[1].data
 print(text)
 ```
 
-Note: this example omits error handling for the sake of simplicity.
+**Note:** this example omits error handling for the sake of simplicity.
 Production code should wrap each step with `assert()` or some other,
 application-specific error handling.
 
@@ -137,7 +137,7 @@ lua-gumbo specific documentation currently exists, but since it's
 an implementation of a standard API, cross-checking the list with
 the [MDN DOM reference] should suffice for now.
 
-*Note:* When referring to external DOM documentation, don't forget to
+**Note:** When referring to external DOM documentation, don't forget to
 translate JavaScript examples to use Lua `object:method()` call syntax.
 
 ### `Document`
