@@ -6,45 +6,19 @@ local gumbo = require "gumbo"
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
 local parse = gumbo.parse
-local open, write, ipairs, assert = io.open, io.write, ipairs, assert
-local format, clock, sort, exit = string.format, os.clock, table.sort, os.exit
+local ipairs, assert, sort = ipairs, assert, table.sort
+local open, popen, write = io.open, io.popen, io.write
+local clock, exit = os.clock, os.exit
 local verbose = os.getenv "VERBOSE"
 local _ENV = nil
 local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
+local filenames = {}
 
 local nsmap = {
     ["http://www.w3.org/1999/xhtml"] = "",
     ["http://www.w3.org/1998/Math/MathML"] = "math ",
     ["http://www.w3.org/2000/svg"] = "svg "
 }
-
-local filenames = {
-    "test/tree-construction/adoption01.dat",
-    "test/tree-construction/adoption02.dat",
-    "test/tree-construction/comments01.dat",
-    "test/tree-construction/doctype01.dat",
-    "test/tree-construction/domjs-unsafe.dat",
-    "test/tree-construction/entities01.dat",
-    "test/tree-construction/entities02.dat",
-    "test/tree-construction/html5test-com.dat",
-    "test/tree-construction/inbody01.dat",
-    "test/tree-construction/isindex.dat",
-    "test/tree-construction/pending-spec-changes.dat",
-    "test/tree-construction/pending-spec-changes-plain-text-unsafe.dat",
-    "test/tree-construction/plain-text-unsafe.dat",
-    "test/tree-construction/scriptdata01.dat",
-    "test/tree-construction/tables01.dat",
-    "test/tree-construction/tests_innerHTML_1.dat",
-    "test/tree-construction/tricky01.dat",
-    "test/tree-construction/webkit01.dat",
-    "test/tree-construction/webkit02.dat",
-}
-
-for i = 1, 26 do
-    if i ~= 13 then
-        filenames[#filenames+1] = "test/tree-construction/tests" .. i .. ".dat"
-    end
-end
 
 local function serialize(document)
     assert(document and document.type == "document")
@@ -144,6 +118,19 @@ local function parseTestData(filename)
 end
 
 do
+    local pipe = assert(popen("echo test/tree-construction/*.dat"))
+    local text = assert(pipe:read("*a"))
+    pipe:close()
+    assert(text:len() > 0, "No test data found")
+    local i = 0
+    for filename in text:gmatch("%S+") do
+        i = i + 1
+        filenames[i] = filename
+    end
+    assert(i > 0, "No test data found")
+end
+
+do
     local hrule = ("="):rep(76)
     local totalPassed, totalFailed, totalSkipped = 0, 0, 0
     local start = clock()
@@ -190,7 +177,7 @@ do
     if verbose or totalFailed > 0 then
         write (
             "\nRan ", totalPassed + totalFailed + totalSkipped, " tests in ",
-            format("%.2fs", stop - start), "\n\n",
+            ("%.2fs"):format(stop - start), "\n\n",
             "Passed: ", totalPassed, "\n",
             "Failed: ", totalFailed, "\n",
             "Skipped: ", totalSkipped, "\n\n"
