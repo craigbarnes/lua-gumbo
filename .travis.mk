@@ -11,7 +11,7 @@ ifeq "$(TRAVIS_OS_NAME)" "linux"
   PACKAGES_lua5.2 = lua5.2 liblua5.2-dev
   PACKAGES_luajit = luajit libluajit-5.1-dev
   ifeq "$(LUA_PC)" "lua5.1"
-    EXTRA_TESTS = make clean && sudo luarocks make gumbo-scm-1.rockspec
+    EXTRA_TESTS = $(MAKE) check-luarocks-make
   else ifeq "$(LUA_PC)" "luajit"
     PM_ADD_REPO = sudo add-apt-repository -y ppa:mwild1/ppa
   endif
@@ -24,7 +24,7 @@ ifeq "$(TRAVIS_OS_NAME)" "osx"
   PACKAGES_lua5.2 = lua luarocks
   PACKAGES_luajit = luajit
   ifeq "$(LUA_PC)" "lua5.2"
-    EXTRA_TESTS = make clean && luarocks make gumbo-scm-1.rockspec
+    EXTRA_TESTS = $(MAKE) check-luarocks-make
   endif
 endif
 

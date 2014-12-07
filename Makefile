@@ -4,6 +4,7 @@ GUMBO_CFLAGS  ?= $(shell $(PKGCONFIG) --cflags gumbo)
 GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs-only-L gumbo)
 GUMBO_LDLIBS  ?= $(or $(shell $(PKGCONFIG) --libs-only-l gumbo), -lgumbo)
 GUMBO_INCDIR  ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
+GUMBO_LIBDIR  ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
 GUMBO_HEADER  ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
@@ -143,10 +144,19 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(LUA_CPATH)")'
 	$(RM) -r '$(DESTDIR)'
 
+LUAROCKS = luarocks
+
 check-rockspec: LUA_PATH = ;;
-check-rockspec: dist
-	luarocks lint gumbo-$(VERSION)-1.rockspec
-	luarocks lint gumbo-scm-1.rockspec
+check-rockspec: dist gumbo-scm-1.rockspec
+	$(LUAROCKS) lint gumbo-$(VERSION)-1.rockspec
+	$(LUAROCKS) lint gumbo-scm-1.rockspec
+
+check-luarocks-make: LUA_PATH = ;;
+check-luarocks-make: MAKEFLAGS += -B
+check-luarocks-make: gumbo-scm-1.rockspec
+	$(LUAROCKS) make --local $< \
+	    GUMBO_INCDIR='$(GUMBO_INCDIR)' \
+	    GUMBO_LIBDIR='$(GUMBO_LIBDIR)'
 
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
@@ -168,13 +178,13 @@ todo:
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
-	      coverage.txt lua-gumbo-*.tar.gz gumbo-[0-9]*.rockspec \
-	      gumbo-*.rock
+	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
 
 
 .PHONY: \
     all amalg install uninstall clean git-hooks dist env todo \
-    check check-html5lib check-compat check-install check-rockspec \
+    check check-html5lib check-compat check-install \
+    check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
     bench-parse bench-serialize
 
