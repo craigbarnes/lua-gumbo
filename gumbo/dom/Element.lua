@@ -17,7 +17,7 @@ local _ENV = nil
 local Element = util.merge("Node", "ChildNode", "ParentNode", {
     type = "element",
     nodeType = 1,
-    namespaceURI = "http://www.w3.org/1999/xhtml",
+    namespace = "html",
     attributes = setmetatable({length = 0}, NamedNodeMap),
     readonly = Set{"tagName", "classList"}
 })
@@ -103,7 +103,7 @@ function Element:getAttribute(name)
     if type(name) == "string" then
         -- If the context object is in the HTML namespace and its node document
         -- is an HTML document, let name be converted to ASCII lowercase.
-        if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
+        if self.namespace == "html" then
             name = name:lower()
         end
         -- Return the value of the first attribute in the context object's
@@ -162,7 +162,7 @@ function Element:cloneNode(deep)
     if deep then NYI() end -- << TODO
     local clone = {
         localName = self.localName,
-        namespaceURI = self.namespaceURI,
+        namespace = self.namespace,
         prefix = self.prefix
     }
     if self:hasAttributes() then
@@ -190,9 +190,19 @@ end
 -- TODO: function Element.matches(selectors)
 -- TODO: function Element.getElementsByTagNameNS(namespace, localName)
 
+local namespaces = {
+    html = "http://www.w3.org/1999/xhtml",
+    math = "http://www.w3.org/1998/Math/MathML",
+    svg = "http://www.w3.org/2000/svg"
+}
+
+function Element.getters:namespaceURI()
+    return namespaces[self.namespace]
+end
+
 -- TODO: implement all cases from http://www.w3.org/TR/dom/#dom-element-tagname
 function Element.getters:tagName()
-    if self.namespaceURI == "http://www.w3.org/1999/xhtml" then
+    if self.namespace == "html" then
         return self.localName:upper()
     else
         return self.localName

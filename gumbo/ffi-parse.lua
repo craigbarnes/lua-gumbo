@@ -32,8 +32,7 @@ local cstring, cast, new = ffi.string, ffi.cast, ffi.new
 local tonumber, setmetatable, format = tonumber, setmetatable, string.format
 local function oob(t, k) error(format("Index out of bounds: %s", k), 2) end
 local function LookupTable(t) return setmetatable(t, {__index = oob}) end
-local w3 = "http://www.w3.org/"
-local tagnsmap = LookupTable{w3.."2000/svg", w3.."1998/Math/MathML"}
+local tagnsmap = LookupTable{"svg", "math"}
 local attrnsmap = LookupTable{"xlink", "xml", "xmlns"}
 local quirksmap = LookupTable{[0] = "no-quirks", "quirks", "limited-quirks"}
 local constructors
@@ -105,7 +104,7 @@ local function create_element(node, depth)
         offset = element.start_pos.offset
     }
     if element.tag_namespace ~= C.GUMBO_NAMESPACE_HTML then
-        t.namespaceURI = tagnsmap[tonumber(element.tag_namespace)]
+        t.namespace = tagnsmap[tonumber(element.tag_namespace)]
     end
     local parseFlags = tonumber(node.parse_flags)
     if parseFlags ~= 0 then

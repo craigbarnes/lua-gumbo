@@ -109,7 +109,7 @@ local function isEqualElement(self, other)
     local selfAttrs = self.attributes
     local otherAttrs = other.attributes
     if
-        self.namespaceURI ~= other.namespaceURI
+        self.namespace ~= other.namespace
         -- TODO: namespace prefix
         or self.localName ~= other.localName
         or selfAttrs.length ~= otherAttrs.length
