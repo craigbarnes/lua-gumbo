@@ -14,12 +14,6 @@ local _ENV = nil
 local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
 local filenames = {}
 
-local nsmap = {
-    ["http://www.w3.org/1999/xhtml"] = "",
-    ["http://www.w3.org/1998/Math/MathML"] = "math ",
-    ["http://www.w3.org/2000/svg"] = "svg "
-}
-
 local function serialize(document)
     assert(document and document.type == "document")
     local buf = Buffer()
@@ -28,8 +22,12 @@ local function serialize(document)
         local type = node.nodeType
         if type == ELEMENT_NODE then
             local i1, i2 = indent[depth], indent[depth+1]
-            local namespace = nsmap[node.namespaceURI] or ""
-            buf:write("| ", i1, "<", namespace, node.localName, ">\n")
+            buf:write("| ", i1, "<")
+            local namespace = node.namespace
+            if namespace ~= "html" then
+                buf:write(namespace, " ")
+            end
+            buf:write(node.localName, ">\n")
 
             -- The html5lib tree format expects attributes to be sorted by
             -- name, in lexicographic order. Instead of sorting in-place or
