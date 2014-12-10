@@ -16,13 +16,13 @@ Bug Reports
 Pull Requests
 -------------
 
-* Do not mix unrelated improvements/commits in a single pull request. Open
-  a new request for each issue so that they can be reviewed and merged
-  separately.
-* Include as few commits as necessary. Use `git rebase`, if necessary, to
-  keep the history amenable to `git bisect`.
-* Add test coverage for any new code. Update tests for any modified
-  code. All new and existing tests should pass.
+* Create a feature branch and submit a separate [pull request] for each
+  issue. Avoid mixing unrelated improvements/commits in a single request.
+* Include as few commits as necessary, without any merge commits.
+* Add test coverage for new code. Update tests for modified code. All new
+  and existing tests should pass.
+
+[pull request]: https://github.com/craigbarnes/lua-gumbo/pulls
 
 Commit Messages
 ---------------
