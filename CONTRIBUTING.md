@@ -1,3 +1,18 @@
+Bug Reports
+-----------
+
+* Check if the bug already exists in the [issue tracker]. If not, open a
+  [new issue].
+* Include any relevant error messages and test cases, formatted as
+  Markdown [code blocks]. Avoid linking to external paste services.
+* Make test cases as minimal as possible.
+* For general suggestions or feedback, leave a message in the [chat room].
+
+[issue tracker]: https://github.com/craigbarnes/lua-gumbo/issues
+[new issue]: https://github.com/craigbarnes/lua-gumbo/issues/new
+[code blocks]: https://help.github.com/articles/github-flavored-markdown/#fenced-code-blocks
+[chat room]: https://gitter.im/craigbarnes/lua-gumbo
+
 Pull Requests
 -------------
 
