@@ -18,14 +18,25 @@ local rcdataElements = Set {
     "plaintext"
 }
 
-local booleanAttributes = Set {
-    "allowfullscreen", "async", "autofocus", "autoplay", "checked",
-    "compact", "controls", "declare", "default", "defer", "disabled",
-    "formnovalidate", "hidden", "inert", "ismap", "itemscope", "loop",
-    "multiple", "multiple", "muted", "nohref", "noresize", "noshade",
-    "novalidate", "nowrap", "open", "readonly", "required", "reversed",
-    "scoped", "seamless", "selected", "sortable", "truespeed",
-    "typemustmatch"
+local booleanAttributes = {
+    [""] = Set{"hidden", "irrelevant"},
+    audio = Set{"autoplay", "controls"},
+    button = Set{"disabled", "autofocus"},
+    command = Set{"hidden", "disabled", "checked", "default"},
+    datagrid = Set{"multiple", "disabled"},
+    details = Set{"open"},
+    fieldset = Set{"disabled", "readonly"},
+    hr = Set{"noshade"},
+    img = Set{"ismap"},
+    input = Set[[disabled readonly required autofocus checked ismap]],
+    menu = Set{"autosubmit"},
+    optgroup = Set{"disabled", "readonly"},
+    option = Set{"disabled", "readonly", "selected"},
+    output = Set{"disabled", "readonly"},
+    script = Set{"defer", "async"},
+    select = Set{"disabled", "readonly", "autofocus", "multiple"},
+    style = Set{"scoped"},
+    video = Set{"autoplay", "controls"},
 }
 
 return {

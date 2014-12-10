@@ -9,6 +9,7 @@ local constants = require "gumbo.constants"
 local namespaces = constants.namespaces
 local voidElements = constants.voidElements
 local rcdataElements = constants.rcdataElements
+local booleanAttributes = constants.booleanAttributes
 local assertElement = assertions.assertElement
 local assertNode = assertions.assertNode
 local assertName = assertions.assertName
@@ -228,7 +229,17 @@ local function serialize(node, buf)
     local type = node.type
     if type == "element" then
         local tag = node.localName
-        buf:write(node.tagHTML)
+        buf:write("<", tag)
+        for i, attr in ipairs(node.attributes) do
+            local ns, name, val = attr.prefix, attr.name, attr.value
+            if ns and not (ns == "xmlns" and name == "xmlns") then
+                buf:write(" ", ns, ":", name)
+            else
+                buf:write(" ", name)
+            end
+            buf:write('="', attr.escapedValue, '"')
+        end
+        buf:write(">")
         if not voidElements[tag] then
             local children = node.childNodes
             for i = 1, #children do
@@ -265,7 +276,8 @@ end
 
 function Element.getters:tagHTML()
     local buffer = Buffer()
-    buffer:write("<", self.localName)
+    local tag = self.localName
+    buffer:write("<", tag)
     for i, attr in ipairs(self.attributes) do
         local ns, name, val = attr.prefix, attr.name, attr.value
         if ns and not (ns == "xmlns" and name == "xmlns") then
@@ -273,7 +285,11 @@ function Element.getters:tagHTML()
         else
             buffer:write(" ", name)
         end
-        buffer:write('="', attr.escapedValue, '"')
+        local bset = booleanAttributes[tag]
+        local boolattr = (bset and bset[name]) or booleanAttributes[""][name]
+        if not boolattr or not (val == "" or val == name) then
+            buffer:write('="', attr.escapedValue, '"')
+        end
     end
     buffer:write(">")
     return buffer:tostring()
