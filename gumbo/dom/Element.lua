@@ -9,7 +9,6 @@ local constants = require "gumbo.constants"
 local namespaces = constants.namespaces
 local voidElements = constants.voidElements
 local rcdataElements = constants.rcdataElements
-local booleanAttributes = constants.booleanAttributes
 local assertElement = assertions.assertElement
 local assertNode = assertions.assertNode
 local assertName = assertions.assertName
@@ -274,9 +273,7 @@ function Element.getters:tagHTML()
         else
             buffer:write(" ", name)
         end
-        if not booleanAttributes[name] or not (val == "" or val == name) then
-            buffer:write('="', attr.escapedValue, '"')
-        end
+        buffer:write('="', attr.escapedValue, '"')
     end
     buffer:write(">")
     return buffer:tostring()
