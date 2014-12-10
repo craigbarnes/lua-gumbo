@@ -27,15 +27,13 @@ Pull Requests
 Commit Messages
 ---------------
 
-* Hard wrap lines at no more than 72 columns.
+* Hard wrap lines at 72 columns.
+* Use proper sentence case and punctuation.
 * Don't use GitHub-specific features/references (e.g. "fixes issue #9").
-* If there's more than a single line, the first line should be a short
-  summary, followed by a blank line and any number of longer paragraphs.
-* Use proper sentence case and punctuation, but don't add a period after
-  single-line summaries.
-* Add an ellipsis (`...`) to the end of the first line if it's followed
-  by any additional paragraphs, so that it's clear from looking at
-  `git log --oneline` which commits have additional information.
+* The first line should be a single-sentence summary.
+* If writing more than just a summary, add an ellipsis (`...`) to the end
+  of the first line, followed by a blank line, followed by any number of
+  wrapped paragraphs.
 
 Coding Style
 ------------
