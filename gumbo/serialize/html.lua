@@ -1,5 +1,8 @@
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
+local constants = require "gumbo.constants"
+local voidElements = constants.voidElements
+local rcdataElements = constants.rcdataElements
 local ipairs = ipairs
 local _ENV = nil
 
@@ -30,7 +33,7 @@ return function(node, buffer, indentWidth)
             buf:write(indent, node.tagHTML)
             local children = node.childNodes
             local length = #children
-            if node.isVoid then
+            if voidElements[tag] then
                 buf:write("\n")
             elseif length == 0 then
                 buf:write("</", tag, ">\n")
@@ -43,7 +46,7 @@ return function(node, buffer, indentWidth)
             end
         elseif type == "text" then
             local parent = node.parentNode
-            if parent and parent.isRaw then
+            if parent and rcdataElements[parent.localName] then
                 buf:write(indent, node.data, "\n")
             else
                 buf:write(wrap(node.escapedData, indent))

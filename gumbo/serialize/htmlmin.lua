@@ -2,6 +2,9 @@
 -- TODO: Add test cases
 
 local Buffer = require "gumbo.Buffer"
+local constants = require "gumbo.constants"
+local voidElements = constants.voidElements
+local rcdataElements = constants.rcdataElements
 local ipairs = ipairs
 local _ENV = nil
 
@@ -20,7 +23,7 @@ return function(node, buffer)
             if not insertedByParser then
                 buf:write(node.tagHTML)
             end
-            if not node.isVoid then
+            if not voidElements[tag] then
                 if node:hasChildNodes() then
                     local childNodes = node.childNodes
                     for i = 1, #childNodes do
@@ -33,7 +36,7 @@ return function(node, buffer)
             end
         elseif type == "text" then
             local parent = node.parentNode
-            if parent and parent.isRaw then
+            if parent and rcdataElements[parent.localName] then
                 buf:write(node.data)
             else
                 buf:write(stripws(node.escapedData))

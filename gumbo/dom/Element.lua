@@ -5,6 +5,11 @@ local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
 local HTMLCollection = require "gumbo.dom.HTMLCollection"
 local assertions = require "gumbo.dom.assertions"
+local constants = require "gumbo.constants"
+local namespaces = constants.namespaces
+local voidElements = constants.voidElements
+local rcdataElements = constants.rcdataElements
+local booleanAttributes = constants.booleanAttributes
 local assertElement = assertions.assertElement
 local assertNode = assertions.assertNode
 local assertName = assertions.assertName
@@ -190,12 +195,6 @@ end
 -- TODO: function Element.matches(selectors)
 -- TODO: function Element.getElementsByTagNameNS(namespace, localName)
 
-local namespaces = {
-    html = "http://www.w3.org/1999/xhtml",
-    math = "http://www.w3.org/1998/Math/MathML",
-    svg = "http://www.w3.org/2000/svg"
-}
-
 function Element.getters:namespaceURI()
     return namespaces[self.namespace]
 end
@@ -226,41 +225,12 @@ function Element.getters:classList()
     return list
 end
 
-local void = Set {
-    "area", "base", "basefont", "bgsound", "br", "col", "embed",
-    "frame", "hr", "img", "input", "keygen", "link", "menuitem", "meta",
-    "param", "source", "track", "wbr"
-}
-
-local raw = Set {
-    "style", "script", "xmp", "iframe", "noembed", "noframes",
-    "plaintext"
-}
-
-local boolattr = Set {
-    "allowfullscreen", "async", "autofocus", "autoplay", "checked",
-    "compact", "controls", "declare", "default", "defer", "disabled",
-    "formnovalidate", "hidden", "inert", "ismap", "itemscope", "loop",
-    "multiple", "multiple", "muted", "nohref", "noresize", "noshade",
-    "novalidate", "nowrap", "open", "readonly", "required", "reversed",
-    "scoped", "seamless", "selected", "sortable", "truespeed",
-    "typemustmatch"
-}
-
-function Element.getters:isRaw()
-    return raw[self.localName]
-end
-
-function Element.getters:isVoid()
-    return void[self.localName]
-end
-
 local function serialize(node, buf)
     local type = node.type
     if type == "element" then
         local tag = node.localName
         buf:write(node.tagHTML)
-        if not void[tag] then
+        if not voidElements[tag] then
             local children = node.childNodes
             for i = 1, #children do
                 serialize(children[i], buf)
@@ -268,7 +238,7 @@ local function serialize(node, buf)
             buf:write("</", tag, ">")
         end
     elseif type == "text" then
-        if raw[node.parentNode.localName] then
+        if rcdataElements[node.parentNode.localName] then
             buf:write(node.data)
         else
             buf:write(node.escapedData)
@@ -304,7 +274,7 @@ function Element.getters:tagHTML()
         else
             buffer:write(" ", name)
         end
-        if not boolattr[name] or not (val == "" or val == name) then
+        if not booleanAttributes[name] or not (val == "" or val == name) then
             buffer:write('="', attr.escapedValue, '"')
         end
     end
