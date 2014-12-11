@@ -15,9 +15,7 @@ ifeq "$(TRAVIS_OS_NAME)" "linux"
   else ifeq "$(LUA_PC)" "luajit"
     PM_ADD_REPO = sudo add-apt-repository -y ppa:mwild1/ppa
   endif
-endif
-
-ifeq "$(TRAVIS_OS_NAME)" "osx"
+else ifeq "$(TRAVIS_OS_NAME)" "osx"
   PM_INSTALL = brew install
   PM_UPDATE_CACHE = brew update
   PACKAGES_lua5.1 = lua51
@@ -26,6 +24,10 @@ ifeq "$(TRAVIS_OS_NAME)" "osx"
   ifeq "$(LUA_PC)" "lua5.2"
     EXTRA_TESTS = $(MAKE) check-luarocks-make
   endif
+else ifndef TRAVIS_OS_NAME
+  $(error Missing value for TRAVIS_OS_NAME variable)
+else
+  $(error Unexpected value for TRAVIS_OS_NAME variable)
 endif
 
 ifeq "$(LUA_PC)" "luajit"
