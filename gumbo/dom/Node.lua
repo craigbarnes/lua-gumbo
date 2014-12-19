@@ -2,6 +2,7 @@ local NodeList = require "gumbo.dom.NodeList"
 local Set = require "gumbo.Set"
 local assertions = require "gumbo.dom.assertions"
 local assertNode = assertions.assertNode
+local assertNilableString = assertions.assertNilableString
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tinsert, tremove = table.insert, table.remove
 local ipairs, type, error, assert = ipairs, type, error, assert
@@ -410,7 +411,12 @@ function Node.getters:nodeValue()
     end
 end
 
--- TODO: function Node.setters:nodeValue(value)
+function Node.setters:nodeValue(value)
+    assertNilableString(value)
+    if isTextOrComment[self.nodeType] then
+        self.data = value or ""
+    end
+end
 
 local function hasbit(flags, bit)
     return (flags and flags % (bit * 2) >= bit) and true or false

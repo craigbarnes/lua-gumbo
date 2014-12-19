@@ -13,6 +13,7 @@ local Comment = util.merge("CharacterData", {
 })
 
 Comment.__index = util.indexFactory(Comment)
+Comment.__newindex = util.newindexFactory(Comment)
 
 function Comment:__tostring()
     assertComment(self)

@@ -10,6 +10,7 @@ local DocumentType = util.merge("Node", "ChildNode", {
 })
 
 DocumentType.__index = util.indexFactory(DocumentType)
+DocumentType.__newindex = util.newindexFactory(DocumentType)
 
 function DocumentType:cloneNode()
     local clone = {

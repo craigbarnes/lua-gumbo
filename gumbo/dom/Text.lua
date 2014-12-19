@@ -12,6 +12,7 @@ local Text = util.merge("CharacterData", {
 })
 
 Text.__index = util.indexFactory(Text)
+Text.__newindex = util.newindexFactory(Text)
 
 function Text:__tostring()
     assertTextNode(self)

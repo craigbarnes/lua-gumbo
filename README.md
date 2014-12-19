@@ -218,8 +218,6 @@ Inherits from [`Node`]. Implements [`ChildNode`] and
 * [`previousSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.previousSibling)
 * [`nextSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nextSibling)
 * [`nodeValue`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeValue)
-   * [x] `getter`
-   * [ ] `setter`
 * `ELEMENT_NODE`
 * `TEXT_NODE`
 * `COMMENT_NODE`
