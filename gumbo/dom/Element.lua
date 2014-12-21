@@ -4,6 +4,7 @@ local Set = require "gumbo.Set"
 local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
 local HTMLCollection = require "gumbo.dom.HTMLCollection"
+local DOMTokenList = require "gumbo.dom.DOMTokenList"
 local assertions = require "gumbo.dom.assertions"
 local constants = require "gumbo.constants"
 local namespaces = constants.namespaces
@@ -216,13 +217,15 @@ function Element.getters:classList()
     local length = 0
     if class then
         for s in class.value:gmatch "%S+" do
-            length = length + 1
-            list[length] = s
-            list[s] = length
+            if not list[s] then
+                length = length + 1
+                list[length] = s
+                list[s] = length
+            end
         end
     end
     list.length = length
-    return list
+    return setmetatable(list, DOMTokenList)
 end
 
 local function serialize(node, buf)

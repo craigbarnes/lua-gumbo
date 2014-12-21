@@ -23,8 +23,8 @@ USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 
 DOM_IFACES    = Attr CharacterData ChildNode Comment Document DocumentType \
-                Element HTMLCollection NamedNodeMap Node NodeList \
-                NonElementParentNode ParentNode Text
+                DOMTokenList Element HTMLCollection NamedNodeMap Node \
+                NodeList NonElementParentNode ParentNode Text
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, \
                 $(DOM_IFACES) assertions util))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
