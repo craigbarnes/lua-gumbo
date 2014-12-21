@@ -126,6 +126,25 @@ function Document.getters:head()
     end
 end
 
+function Document.getters:title()
+    for node in self.documentElement:walk() do
+        if node.type == "element" and node.localName == "title" then
+            local buffer = Buffer()
+            for i, node in ipairs(node.childNodes) do
+                if node.nodeName == "#text" then
+                    buffer:write(node.data)
+                end
+            end
+            local whitespace = "[ \t\n\f\r]+"
+            local trim = "^[ \t\n\f\r]*(.-)[ \t\n\f\r]*$"
+            return (buffer:tostring():gsub(whitespace, " "):gsub(trim, "%1"))
+        end
+    end
+    return ""
+end
+
+Document.setters.title = assertions.NYI --<< TODO
+
 function Document.getters:documentURI()
     return self.URL
 end

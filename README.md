@@ -145,6 +145,9 @@ translate JavaScript examples to use Lua `object:method()` call syntax.
 Inherits from [`Node`]. Implements [`ParentNode`].
 
 * [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
+* [`head`](https://developer.mozilla.org/en-US/docs/Web/API/Document.head)
+* [`body`](https://developer.mozilla.org/en-US/docs/Web/API/Document.body)
+* [`title`](https://developer.mozilla.org/en-US/docs/Web/API/Document.title)
 * [`doctype`](#documenttype)
 * [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/Document.URL)
 * [`documentURI`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentURI)

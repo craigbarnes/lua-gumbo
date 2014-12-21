@@ -9,6 +9,7 @@ local tests = {
     "test/dom/HTMLCollection-empty-name.lua",
     "test/dom/getElementsByClassName-01.lua",
     "test/dom/getElementsByClassName-02.lua",
+    "test/dom/Document-title.lua",
     "test/dom/Element-classList.lua",
     "test/dom/Element-getElementsByClassName.lua",
     "test/dom/Element-remove.lua",
