@@ -1,7 +1,6 @@
 local gumbo = require "gumbo"
 local parse, parseFile = gumbo.parse, gumbo.parseFile
-local assert, type, open, pcall = assert, type, io.open, pcall
-local load = loadstring or load
+local assert, open, pcall = assert, io.open, pcall
 local _ENV = nil
 
 do

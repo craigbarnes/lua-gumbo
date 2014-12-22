@@ -3,7 +3,6 @@ local Indent = require "gumbo.serialize.Indent"
 local constants = require "gumbo.constants"
 local voidElements = constants.voidElements
 local rcdataElements = constants.rcdataElements
-local ipairs = ipairs
 local _ENV = nil
 
 local function wrap(text, indent)

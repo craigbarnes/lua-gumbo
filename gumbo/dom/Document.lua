@@ -8,10 +8,9 @@ local util = require "gumbo.dom.util"
 local assertions = require "gumbo.dom.assertions"
 local assertDocument = assertions.assertDocument
 local assertNode = assertions.assertNode
-local assertString = assertions.assertString
 local assertNilableString = assertions.assertNilableString
 local assertName = assertions.assertName
-local rawset, ipairs, assert = rawset, ipairs, assert
+local ipairs, assert = ipairs, assert
 local setmetatable = setmetatable
 local _ENV = nil
 

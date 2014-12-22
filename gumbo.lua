@@ -2,7 +2,7 @@ local type, open, iotype = type, io.open, io.type
 local parse
 
 if jit and jit.status() then
-    local haveffi, ffi = pcall(require, "ffi")
+    local haveffi = pcall(require, "ffi")
     if haveffi then
         parse = require "gumbo.ffi-parse"
     end

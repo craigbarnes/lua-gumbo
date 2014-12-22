@@ -4,7 +4,7 @@
 local gumbo = require "gumbo"
 local Set = require "gumbo.Set"
 local input = arg[1] or io.stdin
-local ipairs, write, assert = ipairs, io.write, assert
+local write, assert = io.write, assert
 local _ENV = nil
 
 local allowedHrefSchemes = Set{"http://", "https://", "mailto:"}

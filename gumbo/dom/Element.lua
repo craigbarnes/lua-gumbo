@@ -17,7 +17,7 @@ local assertName = assertions.assertName
 local assertString = assertions.assertString
 local NYI = assertions.NYI
 local type, ipairs = type, ipairs
-local tremove, rawset, setmetatable = table.remove, rawset, setmetatable
+local tremove, setmetatable = table.remove, setmetatable
 local _ENV = nil
 
 local Element = util.merge("Node", "ChildNode", "ParentNode", {
@@ -234,7 +234,7 @@ local function serialize(node, buf)
         local tag = node.localName
         buf:write("<", tag)
         for i, attr in ipairs(node.attributes) do
-            local ns, name, val = attr.prefix, attr.name, attr.value
+            local ns, name = attr.prefix, attr.name
             if ns and not (ns == "xmlns" and name == "xmlns") then
                 buf:write(" ", ns, ":", name)
             else

@@ -158,6 +158,9 @@ check-luarocks-make: gumbo-scm-1.rockspec
 	    GUMBO_INCDIR='$(GUMBO_INCDIR)' \
 	    GUMBO_LIBDIR='$(GUMBO_LIBDIR)'
 
+luacheck:
+	@luacheck gumbo.lua runtests.lua gumbo test examples
+
 coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
               $(DOM_MODULES) test/misc.lua test/dom/interfaces.lua runtests.lua
@@ -183,7 +186,7 @@ clean:
 
 .PHONY: \
     all amalg install uninstall clean git-hooks dist env todo \
-    check check-html5lib check-compat check-install \
+    check check-html5lib check-compat check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
     bench-parse bench-serialize
