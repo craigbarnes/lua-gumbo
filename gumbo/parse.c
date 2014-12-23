@@ -16,7 +16,6 @@
 */
 
 #include <stddef.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <lua.h>
 #include <lauxlib.h>
@@ -27,7 +26,7 @@
 # include "amalg.h"
 #endif
 
-typedef uint_fast16_t uint16;
+typedef unsigned int uint;
 
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
@@ -106,7 +105,7 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
             setmetatable(L, Attr);
-            lua_rawseti(L, -2, i+1);
+            lua_rawseti(L, -2, i + 1);
         }
         setmetatable(L, NamedNodeMap);
         lua_setfield(L, -2, "attributes");
@@ -150,14 +149,10 @@ static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
 }
 
 // Forward declaration, to allow mutual recursion with add_children()
-static void push_node(lua_State *L, const GumboNode *node, uint16 depth);
+static void push_node(lua_State *L, const GumboNode *node, uint depth);
 
-static inline void add_children (
-    lua_State *L,
-    const GumboVector *vec,
-    const uint16 start,
-    const uint16 depth
-){
+static void
+add_children(lua_State *L, const GumboVector *vec, uint start, uint depth) {
     const unsigned int length = vec->length;
     if (depth >= 800) luaL_error(L, "Tree depth limit of 800 exceeded");
     lua_createtable(L, length, 0);
@@ -170,7 +165,7 @@ static inline void add_children (
     lua_setfield(L, -2, "childNodes");
 }
 
-static void push_node(lua_State *L, const GumboNode *node, uint16 depth) {
+static void push_node(lua_State *L, const GumboNode *node, uint depth) {
     luaL_checkstack(L, 10, "Unable to allocate Lua stack space");
     switch (node->type) {
     case GUMBO_NODE_ELEMENT: {
@@ -211,7 +206,7 @@ static int parse(lua_State *L) {
     size_t length;
     const char *input = luaL_checklstring(L, 1, &length);
     GumboOptions options = kGumboDefaultOptions;
-    options.tab_stop = (int) luaL_optinteger(L, 2, 8);
+    options.tab_stop = (int)luaL_optinteger(L, 2, 8);
     options.allocator = xmalloc;
     GumboOutput *output = gumbo_parse_with_options(&options, input, length);
     if (output) {
