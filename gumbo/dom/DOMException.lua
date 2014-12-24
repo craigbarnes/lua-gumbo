@@ -25,6 +25,10 @@ local DOMException = {
     DATA_CLONE_ERR = 25
 }
 
+function DOMException:__tostring()
+    return ("%s: %s"):format(self.name, self.message)
+end
+
 local codes = {
     IndexSizeError = 1,
     HierarchyRequestError = 3,
@@ -90,13 +94,13 @@ for name, message in pairs(messages) do
         message = message,
         code = code
     }
+    objects[name] = setmetatable(t, DOMException)
     if code then
         objects[code] = t
     end
-    objects[name] = t
 end
 
-local function constructor(nameOrCode)
+local function constructor(self, nameOrCode)
     return objects[nameOrCode] or objects.UnknownError
 end
 
