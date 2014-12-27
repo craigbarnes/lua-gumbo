@@ -192,16 +192,14 @@ Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
 
 ### `Text`
 
-Inherits from [`CharacterData`].
+Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
+
+* [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
+* [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 
 ### `Comment`
 
-Inherits from [`CharacterData`].
-
-### `CharacterData`
-
-Inherits from [`Node`]. Implements [`ChildNode`] and
-[`NonDocumentTypeChildNode`].
+Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
 
 * [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
@@ -325,7 +323,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [`Document`]: #document
 [`Element`]: #element
-[`CharacterData`]: #characterdata
 [`Attr`]: #attr
 [`Node`]: #node
 [`ParentNode`]: #parentnode

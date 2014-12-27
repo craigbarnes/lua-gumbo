@@ -6,10 +6,11 @@ local constructor = assert(getmetatable(Text))
 local setmetatable = setmetatable
 local _ENV = nil
 
-local Comment = util.merge("CharacterData", {
+local Comment = util.merge("Node", "ChildNode", {
     type = "comment",
     nodeName = "#comment",
-    nodeType = 8
+    nodeType = 8,
+    data = ""
 })
 
 Comment.__index = util.indexFactory(Comment)
@@ -23,6 +24,10 @@ end
 function Comment:cloneNode()
     assertComment(self)
     return setmetatable({data = self.data}, Comment)
+end
+
+function Comment.getters:length()
+    return #self.data
 end
 
 return setmetatable(Comment, constructor)
