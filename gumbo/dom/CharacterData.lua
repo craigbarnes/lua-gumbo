@@ -9,10 +9,4 @@ function CharacterData.getters:length()
     return #self.data
 end
 
--- TODO: function CharacterData:substringData(offset, count)
--- TODO: function CharacterData:appendData(data)
--- TODO: function CharacterData:insertData(offset, data)
--- TODO: function CharacterData:deleteData(offset, count)
--- TODO: function CharacterData:replaceData(offset, count, data)
-
 return CharacterData

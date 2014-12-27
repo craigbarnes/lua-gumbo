@@ -263,6 +263,23 @@ Inherits from [`Node`]. Implements [`ChildNode`].
 
 * [`remove()`](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode.remove)
 
+Not Implemented
+---------------
+
+The following methods from the `CharacterData` interface are
+intentionally omitted:
+
+* `substringData()`
+* `appendData()`
+* `insertData()`
+* `deleteData()`
+* `replaceData()`
+
+The specification for these methods has numerous flaws, assumes UTF-16
+encoding and 0-based offsets and is just unnecessarily complex for the
+trivial amount of utility provided. A better alternative is to just
+manipulate the `data` property directly.
+
 Testing
 -------
 
