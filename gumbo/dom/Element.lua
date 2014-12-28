@@ -28,9 +28,6 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
     readonly = Set{"tagName", "classList"}
 })
 
-Element.__index = util.indexFactory(Element)
-Element.__newindex = util.newindexFactory(Element)
-
 function Element:__tostring()
     assertElement(self)
     return self.tagHTML

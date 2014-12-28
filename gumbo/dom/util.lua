@@ -28,6 +28,8 @@ function util.merge(...)
             end
         end
     end
+    t.__index = util.indexFactory(t)
+    t.__newindex = util.newindexFactory(t)
     return t
 end
 

@@ -31,9 +31,6 @@ local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     }
 })
 
-Document.__index = util.indexFactory(Document)
-Document.__newindex = util.newindexFactory(Document)
-
 function Document:createElement(localName)
     assertDocument(self)
     assertName(localName)

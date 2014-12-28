@@ -12,9 +12,6 @@ local Text = util.merge("Node", "ChildNode", {
     data = ""
 })
 
-Text.__index = util.indexFactory(Text)
-Text.__newindex = util.newindexFactory(Text)
-
 function Text:__tostring()
     assertTextNode(self)
     return '#text "' .. self.data .. '"'

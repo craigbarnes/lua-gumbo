@@ -13,9 +13,6 @@ local Comment = util.merge("Node", "ChildNode", {
     data = ""
 })
 
-Comment.__index = util.indexFactory(Comment)
-Comment.__newindex = util.newindexFactory(Comment)
-
 function Comment:__tostring()
     assertComment(self)
     return "<!--" .. self.data .. "-->"
