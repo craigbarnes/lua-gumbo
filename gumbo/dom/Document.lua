@@ -2,6 +2,7 @@ local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local NodeList = require "gumbo.dom.NodeList"
+local HTMLCollection = require "gumbo.dom.HTMLCollection"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
@@ -25,7 +26,9 @@ local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     getElementsByClassName = Element.getElementsByClassName,
     readonly = Set {
         "characterSet", "compatMode", "contentType", "doctype",
-        "documentElement", "documentURI", "implementation", "origin", "URL"
+        "documentElement", "documentURI", "head", "implementation",
+        "links", "origin", "URL",
+
     }
 })
 
@@ -125,9 +128,30 @@ function Document.getters:head()
     end
 end
 
+function Document.getters:links()
+    local collection = {}
+    local length = 0
+    local root = self.documentElement
+    if root then
+        for node in root:walk() do
+            if
+                node.type == "element"
+                and (node.localName == "a" or node.localName == "area")
+                and node:hasAttribute("href")
+            then
+                length = length + 1
+                collection[length] = node
+            end
+        end
+    end
+    collection.length = length
+    return setmetatable(collection, HTMLCollection)
+end
+
 function Document.getters:titleElement()
-    if self.documentElement then
-        for node in self.documentElement:walk() do
+    local root = self.documentElement
+    if root then
+        for node in root:walk() do
             if node.type == "element" and node.localName == "title" then
                 return node
             end
