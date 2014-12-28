@@ -148,6 +148,7 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 * [`head`](https://developer.mozilla.org/en-US/docs/Web/API/Document.head)
 * [`body`](https://developer.mozilla.org/en-US/docs/Web/API/Document.body)
 * [`title`](https://developer.mozilla.org/en-US/docs/Web/API/Document.title)
+* [`links`](https://developer.mozilla.org/en-US/docs/Web/API/Document.links)
 * [`doctype`](#documenttype)
 * [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/Document.URL)
 * [`documentURI`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentURI)
