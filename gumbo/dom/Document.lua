@@ -26,9 +26,8 @@ local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
     getElementsByClassName = Element.getElementsByClassName,
     readonly = Set {
         "characterSet", "compatMode", "contentType", "doctype",
-        "documentElement", "documentURI", "head", "implementation",
-        "links", "origin", "URL",
-
+        "documentElement", "documentURI", "forms", "head", "images",
+        "implementation", "links", "origin", "scripts", "URL"
     }
 })
 
@@ -146,6 +145,18 @@ function Document.getters:links()
     end
     collection.length = length
     return setmetatable(collection, HTMLCollection)
+end
+
+function Document.getters:images()
+    return self:getElementsByTagName("img")
+end
+
+function Document.getters:forms()
+    return self:getElementsByTagName("form")
+end
+
+function Document.getters:scripts()
+    return self:getElementsByTagName("script")
 end
 
 function Document.getters:titleElement()
