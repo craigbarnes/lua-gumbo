@@ -25,8 +25,7 @@ PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 DOM_IFACES    = Attr ChildNode Comment Document DocumentType DOMTokenList \
                 Element HTMLCollection NamedNodeMap Node NodeList \
                 NonElementParentNode ParentNode Text
-DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, \
-                $(DOM_IFACES) assertions util))
+DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, $(DOM_IFACES) util))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
 TOP_MODULES   = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua)

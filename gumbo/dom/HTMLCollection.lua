@@ -1,5 +1,5 @@
-local assertions = require "gumbo.dom.assertions"
-local assertString = assertions.assertString
+local util = require "gumbo.dom.util"
+local assertString = util.assertString
 local type, ipairs = type, ipairs
 local _ENV = nil
 local HTMLCollection = {}

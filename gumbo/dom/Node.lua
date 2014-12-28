@@ -1,9 +1,9 @@
+local util = require "gumbo.dom.util"
 local NodeList = require "gumbo.dom.NodeList"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
-local assertions = require "gumbo.dom.assertions"
-local assertNode = assertions.assertNode
-local assertNilableString = assertions.assertNilableString
+local assertNode = util.assertNode
+local assertNilableString = util.assertNilableString
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tinsert, tremove = table.insert, table.remove
 local ipairs, type, error, assert = ipairs, type, error, assert

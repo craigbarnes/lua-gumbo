@@ -1,6 +1,6 @@
+local util = require "gumbo.dom.util"
 local Buffer = require "gumbo.Buffer"
-local assertions = require "gumbo.dom.assertions"
-local assertString = assertions.assertString
+local assertString = util.assertString
 local error = error
 local _ENV = nil
 local DOMTokenList = {}

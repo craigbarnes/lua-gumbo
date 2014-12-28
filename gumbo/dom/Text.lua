@@ -1,7 +1,6 @@
 local util = require "gumbo.dom.util"
-local assertions = require "gumbo.dom.assertions"
-local assertTextNode = assertions.assertTextNode
-local assertNilableString = assertions.assertNilableString
+local assertTextNode = util.assertTextNode
+local assertNilableString = util.assertNilableString
 local setmetatable = setmetatable
 local _ENV = nil
 

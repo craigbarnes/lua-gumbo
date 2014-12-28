@@ -1,7 +1,6 @@
 local util = require "gumbo.dom.util"
 local Text = require "gumbo.dom.Text"
-local assertions = require "gumbo.dom.assertions"
-local assertComment = assertions.assertComment
+local assertComment = util.assertComment
 local constructor = assert(getmetatable(Text))
 local setmetatable = setmetatable
 local _ENV = nil
