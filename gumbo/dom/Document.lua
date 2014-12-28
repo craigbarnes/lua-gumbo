@@ -190,7 +190,7 @@ function Document.setters:title(value)
         if not element then
             local head = self.head
             if head then
-                element = head:appendChild(document:createElement("title"))
+                element = head:appendChild(self:createElement("title"))
             else
                 return
             end

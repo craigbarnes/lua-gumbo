@@ -1,4 +1,5 @@
 local NodeList = require "gumbo.dom.NodeList"
+local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local assertions = require "gumbo.dom.assertions"
 local assertNode = assertions.assertNode
