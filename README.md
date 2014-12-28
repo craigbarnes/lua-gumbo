@@ -219,6 +219,7 @@ Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
 * [`previousSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.previousSibling)
 * [`nextSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nextSibling)
 * [`nodeValue`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeValue)
+* [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node.textContent)
 * `ELEMENT_NODE`
 * `TEXT_NODE`
 * `COMMENT_NODE`

@@ -51,6 +51,17 @@ local isTextOrComment = Set {
     Node.COMMENT_NODE
 }
 
+local isCharacterData = Set {
+    Node.TEXT_NODE,
+    Node.COMMENT_NODE,
+    Node.PROCESSING_INSTRUCTION_NODE
+}
+
+local isElementOrDocumentFragment = Set {
+    Node.DOCUMENT_FRAGMENT_NODE,
+    Node.ELEMENT_NODE
+}
+
 local isValidParent = Set {
     Node.DOCUMENT_NODE,
     Node.DOCUMENT_FRAGMENT_NODE,
@@ -181,7 +192,6 @@ function Node:isEqualNode(other)
     return true
 end
 
--- TODO: Node.textContent
 -- TODO: function Node:cloneNode(deep)
 
 -- TODO: Node.baseURI
@@ -415,6 +425,35 @@ function Node.setters:nodeValue(value)
     assertNilableString(value)
     if isTextOrComment[self.nodeType] then
         self.data = value or ""
+    end
+end
+
+function Node.getters:textContent()
+    local nodeType = self.nodeType
+    if isCharacterData[nodeType] then
+        return self.data
+    elseif isElementOrDocumentFragment[nodeType] then
+        local buffer = Buffer()
+        for node in self:walk() do
+            if node.nodeName == "#text" then
+                buffer:write(node.data)
+            end
+        end
+        return buffer:tostring()
+    end
+end
+
+function Node.setters:textContent(value)
+    assertNilableString(value)
+    local nodeType = self.nodeType
+    if isCharacterData[nodeType] then
+        self.data = value
+    elseif isElementOrDocumentFragment[nodeType] then
+        self.childNodes:removeAll()
+        if value then
+            local node = self.ownerDocument:createTextNode(value)
+            self:appendChild(node)
+        end
     end
 end
 
