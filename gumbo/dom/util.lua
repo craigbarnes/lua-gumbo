@@ -1,4 +1,4 @@
-local type, select, pairs, require = type, select, pairs, require
+local type, select, pairs = type, select, pairs
 local assert, error, rawset = assert, error, rawset
 local _ENV = nil
 local util = {}
@@ -6,16 +6,8 @@ local util = {}
 function util.merge(...)
     local t = {getters={}}
     for i = 1, select("#", ...) do
-        local arg = select(i, ...)
-        local argtype = type(arg)
-        local m
-        if argtype == "string" then
-            m = require("gumbo.dom." .. arg)
-        elseif argtype == "table" then
-            m = arg
-        else
-            assert(false, "Invalid argument type")
-        end
+        local m = select(i, ...)
+        assert(type(m) == "table")
         for k, v in pairs(m) do
             local tk = t[k]
             if type(v) == "table" and type(tk) == "table" then

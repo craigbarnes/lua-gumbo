@@ -1,8 +1,10 @@
 local util = require "gumbo.dom.util"
-local merge = util.merge
+local Node = require "gumbo.dom.Node"
+local ParentNode = require "gumbo.dom.ParentNode"
+local NonElementParentNode = require "gumbo.dom.NonElementParentNode"
 local _ENV = nil
 
-local DocumentFragment = merge("Node", "ParentNode", "NonElementParentNode", {
+local DocumentFragment = util.merge(Node, ParentNode, NonElementParentNode, {
     type = "fragment",
     nodeName = "#document-fragment",
     nodeType = 11

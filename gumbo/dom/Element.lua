@@ -1,10 +1,13 @@
 local util = require "gumbo.dom.util"
-local Buffer = require "gumbo.Buffer"
-local Set = require "gumbo.Set"
+local Node = require "gumbo.dom.Node"
+local ChildNode = require "gumbo.dom.ChildNode"
+local ParentNode = require "gumbo.dom.ParentNode"
 local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
 local Attr = require "gumbo.dom.Attr"
 local HTMLCollection = require "gumbo.dom.HTMLCollection"
 local DOMTokenList = require "gumbo.dom.DOMTokenList"
+local Buffer = require "gumbo.Buffer"
+local Set = require "gumbo.Set"
 local constants = require "gumbo.constants"
 local namespaces = constants.namespaces
 local voidElements = constants.voidElements
@@ -19,7 +22,7 @@ local type, ipairs = type, ipairs
 local tremove, setmetatable = table.remove, setmetatable
 local _ENV = nil
 
-local Element = util.merge("Node", "ChildNode", "ParentNode", {
+local Element = util.merge(Node, ChildNode, ParentNode, {
     type = "element",
     nodeType = 1,
     namespace = "html",

@@ -1,3 +1,6 @@
+local Node = require "gumbo.dom.Node"
+local ParentNode = require "gumbo.dom.ParentNode"
+local NonElementParentNode = require "gumbo.dom.NonElementParentNode"
 local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
@@ -14,7 +17,7 @@ local ipairs, assert = ipairs, assert
 local setmetatable = setmetatable
 local _ENV = nil
 
-local Document = util.merge("Node", "NonElementParentNode", "ParentNode", {
+local Document = util.merge(Node, ParentNode, NonElementParentNode, {
     type = "document",
     nodeName = "#document",
     nodeType = 9,

@@ -1,10 +1,12 @@
 local util = require "gumbo.dom.util"
+local Node = require "gumbo.dom.Node"
+local ChildNode = require "gumbo.dom.ChildNode"
 local assertTextNode = util.assertTextNode
 local assertNilableString = util.assertNilableString
 local setmetatable = setmetatable
 local _ENV = nil
 
-local Text = util.merge("Node", "ChildNode", {
+local Text = util.merge(Node, ChildNode, {
     type = "text",
     nodeName = "#text",
     nodeType = 3,

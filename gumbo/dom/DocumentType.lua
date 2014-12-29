@@ -1,8 +1,10 @@
 local util = require "gumbo.dom.util"
+local Node = require "gumbo.dom.Node"
+local ChildNode = require "gumbo.dom.ChildNode"
 local rawget, setmetatable = rawget, setmetatable
 local _ENV = nil
 
-local DocumentType = util.merge("Node", "ChildNode", {
+local DocumentType = util.merge(Node, ChildNode, {
     type = "doctype",
     nodeType = 10,
     publicId = "",
