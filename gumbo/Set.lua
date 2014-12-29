@@ -1,5 +1,5 @@
 local type, pairs, error = type, pairs, error
-local getmetatable, setmetatable = getmetatable, setmetatable
+local setmetatable = setmetatable
 local _ENV = nil
 local Set = {}
 Set.__index = Set
@@ -7,24 +7,6 @@ Set.__index = Set
 local function assertSet(v)
     if not (v and type(v) == "table" and v.union) then
         error("TypeError: Argument is not a Set", 3)
-    end
-end
-
-local function addKeys(set, t)
-    for member in pairs(t) do
-        set[member] = true
-    end
-end
-
-local function addValues(set, t)
-    for i = 1, #t do
-        set[t[i]] = true
-    end
-end
-
-local function addWords(set, s)
-    for member in s:gmatch("%S+") do
-        set[member] = true
     end
 end
 
@@ -63,9 +45,13 @@ local function constructor(members)
     local set = {}
     local type = type(members)
     if type == "table" then
-        addValues(set, members)
+        for i = 1, #members do
+            set[members[i]] = true
+        end
     elseif type == "string" then
-        addWords(set, members)
+        for member in members:gmatch("%S+") do
+            set[member] = true
+        end
     else
         error("Invalid argument type; expecting table or string", 2)
     end
