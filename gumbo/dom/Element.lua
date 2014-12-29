@@ -24,7 +24,7 @@ local Element = util.merge("Node", "ChildNode", "ParentNode", {
     nodeType = 1,
     namespace = "html",
     attributes = setmetatable({length = 0}, NamedNodeMap),
-    readonly = Set{"tagName", "classList"}
+    readonly = Set{"classList", "namespaceURI", "tagName"}
 })
 
 function Element:__tostring()
