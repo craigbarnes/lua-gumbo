@@ -4,6 +4,12 @@ local _ENV = nil
 local Set = {}
 Set.__index = Set
 
+local function assertSet(v)
+    if not (v and type(v) == "table" and v.union) then
+        error("TypeError: Argument is not a Set", 3)
+    end
+end
+
 local function addKeys(set, t)
     for member in pairs(t) do
         set[member] = true
@@ -23,26 +29,35 @@ local function addWords(set, s)
 end
 
 function Set:union(other)
+    assertSet(self)
+    assertSet(other)
     local union = {}
-    local type = type(other)
-    if type == "table" then
-        if getmetatable(other) == Set then
-            addKeys(union, other)
-        else
-            addValues(union, other)
-        end
-    elseif type == "string" then
-        addWords(union, other)
-    else
-        error("Invalid argument type; expecting Set, table or string", 2)
-    end
     for member in pairs(self) do
+        union[member] = true
+    end
+    for member in pairs(other) do
         union[member] = true
     end
     return setmetatable(union, Set)
 end
 
+function Set:isSubsetOf(other)
+    assertSet(self)
+    assertSet(other)
+    for member in pairs(self) do
+        if not other[member] then
+            return false
+        end
+    end
+    return true
+end
+
 Set.__add = Set.union
+Set.__lt = Set.isSubsetOf
+
+function Set:__eq(other)
+    return self:isSubsetOf(other) and other:isSubsetOf(self)
+end
 
 local function constructor(members)
     local set = {}
