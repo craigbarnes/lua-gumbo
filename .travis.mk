@@ -3,6 +3,10 @@ GUMBO_TARNAME = gumbo-parser-$(GUMBO_VERSION)
 GUMBO_HOME    = https://github.com/google/gumbo-parser
 GUMBO_TARBALL = $(GUMBO_HOME)/archive/v$(GUMBO_VERSION)/$(GUMBO_TARNAME).tar.gz
 
+ifneq "$(findstring else-if, $(.FEATURES))" "else-if"
+  $(error "else-if" feature not supported by $(MAKE))
+endif
+
 ifeq "$(TRAVIS_OS_NAME)" "linux"
   PM_INSTALL = sudo apt-get -y install
   PM_UPDATE_CACHE = sudo apt-get update -qq
