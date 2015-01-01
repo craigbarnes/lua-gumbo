@@ -1,10 +1,12 @@
+[attr]notab whitespace=tab-in-indent
+
 .git* export-ignore
 .travis.* export-ignore
 test/git-hooks/ export-ignore
 CONTRIBUTING.md export-ignore
 
-*.[ch] whitespace=tab-in-indent
-*.lua whitespace=tab-in-indent
-*.md whitespace=tab-in-indent
-*.yml whitespace=tab-in-indent
-rockspec.in whitespace=tab-in-indent
+*.[ch] notab
+*.lua notab
+*.md notab
+*.yml notab
+rockspec.in notab
