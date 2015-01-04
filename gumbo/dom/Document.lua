@@ -92,7 +92,6 @@ end
 -- TODO: function Document:createElementNS(namespace, qualifiedName)
 -- TODO: function Document:createDocumentFragment()
 -- TODO: function Document:importNode(node, deep)
--- TODO: function Document:createRange()
 
 function Document.getters:doctype()
     for i, node in ipairs(self.childNodes) do
