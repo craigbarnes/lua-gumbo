@@ -142,7 +142,7 @@ translate JavaScript examples to use Lua `object:method()` call syntax.
 
 ### `Document`
 
-Inherits from [`Node`]. Implements [`ParentNode`].
+Implements [`Node`] and [`ParentNode`].
 
 * [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
 * [`head`](https://developer.mozilla.org/en-US/docs/Web/API/Document.head)
@@ -168,13 +168,11 @@ Inherits from [`Node`]. Implements [`ParentNode`].
 
 ### `Element`
 
-Inherits from [`Node`]. Implements [`ParentNode`], [`ChildNode`] and
+Implements [`Node`], [`ParentNode`], [`ChildNode`] and
 [`NonDocumentTypeChildNode`].
 
 * `localName`
 * [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes)
-  * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Properties)
-  * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap#Methods)
 * `namespaceURI`
 * [`tagName`](https://developer.mozilla.org/en-US/docs/Web/API/Element.tagName)
 * [`id`](https://developer.mozilla.org/en-US/docs/Web/API/Element.id)
@@ -208,11 +206,17 @@ Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
 * [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 
+### `DocumentType`
+
+Implements [`Node`] and [`ChildNode`].
+
+* `name`
+* `publicId`
+* `systemId`
+
 ### `Node`
 
 * [`childNodes`](https://developer.mozilla.org/en-US/docs/Web/API/Node.childNodes)
-  * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Properties)
-  * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList#Methods)
 * [`parentNode`](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentNode)
 * [`parentElement`](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentElement)
 * [`ownerDocument`](https://developer.mozilla.org/en-US/docs/Web/API/Node.ownerDocument)
@@ -236,13 +240,16 @@ Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
 * [`insertBefore()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore)
 * [`removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild)
 
-### `DocumentType`
+### `ParentNode`
 
-Inherits from [`Node`]. Implements [`ChildNode`].
+* [`children`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children)
+* [`childElementCount`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.childElementCount)
+* [`firstElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.firstElementChild)
+* [`lastElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild)
 
-* `name`
-* `publicId`
-* `systemId`
+### `ChildNode`
+
+* [`remove()`](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode.remove)
 
 ### `Attr`
 
@@ -251,20 +258,6 @@ Inherits from [`Node`]. Implements [`ChildNode`].
 * `prefix`
 * `localName`
 * [`specified`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
-
-### `ParentNode`
-
-* [`children`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children)
-  * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Properties)
-  * [`item()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
-  * [`namedItem()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection#Methods)
-* [`childElementCount`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.childElementCount)
-* [`firstElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.firstElementChild)
-* [`lastElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild)
-
-### `ChildNode`
-
-* [`remove()`](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode.remove)
 
 Not Implemented
 ---------------
