@@ -27,14 +27,15 @@ local tests = {
 }
 
 local function getline(filename, linenumber)
-    local file, err = open(filename)
+    local file = open(filename)
     if not file then
-        return nil, err
+        return nil
     end
-    local line
-    for i = 1, linenumber do
-        line = assert(file:read())
+    for i = 1, linenumber - 1 do
+        file:read()
     end
+    local line = file:read()
+    file:close()
     return line
 end
 
