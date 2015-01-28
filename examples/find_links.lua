@@ -1,10 +1,6 @@
 local gumbo = require "gumbo"
 local document = assert(gumbo.parseFile(arg[1] or io.stdin))
-local elements = assert(document.links)
 
-for i, element in ipairs(elements) do
-    local href = element:getAttribute("href")
-    if href then
-        print(href)
-    end
+for i, element in ipairs(document.links) do
+    print(element:getAttribute("href"))
 end
