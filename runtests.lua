@@ -1,5 +1,5 @@
 local open, write, ipairs, loadfile = io.open, io.write, ipairs, loadfile
-local xpcall, assert, tonumber, exit = xpcall, assert, tonumber, os.exit
+local xpcall, tonumber, exit = xpcall, tonumber, os.exit
 local yield, wrap = coroutine.yield, coroutine.wrap
 local traceback = debug.traceback
 local _ENV = nil
@@ -7,8 +7,7 @@ local _ENV = nil
 local tests = {
     "test/dom/interfaces.lua",
     "test/dom/HTMLCollection-empty-name.lua",
-    "test/dom/getElementsByClassName-01.lua",
-    "test/dom/getElementsByClassName-02.lua",
+    "test/dom/getElementsByClassName.lua",
     "test/dom/Document-title.lua",
     "test/dom/Element-classList.lua",
     "test/dom/Element-getElementsByClassName.lua",
