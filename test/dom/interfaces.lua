@@ -32,19 +32,6 @@ local p2 = assert(document:getElementById("p2"))
 local p3 = assert(document:getElementById("p3"))
 local p4 = assert(document:getElementById("p4"))
 
-assert(document:getElementsByTagName("head")[1] == head)
-assert(document:getElementsByTagName("body")[1] == body)
-assert(document:getElementsByTagName("div")[1] == main)
-assert(document:getElementsByTagName("*").length == 11)
-assert(document:getElementsByTagName("").length == 0)
-assert(body:getElementsByTagName("h1")[1] == heading)
-
-do
-    local tendivs = assert(("<div>"):rep(10))
-    local document = assert(gumbo.parse(tendivs))
-    assert(document:getElementsByTagName("div").length == 10)
-end
-
 assert(document.nodeName == "#document")
 assert(#document.childNodes == 1)
 assert(#document.children == 1)
