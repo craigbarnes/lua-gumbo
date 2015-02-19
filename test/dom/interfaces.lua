@@ -354,21 +354,6 @@ assert(document:removeChild(html) == html)
 assert(html.parentNode == nil)
 
 do
-    local document = assert(gumbo.parse("<!doctype html><p>no-quirks!</p>"))
-    assert(document.compatMode == "CSS1Compat")
-    local doctype = assert(document.doctype)
-    assert(doctype.nodeType == document.DOCUMENT_TYPE_NODE)
-    assert(doctype.nodeName == doctype.name)
-    assert(doctype.name == "html")
-    assert(doctype.publicId == "")
-    assert(doctype.systemId == "")
-    doctype.publicId = nil
-    assert(doctype.publicId == "")
-    doctype.systemId = nil
-    assert(doctype.systemId == "")
-end
-
-do
     local input = [[<script>a = 1 << 4;</script><p class='&"'>a = 1 << 4;</p>]]
     local document = assert(gumbo.parse(input))
     local script = assert(document:getElementsByTagName("script")[1])
