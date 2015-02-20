@@ -69,21 +69,29 @@ function Element:getElementsByTagName(localName)
     return setmetatable(collection, HTMLCollection)
 end
 
+local function getClassList(class)
+    local list = {}
+    local length = 0
+    if class then
+        for s in class:gmatch "%S+" do
+            if not list[s] then
+                length = length + 1
+                list[length] = s
+                list[s] = length
+            end
+        end
+    end
+    list.length = length
+    return list
+end
+
 function Element:getElementsByClassName(classNames)
     --TODO: should use assertElement(self), but method is shared with Document
     assertNode(self)
     assertString(classNames)
-    local classes = {}
+    local classes = getClassList(classNames)
     local collection = {}
     local length = 0
-    do
-        local length = 0
-        for class in classNames:gmatch("%S+") do
-            length = length + 1
-            classes[length] = class
-        end
-        classes.length = length
-    end
     for node in self:walk() do
         if node.type == "element" then
             local classList = node.classList
@@ -211,20 +219,7 @@ end
 Element.getters.nodeName = Element.getters.tagName
 
 function Element.getters:classList()
-    local class = self.attributes.class
-    local list = {}
-    local length = 0
-    if class then
-        for s in class.value:gmatch "%S+" do
-            if not list[s] then
-                length = length + 1
-                list[length] = s
-                list[s] = length
-            end
-        end
-    end
-    list.length = length
-    return setmetatable(list, DOMTokenList)
+    return setmetatable(getClassList(self.className), DOMTokenList)
 end
 
 local function serialize(node, buf)
