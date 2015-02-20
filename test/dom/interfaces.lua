@@ -352,13 +352,3 @@ assert(value:find("NotFoundError", 1, true))
 assert(html.parentNode == document)
 assert(document:removeChild(html) == html)
 assert(html.parentNode == nil)
-
-do
-    local input = [[<script>a = 1 << 4;</script><p class='&"'>a = 1 << 4;</p>]]
-    local document = assert(gumbo.parse(input))
-    local script = assert(document:getElementsByTagName("script")[1])
-    local p = assert(document:getElementsByTagName("p")[1])
-    assert(script.innerHTML == "a = 1 << 4;")
-    assert(p.innerHTML == "a = 1 &lt;&lt; 4;")
-    assert(p.outerHTML == '<p class="&amp;&quot;">a = 1 &lt;&lt; 4;</p>')
-end
