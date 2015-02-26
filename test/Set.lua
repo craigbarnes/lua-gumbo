@@ -1,5 +1,6 @@
 local Set = require "gumbo.Set"
-local assert, rawequal = assert, rawequal
+local assert, error, pcall = assert, error, pcall
+local tostring, rawequal = tostring, rawequal
 local _ENV = nil
 local base = Set{"div", "table", "h1"}
 
@@ -34,4 +35,20 @@ end
 do
     assert(base + Set{"a"} == base:union(Set{"a"}))
     assert(base + Set{"a"} ~= base:union(Set{"p"}))
+end
+
+do
+    local function assertTypeError(status, err)
+        if not (status == false and err:find("TypeError")) then
+            error("Expected TypeError, got: '" .. tostring(err) .."'", 2)
+        end
+    end
+    assertTypeError(pcall(base.union, base, 5))
+    assertTypeError(pcall(base.union, base, "five"))
+    assertTypeError(pcall(base.isSubsetOf, base, 5))
+    assertTypeError(pcall(base.isSubsetOf, base, "five"))
+    assertTypeError(pcall(function() return base + 5 end))
+    assertTypeError(pcall(function() return base + "five" end))
+    assertTypeError(pcall(function() return base < 5 end))
+    assertTypeError(pcall(function() return base < "five" end))
 end
