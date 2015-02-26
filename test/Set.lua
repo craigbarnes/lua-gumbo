@@ -22,19 +22,27 @@ do
     assert(not rawequal(u1, u3))
     assert(not rawequal(u2, u3))
 
+    assert(u1 + Set() == u1)
+    assert(u1 + u2 == u1)
+    assert(u1 + u2 + u3 == u1)
+    assert(u1 + Set{"z"} ~= u1)
+
     assert(u2:isSubsetOf(u1) == true)
     assert(u3:isSubsetOf(u1) == true)
     assert(u1:isSubsetOf(u2) == false)
     assert(u1:isSubsetOf(u3) == false)
-    assert(u2 < u1 == true)
-    assert(u3 < u1 == true)
-    assert(u1 < u2 == false)
-    assert(u1 < u3 == false)
 end
 
 do
     assert(base + Set{"a"} == base:union(Set{"a"}))
     assert(base + Set{"a"} ~= base:union(Set{"p"}))
+end
+
+do
+    assert(not pcall(Set, true))
+    assert(not pcall(Set, false))
+    assert(not pcall(Set, 100))
+    assert(not pcall(Set, function() end))
 end
 
 do
@@ -49,6 +57,4 @@ do
     assertTypeError(pcall(base.isSubsetOf, base, "five"))
     assertTypeError(pcall(function() return base + 5 end))
     assertTypeError(pcall(function() return base + "five" end))
-    assertTypeError(pcall(function() return base < 5 end))
-    assertTypeError(pcall(function() return base < "five" end))
 end

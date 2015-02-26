@@ -35,7 +35,6 @@ function Set:isSubsetOf(other)
 end
 
 Set.__add = Set.union
-Set.__lt = Set.isSubsetOf
 
 function Set:__eq(other)
     return self:isSubsetOf(other) and other:isSubsetOf(self)
@@ -43,17 +42,19 @@ end
 
 local function constructor(members)
     local set = {}
-    local type = type(members)
-    if type == "table" then
-        for i = 1, #members do
-            set[members[i]] = true
+    if members ~= nil then
+        local type = type(members)
+        if type == "table" then
+            for i = 1, #members do
+                set[members[i]] = true
+            end
+        elseif type == "string" then
+            for member in members:gmatch("%S+") do
+                set[member] = true
+            end
+        else
+            error("Invalid argument type; expecting table or string", 2)
         end
-    elseif type == "string" then
-        for member in members:gmatch("%S+") do
-            set[member] = true
-        end
-    else
-        error("Invalid argument type; expecting table or string", 2)
     end
     return setmetatable(set, Set)
 end
