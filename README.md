@@ -11,7 +11,7 @@ Requirements
 * C99 compiler
 * [GNU Make] `>= 3.81`
 * [Lua] `>= 5.1` **or** [LuaJIT] `>= 2.0`
-* [Gumbo][Gumbo installation] `>= 0.9.2`
+* [Gumbo][Gumbo installation] `>= 0.9.2, < 0.10.0`
 
 Installation
 ------------
