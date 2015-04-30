@@ -286,12 +286,7 @@ Testing
 * `make check-install`: Runs `make check` within a temporary, isolated
   installation, to ensure all modules are installed correctly.
 * `make coverage.txt`: Generates a test coverage report with [luacov].
-* `make bench-parse BENCHFILE=test/data/${size}MiB.html`: Parses an
-  automatically generated document of `${size}` MiB, then prints CPU time
-  and memory usage stats.
-* `make git-hooks`: Installs some git hooks to disallow commits with
-  failing tests or a commit message longer than 72 columns.
-* `make todo`: Lists all `TODO:` comments found in the code.
+* `make git-hooks`: Adds a git hook to disallow commits with failing tests.
 
 [License]
 ---------
