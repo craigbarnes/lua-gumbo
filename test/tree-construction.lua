@@ -47,28 +47,28 @@ local function serialize(document)
                 buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
             end
 
-            local children
+            local childNodes
             if node.type == "template" then
                 buf:write("| ", i2, "content\n")
                 depth = depth + 1
-                children = node.content.childNodes
+                childNodes = node.content.childNodes
             else
-                children = node.childNodes
+                childNodes = node.childNodes
             end
 
-            local n = #children
+            local n = #childNodes
             for i = 1, n do
-                if children[i].type == "text" and children[i+1]
-                   and children[i+1].type == "text"
+                if childNodes[i].type == "text" and childNodes[i+1]
+                   and childNodes[i+1].type == "text"
                 then
                     -- Merge adjacent text nodes, as expected by the
                     -- spec and the html5lib tests
                     -- TODO: Why doesn't Gumbo do this during parsing?
-                    local text = children[i+1].data
-                    children[i+1] = children[i]
-                    children[i+1].data = children[i+1].data .. text
+                    local text = childNodes[i+1].data
+                    childNodes[i+1] = childNodes[i]
+                    childNodes[i+1].data = childNodes[i+1].data .. text
                 else
-                    writeNode(children[i], depth + 1)
+                    writeNode(childNodes[i], depth + 1)
                 end
             end
         elseif type == TEXT_NODE then
@@ -115,12 +115,9 @@ local function parseTestData(filename)
             buffer:write(line, "\n")
         end
     end
+    assert(testnum > 0, "No test data found in " .. filename)
     tests[testnum][field] = buffer:tostring()
-    if testnum > 0 then
-        return tests
-    else
-        return nil, "No test data found in " .. filename
-    end
+    return tests
 end
 
 do
@@ -141,7 +138,7 @@ do
     local totalPassed, totalFailed, totalSkipped = 0, 0, 0
     local start = clock()
     for _, filename in ipairs(filenames) do
-        local tests = assert(parseTestData(filename))
+        local tests = parseTestData(filename)
         local passed, failed, skipped = 0, 0, 0
         for i, test in ipairs(tests) do
             local input = assert(test.data)
