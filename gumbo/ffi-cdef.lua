@@ -22,7 +22,7 @@ typedef struct {
   unsigned int capacity;
 } GumboVector;
 extern const GumboVector kGumboEmptyVector;
-int gumbo_vector_index_of(GumboVector* vector, void* element);
+int gumbo_vector_index_of(GumboVector* vector, const void* element);
 typedef enum {
   GUMBO_TAG_HTML,
   GUMBO_TAG_HEAD,
@@ -173,6 +173,7 @@ typedef enum {
   GUMBO_TAG_NOBR,
   GUMBO_TAG_SPACER,
   GUMBO_TAG_TT,
+  GUMBO_TAG_RTC,
   GUMBO_TAG_UNKNOWN,
   GUMBO_TAG_LAST,
 } GumboTag;
@@ -180,6 +181,7 @@ const char* gumbo_normalized_tagname(GumboTag tag);
 void gumbo_tag_from_original_text(GumboStringPiece* text);
 const char* gumbo_normalize_svg_tagname(const GumboStringPiece* tagname);
 GumboTag gumbo_tag_enum(const char* tagname);
+GumboTag gumbo_tagn_enum(const char* tagname, unsigned int length);
 typedef enum {
   GUMBO_ATTR_NAMESPACE_NONE,
   GUMBO_ATTR_NAMESPACE_XLINK,
@@ -204,7 +206,8 @@ typedef enum {
   GUMBO_NODE_TEXT,
   GUMBO_NODE_CDATA,
   GUMBO_NODE_COMMENT,
-  GUMBO_NODE_WHITESPACE
+  GUMBO_NODE_WHITESPACE,
+  GUMBO_NODE_TEMPLATE
 } GumboNodeType;
 typedef struct GumboInternalNode GumboNode;
 typedef enum {
@@ -273,6 +276,8 @@ typedef struct GumboInternalOptions {
   int tab_stop;
   bool stop_on_first_error;
   int max_errors;
+  GumboTag fragment_context;
+  GumboNamespaceEnum fragment_namespace;
 } GumboOptions;
 extern const GumboOptions kGumboDefaultOptions;
 typedef struct GumboInternalOutput {
@@ -283,8 +288,7 @@ typedef struct GumboInternalOutput {
 GumboOutput* gumbo_parse(const char* buffer);
 GumboOutput* gumbo_parse_with_options(
     const GumboOptions* options, const char* buffer, size_t buffer_length);
-void gumbo_destroy_output(
-    const GumboOptions* options, GumboOutput* output);
+void gumbo_destroy_output(const GumboOptions* options, GumboOutput* output);
 ]=]
 
 return ffi.load "gumbo"

@@ -47,7 +47,15 @@ local function serialize(document)
                 buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
             end
 
-            local children = node.childNodes
+            local children
+            if node.type == "template" then
+                buf:write("| ", i2, "content\n")
+                depth = depth + 1
+                children = node.content.childNodes
+            else
+                children = node.childNodes
+            end
+
             local n = #children
             for i = 1, n do
                 if children[i].type == "text" and children[i+1]
@@ -137,13 +145,7 @@ do
         local passed, failed, skipped = 0, 0, 0
         for i, test in ipairs(tests) do
             local input = assert(test.data)
-            if
-                -- Gumbo can't parse document fragments yet
-                test["document-fragment"]
-                -- See line 134 of python/gumbo/html5lib_adapter_test.py
-                or input:find("<noscript>", 1, true)
-                or input:find("<command>", 1, true)
-            then
+            if test["document-fragment"] or input:find("<noscript>") then
                 skipped = skipped + 1
             else
                 local expected = assert(test.document)

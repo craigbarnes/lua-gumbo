@@ -38,6 +38,7 @@ typedef enum {
     Attr,
     Document,
     DocumentType,
+    DocumentFragment,
     NodeList,
     NamedNodeMap,
     nupvalues = NamedNodeMap
@@ -50,6 +51,7 @@ static const char *const modules[] = {
     [Attr] = "gumbo.dom.Attr",
     [Document] = "gumbo.dom.Document",
     [DocumentType] = "gumbo.dom.DocumentType",
+    [DocumentFragment] = "gumbo.dom.DocumentFragment",
     [NodeList] = "gumbo.dom.NodeList",
     [NamedNodeMap] = "gumbo.dom.NamedNodeMap"
 };
@@ -178,6 +180,23 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
         }
         add_attributes(L, &element->attributes);
         add_children(L, &element->children, 1, depth);
+        setmetatable(L, Element);
+        return;
+    }
+    case GUMBO_NODE_TEMPLATE: {
+        const GumboElement *element = &node->v.element;
+        lua_createtable(L, 0, 8);
+        add_literal(L, "type", "template");
+        add_literal(L, "localName", "template");
+        add_position(L, element->start_pos);
+        add_attributes(L, &element->attributes);
+        lua_createtable(L, 0, 0);
+        setmetatable(L, NodeList);
+        lua_setfield(L, -2, "childNodes");
+        lua_createtable(L, 0, 1);
+        add_children(L, &element->children, 1, depth);
+        setmetatable(L, DocumentFragment);
+        lua_setfield(L, -2, "content");
         setmetatable(L, Element);
         return;
     }

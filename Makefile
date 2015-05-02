@@ -22,9 +22,9 @@ USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
                 LUA_PC LUA_CFLAGS LUA_LMOD_DIR LUA_CMOD_DIR LUA
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 
-DOM_IFACES    = Attr ChildNode Comment Document DocumentType DOMTokenList \
-                Element HTMLCollection NamedNodeMap Node NodeList \
-                NonElementParentNode ParentNode Text
+DOM_IFACES    = Attr ChildNode Comment Document DocumentFragment DocumentType \
+                DOMTokenList Element HTMLCollection NamedNodeMap Node \
+                NodeList NonElementParentNode ParentNode Text
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, $(DOM_IFACES) util))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
@@ -43,7 +43,7 @@ libgumbo/:
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@
-	@sed '/^#include/d' $< | $(CC) -E -P - >> $@
+	@sed '/^#include/d' $< | $(CC) $(GUMBO_CFLAGS) -E -P - >> $@
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
 

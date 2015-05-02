@@ -19,6 +19,7 @@ local ffi = require "ffi"
 local C = require "gumbo.ffi-cdef"
 local Document = require "gumbo.dom.Document"
 local DocumentType = require "gumbo.dom.DocumentType"
+local DocumentFragment = require "gumbo.dom.DocumentFragment"
 local Element = require "gumbo.dom.Element"
 local Attr = require "gumbo.dom.Attr"
 local Text = require "gumbo.dom.Text"
@@ -114,6 +115,22 @@ local function create_element(node, depth)
     return setmetatable(t, Element)
 end
 
+local function create_template(node, depth)
+    local element = node.v.element
+    local t = {
+        type = "template",
+        localName = "template",
+        attributes = get_attributes(element.attributes),
+        line = element.start_pos.line,
+        column = element.start_pos.column,
+        offset = element.start_pos.offset,
+        childNodes = setmetatable({}, NodeList),
+        content = setmetatable({}, DocumentFragment)
+    }
+    add_children(t.content, element.children, 1, depth)
+    return setmetatable(t, Element)
+end
+
 local function make_text(node)
     local text = node.v.text
     return {
@@ -152,6 +169,7 @@ constructors = LookupTable {
     create_cdata,
     create_comment,
     create_whitespace,
+    create_template
 }
 
 local function parse(input, tab_stop)

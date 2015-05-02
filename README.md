@@ -11,7 +11,7 @@ Requirements
 * C99 compiler
 * [GNU Make] `>= 3.81`
 * [Lua] `>= 5.1` **or** [LuaJIT] `>= 2.0`
-* [Gumbo][Gumbo installation] `>= 0.9.2, < 0.10.0`
+* [Gumbo] `>= 0.10.0` (For Gumbo 0.9.x support use the [lua-gumbo 0.3 release])
 
 Installation
 ------------
@@ -322,7 +322,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [`ChildNode`]: #childnode
 [`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
 [Gumbo]: https://github.com/google/gumbo-parser
-[Gumbo installation]: https://github.com/google/gumbo-parser#installation
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: http://luarocks.org/
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
@@ -330,3 +329,4 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
+[lua-gumbo 0.3 release]: https://github.com/craigbarnes/lua-gumbo/releases/tag/0.3
