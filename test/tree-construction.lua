@@ -135,17 +135,17 @@ end
 
 do
     local hrule = ("="):rep(76)
-    local totalPassed, totalFailed, totalSkipped = 0, 0, 0
+    local passed, failed, skipped = 0, 0, 0
     local start = clock()
     for _, filename in ipairs(filenames) do
         local tests = parseTestData(filename)
-        local passed, failed, skipped = 0, 0, 0
         for i, test in ipairs(tests) do
             local input = assert(test.data)
             if test["document-fragment"] or input:find("<noscript>") then
                 skipped = skipped + 1
             else
                 local expected = assert(test.document)
+                assert(#expected > 0)
                 local parsed = assert(parse(input))
                 local serialized = assert(serialize(parsed))
                 if serialized == expected then
@@ -166,21 +166,18 @@ do
                 end
             end
         end
-        totalPassed = totalPassed + passed
-        totalFailed = totalFailed + failed
-        totalSkipped = totalSkipped + skipped
     end
     local stop = clock()
-    if verbose or totalFailed > 0 then
+    if verbose or failed > 0 then
         write (
-            "\nRan ", totalPassed + totalFailed + totalSkipped, " tests in ",
+            "\nRan ", passed + failed, " tests in ",
             ("%.2fs"):format(stop - start), "\n\n",
-            "Passed: ", totalPassed, "\n",
-            "Failed: ", totalFailed, "\n",
-            "Skipped: ", totalSkipped, "\n\n"
+            "Passed: ", passed, "\n",
+            "Failed: ", failed, "\n",
+            "Skipped: ", skipped, "\n\n"
         )
     end
-    if totalFailed > 0 then
+    if failed > 0 then
         if not verbose then
             write "Re-run with VERBOSE=1 for a full report\n"
         end
