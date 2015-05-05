@@ -67,10 +67,11 @@ test/data/2MiB.html test/data/5MiB.html test/data/10MiB.html:
 tags: gumbo/parse.c Makefile lualib.mk
 	ctags --c-kinds=+p $(GUMBO_HEADER) $(LUA_HEADERS) $^
 
-git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg
+git-hooks: .git/hooks/pre-commit
 
-.git/hooks/%: test/git-hooks/%
-	install -m 755 $< $@
+.git/hooks/pre-commit: Makefile
+	printf '#!/bin/sh\n\nmake -s check || exit 1' > $@
+	chmod +x $@
 
 HOMEURL = https://github.com/craigbarnes/lua-gumbo
 GITURL  = git://github.com/craigbarnes/lua-gumbo.git

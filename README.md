@@ -286,7 +286,6 @@ Testing
 * `make check-install`: Runs `make check` within a temporary, isolated
   installation, to ensure all modules are installed correctly.
 * `make coverage.txt`: Generates a test coverage report with [luacov].
-* `make git-hooks`: Adds a git hook to disallow commits with failing tests.
 
 [License]
 ---------
