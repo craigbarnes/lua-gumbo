@@ -6,6 +6,7 @@ GUMBO_LDLIBS  ?= $(or $(shell $(PKGCONFIG) --libs-only-l gumbo), -lgumbo)
 GUMBO_INCDIR  ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
 GUMBO_LIBDIR  ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
 GUMBO_HEADER  ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
+GUMBO_TARDIR  ?= gumbo-parser-0.10.1
 
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
 XCFLAGS      += -std=c99 -pedantic-errors -fpic
@@ -16,6 +17,7 @@ TIMEFMT      ?= 'Process time: %es\nProcess peak memory usage: %MKB'
 TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
+GET           = curl -s -L -o $@
 BENCHFILE    ?= test/data/2MiB.html
 
 USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
@@ -33,13 +35,16 @@ TOP_MODULES   = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua)
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
 
-amalg: XCFLAGS := -std=c99 -fpic -DAMALGAMATE -Ilibgumbo/src
+amalg: XCFLAGS := -std=c99 -fpic -DAMALGAMATE -I$(GUMBO_TARDIR)/src
 amalg: XLDFLAGS :=
 amalg: CFLAGS := -g -O2 -Wall
-amalg: libgumbo/ gumbo/parse.so
+amalg: $(GUMBO_TARDIR)/ gumbo/parse.so
 
-libgumbo/:
-	@test -d $@ || git clone git://github.com/google/gumbo-parser.git $@
+gumbo-parser-%/: gumbo-parser-%.tar.gz
+	gzip -d < $< | tar xf -
+
+gumbo-parser-%.tar.gz:
+	$(GET) https://github.com/google/gumbo-parser/archive/v$*.tar.gz
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@

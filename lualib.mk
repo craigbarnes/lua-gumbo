@@ -87,4 +87,3 @@ LUA_HEADERS  ?= $(addprefix $(LUA_INCDIR)/, lua.h lauxlib.h)
 
 
 .DELETE_ON_ERROR:
-.SECONDARY:

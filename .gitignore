@@ -1,6 +1,7 @@
 local.mk
 *.so
 *.o
+gumbo-parser-*/
 lua-gumbo-*.tar.gz
 gumbo-*.rockspec
 gumbo-*.rock
