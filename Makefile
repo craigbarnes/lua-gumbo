@@ -17,16 +17,19 @@ TIMEFMT      ?= 'Process time: %es\nProcess peak memory usage: %MKB'
 TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
+PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
 BENCHFILE    ?= test/data/2MiB.html
 
-USERVARS      = CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
-                LUA_PC LUA_CFLAGS LUA_LMOD_DIR LUA_CMOD_DIR LUA
-PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
+USERVARS = \
+    CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
+    LUA_PC LUA_CFLAGS LUA_LMOD_DIR LUA_CMOD_DIR LUA
 
-DOM_IFACES    = Attr ChildNode Comment Document DocumentFragment DocumentType \
-                DOMTokenList Element HTMLCollection NamedNodeMap Node \
-                NodeList NonElementParentNode ParentNode Text
+DOM_IFACES = \
+    Attr ChildNode Comment Document DocumentFragment DocumentType \
+    DOMTokenList Element HTMLCollection NamedNodeMap Node \
+    NodeList NonElementParentNode ParentNode Text
+
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, $(DOM_IFACES) util))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
