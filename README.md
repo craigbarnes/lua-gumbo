@@ -153,11 +153,6 @@ Implements [`Node`] and [`ParentNode`].
 * [`links`](https://developer.mozilla.org/en-US/docs/Web/API/Document.links)
 * [`scripts`](https://developer.mozilla.org/en-US/docs/Web/API/Document.scripts)
 * [`doctype`](#documenttype)
-* [`URL`](https://developer.mozilla.org/en-US/docs/Web/API/Document.URL)
-* [`documentURI`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentURI)
-* [`compatMode`](https://developer.mozilla.org/en-US/docs/Web/API/document.compatMode)
-* [`characterSet`](https://developer.mozilla.org/en-US/docs/Web/API/document.characterSet)
-* [`contentType`](https://developer.mozilla.org/en-US/docs/Web/API/document.contentType)
 * [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
 * [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
 * [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementsByClassName)
@@ -177,20 +172,19 @@ Implements [`Node`], [`ParentNode`], [`ChildNode`] and
 * [`tagName`](https://developer.mozilla.org/en-US/docs/Web/API/Element.tagName)
 * [`id`](https://developer.mozilla.org/en-US/docs/Web/API/Element.id)
 * [`className`](https://developer.mozilla.org/en-US/docs/Web/API/Element.className)
-* [`classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element.classList)
 * [`innerHTML`](https://developer.mozilla.org/en-US/docs/Web/API/Element.innerHTML)
   * [x] getter
   * [ ] setter
 * [`outerHTML`](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML)
   * [x] getter
   * [ ] setter
+* [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName)
+* [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName)
 * [`hasAttributes()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttributes)
+* [`hasAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute)
 * [`getAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getAttribute)
 * [`setAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.setAttribute)
 * [`removeAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.removeAttribute)
-* [`hasAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute)
-* [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName)
-* [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName)
 
 ### `Text`
 
