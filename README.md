@@ -228,12 +228,6 @@ Implements [`Node`] and [`ChildNode`].
 * [`nextSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nextSibling)
 * [`nodeValue`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeValue)
 * [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node.textContent)
-* `ELEMENT_NODE`
-* `TEXT_NODE`
-* `COMMENT_NODE`
-* `DOCUMENT_NODE`
-* `DOCUMENT_TYPE_NODE`
-* `DOCUMENT_FRAGMENT_NODE`
 * [`hasChildNodes()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.hasChildNodes)
 * [`contains()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains)
 * [`appendChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.appendChild)
@@ -255,9 +249,6 @@ Implements [`Node`] and [`ChildNode`].
 
 * [`name`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
 * [`value`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
-* `prefix`
-* `localName`
-* [`specified`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
 
 Not Implemented
 ---------------
