@@ -30,6 +30,7 @@ typedef unsigned int uint;
 
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
 static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
+static const char *namespaces[] = {"html", "svg", "math", NULL};
 
 typedef enum {
     Text = 1,
@@ -222,17 +223,22 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
 }
 
 static int parse(lua_State *L) {
-    size_t length;
-    const char *input = luaL_checklstring(L, 1, &length);
+    size_t input_len, tagname_len;
     GumboOptions options = kGumboDefaultOptions;
-    options.tab_stop = (int)luaL_optinteger(L, 2, 8);
+    const char *input = luaL_checklstring(L, 1, &input_len);
+    const char *tagname = luaL_optlstring(L, 2, NULL, &tagname_len);
+    if (tagname != NULL) {
+        options.fragment_context = gumbo_tagn_enum(tagname, tagname_len);
+    }
+    options.fragment_namespace = luaL_checkoption(L, 3, "html", namespaces);
+    options.tab_stop = (int)luaL_optinteger(L, 4, 8);
     options.allocator = xmalloc;
-    GumboOutput *output = gumbo_parse_with_options(&options, input, length);
+    GumboOutput *output = gumbo_parse_with_options(&options, input, input_len);
     if (output) {
         const GumboDocument *document = &output->document->v.document;
         lua_createtable(L, 0, 4);
-        add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
         if (document->has_doctype) {
+            add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
             add_children(L, &document->children, 2, 0);
             lua_getfield(L, -1, "childNodes");
             lua_createtable(L, 0, 3); // doctype

@@ -5,7 +5,7 @@ local _ENV = nil
 
 do
     local input = "\t\t<!--one--><!--two--><h1>Hi</h1>"
-    local document = assert(parse(input, 16))
+    local document = assert(parse(input, nil, nil, 16))
     local html = assert(document.documentElement)
 
     -- Check that document structure is as expected

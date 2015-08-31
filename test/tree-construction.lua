@@ -15,7 +15,6 @@ local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
 local filenames = {}
 
 local function serialize(document)
-    assert(document and document.type == "document")
     local buf = Buffer()
     local indent = Indent(2)
     local function writeNode(node, depth)
@@ -141,13 +140,25 @@ do
         local tests = parseTestData(filename)
         for i, test in ipairs(tests) do
             local input = assert(test.data)
-            if test["document-fragment"] or input:find("<noscript>") then
+            if input:find("<noscript>") then
                 skipped = skipped + 1
             else
                 local expected = assert(test.document)
                 assert(#expected > 0)
-                local parsed = assert(parse(input))
-                local serialized = assert(serialize(parsed))
+                local parsed, serialized
+                local fragment = test["document-fragment"]
+                if fragment then
+                    local ns, tag = fragment:match("^([a-z]+) +([a-z-]+)$")
+                    if ns then
+                        parsed = assert(parse(input, tag, ns))
+                    else
+                        parsed = assert(parse(input, fragment))
+                    end
+                    serialized = assert(serialize(parsed.documentElement))
+                else
+                    parsed = assert(parse(input))
+                    serialized = assert(serialize(parsed))
+                end
                 if serialized == expected then
                     passed = passed + 1
                 else

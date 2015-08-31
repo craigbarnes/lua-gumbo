@@ -36,6 +36,7 @@ local function LookupTable(t) return setmetatable(t, {__index = oob}) end
 local tagnsmap = LookupTable{"svg", "math"}
 local attrnsmap = LookupTable{"xlink", "xml", "xmlns"}
 local quirksmap = LookupTable{[0] = "no-quirks", "quirks", "limited-quirks"}
+local namespaces = {html = 0, svg = 1, math = 2}
 local constructors
 
 local function get_attributes(attrs)
@@ -172,17 +173,31 @@ constructors = LookupTable {
     create_template
 }
 
-local function parse(input, tab_stop)
+local function parse(input, tagname, ns, tab_stop)
     assert(type(input) == "string")
-    assert(type(tab_stop) == "number" or tab_stop == nil)
     local options = new("GumboOptions", C.kGumboDefaultOptions)
-    options.tab_stop = tab_stop or 8
+    if tagname ~= nil then
+        assert(type(tagname) == "string")
+        options.fragment_context = C.gumbo_tag_enum(tagname)
+    end
+    if ns ~= nil then
+        assert(type(ns) == "string")
+        local validNamespace = namespaces[ns]
+        if validNamespace then
+            options.fragment_namespace = validNamespace
+        else
+            error("bad argument #3; invalid namespace '" .. ns .. "'", 2)
+        end
+    end
+    if tab_stop ~= nil then
+        assert(type(tab_stop) == "number")
+        options.tab_stop = tab_stop
+    end
     local output = C.gumbo_parse_with_options(options, input, #input)
     local document = output.document.v.document
-    local t = {
-        quirksMode = quirksmap[tonumber(document.doc_type_quirks_mode)]
-    }
+    local t = {}
     if document.has_doctype then
+        t.quirksMode = quirksmap[tonumber(document.doc_type_quirks_mode)]
         local doctype = {
             name = cstring(document.name),
             publicId = cstring(document.public_identifier),

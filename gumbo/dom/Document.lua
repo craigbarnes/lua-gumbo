@@ -21,6 +21,7 @@ local Document = util.merge(Node, ParentNode, NonElementParentNode, {
     type = "document",
     nodeName = "#document",
     nodeType = 9,
+    quirksMode = "quirks",
     contentType = "text/html",
     characterSet = "UTF-8",
     URL = "about:blank",
