@@ -7,8 +7,9 @@ local input = arg[1] or io.stdin
 local write, assert = io.write, assert
 local _ENV = nil
 
-local allowedHrefSchemes = Set{"http://", "https://", "mailto:"}
-local allowedImgSrcSchemes = Set{"http://", "https://"}
+local urlSchemePattern = "^[\0-\32]*([a-zA-Z][a-zA-Z0-9+.-]*:)"
+local allowedHrefSchemes = Set{"http:", "https:", "mailto:"}
+local allowedImgSrcSchemes = Set{"http:", "https:"}
 local allowedDivAttributes = Set{"itemscope", "itemtype"}
 
 local allowedElements = Set [[
@@ -29,16 +30,15 @@ local allowedAttributes = Set [[
 ]]
 
 local function isAllowedHref(url)
-    local scheme = url:match("^[a-z]+:/?/?")
-    return (scheme and allowedHrefSchemes[scheme]) and true or false
+    local scheme = url:match(urlSchemePattern)
+    return scheme == nil or allowedHrefSchemes[scheme:lower()] == true
 end
 
 local function isAllowedImgSrc(url)
-    local scheme = url:match("^[a-z]+://")
-    return (scheme and allowedImgSrcSchemes[scheme]) and true or false
+    local scheme = url:match(urlSchemePattern)
+    return scheme == nil or allowedImgSrcSchemes[scheme:lower()] == true
 end
 
--- TODO: Allow relative URLs for a[href] and img[src]
 local function isAllowedAttribute(tag, attr)
     local name = assert(attr.name)
     if allowedAttributes[name] then
@@ -48,6 +48,8 @@ local function isAllowedAttribute(tag, attr)
     else
         local value = assert(attr.value)
         if tag == "a" and name == "href" and isAllowedHref(value) then
+            return true
+        elseif tag == "area" and name == "href" and isAllowedHref(value) then
             return true
         elseif tag == "img" and name == "src" and isAllowedImgSrc(value) then
             return true
