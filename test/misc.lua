@@ -87,8 +87,24 @@ do -- Check that writing to default, shared childNodes table throws an error
     assert(not pcall(text.appendChild, text, div))
 end
 
+do -- Check that passing invalid arguments throws an error
+    assert(not pcall(parseFile, 0))
+    assert(not pcall(parseFile, nil))
+    assert(not pcall(parseFile, true))
+    assert(not pcall(parseFile, {}))
+    assert(not pcall(parseFile, parseFile))
+    local file = open("test/data/t1.html")
+    assert(pcall(parseFile, file, "iframe", "html", 8))
+    assert(pcall(parseFile, file, "path", "svg", 8))
+    assert(pcall(parseFile, file, "table", nil, 8))
+    assert(pcall(parseFile, file, nil, nil, 8))
+    assert(not pcall(parseFile, file, true))
+    assert(not pcall(parseFile, file, {}))
+    assert(not pcall(parseFile, file, "div", "badns"))
+    assert(not pcall(parseFile, file, "div", true))
+end
+
 -- Check that file open/read errors are handled
-assert(not parseFile(0), "Passing an invalid argument type should return nil")
 assert(not parseFile".", "Passing a directory name should return nil")
 assert(not parseFile"_", "Passing a non-existant filename should return nil")
 
