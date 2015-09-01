@@ -36,12 +36,12 @@ ISLINUX    = $(call EQUAL, $(UNAME), Linux)
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
 
-# The naming of Lua pkg-config files across distributions is a mess:
-# - Fedora and Arch use lua.pc
-# - Debian uses lua5.2.pc and lua5.1.pc
-# - OpenBSD ports uses lua52.pc and lua51.pc
-# - FreeBSD uses lua-5.2.pc and lua-5.1.pc
-LUA_NAMES = lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua luajit
+LUA_NAMES = \
+    lua53 lua5.3 lua-5.3 \
+    lua52 lua5.2 lua-5.2 \
+    lua51 lua5.1 lua-5.1 \
+    lua luajit
+
 LUA_WHICH = $(firstword $(shell which $(_LUA_PC) $(LUA_NAMES) 2>/dev/null))
 
 LUA_PC ?= $(or \

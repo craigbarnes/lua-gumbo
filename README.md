@@ -35,7 +35,7 @@ Lua variables. Usually the following commands will be sufficient:
 The following pkg-config names are searched in order and the first one
 to be found is used (yes, these all exist in the wild):
 
-    lua lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 luajit
+    lua lua53 lua5.3 lua-5.3 lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 luajit
 
 If, for example, your system has both `lua.pc` and `luajit.pc` installed
 then `lua.pc` will be used by default. You can override this default
