@@ -40,22 +40,13 @@ local function isAllowedImgSrc(url)
 end
 
 local function isAllowedAttribute(tag, attr)
-    local name = assert(attr.name)
-    if allowedAttributes[name] then
-        return true
-    elseif tag == "div" and allowedDivAttributes[name] then
-        return true
-    else
-        local value = assert(attr.value)
-        if tag == "a" and name == "href" and isAllowedHref(value) then
-            return true
-        elseif tag == "area" and name == "href" and isAllowedHref(value) then
-            return true
-        elseif tag == "img" and name == "src" and isAllowedImgSrc(value) then
-            return true
-        end
-    end
-    return false
+    local name, value = assert(attr.name), assert(attr.value)
+    return
+        allowedAttributes[name]
+        or (tag == "div" and allowedDivAttributes[name])
+        or (tag == "a" and name == "href" and isAllowedHref(value))
+        or (tag == "area" and name == "href" and isAllowedHref(value))
+        or (tag == "img" and name == "src" and isAllowedImgSrc(value))
 end
 
 local function sanitize(root)
