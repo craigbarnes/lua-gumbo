@@ -39,7 +39,7 @@ TOP_MODULES   = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua)
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
 
-amalg: XCFLAGS := -std=c99 -fpic -DAMALGAMATE -I$(GUMBO_TARDIR)/src
+amalg: XCFLAGS := -std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src
 amalg: XLDFLAGS :=
 amalg: CFLAGS := -g -O2 -Wall
 amalg: $(GUMBO_TARDIR)/ gumbo/parse.so
@@ -147,8 +147,10 @@ check-compat:
 
 check-lua-all: $(CHECK_LUA_ALL)
 
-$(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua
-	$(MAKE) -sB lua-v amalg check LUA=$| LUA_CFLAGS=-Ilua-$*/src
+$(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
+	$(MAKE) -sB lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
+	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
+	  LUA=lua-$*/src/lua
 
 lua-%/src/lua: | lua-%/
 	make -C $| linux # TODO: Detect OS

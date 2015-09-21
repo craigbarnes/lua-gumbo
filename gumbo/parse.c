@@ -22,7 +22,7 @@
 #include <gumbo.h>
 #include "compat.h"
 
-#ifdef AMALGAMATE
+#ifdef AMALG
 # include "amalg.h"
 #endif
 
