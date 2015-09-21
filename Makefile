@@ -20,6 +20,7 @@ TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
 BENCHFILE    ?= test/data/2MiB.html
+CHECK_LUA_ALL = check-lua-5.3.1 check-lua-5.2.4 # TODO: Lua 5.1.5 / LuaJIT 2.0
 
 USERVARS = \
     CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
@@ -144,6 +145,20 @@ check-compat:
 	$(MAKE) -sB check LUA_PC=luajit LUAFLAGS=-joff
 	$(MAKE) -sB check CC=clang
 
+check-lua-all: $(CHECK_LUA_ALL)
+
+$(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua
+	$(MAKE) -sB lua-v amalg check LUA=$| LUA_CFLAGS=-Ilua-$*/src
+
+lua-%/src/lua: | lua-%/
+	make -C $| linux # TODO: Detect OS
+
+lua-%/: | lua-%.tar.gz
+	tar -xzf $|
+
+lua-%.tar.gz:
+	curl http://www.lua.org/ftp/$@ > $@
+
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
 check-install: export LUA_CPATH = $(DESTDIR)$(LUA_CMOD_DIR)/?.so
@@ -184,19 +199,27 @@ bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 env:
 	@$(foreach VAR, $(USERVARS), $(call PRINTVAR,$(VAR));)
 
+lua-v:
+	@$(LUA) -v
+
 todo:
 	git grep -E --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
 
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
 	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
+	$(RM) -r lua-*/
 
 
 .PHONY: \
-    all amalg install uninstall clean git-hooks dist env todo \
+    all amalg install uninstall clean git-hooks dist env lua-v todo \
     check check-html5lib check-compat check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
+    check-lua-all $(CHECK_LUA_ALL) \
     bench-parse bench-serialize
+
+.SECONDARY: \
+    lua-5.3.1/ lua-5.2.4/ lua-5.1.5/
 
 .DELETE_ON_ERROR:

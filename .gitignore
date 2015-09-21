@@ -9,3 +9,4 @@ coverage.txt
 tags
 README.html
 test/data/*MiB.html
+lua-*/
