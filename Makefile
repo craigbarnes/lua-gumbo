@@ -20,7 +20,8 @@ TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
 BENCHFILE    ?= test/data/2MiB.html
-CHECK_LUA_ALL = check-lua-5.3.1 check-lua-5.2.4 # TODO: Lua 5.1.5 / LuaJIT 2.0
+LUA_BUILDS    = lua-5.3.1 lua-5.2.4 # TODO lua-5.1.5 luajit
+CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
 
 USERVARS = \
     CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
@@ -204,6 +205,8 @@ env:
 lua-v:
 	@$(LUA) -v
 
+prep: $(GUMBO_TARDIR)/ $(addsuffix /src/lua, $(LUA_BUILDS))
+
 todo:
 	git grep -E --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
 
@@ -214,7 +217,7 @@ clean:
 
 
 .PHONY: \
-    all amalg install uninstall clean git-hooks dist env lua-v todo \
+    all amalg install uninstall clean git-hooks dist env lua-v prep todo \
     check check-html5lib check-compat check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
