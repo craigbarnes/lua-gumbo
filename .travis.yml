@@ -1,0 +1,6 @@
+language:  c
+branches:  {only: master}
+os:        [linux]
+compiler:  [clang, gcc]
+install:   make lua-5.3.1/src/lua lua-5.2.4/src/lua
+script:    make check-lua-all
