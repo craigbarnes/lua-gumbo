@@ -24,8 +24,7 @@ LUA_BUILDS    = lua-5.3.1 lua-5.2.4 # TODO lua-5.1.5 luajit
 CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
 
 OS_NAME ?= $(or \
-    $(TRAVIS_OS_NAME), \
-    $(if ISDARWIN, osx), \
+    $(if ISDARWIN, macosx), \
     $(shell uname | tr 'A-Z' 'a-z') \
 )
 
