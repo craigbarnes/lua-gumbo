@@ -1,6 +1,6 @@
 language: c
 branches: {only: master}
-os: [linux]
+os: [linux, osx]
 compiler: [clang, gcc]
 before_script: make prep
 script: make check-lua-all
