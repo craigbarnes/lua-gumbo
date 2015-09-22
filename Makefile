@@ -218,11 +218,14 @@ todo:
 clean:
 	$(RM) gumbo/parse.so gumbo/parse.o test/data/*MiB.html README.html \
 	      coverage.txt lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
+
+clean-all: clean
 	$(RM) -r lua-*/
 
 
 .PHONY: \
-    all amalg install uninstall clean git-hooks dist env lua-v prep todo \
+    all amalg install uninstall \
+    clean clean-all git-hooks dist env lua-v prep todo \
     check check-html5lib check-compat check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
