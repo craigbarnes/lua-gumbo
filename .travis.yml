@@ -3,5 +3,5 @@ sudo: false
 branches: {only: master}
 os: [linux, osx]
 compiler: [clang, gcc]
-before_script: make prep
+before_script: make -j8 prep
 script: make check-lua-all
