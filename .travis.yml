@@ -4,4 +4,4 @@ branches: {only: master}
 os: [linux, osx]
 compiler: [clang, gcc]
 before_script: make -j8 prep
-script: make check-lua-all
+script: make check-lua-all LUA_PC=none
