@@ -19,6 +19,7 @@ TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
+GUNZIP        = gzip -d < '$|' | tar xf -
 BENCHFILE    ?= test/data/2MiB.html
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 # TODO lua-5.1.5 luajit
 CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
@@ -50,8 +51,17 @@ amalg: XLDFLAGS :=
 amalg: CFLAGS := -g -O2 -Wall
 amalg: $(GUMBO_TARDIR)/ gumbo/parse.so
 
-gumbo-parser-%/: gumbo-parser-%.tar.gz
-	gzip -d < $< | tar xf -
+lua-%/src/lua: | lua-%/
+	$(MAKE) -C $| $(OS_NAME)
+
+lua-%/: | lua-%.tar.gz
+	$(GUNZIP)
+
+lua-%.tar.gz:
+	$(GET) http://www.lua.org/ftp/$@
+
+gumbo-parser-%/: | gumbo-parser-%.tar.gz
+	$(GUNZIP)
 
 gumbo-parser-%.tar.gz:
 	$(GET) https://github.com/google/gumbo-parser/archive/v$*.tar.gz
@@ -157,15 +167,6 @@ $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
 	$(MAKE) -sB lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
 	  LUA=lua-$*/src/lua
-
-lua-%/src/lua: | lua-%/
-	make -C $| $(OS_NAME)
-
-lua-%/: | lua-%.tar.gz
-	tar -xzf $|
-
-lua-%.tar.gz:
-	curl http://www.lua.org/ftp/$@ > $@
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
