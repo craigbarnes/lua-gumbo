@@ -20,7 +20,7 @@ TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
 GUNZIP        = gzip -d < '$|' | tar xf -
-PANDOC        = pandoc -f markdown_github-hard_line_breaks -t html5
+PANDOC        = pandoc -S -f markdown_github-hard_line_breaks-raw_html -t html5
 BENCHFILE    ?= test/data/2MiB.html
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 # TODO lua-5.1.5 luajit
 CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
