@@ -61,7 +61,7 @@ named `local.mk`. This may be useful when building and testing against
 the same configuration multiple times or when you prefer not to install
 libgumbo globally, for example:
 
-```make
+```makefile
 # Compile against a local build of libgumbo
 GUMBO_DIR=gumbo-parser-0.10.2
 GUMBO_INCDIR=${GUMBO_DIR}/src
@@ -134,7 +134,7 @@ local gumbo = require "gumbo"
 local document = gumbo.parse('<div id="foo">Hello World</div>')
 local foo = document:getElementById("foo")
 local text = foo.childNodes[1].data
-print(text)
+print(text) --> Hello World
 ```
 
 **Note:** this example omits error handling for the sake of simplicity.
