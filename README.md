@@ -54,9 +54,29 @@ relevant variables will have to be specified manually, for example:
     make check
     make install LUA_LMOD_DIR=/usr/share/lua/5.2 LUA_CMOD_DIR=/usr/lib/lua/5.2
 
-**Note:** for convenience, variable overrides can be stored persistently
-in a file named `local.mk`. For example, instead of adding `LUA_PC=luajit`
-to every command, as shown above, it can just be added once to `local.mk`.
+### Persistent Build Configuration
+
+For convenience, variable overrides can be stored persistently in a file
+named `local.mk`. This may be useful when building and testing against
+the same configuration multiple times or when you prefer not to install
+libgumbo globally, for example:
+
+```make
+# Compile against a local build of libgumbo
+GUMBO_DIR=gumbo-parser-0.10.2
+GUMBO_INCDIR=${GUMBO_DIR}/src
+GUMBO_LIBDIR=${GUMBO_DIR}/.libs
+GUMBO_CFLAGS=-I${GUMBO_INCDIR}
+GUMBO_LDFLAGS=-L${GUMBO_LIBDIR}
+GUMBO_LDLIBS=-lgumbo
+export LD_LIBRARY_PATH=${GUMBO_LIBDIR}
+
+# Force pkg-config to only find and use build variables for LuaJIT
+LUA_PC=luajit
+```
+
+The above code also happens to be valid shell syntax and can be loaded
+into the shell environment via `source local.mk` if required.
 
 Usage
 -----
