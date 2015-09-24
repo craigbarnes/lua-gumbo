@@ -5,5 +5,5 @@ os: [linux, osx]
 compiler: [clang, gcc]
 before_script: make -j8 prep
 script:
-    - make env USERVARS='CC LDFLAGS'
+    - make print-vars USERVARS='CC LDFLAGS'
     - make check-lua-all LUA_PC=none

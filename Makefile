@@ -170,7 +170,7 @@ check-compat:
 check-lua-all: $(CHECK_LUA_ALL)
 
 $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
-	$(MAKE) -sB lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
+	$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
 	  LUA=lua-$*/src/lua
 
@@ -211,10 +211,10 @@ bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 	@echo 'Parsing and serializing $(BENCHFILE) to html...'
 	@$(TIME) $(LUA) $(LUAFLAGS) test/htmlfmt.lua $(BENCHFILE) /dev/null
 
-env:
+print-vars env:
 	@$(foreach VAR, $(USERVARS), $(call PRINTVAR,$(VAR));)
 
-lua-v:
+print-lua-v:
 	@$(LUA) -v
 
 prep: $(GUMBO_TARDIR)/ $(addsuffix /src/lua, $(LUA_BUILDS))
@@ -233,7 +233,7 @@ clean-all: clean
 
 .PHONY: \
     all amalg install uninstall \
-    clean clean-all git-hooks dist env lua-v prep todo \
+    clean clean-all git-hooks dist print-vars env print-lua-v prep todo \
     check check-html5lib check-compat check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
