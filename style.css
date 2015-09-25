@@ -405,6 +405,15 @@ pre code, pre tt {
     border: none;
 }
 
+code > span.kw {font-weight: bold}
+code > span.st {color: goldenrod}
+code > span.co {color: gray}
+code > span.dv {color: blue}
+code > span.bn {color: blue}
+code > span.fl {color: purple}
+code > span.al {color: green; font-weight: bold}
+code > span.er {color: red; font-weight: bold}
+
 #toc {
     margin-bottom: 25px;
     padding-bottom: 30px;

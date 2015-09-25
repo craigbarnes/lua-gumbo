@@ -61,7 +61,7 @@ named `local.mk`. This may be useful when building and testing against
 the same configuration multiple times or when you prefer not to install
 libgumbo globally, for example:
 
-```makefile
+```bash
 # Compile against a local build of libgumbo
 GUMBO_DIR=gumbo-parser-0.10.2
 GUMBO_INCDIR=${GUMBO_DIR}/src
