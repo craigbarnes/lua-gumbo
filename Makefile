@@ -72,6 +72,9 @@ LuaJIT-%/: | LuaJIT-%.tar.gz
 LuaJIT-%.tar.gz:
 	$(GET) http://luajit.org/download/$@
 
+gumbo-parser-%/.libs/: | gumbo-parser-%/
+	cd $| && ./autogen.sh && ./configure && make
+
 gumbo-parser-%/: | gumbo-parser-%.tar.gz
 	$(GUNZIP)
 
@@ -187,7 +190,13 @@ $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
 	  LUA=lua-$*/src/lua LUA_PC=none
 
-$(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit $(GUMBO_TARDIR)/
+$(CHECK_LJ_ALL): GUMBO_INCDIR=$(GUMBO_TARDIR)/src
+$(CHECK_LJ_ALL): GUMBO_LIBDIR=$(GUMBO_TARDIR)/.libs
+$(CHECK_LJ_ALL): GUMBO_CFLAGS=-I$(GUMBO_INCDIR)
+$(CHECK_LJ_ALL): GUMBO_LDFLAGS=-L$(GUMBO_LIBDIR)
+$(CHECK_LJ_ALL): GUMBO_LDLIBS=-lgumbo
+$(CHECK_LJ_ALL): export LD_LIBRARY_PATH=$(GUMBO_LIBDIR)
+$(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit $(GUMBO_TARDIR)/.libs/
 	$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -ILuaJIT-$*/src' \
 	  LUA=LuaJIT-$*/src/luajit LUA_PC=none
@@ -235,7 +244,7 @@ print-vars env:
 print-lua-v:
 	@$(LUA) -v
 
-prep: $(GUMBO_TARDIR)/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /src/luajit, $(LJ_BUILDS))
+prep: $(GUMBO_TARDIR)/.libs/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /src/luajit, $(LJ_BUILDS))
 
 todo:
 	git grep -E --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
