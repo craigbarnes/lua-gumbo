@@ -1,12 +1,23 @@
 include lualib.mk
 
-GUMBO_CFLAGS  ?= $(shell $(PKGCONFIG) --cflags gumbo)
-GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs-only-L gumbo)
-GUMBO_LDLIBS  ?= $(or $(shell $(PKGCONFIG) --libs-only-l gumbo), -lgumbo)
-GUMBO_INCDIR  ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
-GUMBO_LIBDIR  ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
-GUMBO_HEADER  ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
-GUMBO_TARDIR  ?= gumbo-parser-0.10.1
+GUMBO_TARDIR ?= gumbo-parser-0.10.1
+
+ifdef USE_LOCAL_LIBGUMBO
+ GUMBO_INCDIR ?= $(GUMBO_TARDIR)/src
+ GUMBO_LIBDIR ?= $(GUMBO_TARDIR)/.libs
+ GUMBO_CFLAGS ?= -I$(GUMBO_INCDIR)
+ GUMBO_LDFLAGS ?= -L$(GUMBO_LIBDIR)
+ GUMBO_LDLIBS ?= -lgumbo
+ GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
+ export LD_LIBRARY_PATH = $(GUMBO_LIBDIR)
+else
+ GUMBO_CFLAGS ?= $(shell $(PKGCONFIG) --cflags gumbo)
+ GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs-only-L gumbo)
+ GUMBO_LDLIBS ?= $(or $(shell $(PKGCONFIG) --libs-only-l gumbo), -lgumbo)
+ GUMBO_INCDIR ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
+ GUMBO_LIBDIR ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
+ GUMBO_HEADER ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
+endif
 
 CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
 XCFLAGS      += -std=c99 -pedantic-errors -fpic
@@ -73,7 +84,8 @@ LuaJIT-%.tar.gz:
 	$(GET) http://luajit.org/download/$@
 
 gumbo-parser-%/.libs/: | gumbo-parser-%/
-	cd $| && ./autogen.sh && ./configure && make
+	cd $| && ./autogen.sh && ./configure
+	$(MAKE) -C $|
 
 gumbo-parser-%/: | gumbo-parser-%.tar.gz
 	$(GUNZIP)
@@ -190,16 +202,10 @@ $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
 	  LUA=lua-$*/src/lua LUA_PC=none
 
-$(CHECK_LJ_ALL): GUMBO_INCDIR=$(GUMBO_TARDIR)/src
-$(CHECK_LJ_ALL): GUMBO_LIBDIR=$(GUMBO_TARDIR)/.libs
-$(CHECK_LJ_ALL): GUMBO_CFLAGS=-I$(GUMBO_INCDIR)
-$(CHECK_LJ_ALL): GUMBO_LDFLAGS=-L$(GUMBO_LIBDIR)
-$(CHECK_LJ_ALL): GUMBO_LDLIBS=-lgumbo
-$(CHECK_LJ_ALL): export LD_LIBRARY_PATH=$(GUMBO_LIBDIR)
 $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit $(GUMBO_TARDIR)/.libs/
 	$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -ILuaJIT-$*/src' \
-	  LUA=LuaJIT-$*/src/luajit LUA_PC=none
+	  LUA=LuaJIT-$*/src/luajit LUA_PC=none USE_LOCAL_LIBGUMBO=1
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
