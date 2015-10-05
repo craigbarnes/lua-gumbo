@@ -23,7 +23,9 @@ GUNZIP        = gzip -d < '$|' | tar xf -
 PANDOC        = pandoc -S -f markdown_github-hard_line_breaks-raw_html -t html5
 BENCHFILE    ?= test/data/2MiB.html
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 # TODO lua-5.1.5 luajit
+LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta1
 CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
+CHECK_LJ_ALL  = $(addprefix check-, $(LJ_BUILDS))
 
 OS_NAME ?= $(or \
     $(if $(ISDARWIN), macosx), \
@@ -60,6 +62,15 @@ lua-%/: | lua-%.tar.gz
 
 lua-%.tar.gz:
 	$(GET) http://www.lua.org/ftp/$@
+
+LuaJIT-%/src/luajit: | LuaJIT-%/
+	$(MAKE) -C $|
+
+LuaJIT-%/: | LuaJIT-%.tar.gz
+	$(GUNZIP)
+
+LuaJIT-%.tar.gz:
+	$(GET) http://luajit.org/download/$@
 
 gumbo-parser-%/: | gumbo-parser-%.tar.gz
 	$(GUNZIP)
@@ -167,12 +178,19 @@ check-compat:
 	$(MAKE) -sB check LUA_PC=luajit LUAFLAGS=-joff
 	$(MAKE) -sB check CC=clang
 
-check-lua-all: $(CHECK_LUA_ALL)
+check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
+
+# TODO: Clean up and unify these two recipes:
 
 $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
 	$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
-	  LUA=lua-$*/src/lua
+	  LUA=lua-$*/src/lua LUA_PC=none
+
+$(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit $(GUMBO_TARDIR)/
+	$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
+	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -ILuaJIT-$*/src' \
+	  LUA=LuaJIT-$*/src/luajit LUA_PC=none
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
@@ -217,7 +235,7 @@ print-vars env:
 print-lua-v:
 	@$(LUA) -v
 
-prep: $(GUMBO_TARDIR)/ $(addsuffix /src/lua, $(LUA_BUILDS))
+prep: $(GUMBO_TARDIR)/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /src/luajit, $(LJ_BUILDS))
 
 todo:
 	git grep -E --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
@@ -228,7 +246,7 @@ clean:
 	      gumbo-*.rockspec gumbo-*.rock
 
 clean-all: clean
-	$(RM) -r lua-*/
+	$(RM) -r lua-*/ LuaJIT-*/
 
 
 .PHONY: \
@@ -237,10 +255,9 @@ clean-all: clean
     check check-html5lib check-compat check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
-    check-lua-all $(CHECK_LUA_ALL) \
+    check-lua-all $(CHECK_LUA_ALL) $(CHECK_LJ_ALL) \
     bench-parse bench-serialize
 
-.SECONDARY: \
-    lua-5.3.1/ lua-5.2.4/ lua-5.1.5/
+.SECONDARY: $(addsuffix /, $(LUA_BUILDS) $(LJ_BUILDS))
 
 .DELETE_ON_ERROR:
