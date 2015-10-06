@@ -299,8 +299,8 @@ Testing
   installation, to ensure all modules are installed correctly.
 * `make coverage.txt`: Generates a test coverage report with [luacov].
 
-[License]
----------
+License
+-------
 
 Copyright (c) 2013-2014, Craig Barnes.
 
@@ -317,7 +317,6 @@ OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-[License]: http://en.wikipedia.org/wiki/ISC_license "ISC License"
 [Lua]: http://www.lua.org/
 [LuaJIT]: http://luajit.org/
 [C API]: http://www.lua.org/manual/5.2/manual.html#4
