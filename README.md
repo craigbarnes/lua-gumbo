@@ -1,5 +1,5 @@
-lua-gumbo
-=========
+Synopsis
+--------
 
 [Lua][] [C API] and [LuaJIT][] [FFI] bindings for the [Gumbo][] [HTML5]
 parsing library, including a small set of core [DOM] APIs implemented in
