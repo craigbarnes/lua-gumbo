@@ -32,6 +32,7 @@ PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
 GUNZIP        = gzip -d < '$|' | tar xf -
 PANDOC        = pandoc
+DATE          = $(shell date +'%B %d, %Y')
 BENCHFILE    ?= test/data/2MiB.html
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 # TODO lua-5.1.5 luajit
 LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta1
@@ -104,7 +105,8 @@ README.html: metadata.yml README.md template.html style.css.inc
 	  metadata.yml README.md
 
 README.pdf: metadata.yml README.md
-	sed '/^\[!\[Build Status/d' $^ | $(PANDOC) --toc -o $@
+	sed '/^\[!\[Build Status/d' metadata.yml README.md | \
+	  $(PANDOC) --toc -M date='$(DATE)' -V geometry:margin=3.5cm -o $@
 
 style.css.inc: style.css
 	echo '<style>' > $@
