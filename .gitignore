@@ -8,6 +8,7 @@ gumbo-*.rock
 coverage.txt
 tags
 README.html
+README.pdf
 style.css.inc
 test/data/*MiB.html
 lua-*/

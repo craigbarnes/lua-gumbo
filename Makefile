@@ -31,7 +31,7 @@ TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
 GUNZIP        = gzip -d < '$|' | tar xf -
-PANDOC        = pandoc -S -f markdown_github-hard_line_breaks-raw_html -t html5
+PANDOC        = pandoc
 BENCHFILE    ?= test/data/2MiB.html
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 # TODO lua-5.1.5 luajit
 LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta1
@@ -99,8 +99,12 @@ gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
 
-README.html: README.md template.html style.css.inc
-	$(PANDOC) --toc --template=template.html -H style.css.inc $< > $@
+README.html: metadata.yml README.md template.html style.css.inc
+	$(PANDOC) -S --toc --template template.html -H style.css.inc -o $@ \
+	  metadata.yml README.md
+
+README.pdf: metadata.yml README.md
+	sed '/^\[!\[Build Status/d' $^ | $(PANDOC) --toc -o $@
 
 style.css.inc: style.css
 	echo '<style>' > $@
@@ -256,9 +260,10 @@ todo:
 	git grep -E --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
 
 clean:
-	$(RM) gumbo/parse.so gumbo/parse.o README.html style.css.inc \
-	      coverage.txt test/data/*MiB.html lua-gumbo-*.tar.gz \
-	      gumbo-*.rockspec gumbo-*.rock
+	$(RM) \
+	  gumbo/parse.so gumbo/parse.o README.html README.pdf style.css.inc \
+	  coverage.txt test/data/*MiB.html lua-gumbo-*.tar.gz \
+	  gumbo-*.rockspec gumbo-*.rock
 
 clean-all: clean
 	$(RM) -r lua-*/ LuaJIT-*/
