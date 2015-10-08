@@ -200,6 +200,9 @@ check-compat:
 	$(MAKE) -sB check CC=clang
 
 check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
+	@echo
+	@+for t in $^; do printf " \33[32mPASSED\33[0m  make $$t\n"; done
+	@echo
 
 # TODO: Clean up and unify these two recipes:
 
