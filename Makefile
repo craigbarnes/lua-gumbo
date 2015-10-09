@@ -33,12 +33,16 @@ GET           = curl -s -L -o $@
 GUNZIP        = gzip -d < '$|' | tar xf -
 PANDOC        = pandoc
 DATE          = $(shell date +'%B %d, %Y')
-OS_NAME      ?= $(or $(if $(ISDARWIN),macosx), $(shell uname | tr 'A-Z' 'a-z'))
 BENCHFILE    ?= test/data/2MiB.html
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 lua-5.1.5
 LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta1
 CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
 CHECK_LJ_ALL  = $(addprefix check-, $(LJ_BUILDS))
+
+OS_NAME ?= $(or \
+    $(if $(ISDARWIN), macosx), \
+    $(shell uname | tr 'A-Z' 'a-z') \
+)
 
 USERVARS = \
     CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
@@ -203,13 +207,14 @@ check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 # TODO: Clean up and unify these two recipes:
 
 $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
-	@$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall -DAMALG' XLDFLAGS= \
-	  LUA_CFLAGS=-Ilua-$*/src LUA=lua-$*/src/lua LUA_PC=none
+	$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
+	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
+	  LUA=lua-$*/src/lua LUA_PC=none
 
 $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit $(GUMBO_TARDIR)/.libs/
-	@$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall -DAMALG' XLDFLAGS= \
-	 LUA_CFLAGS=-ILuaJIT-$*/src LUA=LuaJIT-$*/src/luajit LUA_PC=none \
-	 USE_LOCAL_LIBGUMBO=1
+	$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
+	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -ILuaJIT-$*/src' \
+	  LUA=LuaJIT-$*/src/luajit LUA_PC=none USE_LOCAL_LIBGUMBO=1
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
