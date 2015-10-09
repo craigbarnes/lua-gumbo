@@ -137,7 +137,7 @@ GITURL  = git://github.com/craigbarnes/lua-gumbo.git
 VERSION = $(or $(shell git describe --abbrev=0),$(error No version info))
 
 dist:
-	@$(MAKE) --no-print-directory gumbo-$(VERSION)-1.rockspec
+	@$(MAKE) -s lua-gumbo-$(VERSION).tar.gz gumbo-$(VERSION)-1.rockspec
 
 lua-gumbo-%.tar.gz:
 	@git archive --prefix=lua-gumbo-$*/ -o $@ $*
