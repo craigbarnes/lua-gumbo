@@ -145,7 +145,7 @@ lua-gumbo-%.tar.gz:
 
 gumbo-%-1.rockspec: URL = $(HOMEURL)/releases/download/$*/lua-gumbo-$*.tar.gz
 gumbo-%-1.rockspec: MD5 = `md5sum lua-gumbo-$*.tar.gz | cut -d' ' -f1`
-gumbo-%-1.rockspec: rockspec.in lua-gumbo-%.tar.gz | .git/refs/tags/%
+gumbo-%-1.rockspec: rockspec.in lua-gumbo-%.tar.gz
 	@sed "s|%VERSION%|$*|;s|%URL%|$(URL)|;s|%SRCX%|md5 = '$(MD5)'|" $< > $@
 	@echo 'Generated: $@'
 
