@@ -1,9 +1,10 @@
 local gumbo = require "gumbo"
 local Set = require "gumbo.Set"
 local assert = assert
+local urlPrefix = (_VERSION == "Lua 5.1") and "^[%z\1-\32]*" or "^[\0-\32]*"
 local _ENV = nil
 
-local urlSchemePattern = "^[%z\1-\32]*([a-zA-Z][a-zA-Z0-9+.-]*:)"
+local urlSchemePattern = urlPrefix .. "([a-zA-Z][a-zA-Z0-9+.-]*:)"
 local allowedHrefSchemes = Set{"http:", "https:", "mailto:"}
 local allowedImgSrcSchemes = Set{"http:", "https:"}
 local allowedDivAttributes = Set{"itemscope", "itemtype"}
