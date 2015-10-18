@@ -145,7 +145,6 @@ See also:
 
 * [find_links.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua)
 * [remove_by_id.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua)
-* [sanitizer.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/sanitizer.lua)
 
 DOM API
 -------

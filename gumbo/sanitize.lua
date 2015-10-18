@@ -1,13 +1,11 @@
--- This example implements the HTML sanitization rules used by GitHub
--- https://github.com/github/markup#html-sanitization
-
 local gumbo = require "gumbo"
 local Set = require "gumbo.Set"
-local input = arg[1] or io.stdin
-local write, assert = io.write, assert
+local assert = assert
 local _ENV = nil
 
-local urlSchemePattern = "^[\0-\32]*([a-zA-Z][a-zA-Z0-9+.-]*:)"
+-- TODO: This pattern should start [\0-\32] but Lua 5.1 uses %z instead of \0
+--       (This is a security hole -- do not use until fixed!)
+local urlSchemePattern = "^[\1-\32]*([a-zA-Z][a-zA-Z0-9+.-]*:)"
 local allowedHrefSchemes = Set{"http:", "https:", "mailto:"}
 local allowedImgSrcSchemes = Set{"http:", "https:"}
 local allowedDivAttributes = Set{"itemscope", "itemtype"}
@@ -43,6 +41,7 @@ local function isAllowedAttribute(tag, attr)
     local name, value = assert(attr.name), assert(attr.value)
     return
         allowedAttributes[name]
+        or (name:find("^data[-].+") ~= nil)
         or (tag == "div" and allowedDivAttributes[name])
         or (tag == "a" and name == "href" and isAllowedHref(value))
         or (tag == "area" and name == "href" and isAllowedHref(value))
@@ -69,6 +68,4 @@ local function sanitize(root)
     return root
 end
 
-local document = assert(gumbo.parseFile(input))
-local body = assert(sanitize(document.body))
-write(body.outerHTML, "\n")
+return sanitize

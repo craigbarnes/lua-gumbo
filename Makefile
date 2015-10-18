@@ -52,7 +52,7 @@ DOM_IFACES = \
 DOM_MODULES   = $(addprefix gumbo/dom/, $(addsuffix .lua, $(DOM_IFACES) util))
 SLZ_MODULES   = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 FFI_MODULES   = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
-TOP_MODULES   = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua)
+TOP_MODULES   = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua sanitize.lua)
 
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
