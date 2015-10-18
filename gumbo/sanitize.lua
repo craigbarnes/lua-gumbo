@@ -3,9 +3,7 @@ local Set = require "gumbo.Set"
 local assert = assert
 local _ENV = nil
 
--- TODO: This pattern should start [\0-\32] but Lua 5.1 uses %z instead of \0
---       (This is a security hole -- do not use until fixed!)
-local urlSchemePattern = "^[\1-\32]*([a-zA-Z][a-zA-Z0-9+.-]*:)"
+local urlSchemePattern = "^[%z\1-\32]*([a-zA-Z][a-zA-Z0-9+.-]*:)"
 local allowedHrefSchemes = Set{"http:", "https:", "mailto:"}
 local allowedImgSrcSchemes = Set{"http:", "https:"}
 local allowedDivAttributes = Set{"itemscope", "itemtype"}

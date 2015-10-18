@@ -3,8 +3,6 @@ local sanitize = require "gumbo/sanitize"
 local assert = assert
 local _ENV = nil
 
--- TODO: Add test for href scheme with leading NULL byte
-
 local input = [[
 <!DOCTYPE html>
 <html lang="en">
@@ -38,3 +36,12 @@ for node in document.body:walk() do
         assert(node:hasAttribute("href") ~= node:hasAttribute("data-unsafe"))
     end
 end
+
+-- Check that leading NULL bytes are ignored
+local a5 = assert(document.body.children[5])
+local a10 = assert(document.body.children[10])
+a5:setAttribute("href", "\0\0\t\n\r\f\0 http://example.com")
+a10:setAttribute("href", " \0\0\t\0 non-whitelisted-scheme: alert()")
+sanitize(document.body)
+assert(a5:hasAttribute("href") ~= a5:hasAttribute("data-unsafe"))
+assert(a10:hasAttribute("href") ~= a10:hasAttribute("data-unsafe"))
