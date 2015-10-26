@@ -189,11 +189,13 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | diff -u2 test/data/$*.out.html -
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
-check-compat:
-	$(MAKE) -sB check
-	$(MAKE) -sB check LUA_PC=luajit
-	$(MAKE) -sB check LUA_PC=luajit LUAFLAGS=-joff
-	$(MAKE) -sB check CC=clang
+check-pkgconfig:
+	$(MAKE) -sB print-lua-v check
+	$(MAKE) -sB print-lua-v check LUA_PC=lua5.3
+	$(MAKE) -sB print-lua-v check LUA_PC=lua5.2
+	$(MAKE) -sB print-lua-v check LUA_PC=lua5.1
+	$(MAKE) -sB print-lua-v check LUA_PC=luajit
+	$(MAKE) -sB print-lua-v check LUA_PC=luajit LUAFLAGS=-joff
 
 check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 	@echo
@@ -273,7 +275,7 @@ clean-all: clean
 .PHONY: \
     all amalg install uninstall \
     clean clean-all git-hooks dist print-vars env print-lua-v prep todo \
-    check check-html5lib check-compat check-install luacheck \
+    check check-html5lib check-pkgconfig check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
     check-lua-all $(CHECK_LUA_ALL) $(CHECK_LJ_ALL) \
