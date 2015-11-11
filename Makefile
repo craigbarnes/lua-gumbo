@@ -57,12 +57,18 @@ TOP_MODULES   = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua sanitize.lu
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
 
+# If this is used, it must either be appended to *every* make command or
+# added to local.mk. Using this flag alone may be useful for testing, but
+# for production/installation purposes it should almost always be combined
+# with an amalgamation build.
 ifdef USE_LOCAL_LIBGUMBO
  gumbo/parse.o: | $(GUMBO_TARDIR)/
  # TODO: Only add this dependency for non-amalgamation builds
  gumbo/parse.so: | $(GUMBO_LIBDIR)/
 endif
 
+# TODO: Make this a variable ("AMALG") instead of a separate target and
+# handle the same way as "USE_LOCAL_LIBGUMBO".
 amalg: XCFLAGS := -std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src
 amalg: XLDFLAGS :=
 amalg: CFLAGS := -g -O2 -Wall
