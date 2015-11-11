@@ -23,7 +23,7 @@
 #include "compat.h"
 
 #ifdef AMALG
-# include "amalg.h"
+#include "amalg.h"
 #endif
 
 typedef unsigned int uint;
@@ -45,6 +45,8 @@ typedef enum {
     nupvalues = NamedNodeMap
 } Upvalue;
 
+// clang-format off
+
 static const char *const modules[] = {
     [Text] = "gumbo.dom.Text",
     [Comment] = "gumbo.dom.Comment",
@@ -63,10 +65,12 @@ static const char *const modules[] = {
     lua_rawset(L, -3) \
 )
 
+// clang-format on
+
 #define add_literal(L, k, v) add_field(literal, L, k, v)
 #define add_string(L, k, v) add_field(string, L, k, v)
 #define add_integer(L, k, v) add_field(integer, L, k, v)
-#define add_value(L, k, v) add_field(value, L, k, (v) < 0 ? (v) - 1 : (v))
+#define add_value(L, k, v) add_field(value, L, k, (v) < 0 ? (v)-1 : (v))
 
 static void *xmalloc(void *userdata, size_t size) {
     (void)userdata;
@@ -157,7 +161,9 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth);
 static void
 add_children(lua_State *L, const GumboVector *vec, uint start, uint depth) {
     const unsigned int length = vec->length;
-    if (depth >= 800) luaL_error(L, "Tree depth limit of 800 exceeded");
+    if (depth >= 800) {
+        luaL_error(L, "Tree depth limit of 800 exceeded");
+    }
     lua_createtable(L, length, 0);
     setmetatable(L, NodeList);
     for (unsigned int i = 0; i < length; i++) {
@@ -238,7 +244,8 @@ static int parse(lua_State *L) {
         const GumboDocument *document = &output->document->v.document;
         lua_createtable(L, 0, 4);
         if (document->has_doctype) {
-            add_string(L, "quirksMode", quirksmap[document->doc_type_quirks_mode]);
+            const char *quirksmode = quirksmap[document->doc_type_quirks_mode];
+            add_string(L, "quirksMode", quirksmode);
             add_children(L, &document->children, 2, 0);
             lua_getfield(L, -1, "childNodes");
             lua_createtable(L, 0, 3); // doctype
