@@ -57,6 +57,12 @@ TOP_MODULES   = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua sanitize.lu
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
 
+ifdef USE_LOCAL_LIBGUMBO
+ gumbo/parse.o: | $(GUMBO_TARDIR)/
+ # TODO: Only add this dependency for non-amalgamation builds
+ gumbo/parse.so: | $(GUMBO_LIBDIR)/
+endif
+
 amalg: XCFLAGS := -std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src
 amalg: XLDFLAGS :=
 amalg: CFLAGS := -g -O2 -Wall
@@ -190,12 +196,12 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
 check-pkgconfig:
-	$(MAKE) -sB print-lua-v check
-	$(MAKE) -sB print-lua-v check LUA_PC=lua5.3
-	$(MAKE) -sB print-lua-v check LUA_PC=lua5.2
-	$(MAKE) -sB print-lua-v check LUA_PC=lua5.1
-	$(MAKE) -sB print-lua-v check LUA_PC=luajit
-	$(MAKE) -sB print-lua-v check LUA_PC=luajit LUAFLAGS=-joff
+	$(MAKE) -s clean-obj print-lua-v check
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua5.3
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua5.2
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua5.1
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=luajit
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=luajit LUAFLAGS=-joff
 
 check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 	@echo
@@ -205,12 +211,14 @@ check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 # TODO: Clean up and unify these two recipes:
 
 $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
-	@$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
+	@$(MAKE) -s clean-obj print-lua-v check \
+	  CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
 	  LUA=lua-$*/src/lua LUA_PC=none
 
 $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit $(GUMBO_TARDIR)/.libs/
-	@$(MAKE) -sB print-lua-v check CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
+	@$(MAKE) -s clean-obj print-lua-v check \
+	  CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
 	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -ILuaJIT-$*/src' \
 	  LUA=LuaJIT-$*/src/luajit LUA_PC=none USE_LOCAL_LIBGUMBO=1
 
@@ -262,19 +270,22 @@ prep: $(GUMBO_TARDIR)/.libs/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /s
 todo:
 	git grep -E --color 'TODO|FIXME' -- '*.lua' | sed 's/ *\-\- */ /'
 
-clean:
+clean-obj:
+	$(RM) gumbo/parse.so gumbo/parse.o
+
+clean-doc:
+	$(RM) README.html README.pdf style.css.inc
+
+clean: clean-obj clean-doc
 	$(RM) \
-	  gumbo/parse.so gumbo/parse.o README.html README.pdf style.css.inc \
 	  coverage.txt test/data/*MiB.html lua-gumbo-*.tar.gz \
 	  gumbo-*.rockspec gumbo-*.rock
-
-clean-all: clean
-	$(RM) -r lua-*/ LuaJIT-*/
 
 
 .PHONY: \
     all amalg install uninstall \
-    clean clean-all git-hooks dist print-vars env print-lua-v prep todo \
+    clean clean-obj clean-doc \
+    git-hooks dist print-vars env print-lua-v prep todo \
     check check-html5lib check-pkgconfig check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
