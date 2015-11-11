@@ -2,7 +2,6 @@
 
 .git* export-ignore
 .travis.* export-ignore
-test/git-hooks/ export-ignore
 CONTRIBUTING.md export-ignore
 
 *.[ch] code
