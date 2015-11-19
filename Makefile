@@ -19,7 +19,7 @@ else
  GUMBO_HEADER ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 endif
 
-CFLAGS       ?= -g -O2 -Wall -Wextra -Wswitch-enum -Wwrite-strings -Wshadow
+CFLAGS       ?= -g -O2 -Wall -Wextra -Wwrite-strings -Wshadow
 XCFLAGS      += -std=c99 -pedantic-errors -fpic
 XCFLAGS      += $(LUA_CFLAGS) $(GUMBO_CFLAGS)
 XLDFLAGS     += $(GUMBO_LDFLAGS) $(GUMBO_LDLIBS)
