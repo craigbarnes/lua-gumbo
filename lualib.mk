@@ -36,16 +36,22 @@ ISLINUX    = $(call EQUAL, $(UNAME), Linux)
 CCOPTIONS  = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTIONS  = $(XLDFLAGS) $(LDFLAGS) $(LDLIBS)
 
-LUA_NAMES = \
+LUA_PC_NAMES = \
     lua53 lua5.3 lua-5.3 \
     lua52 lua5.2 lua-5.2 \
     lua51 lua5.1 lua-5.1 \
     lua luajit
 
-LUA_WHICH = $(firstword $(shell which $(_LUA_PC) $(LUA_NAMES) 2>/dev/null))
+LUA_VERSION_SUFFIXES = \
+    $(LUA_VERSION) \
+    -$(LUA_VERSION) \
+    $(shell echo '$(LUA_VERSION)' | sed 's/[.]//')
+
+LUA_BIN_NAMES = $(addprefix lua, $(LUA_VERSION_SUFFIXES)) $(_LUA_PC)
+LUA_WHICH = $(firstword $(shell which $(LUA_BIN_NAMES) 2>/dev/null))
 
 LUA_PC ?= $(or \
-    $(call FIND_PC, $(LUA_NAMES)), \
+    $(call FIND_PC, $(LUA_PC_NAMES)), \
     $(error No pkg-config file found for Lua) \
 )
 
