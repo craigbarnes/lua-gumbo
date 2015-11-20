@@ -246,9 +246,10 @@ check-rockspec: dist gumbo-scm-1.rockspec
 check-luarocks-make: LUA_PATH = ;;
 check-luarocks-make: MAKEFLAGS += -B
 check-luarocks-make: gumbo-scm-1.rockspec
-	$(LUAROCKS) make --local $< \
+	$(LUAROCKS) --tree='$(CURDIR)/ROCKS' make $< \
 	    GUMBO_INCDIR='$(GUMBO_INCDIR)' \
 	    GUMBO_LIBDIR='$(GUMBO_LIBDIR)'
+	$(RM) -r ROCKS
 
 luacheck:
 	@luacheck gumbo.lua runtests.lua gumbo test examples
