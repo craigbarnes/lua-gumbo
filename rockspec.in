@@ -29,12 +29,13 @@ build = {
     variables = {
         LUA = "$(LUA)",
         LUA_INCDIR = "$(LUA_INCDIR)",
-        LUA_LIBDIR = "$(LUA_LIBDIR)"
+        LUA_LIBDIR = "$(LUA_LIBDIR)",
+        LUA_CFLAGS = "-I$(LUA_INCDIR)",
+        LUA_PC = "none"
     },
     build_variables = {
         CFLAGS = "$(CFLAGS)",
         LDFLAGS = "$(LIBFLAG)",
-        LUA_CFLAGS = "-I$(LUA_INCDIR)",
         GUMBO_CFLAGS = "-I$(GUMBO_INCDIR)",
         GUMBO_LDFLAGS = "-L$(GUMBO_LIBDIR)"
     },
