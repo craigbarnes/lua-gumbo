@@ -173,6 +173,23 @@ constructors = LookupTable {
     create_template
 }
 
+local function create_document(document)
+    local t = {}
+    if document.has_doctype then
+        t.quirksMode = quirksmap[tonumber(document.doc_type_quirks_mode)]
+        local doctype = {
+            name = cstring(document.name),
+            publicId = cstring(document.public_identifier),
+            systemId = cstring(document.system_identifier)
+        }
+        add_children(t, document.children, 2, 0)
+        t.childNodes[1] = setmetatable(doctype, DocumentType)
+    else
+        add_children(t, document.children, 1, 0)
+    end
+    return setmetatable(t, Document)
+end
+
 local function parse(input, tagname, ns, tab_stop)
     assert(type(input) == "string")
     local options = new("GumboOptions", C.kGumboDefaultOptions)
@@ -194,22 +211,17 @@ local function parse(input, tagname, ns, tab_stop)
         options.tab_stop = tab_stop
     end
     local output = C.gumbo_parse_with_options(options, input, #input)
-    local document = output.document.v.document
-    local t = {}
-    if document.has_doctype then
-        t.quirksMode = quirksmap[tonumber(document.doc_type_quirks_mode)]
-        local doctype = {
-            name = cstring(document.name),
-            publicId = cstring(document.public_identifier),
-            systemId = cstring(document.system_identifier)
-        }
-        add_children(t, document.children, 2, 0)
-        t.childNodes[1] = setmetatable(doctype, DocumentType)
+    if output ~= nil then
+        local ok, result = pcall(create_document, output.document.v.document)
+        C.gumbo_destroy_output(options, output)
+        if ok == true then
+            return result
+        else
+            return nil, result
+        end
     else
-        add_children(t, document.children, 1, 0)
+        return nil, "Failed to parse"
     end
-    C.gumbo_destroy_output(options, output)
-    return setmetatable(t, Document)
 end
 
 return parse

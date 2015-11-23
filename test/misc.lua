@@ -56,7 +56,10 @@ end
 
 do -- Make sure maximum tree depth limit is enforced
     local input = ("<div>"):rep(801)
-    assert(not pcall(parse, input))
+    local document, errmsg = parse(input)
+    assert(document == nil)
+    assert(errmsg ~= nil)
+    assert(errmsg:find("depth limit"))
 end
 
 do -- Check that parseFile works the same with a filename as with a file

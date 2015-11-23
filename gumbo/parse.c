@@ -227,6 +227,28 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
     }
 }
 
+static int push_document(lua_State *L) {
+    const GumboDocument *document = lua_touserdata(L, 1);
+    lua_createtable(L, 0, 4);
+    if (document->has_doctype) {
+        const char *quirksmode = quirksmap[document->doc_type_quirks_mode];
+        add_string(L, "quirksMode", quirksmode);
+        add_children(L, &document->children, 2, 0);
+        lua_getfield(L, -1, "childNodes");
+        lua_createtable(L, 0, 3); // doctype
+        add_string(L, "name", document->name);
+        add_string(L, "publicId", document->public_identifier);
+        add_string(L, "systemId", document->system_identifier);
+        setmetatable(L, DocumentType);
+        lua_rawseti(L, -2, 1); // childNodes[1] = doctype
+        lua_pop(L, 1);
+    } else {
+        add_children(L, &document->children, 1, 0);
+    }
+    setmetatable(L, Document);
+    return 1;
+}
+
 static int parse(lua_State *L) {
     size_t input_len, tagname_len;
     GumboOptions options = kGumboDefaultOptions;
@@ -240,26 +262,21 @@ static int parse(lua_State *L) {
     options.allocator = xmalloc;
     GumboOutput *output = gumbo_parse_with_options(&options, input, input_len);
     if (output) {
-        const GumboDocument *document = &output->document->v.document;
-        lua_createtable(L, 0, 4);
-        if (document->has_doctype) {
-            const char *quirksmode = quirksmap[document->doc_type_quirks_mode];
-            add_string(L, "quirksMode", quirksmode);
-            add_children(L, &document->children, 2, 0);
-            lua_getfield(L, -1, "childNodes");
-            lua_createtable(L, 0, 3); // doctype
-            add_string(L, "name", document->name);
-            add_string(L, "publicId", document->public_identifier);
-            add_string(L, "systemId", document->system_identifier);
-            setmetatable(L, DocumentType);
-            lua_rawseti(L, -2, 1); // childNodes[1] = doctype
-            lua_pop(L, 1);
-        } else {
-            add_children(L, &document->children, 1, 0);
+        for (unsigned int i = 1; i <= nupvalues; i++) {
+            lua_pushvalue(L, lua_upvalueindex(i));
         }
-        setmetatable(L, Document);
+        lua_pushcclosure(L, push_document, nupvalues);
+        // TODO: Use lua_cpcall on 5.1 (since lua_pushlightuserdata can throw)
+        lua_pushlightuserdata(L, &output->document->v.document);
+        int err = lua_pcall(L, 1, 1, 0);
         gumbo_destroy_output(&options, output);
-        return 1;
+        if (err == 0) { // LUA_OK
+            return 1;
+        } else {
+            lua_pushnil(L);
+            lua_pushvalue(L, -2);
+            return 2;
+        }
     } else {
         lua_pushnil(L);
         lua_pushliteral(L, "Failed to parse");
