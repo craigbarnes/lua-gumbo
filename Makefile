@@ -2,7 +2,15 @@ include mk/lualib.mk
 
 GUMBO_TARDIR ?= gumbo-parser-0.10.1
 
-ifdef USE_LOCAL_LIBGUMBO
+ifdef AMALG
+ CFLAGS ?= -g -O2 -Wall
+ GUMBO_INCDIR ?= $(GUMBO_TARDIR)/src
+ GUMBO_CFLAGS ?= -I$(GUMBO_INCDIR) -DAMALG
+ GUMBO_LDFLAGS =
+ GUMBO_LDLIBS =
+ GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
+ gumbo/parse.o: | $(GUMBO_TARDIR)/
+else ifdef USE_LOCAL_LIBGUMBO
  GUMBO_INCDIR ?= $(GUMBO_TARDIR)/src
  GUMBO_LIBDIR ?= $(GUMBO_TARDIR)/.libs
  GUMBO_CFLAGS ?= -I$(GUMBO_INCDIR)
@@ -10,12 +18,14 @@ ifdef USE_LOCAL_LIBGUMBO
  GUMBO_LDLIBS ?= -lgumbo
  GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
  export LD_LIBRARY_PATH = $(GUMBO_LIBDIR)
+ gumbo/parse.o: | $(GUMBO_TARDIR)/
+ gumbo/parse.so: | $(GUMBO_LIBDIR)/
 else
+ GUMBO_INCDIR ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
+ GUMBO_LIBDIR ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
  GUMBO_CFLAGS ?= $(shell $(PKGCONFIG) --cflags gumbo)
  GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs-only-L gumbo)
  GUMBO_LDLIBS ?= $(or $(shell $(PKGCONFIG) --libs-only-l gumbo), -lgumbo)
- GUMBO_INCDIR ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
- GUMBO_LIBDIR ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
  GUMBO_HEADER ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 endif
 
@@ -39,23 +49,6 @@ TOP_MODULES = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua sanitize.lua)
 
 all: gumbo/parse.so
 gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
-
-# If this is used, it must either be appended to *every* make command or
-# added to local.mk. Using this flag alone may be useful for testing, but
-# for production/installation purposes it should almost always be combined
-# with an amalgamation build.
-ifdef USE_LOCAL_LIBGUMBO
- gumbo/parse.o: | $(GUMBO_TARDIR)/
- # TODO: Only add this dependency for non-amalgamation builds
- gumbo/parse.so: | $(GUMBO_LIBDIR)/
-endif
-
-# TODO: Make this a variable ("AMALG") instead of a separate target and
-# handle the same way as "USE_LOCAL_LIBGUMBO".
-amalg: XCFLAGS := -std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src $(LUA_CFLAGS)
-amalg: XLDFLAGS :=
-amalg: CFLAGS := -g -O2 -Wall
-amalg: $(GUMBO_TARDIR)/ gumbo/parse.so
 
 gumbo-parser-%/.libs/: | gumbo-parser-%/
 	cd $| && ./autogen.sh && ./configure
@@ -111,5 +104,6 @@ include mk/test.mk
 include mk/dist.mk
 include mk/doc.mk
 
+.DEFAULT_GOAL = all
 .PHONY: all amalg install uninstall clean clean-obj clean-doc
 .DELETE_ON_ERROR:
