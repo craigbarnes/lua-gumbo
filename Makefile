@@ -52,7 +52,7 @@ endif
 
 # TODO: Make this a variable ("AMALG") instead of a separate target and
 # handle the same way as "USE_LOCAL_LIBGUMBO".
-amalg: XCFLAGS := -std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src
+amalg: XCFLAGS := -std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src $(LUA_CFLAGS)
 amalg: XLDFLAGS :=
 amalg: CFLAGS := -g -O2 -Wall
 amalg: $(GUMBO_TARDIR)/ gumbo/parse.so
