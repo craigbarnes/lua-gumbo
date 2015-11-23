@@ -9,7 +9,7 @@ ifdef AMALG
  GUMBO_LDFLAGS =
  GUMBO_LDLIBS =
  GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
- gumbo/parse.o: | $(GUMBO_TARDIR)/
+ gumbo/parse.o: gumbo/amalg.h | $(GUMBO_TARDIR)/
 else ifdef USE_LOCAL_LIBGUMBO
  GUMBO_INCDIR ?= $(GUMBO_TARDIR)/src
  GUMBO_LIBDIR ?= $(GUMBO_TARDIR)/.libs
@@ -48,7 +48,7 @@ FFI_MODULES = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
 TOP_MODULES = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua sanitize.lua)
 
 all: gumbo/parse.so
-gumbo/parse.o: gumbo/parse.c gumbo/compat.h gumbo/amalg.h
+gumbo/parse.o: gumbo/compat.h
 
 gumbo-parser-%/.libs/: | gumbo-parser-%/
 	cd $| && ./autogen.sh && ./configure
