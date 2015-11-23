@@ -260,12 +260,12 @@ static int parse(lua_State *L) {
     options.fragment_namespace = luaL_checkoption(L, 3, "html", namespaces);
     options.tab_stop = (int)luaL_optinteger(L, 4, 8);
     options.allocator = xmalloc;
+    for (unsigned int i = 1; i <= nupvalues; i++) {
+        lua_pushvalue(L, lua_upvalueindex(i));
+    }
+    lua_pushcclosure(L, push_document, nupvalues);
     GumboOutput *output = gumbo_parse_with_options(&options, input, input_len);
     if (output) {
-        for (unsigned int i = 1; i <= nupvalues; i++) {
-            lua_pushvalue(L, lua_upvalueindex(i));
-        }
-        lua_pushcclosure(L, push_document, nupvalues);
         // TODO: Use lua_cpcall on 5.1 (since lua_pushlightuserdata can throw)
         lua_pushlightuserdata(L, &output->document->v.document);
         int err = lua_pcall(L, 1, 1, 0);
