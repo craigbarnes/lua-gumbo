@@ -1,3 +1,4 @@
+include mk/compat.mk
 include mk/lualib.mk
 
 GUMBO_TARDIR ?= gumbo-parser-0.10.1
