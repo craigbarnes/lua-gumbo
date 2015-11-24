@@ -15,8 +15,8 @@ Implements [`Node`] and [`ParentNode`].
 :   The `<body>` [`Element`] of the document.
 
 `title`
-:   A string containing the document's title (initially, the text contents of
-    the `<title>` element in the document markup).
+:   A *string* containing the document's title (initially, the text contents
+    of the `<title>` element in the document markup).
 
 `forms`
 :   A [`HTMLCollection`] of all `<form>` elements in the document.
@@ -110,20 +110,22 @@ Implements [`Node`], [`ParentNode`], [`ChildNode`] and
 Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
 
 `data`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties))
+:   A *string* representing the text contents of the node.
 
 `length`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties))
+:   The length of the `data` property in bytes.
 
 ### `Comment`
 
 Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
 
 `data`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties))
+:   A *string* representing the text contents of the comment node, *not*
+    including the start delimiter (`<!--`) or end delimiter (`-->`) from
+    the original markup.
 
 `length`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties))
+:   The length of the `data` property in bytes.
 
 ### `DocumentType`
 
