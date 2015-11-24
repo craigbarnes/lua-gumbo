@@ -266,7 +266,6 @@ static int parse(lua_State *L) {
     lua_pushcclosure(L, push_document, nupvalues);
     GumboOutput *output = gumbo_parse_with_options(&options, input, input_len);
     if (output) {
-        // TODO: Use lua_cpcall on 5.1 (since lua_pushlightuserdata can throw)
         lua_pushlightuserdata(L, &output->document->v.document);
         int err = lua_pcall(L, 1, 1, 0);
         gumbo_destroy_output(&options, output);
