@@ -6,28 +6,30 @@ DOM API
 Implements [`Node`] and [`ParentNode`].
 
 `documentElement`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement))
+:   The root [`Element`] of the document (i.e. the `<html>` element).
 
 `head`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.head))
+:   The `<head>` [`Element`] of the document.
 
 `body`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.body))
+:   The `<body>` [`Element`] of the document.
 
 `title`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.title))
+:   A string containing the document's title (initially, the text contents of
+    the `<title>` element in the document markup).
 
 `forms`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.forms))
+:   A [`HTMLCollection`] of all `<form>` elements in the document.
 
 `images`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.images))
+:   A [`HTMLCollection`] of all `<img>` elements in the document.
 
 `links`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.links))
+:   A [`HTMLCollection`] of all `<a>` and `<area>` elements in the
+    document that have a value for the `href` attribute.
 
 `scripts`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.scripts))
+:   A [`HTMLCollection`] of all `<script>` elements in the document.
 
 `doctype`
 :   TODO ([MDN](#documenttype))
@@ -226,6 +228,10 @@ Implements [`Node`] and [`ChildNode`].
 
     *This property is an extension; not a part of any specification.*
 
+### `HTMLCollection`
+
+*TODO*
+
 
 [`Document`]: #document
 [`Element`]: #element
@@ -234,5 +240,6 @@ Implements [`Node`] and [`ChildNode`].
 [`ParentNode`]: #parentnode
 [`ChildNode`]: #childnode
 [`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
+[`HTMLCollection`]: #htmlcollection
 [escapingString]: http://www.w3.org/TR/html5/syntax.html#escapingString
 [HTML fragment serialization algorithm]: http://www.w3.org/TR/html5/syntax.html#html-fragment-serialization-algorithm
