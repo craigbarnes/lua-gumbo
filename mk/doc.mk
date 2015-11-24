@@ -3,18 +3,20 @@ DATE   = $(shell date +'%B %d, %Y')
 
 docs: README.html README.pdf
 
-README.html: metadata.yml README.md template.html style.css.inc
-	$(PANDOC) -S --toc --template template.html -H style.css.inc -o $@ \
-	  metadata.yml README.md
+README.html: README.md doc/template.html doc/style.css.inc
+	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) -o $@ $<
 
-README.pdf: metadata.yml README.md
-	sed '/^\[!\[Build Status/d' metadata.yml README.md | \
+README.pdf: doc/metadata.yml README.md
+	sed '/^\[!\[Build Status/d' $^ | \
 	  $(PANDOC) --toc -M date='$(DATE)' -V geometry:margin=3.5cm -o $@
 
-style.css.inc: style.css
+doc/style.css.inc: doc/style.css
 	echo '<style>' > $@
 	cat $< >> $@
 	echo '</style>' >> $@
 
+clean-docs:
+	$(RM) README.html README.pdf doc/style.css.inc
 
-.PHONY: docs
+
+.PHONY: docs clean-docs

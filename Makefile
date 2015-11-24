@@ -92,10 +92,7 @@ uninstall:
 clean-obj:
 	$(RM) gumbo/parse.so gumbo/parse.o
 
-clean-doc:
-	$(RM) README.html README.pdf style.css.inc
-
-clean: clean-obj clean-doc
+clean: clean-obj clean-docs
 	$(RM) \
 	  coverage.txt test/data/*MiB.html lua-gumbo-*.tar.gz \
 	  gumbo-*.rockspec gumbo-*.rock
@@ -106,5 +103,5 @@ include mk/dist.mk
 include mk/doc.mk
 
 .DEFAULT_GOAL = all
-.PHONY: all amalg install uninstall clean clean-obj clean-doc
+.PHONY: all amalg install uninstall clean clean-obj
 .DELETE_ON_ERROR:
