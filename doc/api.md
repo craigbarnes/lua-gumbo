@@ -211,7 +211,28 @@ Implements [`Node`] and [`ChildNode`].
 ### `Attr`
 
 `name`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties))
+:   The attribute's name.
 
 `value`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties))
+:   The attribute's value.
+
+`escapedValue`
+:   The attribute's value, escaped according to the [rules][escapingString]
+    in the [HTML fragment serialization algorithm].
+
+    Ampersand (`&`) characters in `value` become `&amp;`, double quote (`"`)
+    characters become `&quot;` and non-breaking spaces (`U+00A0`) become
+    `&nbsp;`.
+
+    *This property is an extension; not a part of any specification.*
+
+
+[`Document`]: #document
+[`Element`]: #element
+[`Attr`]: #attr
+[`Node`]: #node
+[`ParentNode`]: #parentnode
+[`ChildNode`]: #childnode
+[`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
+[escapingString]: http://www.w3.org/TR/html5/syntax.html#escapingString
+[HTML fragment serialization algorithm]: http://www.w3.org/TR/html5/syntax.html#html-fragment-serialization-algorithm
