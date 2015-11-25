@@ -196,16 +196,16 @@ Implements [`Node`] and [`ChildNode`].
 ### `ParentNode`
 
 `children`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children))
+:   A [`HTMLCollection`] of child [`Element`] nodes.
 
 `childElementCount`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.childElementCount))
+:   An *integer* representing the number of child [`Element`] nodes.
 
 `firstElementChild`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.firstElementChild))
+:   The node's first child [`Element`] if there is one, otherwise `nil`.
 
 `lastElementChild`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild))
+:   The node's last child [`Element`] if there is one, otherwise `nil`.
 
 ### `ChildNode`
 
