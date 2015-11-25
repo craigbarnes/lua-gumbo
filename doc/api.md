@@ -140,25 +140,47 @@ Implements [`Node`] and [`ChildNode`].
 `systemId`
 :   TODO
 
+### `DocumentFragment`
+
+*TODO*
+
 ### `Node`
 
 `childNodes`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.childNodes))
+:   A [`NodeList`] containing all the children of the node.
 
 `parentNode`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentNode))
+:   The parent [`Node`] of the node, if it has one, otherwise `nil`.
 
 `parentElement`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentElement))
+:   The parent [`Element`] of the node, if it has one, otherwise `nil`.
 
 `ownerDocument`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.ownerDocument))
+:   The [`Document`] to which the node belongs, or `nil`.
 
 `nodeType`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeType))
+:   An *integer* code representing the type of the node.
+
+    | Node type            | `nodeType` value | Symbolic constant             |
+    |----------------------|------------------|-------------------------------|
+    | [`Element`]          |                1 | `Node.ELEMENT_NODE`           |
+    | [`Text`]             |                3 | `Node.TEXT_NODE`              |
+    | [`Comment`]          |                8 | `Node.COMMENT_NODE`           |
+    | [`Document`]         |                9 | `Node.DOCUMENT_NODE`          |
+    | [`DocumentType`]     |               10 | `Node.DOCUMENT_TYPE_NODE`     |
+    | [`DocumentFragment`] |               11 | `Node.DOCUMENT_FRAGMENT_NODE` |
 
 `nodeName`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeName))
+:   A *string* representation of the type of the node:
+
+    | Node type            | `nodeName` value                 |
+    |----------------------|----------------------------------|
+    | [`Element`]          | The value of `Element.tagName`   |
+    | [`Text`]             | `#text`                          |
+    | [`Comment`]          | `#comment`                       |
+    | [`Document`]         | `#document`                      |
+    | [`DocumentType`]     | The value of `DocumentType.name` |
+    | [`DocumentFragment`] | `#document-fragment`             |
 
 `firstChild`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.firstChild))
@@ -210,7 +232,7 @@ Implements [`Node`] and [`ChildNode`].
 ### `ChildNode`
 
 `remove()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode.remove))
+:   Removes the node from it's parent.
 
 ### `Attr`
 
@@ -230,18 +252,27 @@ Implements [`Node`] and [`ChildNode`].
 
     *This property is an extension; not a part of any specification.*
 
+### `NodeList`
+
+*TODO*
+
 ### `HTMLCollection`
 
 *TODO*
 
 
 [`Document`]: #document
+[`DocumentType`]: #documenttype
+[`DocumentFragment`]: #documentfragment
 [`Element`]: #element
+[`Text`]: #text
+[`Comment`]: #comment
 [`Attr`]: #attr
 [`Node`]: #node
 [`ParentNode`]: #parentnode
 [`ChildNode`]: #childnode
 [`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
+[`NodeList`]: #nodelist
 [`HTMLCollection`]: #htmlcollection
 [escapingString]: http://www.w3.org/TR/html5/syntax.html#escapingString
 [HTML fragment serialization algorithm]: http://www.w3.org/TR/html5/syntax.html#html-fragment-serialization-algorithm
