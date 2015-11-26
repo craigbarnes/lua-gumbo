@@ -251,10 +251,6 @@ The `Node` interface is implemented by *all* DOM tree [nodes].
 `nextSibling`
 :   The next adjacent [`Node`] in the tree, or `nil`.
 
-`nodeValue`
-:   Equal to the value of the `data` property for `Text` and `Comment`
-    nodes and `nil` for all other types of node.
-
 `textContent`
 :   If the node is a [`Text`] or [`Comment`] node, `textContent` returns
     node text (the `data` property).

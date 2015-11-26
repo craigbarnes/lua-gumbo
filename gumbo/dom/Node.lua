@@ -375,19 +375,6 @@ function Node.getters:nextSibling()
     end
 end
 
-function Node.getters:nodeValue()
-    if isTextOrComment[self.nodeType] then
-        return self.data
-    end
-end
-
-function Node.setters:nodeValue(value)
-    assertNilableString(value)
-    if isTextOrComment[self.nodeType] then
-        self.data = value or ""
-    end
-end
-
 function Node.getters:textContent()
     local nodeType = self.nodeType
     if isCharacterData[nodeType] then
