@@ -145,7 +145,7 @@ See also:
 DOM API
 -------
 
-The `parse` and `parseFile` functions both return a [`Document`] node,
+The [`parse`] and [`parseFile`] functions both return a [`Document`] node,
 containing a tree of [descendant] nodes. The structure and API of this
 tree mostly follows the [DOM] Level 4 Core specification and is
 documented at <https://craigbarnes.github.io/lua-gumbo/api.html>.
@@ -170,6 +170,8 @@ Testing
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [HTML fragment]: https://html.spec.whatwg.org/multipage/syntax.html#parsing-html-fragments
+[`parse`]: #parse
+[`parseFile`]: #parsefile
 [`Document`]: https://craigbarnes.github.io/lua-gumbo/api.html#document
 [Gumbo]: https://github.com/google/gumbo-parser
 [GNU Make]: https://www.gnu.org/software/make/

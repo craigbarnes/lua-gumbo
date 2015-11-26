@@ -40,19 +40,22 @@ all [`Element`] nodes have an `attributes` property, which is a
 Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 
 `localName`
-:   TODO
+:   The name of the element, as a case-normalized *string* (lower case
+    for all HTML elements and most other elements; camelCase for some
+    SVG elements).
 
 `attributes`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes))
+:   A [`NamedNodeMap`] containing an [`Attr`] object for each attribute of
+    the element.
 
 `namespaceURI`
 :   TODO
 
 `tagName`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.tagName))
+:   The name of the element, as an upper case *string*.
 
 `id`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.id))
+:   The value of the element's `id` attribute, if it has one, otherwise `nil`.
 
 `className`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.className))
