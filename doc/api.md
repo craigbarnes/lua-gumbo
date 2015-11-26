@@ -26,7 +26,7 @@ just an interface, which is *implemented* by all 6 of the aforementioned
 types. The term "node" is also used to refer generally to any object
 that implements the interface.
 
-There are also various [other interfaces] that are implemented by only a
+There are also various other [interfaces] that are implemented by only a
 subset of the `Node` types. For example, [`ParentNode`] is implemented
 by any node that can have child nodes.
 
@@ -334,14 +334,14 @@ Other Objects
 [`DocumentType`]: #documenttype
 [`DocumentFragment`]: #documentfragment
 
-[`other interfaces`]: #interfaces
+[interfaces]: #interfaces
 [`Node`]: #node
 [`ParentNode`]: #parentnode
 [`ChildNode`]: #childnode
 [`NonElementParentNode`]: #nonelementparentnode
 [`NonDocumentTypeChildNode`]: #nondocumenttypechildnode
 
-[`other objects`]: #other-objects
+[other objects]: #other-objects
 [`Attr`]: #attr
 [`NodeList`]: #nodelist
 [`HTMLCollection`]: #htmlcollection
