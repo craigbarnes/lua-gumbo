@@ -35,7 +35,7 @@ strings or numbers and some of which are [other objects]. For example,
 all [`Element`] nodes have an `attributes` property, which is a
 [`NamedNodeMap`] object containing [`Attr`] objects.
 
-#### `Element`
+### `Element`
 
 *TODO:* brief description of the `Element` type.
 
@@ -197,6 +197,10 @@ Interfaces
 
 ### `Node`
 
+The `Node` interface is implemented by *all* DOM tree [nodes].
+
+#### Properties:
+
 `childNodes`
 :   A [`NodeList`] containing all the children of the node.
 
@@ -227,46 +231,62 @@ Interfaces
     | Node type            | `nodeName` value                 |
     |----------------------|----------------------------------|
     | [`Element`]          | The value of `Element.tagName`   |
-    | [`Text`]             | `#text`                          |
-    | [`Comment`]          | `#comment`                       |
-    | [`Document`]         | `#document`                      |
+    | [`Text`]             | `"#text"`                        |
+    | [`Comment`]          | `"#comment"`                     |
+    | [`Document`]         | `"#document"`                    |
     | [`DocumentType`]     | The value of `DocumentType.name` |
-    | [`DocumentFragment`] | `#document-fragment`             |
+    | [`DocumentFragment`] | `"#document-fragment"`           |
 
 `firstChild`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.firstChild))
+:   The first child [`Node`] of the node, or `nil` if it has no children.
 
 `lastChild`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.lastChild))
+:   The last child [`Node`] of the node, or `nil` if it has no children.
 
 `previousSibling`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.previousSibling))
+:   The previous adjacent [`Node`] in the tree, or `nil`.
 
 `nextSibling`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.nextSibling))
+:   The next adjacent [`Node`] in the tree, or `nil`.
 
 `nodeValue`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeValue))
+:   Equal to the value of the `data` property for `Text` and `Comment`
+    nodes and `nil` for all other types of node.
 
 `textContent`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.textContent))
+:   If the node is a [`Text`] or [`Comment`] node, `textContent` returns
+    node text (the `data` property).
+
+    If the node is a [`Document`] or [`DocumentType`] node, `textContent`
+    always returns `nil`.
+
+    For other node types, `textContent` returns the concatenation of the
+    `textContent` value of every child node, excluding comments, or an
+    empty string.
+
+#### Methods:
 
 `hasChildNodes()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.hasChildNodes))
+:   Returns a *boolean* value indicating if the element has any child
+    nodes or not.
 
-`contains()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains))
+`contains(other)`
+:   Returns `true` if `other` is an inclusive [descendant] [`Node`] and
+    `false` otherwise.
 
-`appendChild()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.appendChild))
+`appendChild(node)`
+:   Adds the [`Node`] passed as the `node` parameter to the end of the
+    `childNodes` list.
 
-`insertBefore()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore))
+`insertBefore(node, child)`
+:   TODO
 
-`removeChild()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild))
+`removeChild(child)`
+:   TODO
 
 ### `ParentNode`
+
+The `ParentNode` interface is implemented by [nodes] that can have children.
 
 `children`
 :   A [`HTMLCollection`] of child [`Element`] nodes.
@@ -281,6 +301,8 @@ Interfaces
 :   The node's last child [`Element`] if there is one, otherwise `nil`.
 
 ### `ChildNode`
+
+The `ChildNode` interface is implemented by [nodes] that can have a parent.
 
 `remove()`
 :   Removes the node from it's parent.
@@ -326,7 +348,7 @@ Other Objects
 
 *TODO*
 
-
+[nodes]: #nodes
 [`Element`]: #element
 [`Text`]: #text
 [`Comment`]: #comment
