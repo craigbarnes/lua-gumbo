@@ -26,19 +26,19 @@ the requirements listed above are installed, then use the command:
 ### Using GNU Make
 
 By default, the Makefile will consult [pkg-config] for the appropriate
-Lua variables. Usually the following commands will be sufficient:
+build variables. Usually the following commands will be sufficient:
 
     make
     make check
     [sudo] make install
 
 The following pkg-config names are searched in order and the first one
-to be found is used (yes, these all exist in the wild):
+to be found is used:
 
-    lua lua53 lua5.3 lua-5.3 lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 luajit
+    lua53 lua5.3 lua-5.3 lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua luajit
 
-If, for example, your system has both `lua.pc` and `luajit.pc` installed
-then `lua.pc` will be used by default. You can override this default
+If, for example, your system has both `lua5.3.pc` and `luajit.pc` installed
+then `lua5.3.pc` will be used by default. You can override this default
 behavior by specifying the `LUA_PC` variable. To build for LuaJIT, in
 this case, use:
 
@@ -47,19 +47,18 @@ this case, use:
     [sudo] make install LUA_PC=luajit
 
 If your Lua installation doesn't include a pkg-config file,
-running `make` will simply complain and exit. In this case, the 3
+running `make` will simply complain and exit. In this case, the
 relevant variables will have to be specified manually, for example:
 
     make LUA_CFLAGS=-I/usr/include/lua5.2
-    make check
+    make check LUA=/usr/bin/lua5.2
     make install LUA_LMOD_DIR=/usr/share/lua/5.2 LUA_CMOD_DIR=/usr/lib/lua/5.2
 
 ### Persistent Build Configuration
 
 For convenience, variable overrides can be stored persistently in a file
 named `local.mk`. This may be useful when building and testing against
-the same configuration multiple times or when you prefer not to install
-libgumbo globally, for example:
+the same configuration multiple times, for example:
 
 ```bash
 # Compile against a local build of libgumbo
@@ -74,9 +73,6 @@ export LD_LIBRARY_PATH=${GUMBO_LIBDIR}
 # Force pkg-config to only find and use build variables for LuaJIT
 LUA_PC=luajit
 ```
-
-The above code also happens to be valid shell syntax and can be loaded
-into the shell environment via `source local.mk` if required.
 
 Usage
 -----
