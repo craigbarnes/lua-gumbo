@@ -127,7 +127,7 @@ Example
 -------
 
 The following is a simple demonstration of how to find an element by ID
-and then print the contents of it's first child text node.
+and print the contents of it's first child text node.
 
 ```lua
 local gumbo = require "gumbo"
@@ -151,140 +151,8 @@ DOM API
 
 The `parse` and `parseFile` functions both return a [`Document`] node,
 containing a tree of [descendant] nodes. The structure and API of this
-tree mostly conforms to the [DOM] Level 4 Core specification, with the
-following (intentional) exceptions:
-
-* `DOMString` types are encoded as UTF-8 instead of UTF-16.
-* Lists begin at index 1 instead of 0.
-* `readonly` is not fully enforced.
-
-The following sections list the supported properties and methods,
-grouped by the DOM interface in which they are specified. No
-lua-gumbo specific documentation currently exists, but since it's
-an implementation of a standard API, cross-checking the list with
-the [MDN DOM reference] should suffice for now.
-
-**Note:** When referring to external DOM documentation, don't forget to
-translate JavaScript examples to use Lua `object:method()` call syntax.
-
-### `Document`
-
-Implements [`Node`] and [`ParentNode`].
-
-* [`documentElement`](https://developer.mozilla.org/en-US/docs/Web/API/document.documentElement)
-* [`head`](https://developer.mozilla.org/en-US/docs/Web/API/Document.head)
-* [`body`](https://developer.mozilla.org/en-US/docs/Web/API/Document.body)
-* [`title`](https://developer.mozilla.org/en-US/docs/Web/API/Document.title)
-* [`forms`](https://developer.mozilla.org/en-US/docs/Web/API/Document.forms)
-* [`images`](https://developer.mozilla.org/en-US/docs/Web/API/Document.images)
-* [`links`](https://developer.mozilla.org/en-US/docs/Web/API/Document.links)
-* [`scripts`](https://developer.mozilla.org/en-US/docs/Web/API/Document.scripts)
-* [`doctype`](#documenttype)
-* [`getElementById()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById)
-* [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName)
-* [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementsByClassName)
-* [`createElement()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createElement)
-* [`createTextNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createTextNode)
-* [`createComment()`](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment)
-* [`adoptNode()`](https://developer.mozilla.org/en-US/docs/Web/API/document.adoptNode)
-
-### `Element`
-
-Implements [`Node`], [`ParentNode`] and [`ChildNode`].
-* `localName`
-* [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes)
-* `namespaceURI`
-* [`tagName`](https://developer.mozilla.org/en-US/docs/Web/API/Element.tagName)
-* [`id`](https://developer.mozilla.org/en-US/docs/Web/API/Element.id)
-* [`className`](https://developer.mozilla.org/en-US/docs/Web/API/Element.className)
-* [`innerHTML`](https://developer.mozilla.org/en-US/docs/Web/API/Element.innerHTML)
-  * [x] getter
-  * [ ] setter
-* [`outerHTML`](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML)
-  * [x] getter
-  * [ ] setter
-* [`getElementsByTagName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName)
-* [`getElementsByClassName()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName)
-* [`hasAttributes()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttributes)
-* [`hasAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute)
-* [`getAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.getAttribute)
-* [`setAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.setAttribute)
-* [`removeAttribute()`](https://developer.mozilla.org/en-US/docs/Web/API/Element.removeAttribute)
-
-### `Text`
-
-Implements [`Node`] and [`ChildNode`].
-
-* [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
-* [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
-
-### `Comment`
-
-Implements [`Node`] and [`ChildNode`].
-
-* [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
-* [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
-
-### `DocumentType`
-
-Implements [`Node`] and [`ChildNode`].
-
-* `name`
-* `publicId`
-* `systemId`
-
-### `Node`
-
-* [`childNodes`](https://developer.mozilla.org/en-US/docs/Web/API/Node.childNodes)
-* [`parentNode`](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentNode)
-* [`parentElement`](https://developer.mozilla.org/en-US/docs/Web/API/Node.parentElement)
-* [`ownerDocument`](https://developer.mozilla.org/en-US/docs/Web/API/Node.ownerDocument)
-* [`nodeType`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeType)
-* [`nodeName`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeName)
-* [`firstChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node.firstChild)
-* [`lastChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node.lastChild)
-* [`previousSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.previousSibling)
-* [`nextSibling`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nextSibling)
-* [`nodeValue`](https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeValue)
-* [`textContent`](https://developer.mozilla.org/en-US/docs/Web/API/Node.textContent)
-* [`hasChildNodes()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.hasChildNodes)
-* [`contains()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.contains)
-* [`appendChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.appendChild)
-* [`insertBefore()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.insertBefore)
-* [`removeChild()`](https://developer.mozilla.org/en-US/docs/Web/API/Node.removeChild)
-
-### `ParentNode`
-
-* [`children`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.children)
-* [`childElementCount`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.childElementCount)
-* [`firstElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.firstElementChild)
-* [`lastElementChild`](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode.lastElementChild)
-
-### `ChildNode`
-
-* [`remove()`](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode.remove)
-
-### `Attr`
-
-* [`name`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
-* [`value`](https://developer.mozilla.org/en-US/docs/Web/API/Attr#Properties)
-
-Not Implemented
----------------
-
-The following methods from the `CharacterData` interface are
-intentionally omitted:
-
-* `substringData()`
-* `appendData()`
-* `insertData()`
-* `deleteData()`
-* `replaceData()`
-
-The specification for these methods has numerous flaws, assumes UTF-16
-encoding and 0-based offsets and is just unnecessarily complex for the
-trivial amount of utility provided. A better alternative is to just
-manipulate the `data` property directly.
+tree mostly follows the [DOM] Level 4 Core specification and is
+documented at <https://craigbarnes.github.io/lua-gumbo/api.html>.
 
 Testing
 -------
@@ -306,12 +174,7 @@ Testing
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [HTML fragment]: https://html.spec.whatwg.org/multipage/syntax.html#parsing-html-fragments
-[`Document`]: #document
-[`Element`]: #element
-[`Attr`]: #attr
-[`Node`]: #node
-[`ParentNode`]: #parentnode
-[`ChildNode`]: #childnode
+[`Document`]: https://craigbarnes.github.io/lua-gumbo/api.html#document
 [Gumbo]: https://github.com/google/gumbo-parser
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: http://luarocks.org/

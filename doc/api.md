@@ -1,10 +1,8 @@
 DOM API
 =======
 
-The `parse` and `parseFile` functions both return a [`Document`] node,
-containing a tree of [descendant] nodes. The structure and API of this
-tree mostly conforms to the [DOM] Level 4 Core specification, with the
-following (intentional) exceptions:
+The lua-gumbo DOM API mostly follows the [DOM] Level 4 Core
+specification, with the following (intentional) exceptions:
 
 * `DOMString` types are encoded as UTF-8 instead of UTF-16.
 * Lists begin at index 1 instead of 0.
