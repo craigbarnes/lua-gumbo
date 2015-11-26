@@ -1,7 +1,121 @@
 DOM API
--------
+=======
+
+The `parse` and `parseFile` functions both return a [`Document`] node,
+containing a tree of [descendant] nodes. The structure and API of this
+tree mostly conforms to the [DOM] Level 4 Core specification, with the
+following (intentional) exceptions:
+
+* `DOMString` types are encoded as UTF-8 instead of UTF-16.
+* Lists begin at index 1 instead of 0.
+* `readonly` is not fully enforced.
+
+The following sections list the supported properties and methods,
+grouped by the DOM interface in which they are specified.
+
+**Note:** When referring to external DOM documentation, don't forget to
+translate JavaScript examples to use Lua `object:method()` call syntax.
+
+Nodes
+-----
+
+There are 6 types of `Node` that may appear directly in the HTML DOM
+tree. These are [`Element`], [`Text`], [`Comment`], [`Document`],
+[`DocumentType`] and [`DocumentFragment`]. The [`Node`] type itself is
+just an interface, which is *implemented* by all 6 of the aforementioned
+types. The term "node" is also used to refer generally to any object
+that implements the interface.
+
+There are also various [other interfaces] that are implemented by only a
+subset of the `Node` types. For example, [`ParentNode`] is implemented
+by any node that can have child nodes.
+
+Nodes also have various properties, some of which are just simple
+strings or numbers and some of which are [other objects]. For example,
+all [`Element`] nodes have an `attributes` property, which is a
+[`NamedNodeMap`] object containing [`Attr`] objects.
+
+#### `Element`
+
+*TODO:* brief description of the `Element` type.
+
+Implements [`Node`], [`ParentNode`], [`ChildNode`] and
+[`NonDocumentTypeChildNode`].
+
+`localName`
+:   TODO
+
+`attributes`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes))
+
+`namespaceURI`
+:   TODO
+
+`tagName`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.tagName))
+
+`id`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.id))
+
+`className`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.className))
+
+`innerHTML`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.innerHTML))
+
+`outerHTML`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML))
+
+`getElementsByTagName()`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName))
+
+`getElementsByClassName()`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName))
+
+`hasAttributes()`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttributes))
+
+`hasAttribute()`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute))
+
+`getAttribute()`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getAttribute))
+
+`setAttribute()`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.setAttribute))
+
+`removeAttribute()`
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.removeAttribute))
+
+### `Text`
+
+*TODO:* brief description of the `Text` type.
+
+Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
+
+`data`
+:   A *string* representing the text contents of the node.
+
+`length`
+:   The length of the `data` property in bytes.
+
+### `Comment`
+
+*TODO:* brief description of the `Comment` type.
+
+Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
+
+`data`
+:   A *string* representing the text contents of the comment node, *not*
+    including the start delimiter (`<!--`) or end delimiter (`-->`) from
+    the original markup.
+
+`length`
+:   The length of the `data` property in bytes.
 
 ### `Document`
+
+*TODO:* brief description of the `Document` type.
 
 Implements [`Node`] and [`ParentNode`].
 
@@ -55,79 +169,9 @@ Implements [`Node`] and [`ParentNode`].
 `adoptNode()`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.adoptNode))
 
-### `Element`
-
-Implements [`Node`], [`ParentNode`], [`ChildNode`] and
-[`NonDocumentTypeChildNode`].
-
-`localName`
-:   TODO
-
-`attributes`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes))
-
-`namespaceURI`
-:   TODO
-
-`tagName`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.tagName))
-
-`id`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.id))
-
-`className`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.className))
-
-`innerHTML`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.innerHTML))
-
-`outerHTML`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML))
-
-`getElementsByTagName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName))
-
-`getElementsByClassName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName))
-
-`hasAttributes()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttributes))
-
-`hasAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute))
-
-`getAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getAttribute))
-
-`setAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.setAttribute))
-
-`removeAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.removeAttribute))
-
-### `Text`
-
-Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
-
-`data`
-:   A *string* representing the text contents of the node.
-
-`length`
-:   The length of the `data` property in bytes.
-
-### `Comment`
-
-Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
-
-`data`
-:   A *string* representing the text contents of the comment node, *not*
-    including the start delimiter (`<!--`) or end delimiter (`-->`) from
-    the original markup.
-
-`length`
-:   The length of the `data` property in bytes.
-
 ### `DocumentType`
+
+*TODO:* brief description of the `DocumentType` type.
 
 Implements [`Node`] and [`ChildNode`].
 
@@ -142,7 +186,14 @@ Implements [`Node`] and [`ChildNode`].
 
 ### `DocumentFragment`
 
-*TODO*
+*TODO:* brief description of the `DocumentFragment` type.
+
+Implements [`Node`], [`ParentNode`] and [`NonElementParentNode`].
+
+*TODO:* full list of properties and methods.
+
+Interfaces
+----------
 
 ### `Node`
 
@@ -234,6 +285,17 @@ Implements [`Node`] and [`ChildNode`].
 `remove()`
 :   Removes the node from it's parent.
 
+### `NonDocumentTypeChildNode`
+
+*TODO*
+
+### `NonElementParentNode`
+
+*TODO*
+
+Other Objects
+-------------
+
 ### `Attr`
 
 `name`
@@ -260,19 +322,32 @@ Implements [`Node`] and [`ChildNode`].
 
 *TODO*
 
+### `NamedNodeMap`
 
-[`Document`]: #document
-[`DocumentType`]: #documenttype
-[`DocumentFragment`]: #documentfragment
+*TODO*
+
+
 [`Element`]: #element
 [`Text`]: #text
 [`Comment`]: #comment
-[`Attr`]: #attr
+[`Document`]: #document
+[`DocumentType`]: #documenttype
+[`DocumentFragment`]: #documentfragment
+
+[`other interfaces`]: #interfaces
 [`Node`]: #node
 [`ParentNode`]: #parentnode
 [`ChildNode`]: #childnode
-[`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
+[`NonElementParentNode`]: #nonelementparentnode
+[`NonDocumentTypeChildNode`]: #nondocumenttypechildnode
+
+[`other objects`]: #other-objects
+[`Attr`]: #attr
 [`NodeList`]: #nodelist
 [`HTMLCollection`]: #htmlcollection
+[`NamedNodeMap`]: #namednodemap
+
+[DOM]: https://dom.spec.whatwg.org/
+[descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [escapingString]: http://www.w3.org/TR/html5/syntax.html#escapingString
 [HTML fragment serialization algorithm]: http://www.w3.org/TR/html5/syntax.html#html-fragment-serialization-algorithm
