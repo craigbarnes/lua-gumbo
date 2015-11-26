@@ -1,7 +1,11 @@
 PANDOC = pandoc
-DATE   = $(shell date +'%B %d, %Y')
+DATE = $(shell date +'%B %d, %Y')
+DOC_TARGETS = README.html README.pdf doc/api.html
 
-docs: README.html README.pdf
+docs: $(DOC_TARGETS)
+
+doc/%.html: doc/%.md doc/template.html doc/style.css.inc
+	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) -o $@ $<
 
 README.html: README.md doc/template.html doc/style.css.inc
 	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) -o $@ $<
@@ -16,7 +20,7 @@ doc/style.css.inc: doc/style.css
 	echo '</style>' >> $@
 
 clean-docs:
-	$(RM) README.html README.pdf doc/style.css.inc
+	$(RM) $(DOC_TARGETS) doc/style.css.inc
 
 
 .PHONY: docs clean-docs

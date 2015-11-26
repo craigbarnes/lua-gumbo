@@ -1,6 +1,5 @@
 local Node = require "gumbo.dom.Node"
 local ParentNode = require "gumbo.dom.ParentNode"
-local NonElementParentNode = require "gumbo.dom.NonElementParentNode"
 local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
@@ -13,11 +12,11 @@ local assertDocument = util.assertDocument
 local assertNode = util.assertNode
 local assertNilableString = util.assertNilableString
 local assertName = util.assertName
-local ipairs, assert = ipairs, assert
+local ipairs, assert, type = ipairs, assert, type
 local setmetatable = setmetatable
 local _ENV = nil
 
-local Document = util.merge(Node, ParentNode, NonElementParentNode, {
+local Document = util.merge(Node, ParentNode, {
     type = "document",
     nodeName = "#document",
     nodeType = 9,
@@ -33,6 +32,17 @@ local Document = util.merge(Node, ParentNode, NonElementParentNode, {
         "implementation", "links", "origin", "scripts", "URL"
     }
 })
+
+function Document:getElementById(elementId)
+    assertNode(self)
+    if type(elementId) == "string" then
+        for node in self:walk() do
+            if node.type == "element" and node.id == elementId then
+                return node
+            end
+        end
+    end
+end
 
 function Document:createElement(localName)
     assertDocument(self)

@@ -41,7 +41,7 @@ GUNZIP    = gzip -d < '$|' | tar xf -
 DOM_IFACES = \
     Attr ChildNode Comment Document DocumentFragment DocumentType \
     DOMTokenList Element HTMLCollection NamedNodeMap Node \
-    NodeList NonElementParentNode ParentNode Text
+    NodeList ParentNode Text
 
 DOM_MODULES = $(addprefix gumbo/dom/, $(addsuffix .lua, $(DOM_IFACES) util))
 SLZ_MODULES = $(addprefix gumbo/serialize/, Indent.lua html.lua)

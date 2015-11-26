@@ -190,9 +190,7 @@ Implements [`Node`] and [`ParentNode`].
 
 ### `Element`
 
-Implements [`Node`], [`ParentNode`], [`ChildNode`] and
-[`NonDocumentTypeChildNode`].
-
+Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 * `localName`
 * [`attributes`](https://developer.mozilla.org/en-US/docs/Web/API/Element.attributes)
 * `namespaceURI`
@@ -215,14 +213,14 @@ Implements [`Node`], [`ParentNode`], [`ChildNode`] and
 
 ### `Text`
 
-Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
+Implements [`Node`] and [`ChildNode`].
 
 * [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 
 ### `Comment`
 
-Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
+Implements [`Node`] and [`ChildNode`].
 
 * [`data`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
 * [`length`](https://developer.mozilla.org/en-US/docs/Web/API/CharacterData#Properties)
@@ -314,7 +312,6 @@ Testing
 [`Node`]: #node
 [`ParentNode`]: #parentnode
 [`ChildNode`]: #childnode
-[`NonDocumentTypeChildNode`]: https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode
 [Gumbo]: https://github.com/google/gumbo-parser
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: http://luarocks.org/

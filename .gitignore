@@ -9,7 +9,8 @@ coverage.txt
 tags
 README.html
 README.pdf
-style.css.inc
+doc/style.css.inc
+doc/api.html
 test/data/*MiB.html
 lua-*/
 LuaJIT-*/

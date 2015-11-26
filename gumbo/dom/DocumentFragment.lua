@@ -1,13 +1,14 @@
 local util = require "gumbo.dom.util"
 local Node = require "gumbo.dom.Node"
 local ParentNode = require "gumbo.dom.ParentNode"
-local NonElementParentNode = require "gumbo.dom.NonElementParentNode"
+local Document = require "gumbo.dom.Document"
 local _ENV = nil
 
-local DocumentFragment = util.merge(Node, ParentNode, NonElementParentNode, {
+local DocumentFragment = util.merge(Node, ParentNode, {
     type = "fragment",
     nodeName = "#document-fragment",
-    nodeType = 11
+    nodeType = 11,
+    getElementById = assert(Document.getElementById)
 })
 
 return DocumentFragment

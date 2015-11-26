@@ -39,8 +39,7 @@ all [`Element`] nodes have an `attributes` property, which is a
 
 *TODO:* brief description of the `Element` type.
 
-Implements [`Node`], [`ParentNode`], [`ChildNode`] and
-[`NonDocumentTypeChildNode`].
+Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 
 `localName`
 :   TODO
@@ -91,7 +90,7 @@ Implements [`Node`], [`ParentNode`], [`ChildNode`] and
 
 *TODO:* brief description of the `Text` type.
 
-Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
+Implements [`Node`] and [`ChildNode`].
 
 `data`
 :   A *string* representing the text contents of the node.
@@ -103,7 +102,7 @@ Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
 
 *TODO:* brief description of the `Comment` type.
 
-Implements [`Node`], [`ChildNode`] and [`NonDocumentTypeChildNode`].
+Implements [`Node`] and [`ChildNode`].
 
 `data`
 :   A *string* representing the text contents of the comment node, *not*
@@ -146,10 +145,12 @@ Implements [`Node`] and [`ParentNode`].
 :   A [`HTMLCollection`] of all `<script>` elements in the document.
 
 `doctype`
-:   TODO ([MDN](#documenttype))
+:   A reference to the document's [`DocumentType`] node, if it has one,
+    or `nil` if not.
 
-`getElementById()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementById))
+`getElementById(elementId)`
+:   Returns the first [`Element`] node in the tree whose `id` property
+    is equal to the `elementId` *string*.
 
 `getElementsByTagName()`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName))
@@ -188,7 +189,7 @@ Implements [`Node`] and [`ChildNode`].
 
 *TODO:* brief description of the `DocumentFragment` type.
 
-Implements [`Node`], [`ParentNode`] and [`NonElementParentNode`].
+Implements [`Node`] and [`ParentNode`].
 
 *TODO:* full list of properties and methods.
 
@@ -306,14 +307,6 @@ The `ChildNode` interface is implemented by [nodes] that can have a parent.
 `remove()`
 :   Removes the node from it's parent.
 
-### `NonDocumentTypeChildNode`
-
-*TODO*
-
-### `NonElementParentNode`
-
-*TODO*
-
 Other Objects
 -------------
 
@@ -359,8 +352,6 @@ Other Objects
 [`Node`]: #node
 [`ParentNode`]: #parentnode
 [`ChildNode`]: #childnode
-[`NonElementParentNode`]: #nonelementparentnode
-[`NonDocumentTypeChildNode`]: #nondocumenttypechildnode
 
 [other objects]: #other-objects
 [`Attr`]: #attr
