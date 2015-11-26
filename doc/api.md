@@ -267,8 +267,7 @@ The `Node` interface is implemented by *all* DOM tree [nodes].
 #### Methods:
 
 `hasChildNodes()`
-:   Returns a *boolean* value indicating if the element has any child
-    nodes or not.
+:   Returns `true` if the node has any child nodes and `false` otherwise.
 
 `contains(other)`
 :   Returns `true` if `other` is an inclusive [descendant] [`Node`] and
