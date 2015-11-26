@@ -1,14 +1,15 @@
 local util = require "gumbo.dom.util"
+local assert = assert
 local _ENV = nil
 
--- TODO: Implement namespaceURI property
+local Attr = {getters = {}}
+Attr.__index = assert(util.indexFactory(Attr))
 
-local Attr = {
-    specified = true,
-    getters = {}
+local escmap = {
+    ["\194\160"] = "&nbsp;",
+    ["&"] = "&amp;",
+    ['"'] = "&quot;"
 }
-
-Attr.__index = util.indexFactory(Attr)
 
 function Attr.getters:localName()
     return self.name
@@ -18,13 +19,8 @@ function Attr.getters:textContent()
     return self.value
 end
 
-local escmap = {
-    ["&"] = "&amp;",
-    ['"'] = "&quot;"
-}
-
 function Attr.getters:escapedValue()
-    return (self.value:gsub('[&"]', escmap):gsub("\194\160", "&nbsp;"))
+    return (self.value:gsub('[&"]', escmap):gsub("\194\160", escmap))
 end
 
 return Attr

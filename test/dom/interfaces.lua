@@ -271,7 +271,6 @@ assert(heading.parentNode == main)
 assert(heading.ownerDocument == document)
 assert(heading.childElementCount == 0)
 
-assert(heading.attributes[1].specified == true)
 assert(heading.attributes[1].name == "id")
 assert(heading.attributes[1].localName == "id")
 
