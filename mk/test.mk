@@ -66,7 +66,7 @@ check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 	@echo
 
 $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua
-	@$(MAKE) clean-obj print-lua-v check USE_LOCAL_LIBGUMBO=1 \
+	@$(MAKE) -s clean-obj print-lua-v check USE_LOCAL_LIBGUMBO=1 \
 	  LUA_CFLAGS=-Ilua-$*/src LUA=lua-$*/src/lua  LUA_PC=none
 
 $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit
