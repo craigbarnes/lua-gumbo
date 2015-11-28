@@ -10,7 +10,7 @@ local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
 local assertDocument = util.assertDocument
 local assertNode = util.assertNode
-local assertNilableString = util.assertNilableString
+local assertStringOrNil = util.assertStringOrNil
 local assertName = util.assertName
 local ipairs, assert, type = ipairs, assert, type
 local setmetatable = setmetatable
@@ -57,13 +57,13 @@ end
 
 function Document:createTextNode(data)
     assertDocument(self)
-    assertNilableString(data)
+    assertStringOrNil(data)
     return setmetatable({data = data, ownerDocument = self}, Text)
 end
 
 function Document:createComment(data)
     assertDocument(self)
-    assertNilableString(data)
+    assertStringOrNil(data)
     return setmetatable({data = data, ownerDocument = self}, Comment)
 end
 
@@ -196,7 +196,7 @@ function Document.getters:title()
 end
 
 function Document.setters:title(value)
-    assertNilableString(value)
+    assertStringOrNil(value)
     if self.documentElement.namespaceURI == "http://www.w3.org/1999/xhtml" then
         local element = self.titleElement
         if not element then

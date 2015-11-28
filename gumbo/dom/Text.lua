@@ -2,7 +2,7 @@ local util = require "gumbo.dom.util"
 local Node = require "gumbo.dom.Node"
 local ChildNode = require "gumbo.dom.ChildNode"
 local assertTextNode = util.assertTextNode
-local assertNilableString = util.assertNilableString
+local assertStringOrNil = util.assertStringOrNil
 local setmetatable = setmetatable
 local _ENV = nil
 
@@ -39,7 +39,7 @@ end
 
 local constructor = {
     __call = function(self, data)
-        assertNilableString(data)
+        assertStringOrNil(data)
         return setmetatable({data = data}, self)
     end
 }

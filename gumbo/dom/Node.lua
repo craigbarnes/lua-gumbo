@@ -3,7 +3,7 @@ local NodeList = require "gumbo.dom.NodeList"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local assertNode = util.assertNode
-local assertNilableString = util.assertNilableString
+local assertStringOrNil = util.assertStringOrNil
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tinsert, tremove = table.insert, table.remove
 local ipairs, type, error, assert = ipairs, type, error, assert
@@ -391,7 +391,7 @@ function Node.getters:textContent()
 end
 
 function Node.setters:textContent(value)
-    assertNilableString(value)
+    assertStringOrNil(value)
     local nodeType = self.nodeType
     if isCharacterData[nodeType] then
         self.data = value

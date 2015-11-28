@@ -90,7 +90,7 @@ function util.assertString(v)
     end
 end
 
-function util.assertNilableString(v)
+function util.assertStringOrNil(v)
     if v ~= nil and type(v) ~= "string" then
         error("TypeError: Argument is not a string", 3)
     end
