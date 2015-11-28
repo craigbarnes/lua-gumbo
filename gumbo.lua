@@ -1,18 +1,7 @@
+local useffi = jit and jit.status() and pcall(require, "ffi")
+local parse = useffi and require "gumbo.ffi-parse" or require "gumbo.parse"
 local type, open, iotype = type, io.open, io.type
 local assert, error = assert, error
-local parse
-
-if jit and jit.status() then
-    local haveffi = pcall(require, "ffi")
-    if haveffi then
-        parse = require "gumbo.ffi-parse"
-    end
-end
-
-if not parse then
-    parse = require "gumbo.parse"
-end
-
 local _ENV = nil
 
 local function parseFile(pathOrFile, ctx, ctxns, tabStop)
