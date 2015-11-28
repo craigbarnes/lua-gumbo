@@ -28,22 +28,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 28px;
+    font-size: 36px;
     color: #222;
 }
 
 h2 {
-    font-size: 24px;
+    font-size: 28px;
     color: #222;
     border-bottom: 1px solid #cccccc;
 }
 
 h3 {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 h4 {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 h2:first-child,
