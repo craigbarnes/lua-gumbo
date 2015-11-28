@@ -12,7 +12,7 @@ CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
 CHECK_LJ_ALL  = $(addprefix check-, $(LJ_BUILDS))
 
 USERVARS = \
-    CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS GUMBO_LDLIBS \
+    CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS \
     LUA_PC LUA_CFLAGS LUA_LMOD_DIR LUA_CMOD_DIR LUA
 
 # Ensure the tests only load modules from within the current directory
