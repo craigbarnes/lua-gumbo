@@ -72,6 +72,8 @@ $(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua
 $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit
 	@$(MAKE) -s clean-obj print-lua-v check USE_LOCAL_LIBGUMBO=1 \
 	  LUA_CFLAGS=-ILuaJIT-$*/src LUA=LuaJIT-$*/src/luajit LUA_PC=none
+	@$(MAKE) -s print-lua-v print-lua-flags check USE_LOCAL_LIBGUMBO=1 \
+	  LUA=LuaJIT-$*/src/luajit LUAFLAGS=-joff LUA_PC=none
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
@@ -126,10 +128,13 @@ print-vars env:
 print-lua-v:
 	@$(LUA) -v
 
+print-lua-flags:
+	@echo 'LUAFLAGS = $(LUAFLAGS)'
+
 prep: $(GUMBO_TARDIR)/.libs/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /src/luajit, $(LJ_BUILDS))
 
 .PHONY: \
-    print-vars env print-lua-v prep \
+    print-vars env print-lua-v print-lua-flags prep \
     check check-html5lib check-pkgconfig check-install luacheck \
     check-rockspec check-luarocks-make \
     check-serialize check-serialize-ns check-serialize-t1 \
