@@ -65,17 +65,13 @@ check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 	@+for t in $^; do printf " \33[32mPASSED\33[0m  make $$t\n"; done
 	@echo
 
-$(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua $(GUMBO_TARDIR)/
-	@$(MAKE) -s clean-obj print-lua-v check \
-	  CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
-	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -Ilua-$*/src' \
-	  LUA=lua-$*/src/lua LUA_PC=none
+$(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua
+	@$(MAKE) clean-obj print-lua-v check USE_LOCAL_LIBGUMBO=1 \
+	  LUA_CFLAGS=-Ilua-$*/src LUA=lua-$*/src/lua  LUA_PC=none
 
-$(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit $(GUMBO_TARDIR)/.libs/
-	@$(MAKE) -s clean-obj print-lua-v check \
-	  CFLAGS='-g -O2 -Wall' XLDFLAGS='' \
-	  XCFLAGS='-std=c99 -fpic -DAMALG -I$(GUMBO_TARDIR)/src -ILuaJIT-$*/src' \
-	  LUA=LuaJIT-$*/src/luajit LUA_PC=none USE_LOCAL_LIBGUMBO=1
+$(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit
+	@$(MAKE) -s clean-obj print-lua-v check USE_LOCAL_LIBGUMBO=1 \
+	  LUA_CFLAGS=-ILuaJIT-$*/src LUA=LuaJIT-$*/src/luajit LUA_PC=none
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
