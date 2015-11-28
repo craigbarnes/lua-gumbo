@@ -19,6 +19,7 @@ else ifdef USE_LOCAL_LIBGUMBO
  GUMBO_LDLIBS ?= -lgumbo
  GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
  export LD_LIBRARY_PATH = $(GUMBO_LIBDIR)
+ export DYLD_LIBRARY_PATH = $(GUMBO_LIBDIR)
  gumbo/parse.o: | $(GUMBO_TARDIR)/
  gumbo/parse.so: | $(GUMBO_LIBDIR)/
 else
