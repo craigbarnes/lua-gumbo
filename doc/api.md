@@ -39,7 +39,7 @@ all [`Element`] nodes have an `attributes` property, which is a
 
 Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 
-#### Properties:
+**Properties:**
 
 `localName`
 :   The name of the element, as a case-normalized *string* (lower case
@@ -68,7 +68,7 @@ Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 `outerHTML`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML))
 
-#### Methods:
+**Methods:**
 
 `getElementsByTagName()`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName))
@@ -123,7 +123,7 @@ Implements [`Node`] and [`ChildNode`].
 
 Implements [`Node`] and [`ParentNode`].
 
-#### Properties:
+**Properties:**
 
 `documentElement`
 :   The root [`Element`] of the document (i.e. the `<html>` element).
@@ -155,7 +155,7 @@ Implements [`Node`] and [`ParentNode`].
 :   A reference to the document's [`DocumentType`] node, if it has one,
     or `nil` if not.
 
-#### Methods:
+**Methods:**
 
 `getElementById(elementId)`
 :   Returns the first [`Element`] node in the tree whose `id` property
@@ -209,7 +209,7 @@ Interfaces
 
 The `Node` interface is implemented by *all* DOM tree [nodes].
 
-#### Properties:
+**Properties:**
 
 `childNodes`
 :   A [`NodeList`] containing all the children of the node.
@@ -270,7 +270,7 @@ The `Node` interface is implemented by *all* DOM tree [nodes].
     `textContent` value of every child node, excluding comments, or an
     empty string.
 
-#### Methods:
+**Methods:**
 
 `hasChildNodes()`
 :   Returns `true` if the node has any child nodes and `false` otherwise.
