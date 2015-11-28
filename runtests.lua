@@ -15,6 +15,7 @@ local tests = {
     "test/dom/Element-getElementsByClassName.lua",
     "test/dom/Element-remove.lua",
     "test/dom/Element-childElementCount.lua",
+    "test/dom/Element-namespaceURI.lua",
     "test/dom/Comment-constructor.lua",
     "test/dom/Node-appendChild.lua",
     "test/dom/Node-insertBefore.lua",
