@@ -1,8 +1,5 @@
 include mk/compat.mk
 include mk/lualib.mk
-include mk/test.mk
-include mk/dist.mk
-include mk/doc.mk
 
 GUMBO_TARDIR ?= gumbo-parser-0.10.1
 GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
@@ -96,6 +93,10 @@ clean: clean-obj clean-docs
 	  coverage.txt test/data/*MiB.html lua-gumbo-*.tar.gz \
 	  gumbo-*.rockspec gumbo-*.rock
 
+
+include mk/test.mk
+include mk/dist.mk
+include mk/doc.mk
 
 .DEFAULT_GOAL = all
 .PHONY: all install uninstall clean clean-obj
