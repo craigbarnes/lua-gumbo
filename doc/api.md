@@ -39,6 +39,8 @@ all [`Element`] nodes have an `attributes` property, which is a
 
 Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 
+#### Properties:
+
 `localName`
 :   The name of the element, as a case-normalized *string* (lower case
     for all HTML elements and most other elements; camelCase for some
@@ -65,6 +67,8 @@ Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 
 `outerHTML`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML))
+
+#### Methods:
 
 `getElementsByTagName()`
 :   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName))
@@ -119,6 +123,8 @@ Implements [`Node`] and [`ChildNode`].
 
 Implements [`Node`] and [`ParentNode`].
 
+#### Properties:
+
 `documentElement`
 :   The root [`Element`] of the document (i.e. the `<html>` element).
 
@@ -148,6 +154,8 @@ Implements [`Node`] and [`ParentNode`].
 `doctype`
 :   A reference to the document's [`DocumentType`] node, if it has one,
     or `nil` if not.
+
+#### Methods:
 
 `getElementById(elementId)`
 :   Returns the first [`Element`] node in the tree whose `id` property
