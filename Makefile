@@ -98,5 +98,5 @@ clean: clean-obj clean-docs
 
 
 .DEFAULT_GOAL = all
-.PHONY: all amalg install uninstall clean clean-obj
+.PHONY: all install uninstall clean clean-obj
 .DELETE_ON_ERROR:
