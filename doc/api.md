@@ -119,9 +119,15 @@ Implements [`Node`] and [`ChildNode`].
 
 ### `Document`
 
-*TODO:* brief description of the `Document` type.
+The `Document` node represents the outermost container of a DOM tree and
+is the result of parsing a single HTML document. It's direct child nodes
+may include a single [`DocumentType`] node and any number of [`Element`]
+or [`Comment`] nodes.
 
-Implements [`Node`] and [`ParentNode`].
+**Implements:**
+
+* [`Node`]
+* [`ParentNode`]
 
 **Properties:**
 
