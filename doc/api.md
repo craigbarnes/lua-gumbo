@@ -37,7 +37,11 @@ all [`Element`] nodes have an `attributes` property, which is a
 
 *TODO:* brief description of the `Element` type.
 
-Implements [`Node`], [`ParentNode`] and [`ChildNode`].
+**Implements:**
+
+* [`Node`]
+* [`ParentNode`]
+* [`ChildNode`]
 
 **Properties:**
 
@@ -95,7 +99,12 @@ Implements [`Node`], [`ParentNode`] and [`ChildNode`].
 
 *TODO:* brief description of the `Text` type.
 
-Implements [`Node`] and [`ChildNode`].
+**Implements:**
+
+* [`Node`]
+* [`ChildNode`]
+
+**Properties:**
 
 `data`
 :   A *string* representing the text contents of the node.
@@ -107,7 +116,12 @@ Implements [`Node`] and [`ChildNode`].
 
 *TODO:* brief description of the `Comment` type.
 
-Implements [`Node`] and [`ChildNode`].
+**Implements:**
+
+* [`Node`]
+* [`ChildNode`]
+
+**Properties:**
 
 `data`
 :   A *string* representing the text contents of the comment node, *not*
@@ -189,7 +203,12 @@ or [`Comment`] nodes.
 
 *TODO:* brief description of the `DocumentType` type.
 
-Implements [`Node`] and [`ChildNode`].
+**Implements:**
+
+* [`Node`]
+* [`ChildNode`]
+
+**Properties:**
 
 `name`
 :   TODO
@@ -204,9 +223,14 @@ Implements [`Node`] and [`ChildNode`].
 
 *TODO:* brief description of the `DocumentFragment` type.
 
-Implements [`Node`] and [`ParentNode`].
+**Implements:**
 
-*TODO:* full list of properties and methods.
+* [`Node`]
+* [`ParentNode`]
+
+**Properties:**
+
+*TODO*
 
 Interfaces
 ----------
@@ -297,7 +321,10 @@ The `Node` interface is implemented by *all* DOM tree [nodes].
 
 ### `ParentNode`
 
-The `ParentNode` interface is implemented by [nodes] that can have children.
+The `ParentNode` interface is implemented by all [nodes] that can have
+children.
+
+**Properties:**
 
 `children`
 :   A [`HTMLCollection`] of child [`Element`] nodes.
@@ -313,7 +340,10 @@ The `ParentNode` interface is implemented by [nodes] that can have children.
 
 ### `ChildNode`
 
-The `ChildNode` interface is implemented by [nodes] that can have a parent.
+The `ChildNode` interface is implemented by all [nodes] that can have a
+parent.
+
+**Methods:**
 
 `remove()`
 :   Removes the node from it's parent.
@@ -322,6 +352,10 @@ Other Objects
 -------------
 
 ### `Attr`
+
+The `Attr` type represents a DOM element's attribute as an object.
+
+**Properties:**
 
 `name`
 :   The attribute's name.
