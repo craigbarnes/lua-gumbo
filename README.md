@@ -58,21 +58,7 @@ relevant variables will have to be specified manually, for example:
 
 For convenience, variable overrides can be stored persistently in a file
 named `local.mk`. This may be useful when building and testing against
-the same configuration multiple times, for example:
-
-```bash
-# Compile against a local build of libgumbo
-GUMBO_DIR=gumbo-parser-0.10.2
-GUMBO_INCDIR=${GUMBO_DIR}/src
-GUMBO_LIBDIR=${GUMBO_DIR}/.libs
-GUMBO_CFLAGS=-I${GUMBO_INCDIR}
-GUMBO_LDFLAGS=-L${GUMBO_LIBDIR}
-GUMBO_LDLIBS=-lgumbo
-export LD_LIBRARY_PATH=${GUMBO_LIBDIR}
-
-# Force pkg-config to only find and use build variables for LuaJIT
-LUA_PC=luajit
-```
+the same configuration multiple times.
 
 Usage
 -----
