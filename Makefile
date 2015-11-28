@@ -5,20 +5,19 @@ include mk/dist.mk
 include mk/doc.mk
 
 GUMBO_TARDIR ?= gumbo-parser-0.10.1
+GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
 
 ifdef AMALG
  CFLAGS ?= -g -O2 -Wall
  GUMBO_INCDIR ?= $(GUMBO_TARDIR)/src
  GUMBO_CFLAGS ?= -I$(GUMBO_INCDIR) -DAMALG
  GUMBO_LDFLAGS =
- GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
  gumbo/parse.o: gumbo/amalg.h | $(GUMBO_TARDIR)/
 else ifdef USE_LOCAL_LIBGUMBO
  GUMBO_INCDIR ?= $(GUMBO_TARDIR)/src
  GUMBO_LIBDIR ?= $(GUMBO_TARDIR)/.libs
  GUMBO_CFLAGS ?= -I$(GUMBO_INCDIR)
  GUMBO_LDFLAGS ?= -L$(GUMBO_LIBDIR) -lgumbo
- GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
  export LD_LIBRARY_PATH = $(GUMBO_LIBDIR)
  export DYLD_LIBRARY_PATH = $(GUMBO_LIBDIR)
  gumbo/parse.o: | $(GUMBO_TARDIR)/
@@ -28,7 +27,6 @@ else
  GUMBO_LIBDIR ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
  GUMBO_CFLAGS ?= $(shell $(PKGCONFIG) --cflags gumbo)
  GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs gumbo)
- GUMBO_HEADER ?= $(or $(GUMBO_INCDIR), /usr/include)/gumbo.h
 endif
 
 CFLAGS   ?= -g -O2 -Wall -Wextra -Wwrite-strings -Wshadow
@@ -71,7 +69,7 @@ gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 # The *_HEADER* variables aren't in the deps list to avoid unnecessary
 # pkg-config queries on every run. They can be lazy evaluated if they only
 # appear in the body of the recipe.
-tags: gumbo/parse.c Makefile lualib.mk
+tags: gumbo/parse.c
 	ctags --c-kinds=+p $(GUMBO_HEADER) $(LUA_HEADERS) $^
 
 install: all
