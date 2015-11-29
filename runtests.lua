@@ -1,5 +1,5 @@
 local open, write, ipairs, loadfile = io.open, io.write, ipairs, loadfile
-local xpcall, tonumber, exit = xpcall, tonumber, os.exit
+local type, xpcall, tonumber, exit = type, xpcall, tonumber, os.exit
 local yield, wrap = coroutine.yield, coroutine.wrap
 local traceback = debug.traceback
 local _ENV = nil
@@ -42,7 +42,7 @@ local function getline(filename, linenumber)
 end
 
 local function handler(err)
-    if not err then return traceback("Unknown error") end
+    if type(err) ~= "string" then return traceback("Unknown error") end
     local filename, linenumber = err:match("^(.*):([0-9]+): ")
     if not filename then return traceback(err) end
     local line = getline(filename, tonumber(linenumber))
