@@ -11,7 +11,6 @@ local setmetatable = setmetatable
 local _ENV = nil
 
 local Node = {
-    -- Valid node types
     ELEMENT_NODE = 1,
     TEXT_NODE = 3,
     PROCESSING_INSTRUCTION_NODE = 7,
@@ -19,20 +18,6 @@ local Node = {
     DOCUMENT_NODE = 9,
     DOCUMENT_TYPE_NODE = 10,
     DOCUMENT_FRAGMENT_NODE = 11,
-
-    -- Obsolete node types
-    ATTRIBUTE_NODE = 2,
-    CDATA_SECTION_NODE = 4,
-    ENTITY_REFERENCE_NODE = 5,
-    ENTITY_NODE = 6,
-    NOTATION_NODE = 12,
-
-    DOCUMENT_POSITION_DISCONNECTED = 0x01,
-    DOCUMENT_POSITION_PRECEDING = 0x02,
-    DOCUMENT_POSITION_FOLLOWING = 0x04,
-    DOCUMENT_POSITION_CONTAINS = 0x08,
-    DOCUMENT_POSITION_CONTAINED_BY = 0x10,
-    DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20,
 
     childNodes = setmetatable({length = 0}, {
         __index = NodeList,
