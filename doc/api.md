@@ -112,6 +112,9 @@ all [`Element`] nodes have an `attributes` property, which is a
 `length`
 :   The length of the `data` property in bytes.
 
+`escapedData`
+:   TODO
+
 ### `Comment`
 
 *TODO:* brief description of the `Comment` type.
@@ -300,6 +303,14 @@ The `Node` interface is implemented by *all* DOM tree [nodes].
     `textContent` value of every child node, excluding comments, or an
     empty string.
 
+`insertedByParser`
+:   `true` if the node was inserted into the DOM tree automatically by
+    the parser and `false` otherwise.
+
+`implicitEndTag`
+:   `true` if the node was implicitly closed by the parser (e.g. there
+    was no explicit end tag in the markup) and `false` otherwise.
+
 **Methods:**
 
 `hasChildNodes()`
@@ -317,6 +328,12 @@ The `Node` interface is implemented by *all* DOM tree [nodes].
 :   TODO
 
 `removeChild(child)`
+:   TODO
+
+`walk()`
+:   TODO
+
+`reverseWalk()`
 :   TODO
 
 ### `ParentNode`
