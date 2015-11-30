@@ -4,8 +4,9 @@ DOC_TARGETS = README.html README.pdf doc/api.html
 
 docs: $(DOC_TARGETS)
 
-doc/%.html: doc/%.md doc/template.html doc/style.css.inc
-	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) -o $@ $<
+doc/%.html: doc/%.md doc/template.html doc/style.css.inc all
+	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) $< | \
+	  $(LUA) examples/table_align_fix.lua > $@
 
 README.html: README.md doc/template.html doc/style.css.inc
 	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) -o $@ $<
