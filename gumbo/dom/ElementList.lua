@@ -2,10 +2,10 @@ local util = require "gumbo.dom.util"
 local assertString = util.assertString
 local type, ipairs = type, ipairs
 local _ENV = nil
-local HTMLCollection = {}
+local ElementList = {}
 
-function HTMLCollection:__index(k)
-    local field = HTMLCollection[k]
+function ElementList:__index(k)
+    local field = ElementList[k]
     if field then
         return field
     elseif type(k) == "string" then
@@ -13,11 +13,11 @@ function HTMLCollection:__index(k)
     end
 end
 
-function HTMLCollection:item(index)
+function ElementList:item(index)
     return self[index]
 end
 
-function HTMLCollection:namedItem(key)
+function ElementList:namedItem(key)
     assertString(key)
     if key == "" then
         return nil
@@ -34,4 +34,4 @@ function HTMLCollection:namedItem(key)
     end
 end
 
-return HTMLCollection
+return ElementList

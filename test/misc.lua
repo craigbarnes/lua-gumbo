@@ -30,7 +30,7 @@ do
     assert(html.nonExistantField == "new-value")
 end
 
-do -- Check that Attr.escapedValue works correctly
+do -- Check that Attribute.escapedValue works correctly
     local doc = assert(parse[[<div id=test class='x&nbsp;"&amp"&amp;;"'>]])
     local test = assert(doc:getElementById("test"))
     local class = test.attributes.class

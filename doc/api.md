@@ -20,18 +20,8 @@ Nodes
 There are 6 types of `Node` that may appear directly in the HTML DOM
 tree. These are [`Element`], [`Text`], [`Comment`], [`Document`],
 [`DocumentType`] and [`DocumentFragment`]. The [`Node`] type itself is
-just an interface, which is *implemented* by all 6 of the aforementioned
-types. The term "node" is also used to refer generally to any object
-that implements the interface.
-
-There are also various other [interfaces] that are implemented by only a
-subset of the `Node` types. For example, [`ParentNode`] is implemented
-by any node that can have child nodes.
-
-Nodes also have various properties, some of which are just simple
-strings or numbers and some of which are [other objects]. For example,
-all [`Element`] nodes have an `attributes` property, which is a
-[`NamedNodeMap`] object containing [`Attr`] objects.
+just an [interface], which is *implemented* by all 6 of the aforementioned
+types.
 
 ### `Element`
 
@@ -51,8 +41,8 @@ all [`Element`] nodes have an `attributes` property, which is a
     SVG elements).
 
 `attributes`
-:   A [`NamedNodeMap`] containing an [`Attr`] object for each attribute of
-    the element.
+:   An [`AttributeList`] containing an [`Attribute`] object for each
+    attribute of the element.
 
 `namespaceURI`
 :   TODO
@@ -162,17 +152,17 @@ or [`Comment`] nodes.
     of the `<title>` element in the document markup).
 
 `forms`
-:   A [`HTMLCollection`] of all `<form>` elements in the document.
+:   An [`ElementList`] of all `<form>` elements in the document.
 
 `images`
-:   A [`HTMLCollection`] of all `<img>` elements in the document.
+:   An [`ElementList`] of all `<img>` elements in the document.
 
 `links`
-:   A [`HTMLCollection`] of all `<a>` and `<area>` elements in the
+:   An [`ElementList`] of all `<a>` and `<area>` elements in the
     document that have a value for the `href` attribute.
 
 `scripts`
-:   A [`HTMLCollection`] of all `<script>` elements in the document.
+:   An [`ElementList`] of all `<script>` elements in the document.
 
 `doctype`
 :   A reference to the document's [`DocumentType`] node, if it has one,
@@ -235,12 +225,12 @@ or [`Comment`] nodes.
 
 *TODO*
 
-Interfaces
-----------
+Node Interfaces
+---------------
 
 ### `Node`
 
-The `Node` interface is implemented by *all* DOM tree [nodes].
+The `Node` interface is implemented by *all* DOM [nodes].
 
 **Properties:**
 
@@ -344,7 +334,7 @@ children.
 **Properties:**
 
 `children`
-:   A [`HTMLCollection`] of child [`Element`] nodes.
+:   An [`ElementList`] of child [`Element`] nodes.
 
 `childElementCount`
 :   An *integer* representing the number of child [`Element`] nodes.
@@ -365,12 +355,22 @@ parent.
 `remove()`
 :   Removes the node from it's parent.
 
-Other Objects
--------------
+Attribute Objects
+-----------------
 
-### `Attr`
+### `AttributeList`
 
-The `Attr` type represents a DOM element's attribute as an object.
+An `AttributeList` is a list containing zero or more [`Attribute`]
+objects. Every [`Element`] node has an associated `AttributeList`, which
+can be accessed via the `Element.attributes` property.
+
+**Properties:**
+
+*TODO*
+
+### `Attribute`
+
+The `Attribute` type represents a single attribute of an [`Element`].
 
 **Properties:**
 
@@ -390,17 +390,17 @@ The `Attr` type represents a DOM element's attribute as an object.
 
     *This property is an extension; not a part of any specification.*
 
+Node Containers
+---------------
+
 ### `NodeList`
 
 *TODO*
 
-### `HTMLCollection`
+### `ElementList`
 
 *TODO*
 
-### `NamedNodeMap`
-
-*TODO*
 
 [nodes]: #nodes
 [`Element`]: #element
@@ -410,16 +410,16 @@ The `Attr` type represents a DOM element's attribute as an object.
 [`DocumentType`]: #documenttype
 [`DocumentFragment`]: #documentfragment
 
-[interfaces]: #interfaces
+[interface]: #node-interfaces
 [`Node`]: #node
 [`ParentNode`]: #parentnode
 [`ChildNode`]: #childnode
 
-[other objects]: #other-objects
-[`Attr`]: #attr
+[`AttributeList`]: #attributelist
+[`Attribute`]: #attribute
+
 [`NodeList`]: #nodelist
-[`HTMLCollection`]: #htmlcollection
-[`NamedNodeMap`]: #namednodemap
+[`ElementList`]: #elementlist
 
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant

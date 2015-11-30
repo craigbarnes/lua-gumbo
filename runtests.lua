@@ -6,7 +6,7 @@ local _ENV = nil
 
 local tests = {
     "test/dom/interfaces.lua",
-    "test/dom/HTMLCollection-empty-name.lua",
+    "test/dom/ElementList.lua",
     "test/dom/getElementsByTagName.lua",
     "test/dom/getElementsByClassName.lua",
     "test/dom/Document-title.lua",

@@ -4,7 +4,7 @@ local Element = require "gumbo.dom.Element"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local NodeList = require "gumbo.dom.NodeList"
-local HTMLCollection = require "gumbo.dom.HTMLCollection"
+local ElementList = require "gumbo.dom.ElementList"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
@@ -153,7 +153,7 @@ function Document.getters:links()
         end
     end
     collection.length = length
-    return setmetatable(collection, HTMLCollection)
+    return setmetatable(collection, ElementList)
 end
 
 function Document.getters:images()

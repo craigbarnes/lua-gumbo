@@ -2,9 +2,9 @@ local util = require "gumbo.dom.util"
 local Node = require "gumbo.dom.Node"
 local ChildNode = require "gumbo.dom.ChildNode"
 local ParentNode = require "gumbo.dom.ParentNode"
-local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
-local Attr = require "gumbo.dom.Attr"
-local HTMLCollection = require "gumbo.dom.HTMLCollection"
+local AttributeList = require "gumbo.dom.AttributeList"
+local Attribute = require "gumbo.dom.Attribute"
+local ElementList = require "gumbo.dom.ElementList"
 local DOMTokenList = require "gumbo.dom.DOMTokenList"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
@@ -26,7 +26,7 @@ local Element = util.merge(Node, ChildNode, ParentNode, {
     type = "element",
     nodeType = 1,
     namespace = "html",
-    attributes = setmetatable({length = 0}, NamedNodeMap),
+    attributes = setmetatable({length = 0}, AttributeList),
     readonly = Set{"classList", "namespaceURI", "tagName"}
 })
 
@@ -66,7 +66,7 @@ function Element:getElementsByTagName(localName)
         end
     end
     collection.length = length
-    return setmetatable(collection, HTMLCollection)
+    return setmetatable(collection, ElementList)
 end
 
 local function getClassList(class)
@@ -108,7 +108,7 @@ function Element:getElementsByClassName(classNames)
         end
     end
     collection.length = length
-    return setmetatable(collection, HTMLCollection)
+    return setmetatable(collection, ElementList)
 end
 
 function Element:getAttribute(name)
@@ -134,14 +134,14 @@ function Element:setAttribute(name, value)
     assertString(value)
     local attributes = self.attributes
     if attributes == Element.attributes then
-        local attr = setmetatable({name = name, value = value}, Attr)
-        self.attributes = setmetatable({attr, [name] = attr}, NamedNodeMap)
+        local attr = setmetatable({name = name, value = value}, Attribute)
+        self.attributes = setmetatable({attr, [name] = attr}, AttributeList)
     else
         local attr = attributes[name]
         if attr then
             attr.value = value
         else
-            attr = setmetatable({name = name, value = value}, Attr)
+            attr = setmetatable({name = name, value = value}, Attribute)
             attributes[#attributes+1] = attr
             attributes[name] = attr
         end
@@ -186,10 +186,10 @@ function Element:cloneNode(deep)
                 value = attr.value,
                 prefix = attr.prefix
             }
-            attrs[i] = setmetatable(t, Attr)
+            attrs[i] = setmetatable(t, Attribute)
             attrs[attr.name] = t
         end
-        clone.attributes = setmetatable(attrs, NamedNodeMap)
+        clone.attributes = setmetatable(attrs, AttributeList)
     end
     return setmetatable(clone, Element)
 end

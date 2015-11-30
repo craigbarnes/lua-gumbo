@@ -36,13 +36,13 @@ typedef enum {
     Text = 1,
     Comment,
     Element,
-    Attr,
+    Attribute,
     Document,
     DocumentType,
     DocumentFragment,
     NodeList,
-    NamedNodeMap,
-    nupvalues = NamedNodeMap
+    AttributeList,
+    nupvalues = AttributeList
 } Upvalue;
 
 // clang-format off
@@ -51,12 +51,12 @@ static const char *const modules[] = {
     [Text] = "gumbo.dom.Text",
     [Comment] = "gumbo.dom.Comment",
     [Element] = "gumbo.dom.Element",
-    [Attr] = "gumbo.dom.Attr",
+    [Attribute] = "gumbo.dom.Attribute",
     [Document] = "gumbo.dom.Document",
     [DocumentType] = "gumbo.dom.DocumentType",
     [DocumentFragment] = "gumbo.dom.DocumentFragment",
     [NodeList] = "gumbo.dom.NodeList",
-    [NamedNodeMap] = "gumbo.dom.NamedNodeMap"
+    [AttributeList] = "gumbo.dom.AttributeList"
 };
 
 #define add_field(T, L, k, v) ( \
@@ -111,10 +111,10 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
             add_position(L, attr->name_start);
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
-            setmetatable(L, Attr);
+            setmetatable(L, Attribute);
             lua_rawseti(L, -2, i + 1);
         }
-        setmetatable(L, NamedNodeMap);
+        setmetatable(L, AttributeList);
         lua_setfield(L, -2, "attributes");
     }
 }

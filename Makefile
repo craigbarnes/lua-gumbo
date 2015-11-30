@@ -35,9 +35,9 @@ GET       = curl -s -L -o $@
 GUNZIP    = gzip -d < '$|' | tar xf -
 
 DOM_IFACES = \
-    Attr ChildNode Comment Document DocumentFragment DocumentType \
-    DOMTokenList Element HTMLCollection NamedNodeMap Node \
-    NodeList ParentNode Text
+    Element Text Comment Document DocumentFragment DocumentType \
+    Attribute AttributeList DOMTokenList ElementList NodeList \
+    Node ChildNode ParentNode
 
 DOM_MODULES = $(addprefix gumbo/dom/, $(addsuffix .lua, $(DOM_IFACES) util))
 SLZ_MODULES = $(addprefix gumbo/serialize/, Indent.lua html.lua)

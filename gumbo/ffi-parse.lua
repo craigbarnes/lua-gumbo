@@ -21,11 +21,11 @@ local Document = require "gumbo.dom.Document"
 local DocumentType = require "gumbo.dom.DocumentType"
 local DocumentFragment = require "gumbo.dom.DocumentFragment"
 local Element = require "gumbo.dom.Element"
-local Attr = require "gumbo.dom.Attr"
+local Attribute = require "gumbo.dom.Attribute"
 local Text = require "gumbo.dom.Text"
 local Comment = require "gumbo.dom.Comment"
 local NodeList = require "gumbo.dom.NodeList"
-local NamedNodeMap = require "gumbo.dom.NamedNodeMap"
+local AttributeList = require "gumbo.dom.AttributeList"
 local GumboStringPiece = ffi.typeof "GumboStringPiece"
 local have_tnew, tnew = pcall(require, "table.new")
 local createtable = have_tnew and tnew or function() return {} end
@@ -56,10 +56,10 @@ local function get_attributes(attrs)
             if attr.attr_namespace ~= C.GUMBO_ATTR_NAMESPACE_NONE then
                 a.prefix = attrnsmap[tonumber(attr.attr_namespace)]
             end
-            t[i+1] = setmetatable(a, Attr)
+            t[i+1] = setmetatable(a, Attribute)
             t[name] = a
         end
-        return setmetatable(t, NamedNodeMap)
+        return setmetatable(t, AttributeList)
     end
 end
 

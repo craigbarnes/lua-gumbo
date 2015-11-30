@@ -2,7 +2,7 @@
 -- https://github.com/w3c/web-platform-tests/blob/8c07290db5014705e7daa45e3690a54018d27bd5/dom/nodes/Element-getElementsByClassName.html
 
 local gumbo = require "gumbo"
-local HTMLCollection = require "gumbo.dom.HTMLCollection"
+local ElementList = require "gumbo.dom.ElementList"
 local NodeList = require "gumbo.dom.NodeList"
 
 local input = [[
@@ -27,5 +27,5 @@ do -- Interface should be correct
     local list = assert(document:getElementsByClassName("foo"))
     local mt = assert(getmetatable(list))
     assert(mt ~= NodeList)
-    assert(mt == HTMLCollection)
+    assert(mt == ElementList)
 end
