@@ -59,7 +59,8 @@ gumbo-parser-%.tar.gz:
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@
-	@sed '/^#include </d' $< | $(CC) $(GUMBO_CFLAGS) -E -P - >> $@
+	@sed '/^#include </d' $< | $(CC) $(GUMBO_CFLAGS) -E -P - | \
+	  sed 's/^GUMBO_TAG_/  GUMBO_TAG_/' >> $@
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
 
