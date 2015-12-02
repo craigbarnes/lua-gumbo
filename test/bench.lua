@@ -1,13 +1,13 @@
 local gumbo = require "gumbo"
-local parse = gumbo.parse
+local parse = assert(gumbo.parse)
 local open, write, stderr = io.open, io.write, io.stderr
 local clock, assert, collectgarbage = os.clock, assert, collectgarbage
 local filename = assert(arg[1], "arg[1] is nil; expecting filename")
 local _ENV = nil
-local document, duration
 
 collectgarbage()
 local basemem = collectgarbage("count")
+local document, duration
 
 do
     local file = assert(open(filename))
@@ -24,5 +24,5 @@ end
 
 collectgarbage()
 local memory = collectgarbage("count") - basemem
-
-write(("Parse time: %.2fs\nLua memory usage: %dKB\n"):format(duration, memory))
+local summary = "Parse time: %.2fs\nLua memory usage: %.0fKB\n"
+write(summary:format(duration, memory))
