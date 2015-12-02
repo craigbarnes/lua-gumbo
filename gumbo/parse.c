@@ -253,12 +253,12 @@ static int parse(lua_State *L) {
     size_t input_len, tagname_len;
     GumboOptions options = kGumboDefaultOptions;
     const char *input = luaL_checklstring(L, 1, &input_len);
-    const char *tagname = luaL_optlstring(L, 2, NULL, &tagname_len);
+    options.tab_stop = (int)luaL_optinteger(L, 2, 8);
+    const char *tagname = luaL_optlstring(L, 3, NULL, &tagname_len);
     if (tagname != NULL) {
         options.fragment_context = gumbo_tagn_enum(tagname, tagname_len);
     }
-    options.fragment_namespace = luaL_checkoption(L, 3, "html", namespaces);
-    options.tab_stop = (int)luaL_optinteger(L, 4, 8);
+    options.fragment_namespace = luaL_checkoption(L, 4, "html", namespaces);
     options.allocator = xmalloc;
     for (unsigned int i = 1; i <= nupvalues; i++) {
         lua_pushvalue(L, lua_upvalueindex(i));

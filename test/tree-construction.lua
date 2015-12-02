@@ -150,9 +150,9 @@ do
                 if fragment then
                     local ns, tag = fragment:match("^([a-z]+) +([a-z-]+)$")
                     if ns then
-                        parsed = assert(parse(input, tag, ns))
+                        parsed = assert(parse(input, nil, tag, ns))
                     else
-                        parsed = assert(parse(input, fragment))
+                        parsed = assert(parse(input, nil, fragment))
                     end
                     serialized = assert(serialize(parsed.documentElement))
                 else

@@ -190,9 +190,13 @@ local function create_document(document)
     return setmetatable(t, Document)
 end
 
-local function parse(input, tagname, ns, tab_stop)
+local function parse(input, tabStop, tagname, ns)
     assert(type(input) == "string")
     local options = new("GumboOptions", C.kGumboDefaultOptions)
+    if tabStop ~= nil then
+        assert(type(tabStop) == "number")
+        options.tab_stop = tabStop
+    end
     if tagname ~= nil then
         assert(type(tagname) == "string")
         options.fragment_context = C.gumbo_tag_enum(tagname)
@@ -205,10 +209,6 @@ local function parse(input, tagname, ns, tab_stop)
         else
             error("bad argument #3; invalid namespace '" .. ns .. "'", 2)
         end
-    end
-    if tab_stop ~= nil then
-        assert(type(tab_stop) == "number")
-        options.tab_stop = tab_stop
     end
     local output = C.gumbo_parse_with_options(options, input, #input)
     if output ~= nil then

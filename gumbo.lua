@@ -4,9 +4,7 @@ local type, open, iotype = type, io.open, io.type
 local assert, error = assert, error
 local _ENV = nil
 
-local function parseFile(pathOrFile, ctx, ctxns, tabStop)
-    assert(ctx == nil or type(ctx) == "string")
-    assert(ctxns == nil or type(ctxns) == "string")
+local function parseFile(pathOrFile, tabStop, ctx, ctxns)
     local file, openerr
     local closeAfterRead = false
     if type(pathOrFile) == "string" then
@@ -25,7 +23,7 @@ local function parseFile(pathOrFile, ctx, ctxns, tabStop)
         file:close()
     end
     if text then
-        return parse(text, ctx, ctxns, tabStop)
+        return parse(text, tabStop, ctx, ctxns)
     else
         return nil, readerr
     end

@@ -5,7 +5,7 @@ local _ENV = nil
 
 do
     local input = "\t\t<!--one--><!--two--><h1>Hi</h1>"
-    local document = assert(parse(input, nil, nil, 16))
+    local document = assert(parse(input, 16))
     local html = assert(document.documentElement)
 
     -- Check that document structure is as expected
@@ -97,14 +97,19 @@ do -- Check that passing invalid arguments throws an error
     assert(not pcall(parseFile, {}))
     assert(not pcall(parseFile, parseFile))
     local file = open("test/data/t1.html")
-    assert(pcall(parseFile, file, "iframe", "html", 8))
-    assert(pcall(parseFile, file, "path", "svg", 8))
-    assert(pcall(parseFile, file, "table", nil, 8))
-    assert(pcall(parseFile, file, nil, nil, 8))
+    assert(pcall(parseFile, file, 8, "iframe", "html"))
+    assert(pcall(parseFile, file, 8, "path", "svg"))
+    assert(pcall(parseFile, file, 8, "table", nil))
+    assert(pcall(parseFile, file, 8, nil, nil))
     assert(not pcall(parseFile, file, true))
     assert(not pcall(parseFile, file, {}))
+    assert(not pcall(parseFile, file, 8, "div", "badns"))
+    assert(not pcall(parseFile, file, nil, "div", "badns"))
     assert(not pcall(parseFile, file, "div", "badns"))
     assert(not pcall(parseFile, file, "div", true))
+    assert(not pcall(parseFile, file, "div"))
+    assert(not pcall(parseFile, file, "div", "html", 8))
+    assert(not pcall(parseFile, file, nil, nil, 8))
 end
 
 -- Check that file open/read errors are handled

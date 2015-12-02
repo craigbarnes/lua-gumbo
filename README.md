@@ -68,19 +68,19 @@ The `gumbo` module provides 2 functions:
 ### parse
 
 ```lua
-local document = gumbo.parse(html, ctx, ctxns, tabStop)
+local document = gumbo.parse(html, tabStop, ctx, ctxns)
 ```
 
 **Parameters:**
 
 1. `html`: A *string* of UTF-8 encoded HTML.
-2. `ctx`: A *string* containing the name of an element to use as context
+2. `tabStop`: The *number* of columns to count for tab characters
+   when computing source positions (*optional*; defaults to `8`).
+3. `ctx`: A *string* containing the name of an element to use as context
    for parsing a [HTML fragment][] (*optional*). This is for *fragment*
    parsing only -- leave as `nil` to parse HTML *documents*.
-3. `ctxns`: The namespace to use for the `ctx` parameter; either `"html"`,
+4. `ctxns`: The namespace to use for the `ctx` parameter; either `"html"`,
    `"svg"` or `"math"` (*optional*; defaults to `"html"`).
-4. `tabStop`: The *number* of columns to count for tab characters
-   when computing source positions (*optional*; defaults to `8`).
 
 **Returns:**
 
@@ -90,20 +90,20 @@ failure.
 ### parseFile
 
 ```lua
-local document = gumbo.parseFile(pathOrFile, ctx, ctxns, tabStop)
+local document = gumbo.parseFile(pathOrFile, tabStop, ctx, ctxns)
 ```
 
 **Parameters:**
 
 1. `pathOrFile`: Either a [file handle] or filename *string* that refers
    to a file containing UTF-8 encoded HTML.
-2. `ctx`: As above.
-2. `ctxns`: As above.
-2. `tabStop`: As above.
+2. `tabStop`: As [above][parse].
+3. `ctx`: As [above][parse].
+4. `ctxns`: As [above][parse].
 
 **Returns:**
 
-As above.
+As [above][parse].
 
 Example
 -------
