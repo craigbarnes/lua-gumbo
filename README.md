@@ -97,13 +97,13 @@ local document = gumbo.parseFile(pathOrFile, tabStop, ctx, ctxns)
 
 1. `pathOrFile`: Either a [file handle] or filename *string* that refers
    to a file containing UTF-8 encoded HTML.
-2. `tabStop`: As [above][parse].
-3. `ctx`: As [above][parse].
-4. `ctxns`: As [above][parse].
+2. `tabStop`: As [above][`parse`].
+3. `ctx`: As [above][`parse`].
+4. `ctxns`: As [above][`parse`].
 
 **Returns:**
 
-As [above][parse].
+As [above][`parse`].
 
 Example
 -------
