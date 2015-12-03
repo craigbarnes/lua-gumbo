@@ -87,7 +87,15 @@ types.
     attribute of the element.
 
 `namespaceURI`
-:   TODO
+:   The canonical namespace URI of the the element.
+
+    Possible values:
+
+    | Namespace | `namespaceURI` value                   |
+    |-----------|----------------------------------------|
+    | HTML      | `"http://www.w3.org/1999/xhtml"`       |
+    | MathML    | `"http://www.w3.org/1998/Math/MathML"` |
+    | SVG       | `"http://www.w3.org/2000/svg"`         |
 
 `tagName`
 :   The name of the element, as an upper case *string*.
