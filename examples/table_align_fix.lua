@@ -4,8 +4,7 @@ local gumbo = require "gumbo"
 local document = assert(gumbo.parseFile(arg[1] or io.stdin))
 
 local function fixAlignAttr(elements)
-    for i = 1, elements.length do
-        local element = elements[i]
+    for i, element in ipairs(elements) do
         local align = element:getAttribute("align")
         if align then
             if align ~= "left" then -- left is the default for ltr languages
