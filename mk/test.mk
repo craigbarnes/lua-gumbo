@@ -19,6 +19,9 @@ USERVARS = \
 export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
+lua-%/installation/: | lua-%/src/lua
+	$(MAKE) -C lua-$* install INSTALL_TOP='$(CURDIR)/$@'
+
 lua-%/src/lua: | lua-%/
 	$(MAKE) -C $| $(OS_NAME)
 
@@ -36,6 +39,17 @@ LuaJIT-%/: | LuaJIT-%.tar.gz
 
 LuaJIT-%.tar.gz:
 	$(GET) http://luajit.org/download/$@
+
+luarocks-%/installation/: | luarocks-%/ lua-5.3.1/installation/
+	cd luarocks-$* && ./configure --with-lua='$(CURDIR)/lua-5.3.1/installation' --prefix='$(CURDIR)/$@'
+	$(MAKE) -C luarocks-$* build
+	$(MAKE) -C luarocks-$* install
+
+luarocks-%/: | luarocks-%.tar.gz
+	$(GUNZIP)
+
+luarocks-%.tar.gz:
+	$(GET) https://keplerproject.github.io/luarocks/releases/$@
 
 check: all
 	@$(LUA) $(LUAFLAGS) runtests.lua
@@ -131,7 +145,7 @@ print-lua-v:
 print-lua-flags:
 	@echo 'LUAFLAGS = $(LUAFLAGS)'
 
-prep: $(GUMBO_TARDIR)/.libs/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /src/luajit, $(LJ_BUILDS))
+prep: $(GUMBO_TARDIR)/.libs/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /src/luajit, $(LJ_BUILDS)) luarocks-2.2.2/installation/
 
 .PHONY: \
     print-vars env print-lua-v print-lua-flags prep \

@@ -15,3 +15,4 @@ doc/api.html
 test/data/*MiB.html
 lua-*/
 LuaJIT-*/
+luarocks-*/
