@@ -8,6 +8,7 @@ PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 OS_NAME      ?= $(or $(if $(ISDARWIN),macosx), $(shell uname | tr 'A-Z' 'a-z'))
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 lua-5.1.5
 LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta1
+LUAROCKS_BUILD= luarocks-2.2.2
 CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
 CHECK_LJ_ALL  = $(addprefix check-, $(LJ_BUILDS))
 
@@ -39,6 +40,9 @@ LuaJIT-%/: | LuaJIT-%.tar.gz
 
 LuaJIT-%.tar.gz:
 	$(GET) http://luajit.org/download/$@
+
+luarocks-%/installation/bin/luacov: | luarocks-%/installation/
+	$|/bin/luarocks install luacov
 
 luarocks-%/installation/: | luarocks-%/ lua-5.3.1/installation/
 	cd luarocks-$* && ./configure --with-lua='$(CURDIR)/lua-5.3.1/installation' --prefix='$(CURDIR)/$@'
@@ -88,6 +92,10 @@ $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit
 	  LUA_CFLAGS=-ILuaJIT-$*/src LUA=LuaJIT-$*/src/luajit LUA_PC=none
 	@$(MAKE) -s print-lua-v print-lua-flags check USE_LOCAL_LIBGUMBO=1 \
 	  LUA=LuaJIT-$*/src/luajit LUAFLAGS=-joff LUA_PC=none
+
+luacov-stats: | $(LUAROCKS_BUILD)/installation/bin/luacov
+	$(MAKE) check-lua-5.3.1 LUAFLAGS=-lluacov \
+	  LUA_PATH='./?.lua;$(LUAROCKS_BUILD)/installation/share/lua/5.3/?.lua'
 
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
@@ -145,14 +153,20 @@ print-lua-v:
 print-lua-flags:
 	@echo 'LUAFLAGS = $(LUAFLAGS)'
 
-prep: $(GUMBO_TARDIR)/.libs/ $(addsuffix /src/lua, $(LUA_BUILDS)) $(addsuffix /src/luajit, $(LJ_BUILDS)) luarocks-2.2.2/installation/
+prep: \
+    $(GUMBO_TARDIR)/.libs/ \
+    $(addsuffix /src/lua, $(LUA_BUILDS)) \
+    $(addsuffix /src/luajit, $(LJ_BUILDS)) \
+    $(LUAROCKS_BUILD)/installation/bin/luacov
 
 .PHONY: \
     print-vars env print-lua-v print-lua-flags prep \
     check check-html5lib check-pkgconfig check-install luacheck \
-    check-rockspec check-luarocks-make \
+    check-rockspec check-luarocks-make luacov-stats \
     check-serialize check-serialize-ns check-serialize-t1 \
     check-lua-all $(CHECK_LUA_ALL) $(CHECK_LJ_ALL) \
     bench-parse bench-serialize
 
-.SECONDARY: $(addsuffix /, $(LUA_BUILDS) $(LJ_BUILDS))
+.SECONDARY: \
+    $(addsuffix /, $(LUA_BUILDS) $(LJ_BUILDS) $(LUAROCKS_BUILD)) \
+    $(addsuffix /installation/, $(LUA_BUILDS) $(LJ_BUILDS) $(LUAROCKS_BUILD))

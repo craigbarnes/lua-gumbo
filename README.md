@@ -149,10 +149,10 @@ Testing
 [![Coverage Status](https://coveralls.io/repos/craigbarnes/lua-gumbo/badge.svg?branch=master&service=github)](https://coveralls.io/github/craigbarnes/lua-gumbo?branch=master)
 
 * `make check`: Runs all unit tests.
-* `make check-html5lib`: Runs just the html5lib [tree-construction tests].
+* `make check-html5lib`: Runs the html5lib [tree-construction tests] and
+  prints a short summary of results.
 * `make check-install`: Runs `make check` within a temporary, isolated
   installation, to ensure all modules are installed correctly.
-* `make coverage.txt`: Generates a test coverage report with [luacov].
 
 
 [Lua]: http://www.lua.org/

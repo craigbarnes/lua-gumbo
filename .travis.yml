@@ -9,8 +9,6 @@ before_script:
 script:
     - make print-vars USERVARS='CC LDFLAGS'
     - make check-lua-all
-    - eval `luarocks-2.2.2/installation/bin/luarocks path`
-    - make clean-obj all USE_LOCAL_LIBGUMBO=1 LUA_CFLAGS=-Ilua-5.3.1/src LUA=lua-5.3.1/src/lua LUA_PC=none
-    - LD_LIBRARY_PATH=gumbo-parser-0.10.1/.libs DYLD_LIBRARY_PATH=gumbo-parser-0.10.1/.libs lua-5.3.1/src/lua -lluacov runtests.lua
+    - make luacov-stats
 after_success:
     - luarocks-2.2.2/installation/bin/luacov-coveralls -t "$COVERALLS_TOKEN"
