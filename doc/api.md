@@ -80,7 +80,7 @@ types.
 `localName`
 :   The name of the element, as a case-normalized *string* (lower case
     for all HTML elements and most other elements; camelCase for some
-    SVG elements).
+    [SVG elements]).
 
 `attributes`
 :   An [`AttributeList`] containing an [`Attribute`] object for each
@@ -464,6 +464,7 @@ Node Containers
 [`ElementList`]: #elementlist
 
 [DOM]: https://dom.spec.whatwg.org/
+[SVG elements]: https://developer.mozilla.org/en-US/docs/Web/SVG/Element#SVG_elements
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [escapingString]: http://www.w3.org/TR/html5/syntax.html#escapingString
 [HTML fragment serialization algorithm]: http://www.w3.org/TR/html5/syntax.html#html-fragment-serialization-algorithm
