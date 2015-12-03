@@ -60,8 +60,6 @@ relevant variables will have to be specified manually, for example:
     make check LUA=/usr/bin/lua5.2
     make install LUA_LMOD_DIR=/usr/share/lua/5.2 LUA_CMOD_DIR=/usr/lib/lua/5.2
 
-### Persistent Build Configuration
-
 For convenience, variable overrides can be stored persistently in a file
 named `local.mk`. This may be useful when building and testing against
 the same configuration multiple times.
@@ -69,50 +67,15 @@ the same configuration multiple times.
 Usage
 -----
 
-The `gumbo` module provides 2 functions:
+The `gumbo` module provides a [`parse`] function and a [`parseFile`]
+function, which both return a [`Document`] node containing a tree of
+[descendant] nodes. The structure and API of this tree mostly follows
+the [DOM] Level 4 Core specification.
 
-### parse
+For full API documentation, see:
+<https://craigbarnes.github.io/lua-gumbo/api.html>.
 
-```lua
-local document = gumbo.parse(html, tabStop, ctx, ctxns)
-```
-
-**Parameters:**
-
-1. `html`: A *string* of UTF-8 encoded HTML.
-2. `tabStop`: The *number* of columns to count for tab characters
-   when computing source positions (*optional*; defaults to `8`).
-3. `ctx`: A *string* containing the name of an element to use as context
-   for parsing a [HTML fragment][] (*optional*). This is for *fragment*
-   parsing only -- leave as `nil` to parse HTML *documents*.
-4. `ctxns`: The namespace to use for the `ctx` parameter; either `"html"`,
-   `"svg"` or `"math"` (*optional*; defaults to `"html"`).
-
-**Returns:**
-
-Either a [`Document`] node on success, or `nil` and an error message on
-failure.
-
-### parseFile
-
-```lua
-local document = gumbo.parseFile(pathOrFile, tabStop, ctx, ctxns)
-```
-
-**Parameters:**
-
-1. `pathOrFile`: Either a [file handle] or filename *string* that refers
-   to a file containing UTF-8 encoded HTML.
-2. `tabStop`: As [above][`parse`].
-3. `ctx`: As [above][`parse`].
-4. `ctxns`: As [above][`parse`].
-
-**Returns:**
-
-As [above][`parse`].
-
-Example
--------
+### Example
 
 The following is a simple demonstration of how to find an element by ID
 and print the contents of it's first child text node.
@@ -134,14 +97,6 @@ See also:
 * [find_links.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua)
 * [remove_by_id.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua)
 
-DOM API
--------
-
-The [`parse`] and [`parseFile`] functions both return a [`Document`] node,
-containing a tree of [descendant] nodes. The structure and API of this
-tree mostly follows the [DOM] Level 4 Core specification and is
-documented at <https://craigbarnes.github.io/lua-gumbo/api.html>.
-
 Testing
 -------
 
@@ -162,9 +117,8 @@ Testing
 [HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
-[HTML fragment]: https://html.spec.whatwg.org/multipage/syntax.html#parsing-html-fragments
-[`parse`]: #parse
-[`parseFile`]: #parsefile
+[`parse`]: https://craigbarnes.github.io/lua-gumbo/api.html#parse
+[`parseFile`]: https://craigbarnes.github.io/lua-gumbo/api.html#parsefile
 [`Document`]: https://craigbarnes.github.io/lua-gumbo/api.html#document
 [Gumbo]: https://github.com/google/gumbo-parser
 [GNU Make]: https://www.gnu.org/software/make/
