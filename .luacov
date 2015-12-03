@@ -2,7 +2,6 @@ return {
     statsfile = ".luacov-stats.txt",
     reportfile = "coverage.txt",
     runreport = true,
-    deletestats = true,
     include = {},
     exclude = {
         "luacov",

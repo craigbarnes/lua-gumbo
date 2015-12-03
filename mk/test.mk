@@ -112,15 +112,15 @@ test/data/%MiB.html: test/data/1MiB.html
 	@$(RM) $@
 	@for i in `seq 1 $*`; do cat $< >> $@; done
 
+# Some static instances of the above pattern rule, just for autocompletion
+test/data/2MiB.html test/data/5MiB.html test/data/10MiB.html:
+
 bench-parse: all test/bench.lua $(BENCHFILE)
 	@$(TIME) $(LUA) $(LUAFLAGS) test/bench.lua $(BENCHFILE)
 
 bench-serialize: all test/htmlfmt.lua $(BENCHFILE)
 	@echo 'Parsing and serializing $(BENCHFILE) to html...'
 	@$(TIME) $(LUA) $(LUAFLAGS) test/htmlfmt.lua $(BENCHFILE) /dev/null
-
-# Some static instances of the above pattern rule, just for autocompletion
-test/data/2MiB.html test/data/5MiB.html test/data/10MiB.html:
 
 print-vars env:
 	@$(foreach VAR, $(USERVARS), $(call PRINTVAR,$(VAR));)
