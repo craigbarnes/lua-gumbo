@@ -3,7 +3,14 @@ sudo: false
 branches: {only: master}
 os: [linux, osx]
 compiler: [clang, gcc]
-before_script: make -j8 prep
+before_script:
+    - make -j8 prep
+    - luarocks-2.2.2/installation/bin/luarocks install luacov-coveralls
 script:
     - make print-vars USERVARS='CC LDFLAGS'
     - make check-lua-all
+    - eval `luarocks-2.2.2/installation/bin/luarocks path`
+    - make clean-obj all USE_LOCAL_LIBGUMBO=1 LUA_CFLAGS=-Ilua-5.3.1/src LUA=lua-5.3.1/src/lua LUA_PC=none
+    - lua-5.3.1/src/lua -lluacov runtests.lua > /dev/null
+after_success:
+    - luarocks-2.2.2/installation/bin/luacov-coveralls -t "$COVERALLS_TOKEN"
