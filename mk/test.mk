@@ -94,7 +94,7 @@ $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit
 	  LUA=LuaJIT-$*/src/luajit LUAFLAGS=-joff LUA_PC=none
 
 luacov-stats: | $(LUAROCKS_BUILD)/installation/bin/luacov
-	$(MAKE) check-lua-5.3.1 LUAFLAGS=-lluacov \
+	$(MAKE) --no-print-directory check-lua-5.3.1 LUAFLAGS=-lluacov \
 	  LUA_PATH='./?.lua;$(LUAROCKS_BUILD)/installation/share/lua/5.3/?.lua'
 
 check-install: DESTDIR = TMP
