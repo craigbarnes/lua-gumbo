@@ -140,6 +140,7 @@ Testing
 -------
 
 [![Build Status](https://travis-ci.org/craigbarnes/lua-gumbo.png?branch=master)](https://travis-ci.org/craigbarnes/lua-gumbo)
+[![Coverage Status](https://coveralls.io/repos/craigbarnes/lua-gumbo/badge.svg?branch=master&service=github)](https://coveralls.io/github/craigbarnes/lua-gumbo?branch=master)
 
 * `make check`: Runs all unit tests.
 * `make check-html5lib`: Runs just the html5lib [tree-construction tests].
