@@ -4,7 +4,7 @@ supported_platforms = {"unix"}
 
 description = {
     summary = "Lua bindings for the Gumbo HTML5 parsing library",
-    homepage = "https://github.com/craigbarnes/lua-gumbo",
+    homepage = "https://craigbarnes.github.io/lua-gumbo/",
     license = "ISC"
 }
 

@@ -25,6 +25,12 @@ the requirements listed above are installed, then use the command:
 
 ### Using GNU Make
 
+First, download and extract the latest release tarball:
+
+    curl -LO https://craigbarnes.github.io/lua-gumbo/dist/lua-gumbo-0.4.tar.gz
+    tar -xzf lua-gumbo-0.4.tar.gz
+    cd lua-gumbo-0.4
+
 By default, the Makefile will consult [pkg-config] for the appropriate
 build variables. Usually the following commands will be sufficient:
 
