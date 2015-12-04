@@ -1,5 +1,5 @@
-Parsing API
-===========
+Parser API
+==========
 
 The `gumbo` module provides 2 functions:
 
@@ -414,6 +414,9 @@ An `AttributeList` is a list containing zero or more [`Attribute`]
 objects. Every [`Element`] node has an associated `AttributeList`, which
 can be accessed via the `Element.attributes` property.
 
+*Note:* `AttributeList` is equivalent to what the DOM specification
+calls `NamedNodeMap`.
+
 **Properties:**
 
 *TODO*
@@ -422,17 +425,20 @@ can be accessed via the `Element.attributes` property.
 
 The `Attribute` type represents a single attribute of an [`Element`].
 
+*Note:* `Attribute` is equivalent to what the DOM specification calls
+`Attr`.
+
 **Properties:**
 
 `name`
-:   The attribute's name.
+:   The name of the attribute.
 
 `value`
-:   The attribute's value.
+:   The value of the attribute.
 
 `escapedValue`
-:   The attribute's value, escaped according to the [rules][escapingString]
-    in the [HTML fragment serialization algorithm].
+:   The value of the attribute, escaped according to the
+    [rules][escapingString] in the [HTML fragment serialization algorithm].
 
     Ampersand (`&`) characters in `value` become `&amp;`, double quote (`"`)
     characters become `&quot;` and non-breaking spaces (`U+00A0`) become
@@ -445,11 +451,26 @@ Node Containers
 
 ### `NodeList`
 
-*TODO*
+A list containing zero or more [nodes], as typically returned by the
+`Node.childNodes` property.
+
+**Properties:**
+
+`length`
+:   The *number* of nodes contained by the list.
 
 ### `ElementList`
 
-*TODO*
+A list containing zero or more [`Element`] nodes, as typically returned
+by various [`Node`] and [`ParentNode`] methods.
+
+*Note:* `ElementList` is equivalent to what the DOM specification calls
+`HTMLCollection`.
+
+**Properties:**
+
+`length`
+:   The *number* of `Element` nodes contained by the list.
 
 
 [nodes]: #nodes
