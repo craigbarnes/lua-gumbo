@@ -5,6 +5,8 @@ TIMECMD      ?= $(or $(shell which time 2>/dev/null),)
 TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
+GET           = curl -s -L -o $@
+GUNZIP        = gzip -d < '$|' | tar xf -
 OS_NAME      ?= $(or $(if $(ISDARWIN),macosx), $(shell uname | tr 'A-Z' 'a-z'))
 LUA_BUILDS    = lua-5.3.1 lua-5.2.4 lua-5.1.5
 LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta1
