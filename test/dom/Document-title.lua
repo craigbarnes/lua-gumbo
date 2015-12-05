@@ -18,3 +18,11 @@ do
     assert(document.titleElement.childNodes[1].data == newTitle)
     assert(document.title == "Setter Test")
 end
+
+do
+    local document = assert(parse("<p>This document has no title</p>"))
+    assert(document.title == "")
+    document.title = "New Title"
+    assert(document.titleElement.childNodes[1].data == "New Title")
+    assert(document.title == "New Title")
+end
