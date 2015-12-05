@@ -11,6 +11,7 @@ local tests = {
     "test/dom/getElementsByClassName.lua",
     "test/dom/Document-title.lua",
     "test/dom/Document-links.lua",
+    "test/dom/Document-serialize.lua",
     "test/dom/DocumentType.lua",
     "test/dom/Element-classList.lua",
     "test/dom/Element-getElementsByClassName.lua",

@@ -87,15 +87,14 @@ function Document:serialize(buffer)
         if type == "element" then
             buf:write(node.outerHTML)
         elseif type == "comment" then
-            buf:write("<!--", node.data, "-->")
+            buf:write("<!--", node.data, "-->\n")
         elseif type == "doctype" then
-            buf:write("<!DOCTYPE ", node.name, ">")
+            buf:write("<!DOCTYPE ", node.name, ">\n")
         end
     end
+    buf:write("\n")
     if buf.tostring then
         return buf:tostring()
-    else
-        buf:write("\n")
     end
 end
 
