@@ -9,3 +9,12 @@ assert(parse("<title></title>").title == "")
 assert(parse("<title> </title>").title == "")
 assert(parse("<title> \n\t    \f  \r </title>").title == "")
 assert(parse("").title == "")
+
+do
+    local document = assert(parse("<title>Initial Title</title>"))
+    assert(document.title == "Initial Title")
+    local newTitle = "\t  \r\n\r\n Setter Test \n\n"
+    document.title = newTitle
+    assert(document.titleElement.childNodes[1].data == newTitle)
+    assert(document.title == "Setter Test")
+end
