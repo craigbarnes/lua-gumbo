@@ -10,6 +10,7 @@ local tests = {
     "test/dom/getElementsByTagName.lua",
     "test/dom/getElementsByClassName.lua",
     "test/dom/Document-title.lua",
+    "test/dom/Document-links.lua",
     "test/dom/DocumentType.lua",
     "test/dom/Element-classList.lua",
     "test/dom/Element-getElementsByClassName.lua",
