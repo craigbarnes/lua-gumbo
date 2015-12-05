@@ -25,4 +25,7 @@ do
     document.title = "New Title"
     assert(document.titleElement.childNodes[1].data == "New Title")
     assert(document.title == "New Title")
+    document.head:remove()
+    document.title = "Test"
+    assert(document.title == "")
 end
