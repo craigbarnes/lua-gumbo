@@ -89,7 +89,7 @@ print(text) --> Hello World
 ```
 
 **Note:** this example omits error handling for the sake of simplicity.
-Production code should wrap each step with `assert()` or some other,
+Production code should wrap each step with [`assert()`] or some other,
 application-specific error handling.
 
 See also:
@@ -114,7 +114,7 @@ Testing
 [LuaJIT]: http://luajit.org/
 [C API]: http://www.lua.org/manual/5.2/manual.html#4
 [FFI]: http://luajit.org/ext_ffi.html
-[HTML5]: http://www.whatwg.org/specs/web-apps/current-work/multipage/introduction.html#is-this-html5?
+[HTML5]: https://html.spec.whatwg.org/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [`parse`]: https://craigbarnes.github.io/lua-gumbo/api.html#parse
@@ -122,10 +122,11 @@ Testing
 [`Document`]: https://craigbarnes.github.io/lua-gumbo/api.html#document
 [Gumbo]: https://github.com/google/gumbo-parser
 [GNU Make]: https://www.gnu.org/software/make/
-[LuaRocks]: http://luarocks.org/
+[LuaRocks]: https://luarocks.org/modules/craigb/gumbo
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
 [file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
 [lua-gumbo 0.3 release]: https://github.com/craigbarnes/lua-gumbo/releases/tag/0.3
+[`assert()`]: http://www.lua.org/manual/5.3/manual.html#pdf-assert
