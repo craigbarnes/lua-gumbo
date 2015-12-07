@@ -32,11 +32,6 @@ local Node = {
     }
 }
 
-local isTextOrComment = Set {
-    Node.TEXT_NODE,
-    Node.COMMENT_NODE
-}
-
 local isCharacterData = Set {
     Node.TEXT_NODE,
     Node.COMMENT_NODE,

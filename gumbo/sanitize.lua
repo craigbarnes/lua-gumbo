@@ -1,4 +1,3 @@
-local gumbo = require "gumbo"
 local Set = require "gumbo.Set"
 local assert = assert
 local urlPrefix = (_VERSION == "Lua 5.1") and "^[%z\1-\32]*" or "^[\0-\32]*"
