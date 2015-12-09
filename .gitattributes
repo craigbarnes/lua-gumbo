@@ -1,4 +1,5 @@
 [attr]code text whitespace=tab-in-indent,trailing-space,tabwidth=4
+[attr]makefile text whitespace=trailing-space
 
 .git* export-ignore
 .clang-format export-ignore
@@ -11,3 +12,5 @@ CONTRIBUTING.md export-ignore
 *.md code
 *.yml code
 rockspec.in code
+Makefile makefile
+mk/*.mk makefile
