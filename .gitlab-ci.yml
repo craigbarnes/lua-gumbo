@@ -1,0 +1,9 @@
+image: craigbarnes/lua-testing
+
+before_script:
+    - apt-get update
+    - apt-get install -qy pkg-config libgumbo-dev
+
+check-pkgconfig:
+    script:
+        - make check-pkgconfig
