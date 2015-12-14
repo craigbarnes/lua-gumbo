@@ -2,8 +2,9 @@ image: craigbarnes/lua-testing
 
 before_script:
     - apt-get update
-    - apt-get install -qy pkg-config libgumbo-dev
+    - apt-get install -qy g++ pkg-config autoconf automake libtool
+    - make local-libgumbo
 
 check-pkgconfig:
     script:
-        - make check-pkgconfig
+        - make check-pkgconfig USE_LOCAL_LIBGUMBO=1

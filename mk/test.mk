@@ -155,14 +155,16 @@ print-lua-v:
 print-lua-flags:
 	@echo 'LUAFLAGS = $(LUAFLAGS)'
 
+local-libgumbo: $(GUMBO_TARDIR)/.libs/
+
 prep: \
-    $(GUMBO_TARDIR)/.libs/ \
+    local-libgumbo \
     $(addsuffix /src/lua, $(LUA_BUILDS)) \
     $(addsuffix /src/luajit, $(LJ_BUILDS)) \
     $(LUAROCKS_BUILD)/installation/bin/luacov
 
 .PHONY: \
-    print-vars env print-lua-v print-lua-flags prep \
+    print-vars env print-lua-v print-lua-flags local-libgumbo prep \
     check check-html5lib check-pkgconfig check-install luacheck \
     check-rockspec check-luarocks-make luacov-stats \
     check-serialize check-serialize-ns check-serialize-t1 \
