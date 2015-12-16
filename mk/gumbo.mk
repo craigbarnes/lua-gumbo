@@ -41,4 +41,4 @@ gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@echo 'Generated: $@'
 
 
-.SECONDARY: gumbo-parser-0.10.1/
+.SECONDARY: $(GUMBO_TARDIR)/
