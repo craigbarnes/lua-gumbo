@@ -39,3 +39,6 @@ gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	  sed 's/^GUMBO_TAG_/  GUMBO_TAG_/' >> $@
 	@printf ']=]\n\nreturn ffi.load "gumbo"\n' >> $@
 	@echo 'Generated: $@'
+
+
+.SECONDARY: gumbo-parser-0.10.1/
