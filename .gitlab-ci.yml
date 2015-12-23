@@ -12,5 +12,5 @@ pages:
     only: [master]
     script:
         - apt-get update
-        - apt-get install -qy pandoc
+        - apt-get install -qy make pandoc
         - make docs
