@@ -3,7 +3,7 @@ tests:
     script:
         - apt-get update
         - apt-get install -qy g++ autoconf automake libtool
-        - make local-libgumbo
+        - make -j4 local-libgumbo
         - make check-pkgconfig USE_LOCAL_LIBGUMBO=1
 
 pages:
@@ -13,4 +13,5 @@ pages:
     script:
         - apt-get update
         - apt-get install -qy make pandoc
-        - make docs
+        - git fetch --tags
+        - make -j4 docs dist
