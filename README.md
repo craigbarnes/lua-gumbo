@@ -73,7 +73,7 @@ function, which both return a [`Document`] node containing a tree of
 the [DOM] Level 4 Core specification.
 
 For full API documentation, see:
-<https://craigbarnes.github.io/lua-gumbo/api.html>.
+<http://craigbarnes.gitlab.io/lua-gumbo/api.html>.
 
 ### Example
 
@@ -117,9 +117,9 @@ Testing
 [HTML5]: https://html.spec.whatwg.org/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
-[`parse`]: https://craigbarnes.github.io/lua-gumbo/api.html#parse
-[`parseFile`]: https://craigbarnes.github.io/lua-gumbo/api.html#parsefile
-[`Document`]: https://craigbarnes.github.io/lua-gumbo/api.html#document
+[`parse`]: http://craigbarnes.gitlab.io/lua-gumbo/api.html#parse
+[`parseFile`]: http://craigbarnes.gitlab.io/lua-gumbo/api.html#parsefile
+[`Document`]: http://craigbarnes.gitlab.io/lua-gumbo/api.html#document
 [Gumbo]: https://github.com/google/gumbo-parser
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: https://luarocks.org/modules/craigb/gumbo
