@@ -12,6 +12,6 @@ pages:
     only: [master]
     script:
         - apt-get update
-        - apt-get install -qy make pandoc
+        - apt-get install -qy git make pandoc
         - git fetch --tags
         - make -j4 docs dist
