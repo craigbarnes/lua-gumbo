@@ -1,18 +1,16 @@
 tests:
     image: craigbarnes/lua-testing
-    before_script:
+    script:
         - apt-get update
         - apt-get install -qy g++ autoconf automake libtool
         - make local-libgumbo
-    script:
         - make check-pkgconfig USE_LOCAL_LIBGUMBO=1
 
 pages:
     image: debian:stretch
     artifacts: {paths: [public]}
     only: [master]
-    before_script:
+    script:
         - apt-get update
         - apt-get install -qy pandoc
-    script:
         - make docs
