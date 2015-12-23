@@ -2,9 +2,14 @@ image: craigbarnes/lua-testing
 
 before_script:
     - apt-get update
-    - apt-get install -qy g++ pkg-config autoconf automake libtool
+    - apt-get install -qy g++ autoconf automake libtool pandoc
     - make local-libgumbo
 
 check-pkgconfig:
     script:
         - make check-pkgconfig USE_LOCAL_LIBGUMBO=1
+
+pages:
+    artifacts: {paths: [public]}
+    only: [master]
+    script: make docs

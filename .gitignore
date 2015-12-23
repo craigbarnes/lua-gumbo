@@ -8,10 +8,8 @@ gumbo-*.rock
 coverage.txt
 .luacov-stats.txt
 tags
-README.html
-README.pdf
 doc/style.css.inc
-doc/api.html
+public/
 test/data/*MiB.html
 lua-*/
 LuaJIT-*/
