@@ -41,7 +41,7 @@ LuaJIT-%/: | LuaJIT-%.tar.gz
 	$(GUNZIP)
 
 LuaJIT-%.tar.gz:
-	$(GET) http://luajit.org/download/$@
+	$(GET) https://github.com/LuaJIT/LuaJIT/archive/v$*/$@.tar.gz
 
 luarocks-%/installation/bin/luacov: | luarocks-%/installation/
 	$|/bin/luarocks install luacov
