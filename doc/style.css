@@ -3,10 +3,26 @@ html, body {
 }
 
 body {
-    margin: 0 auto;
-    padding: 1.2em;
-    background: white;
+    margin: 0;
+}
+
+header {
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    font-size: large;
+}
+
+main {
     color: #333;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header .container {
+    padding: 15px 20px;
 }
 
 a {
@@ -161,8 +177,8 @@ code > span.er {color: red; font-weight: bold}
 }
 
 @media only screen and (min-width: 920px) and (min-device-width: 700px) {
-    body {
-        max-width: calc(50em + 280px);
+    .container {
+        max-width: 1080px;
     }
 
     #toc {
