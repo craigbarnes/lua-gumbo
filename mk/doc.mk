@@ -2,11 +2,12 @@ PANDOC = pandoc
 
 docs: public/index.html public/api.html
 
-public/%.html: doc/%.md doc/template.html doc/style.css.inc | public/
-	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) -o $@ $<
+public/index.html: README.md doc/api.md doc/template.html doc/style.css.inc | public/
+	$(PANDOC) --smart --toc --include-in-header=doc/style.css.inc \
+	  --template=doc/template.html --output=$@ README.md doc/api.md
 
-public/index.html: README.md doc/template.html doc/style.css.inc | public/
-	$(PANDOC) -S --toc --template $(word 2, $^) -H $(word 3, $^) -o $@ $<
+public/api.html: doc/redir.html | public/
+	cp $< $@
 
 doc/style.css.inc: doc/style.css
 	echo '<style>' > $@
