@@ -73,7 +73,7 @@ function, which both return a [`Document`] node containing a tree of
 the [DOM] Level 4 Core specification.
 
 For full API documentation, see:
-<http://craigbarnes.gitlab.io/lua-gumbo/api.html>.
+<https://craigbarnes.gitlab.io/lua-gumbo/#parser-api>.
 
 ### Example
 
@@ -110,23 +110,23 @@ Testing
   installation, to ensure all modules are installed correctly.
 
 
-[Lua]: http://www.lua.org/
+[Lua]: https://www.lua.org/
 [LuaJIT]: http://luajit.org/
-[C API]: http://www.lua.org/manual/5.2/manual.html#4
+[C API]: https://www.lua.org/manual/5.2/manual.html#4
 [FFI]: http://luajit.org/ext_ffi.html
 [HTML5]: https://html.spec.whatwg.org/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
-[`parse`]: http://craigbarnes.gitlab.io/lua-gumbo/api.html#parse
-[`parseFile`]: http://craigbarnes.gitlab.io/lua-gumbo/api.html#parsefile
-[`Document`]: http://craigbarnes.gitlab.io/lua-gumbo/api.html#document
+[`parse`]: https://craigbarnes.gitlab.io/lua-gumbo/#parse
+[`parseFile`]: https://craigbarnes.gitlab.io/lua-gumbo/#parsefile
+[`Document`]: https://craigbarnes.gitlab.io/lua-gumbo/#document
 [Gumbo]: https://github.com/google/gumbo-parser
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: https://luarocks.org/modules/craigb/gumbo
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
-[file handle]: http://www.lua.org/manual/5.2/manual.html#6.8
+[file handle]: https://www.lua.org/manual/5.2/manual.html#6.8
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
 [lua-gumbo 0.3 release]: https://github.com/craigbarnes/lua-gumbo/releases/tag/0.3
-[`assert()`]: http://www.lua.org/manual/5.3/manual.html#pdf-assert
+[`assert()`]: https://www.lua.org/manual/5.3/manual.html#pdf-assert
