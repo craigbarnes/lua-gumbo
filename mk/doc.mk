@@ -17,7 +17,7 @@ doc/style.css.inc: doc/style.css
 public/:
 	$(MKDIR) $@
 
-check-docs: public/index.html
+check-docs: public/index.html all
 	@$(LUA) examples/find_links.lua $< | grep '^https\?:' | test/checkurl.sh
 
 clean-docs:
