@@ -32,7 +32,7 @@ lua-%/: | lua-%.tar.gz
 	$(GUNZIP)
 
 lua-%.tar.gz:
-	$(GET) http://www.lua.org/ftp/$@
+	$(GET) https://www.lua.org/ftp/$@
 
 LuaJIT-%/src/luajit: | LuaJIT-%/
 	$(MAKE) -C $|

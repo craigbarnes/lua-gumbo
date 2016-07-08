@@ -1,4 +1,4 @@
-HOMEURL = http://craigbarnes.gitlab.io/lua-gumbo
+HOMEURL = https://craigbarnes.gitlab.io/lua-gumbo
 GITURL  = https://gitlab.com/craigbarnes/lua-gumbo.git
 TAGS    = 0.4 0.3 0.2 0.1
 
