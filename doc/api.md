@@ -104,36 +104,36 @@ types.
 :   The value of the element's `id` attribute, if it has one, otherwise `nil`.
 
 `className`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.className))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/className))
 
 `innerHTML`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.innerHTML))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML))
 
 `outerHTML`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.outerHTML))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML))
 
 **Methods:**
 
 `getElementsByTagName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByTagName))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/getElementsByTagName))
 
 `getElementsByClassName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getElementsByClassName))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/getElementsByClassName))
 
 `hasAttributes()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttributes))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttributes))
 
 `hasAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.hasAttribute))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttribute))
 
 `getAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.getAttribute))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/getAttribute))
 
 `setAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.setAttribute))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/setAttribute))
 
 `removeAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element.removeAttribute))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/removeAttribute))
 
 ### `Text`
 
@@ -225,22 +225,22 @@ or [`Comment`] nodes.
     is equal to the `elementId` *string*.
 
 `getElementsByTagName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.getElementsByTagName))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/getElementsByTagName))
 
 `getElementsByClassName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document.getElementsByClassName))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementsByClassName))
 
 `createElement()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.createElement))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/createElement))
 
 `createTextNode()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.createTextNode))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/createTextNode))
 
 `createComment()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.createComment))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/createComment))
 
 `adoptNode()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document.adoptNode))
+:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/adoptNode))
 
 ### `DocumentType`
 
