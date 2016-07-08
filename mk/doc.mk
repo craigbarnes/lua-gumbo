@@ -1,3 +1,4 @@
+CHECKURL = curl -sSI -w "%{http_code}  $$URL  %{redirect_url}\n" -o /dev/null
 PANDOC = pandoc
 
 docs: public/index.html public/api.html
@@ -18,7 +19,8 @@ public/:
 	$(MKDIR) $@
 
 check-docs: public/index.html all
-	@$(LUA) examples/find_links.lua $< | grep '^https\?:' | test/checkurl.sh
+	@$(LUA) examples/find_links.lua $< | grep '^https\?:' | \
+	  while read URL; do $(CHECKURL) "$$URL" || exit 1; done
 
 clean-docs:
 	$(RM) doc/style.css.inc
