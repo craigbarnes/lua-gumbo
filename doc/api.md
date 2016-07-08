@@ -15,7 +15,7 @@ local document = gumbo.parse(html, tabStop, ctx, ctxns)
 2. `tabStop`: The *number* of columns to count for tab characters
    when computing source positions (*optional*; defaults to `8`).
 3. `ctx`: A *string* containing the name of an element to use as context
-   for parsing a [HTML fragment][] (*optional*). This is for *fragment*
+   for [HTML fragment parsing][] (*optional*). This is for *fragment*
    parsing only -- leave as `nil` to parse HTML *documents*.
 4. `ctxns`: The namespace to use for the `ctx` parameter; either `"html"`,
    `"svg"` or `"math"` (*optional*; defaults to `"html"`).
@@ -438,7 +438,7 @@ The `Attribute` type represents a single attribute of an [`Element`].
 
 `escapedValue`
 :   The value of the attribute, escaped according to the
-    [rules][escapingString] in the [HTML fragment serialization algorithm].
+    [rules][escapingString] in the [HTML fragment serialization] algorithm.
 
     Ampersand (`&`) characters in `value` become `&amp;`, double quote (`"`)
     characters become `&quot;` and non-breaking spaces (`U+00A0`) become
@@ -492,8 +492,10 @@ by various [`Node`] and [`ParentNode`] methods.
 [`NodeList`]: #nodelist
 [`ElementList`]: #elementlist
 
+[file handle]: https://www.lua.org/manual/5.2/manual.html#6.8
 [DOM]: https://dom.spec.whatwg.org/
 [SVG elements]: https://developer.mozilla.org/en-US/docs/Web/SVG/Element#SVG_elements
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
-[escapingString]: http://www.w3.org/TR/html5/syntax.html#escapingString
-[HTML fragment serialization algorithm]: http://www.w3.org/TR/html5/syntax.html#html-fragment-serialization-algorithm
+[escapingString]: https://html.spec.whatwg.org/multipage/syntax.html#escapingString
+[HTML fragment parsing]: https://html.spec.whatwg.org/multipage/syntax.html#parsing-html-fragments
+[HTML fragment serialization]: https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-serialisation-algorithm

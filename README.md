@@ -124,7 +124,6 @@ Testing
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: https://luarocks.org/modules/craigb/gumbo
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
-[file handle]: https://www.lua.org/manual/5.2/manual.html#6.8
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
