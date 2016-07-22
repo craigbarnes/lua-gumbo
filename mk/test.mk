@@ -8,9 +8,9 @@ PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
 GUNZIP        = gzip -d < '$|' | tar xf -
 OS_NAME      ?= $(or $(if $(ISDARWIN),macosx), $(shell uname | tr 'A-Z' 'a-z'))
-LUA_BUILDS    = lua-5.3.2 lua-5.2.4 lua-5.1.5
-LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta1
-LUAROCKS_BUILD= luarocks-2.2.2
+LUA_BUILDS    = lua-5.3.3 lua-5.2.4 lua-5.1.5
+LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta2
+LUAROCKS_BUILD= luarocks-2.3.0
 CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
 CHECK_LJ_ALL  = $(addprefix check-, $(LJ_BUILDS))
 
@@ -46,8 +46,8 @@ LuaJIT-%.tar.gz:
 luarocks-%/installation/bin/luacov: | luarocks-%/installation/
 	$|/bin/luarocks install luacov
 
-luarocks-%/installation/: | luarocks-%/ lua-5.3.2/installation/
-	cd luarocks-$* && ./configure --with-lua='$(CURDIR)/lua-5.3.2/installation' --prefix='$(CURDIR)/$@'
+luarocks-%/installation/: | luarocks-%/ $(word 1,$(LUA_BUILDS))/installation/
+	cd luarocks-$* && ./configure --with-lua='$(CURDIR)/$(word 2,$|)' --prefix='$(CURDIR)/$@'
 	$(MAKE) -C luarocks-$* build
 	$(MAKE) -C luarocks-$* install
 
@@ -96,7 +96,7 @@ $(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit
 	  LUA=LuaJIT-$*/src/luajit LUAFLAGS=-joff LUA_PC=none
 
 luacov-stats: | $(LUAROCKS_BUILD)/installation/bin/luacov
-	$(MAKE) --no-print-directory check-lua-5.3.2 LUAFLAGS=-lluacov \
+	$(MAKE) --no-print-directory check-$(word 1,$(LUA_BUILDS)) LUAFLAGS=-lluacov \
 	  LUA_PATH='./?.lua;$(LUAROCKS_BUILD)/installation/share/lua/5.3/?.lua'
 
 check-install: DESTDIR = TMP
