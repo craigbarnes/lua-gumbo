@@ -27,7 +27,7 @@ the requirements listed above are installed, then use the command:
 
 First, download and extract the latest release tarball:
 
-    curl -LO https://craigbarnes.github.io/lua-gumbo/dist/lua-gumbo-0.4.tar.gz
+    curl -LO https://craigbarnes.gitlab.io/lua-gumbo/dist/lua-gumbo-0.4.tar.gz
     tar -xzf lua-gumbo-0.4.tar.gz
     cd lua-gumbo-0.4
 
@@ -127,5 +127,5 @@ Testing
 [tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
 [MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
-[lua-gumbo 0.3 release]: https://github.com/craigbarnes/lua-gumbo/releases/tag/0.3
+[lua-gumbo 0.3 release]: https://craigbarnes.gitlab.io/lua-gumbo/dist/lua-gumbo-0.3.tar.gz
 [`assert()`]: https://www.lua.org/manual/5.3/manual.html#pdf-assert

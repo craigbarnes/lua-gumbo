@@ -14,4 +14,4 @@ pages:
         - apt-get update
         - apt-get install -qy git make pandoc
         - git fetch --tags
-        - make -j4 docs dist
+        - make -j4 docs dist check-dist
