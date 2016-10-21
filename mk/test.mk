@@ -6,13 +6,16 @@ TIME         ?= $(if $(TIMECMD), $(TIMECMD) -f $(TIMEFMT),)
 TOHTML       ?= $(LUA) $(LUAFLAGS) test/htmlfmt.lua
 PRINTVAR      = printf '\033[1m%-14s\033[0m= %s\n' '$(1)' '$(strip $($(1)))'
 GET           = curl -s -L -o $@
-GUNZIP        = gzip -d < '$|' | tar xf -
+GUNZIP        = cd '$(dir $|)' && gzip -d < '$(notdir $|)' | tar -xf -
 OS_NAME      ?= $(or $(if $(ISDARWIN),macosx), $(shell uname | tr 'A-Z' 'a-z'))
-LUA_BUILDS    = lua-5.3.3 lua-5.2.4 lua-5.1.5
-LJ_BUILDS     = LuaJIT-2.0.4 LuaJIT-2.1.0-beta2
-LUAROCKS_BUILD= luarocks-2.3.0
-CHECK_LUA_ALL = $(addprefix check-, $(LUA_BUILDS))
-CHECK_LJ_ALL  = $(addprefix check-, $(LJ_BUILDS))
+CHECK_LUAS    = lua-5.3.3 lua-5.2.4 lua-5.1.5
+CHECK_LUAJITS = LuaJIT-2.0.4 LuaJIT-2.1.0-beta2
+CHECK_LUAROCKS= luarocks-2.3.0
+CHECK_LUA_ALL = $(addprefix check-, $(CHECK_LUAS))
+CHECK_LJ_ALL  = $(addprefix check-, $(CHECK_LUAJITS))
+LUA_BUILDS    = $(addprefix build/test/, $(CHECK_LUAS))
+LJ_BUILDS     = $(addprefix build/test/, $(CHECK_LUAJITS))
+LUAROCKS_BUILD= $(addprefix build/test/, $(CHECK_LUAROCKS))
 
 USERVARS = \
     CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS \
@@ -22,40 +25,44 @@ USERVARS = \
 export LUA_PATH = ./?.lua
 export LUA_CPATH = ./?.so
 
-lua-%/installation/: | lua-%/src/lua
-	$(MAKE) -C lua-$* install INSTALL_TOP='$(CURDIR)/$@'
+build/test/lua-%/installation/: | build/test/lua-%/src/lua
+	$(MAKE) -C build/test/lua-$* install INSTALL_TOP='$(CURDIR)/$@'
 
-lua-%/src/lua: | lua-%/
+build/test/lua-%/src/lua: | build/test/lua-%/
 	$(MAKE) -C $| $(OS_NAME)
 
-lua-%/: | lua-%.tar.gz
+build/test/lua-%/: | build/test/lua-%.tar.gz
 	$(GUNZIP)
 
-lua-%.tar.gz:
-	$(GET) https://www.lua.org/ftp/$@
+build/test/lua-%.tar.gz: | build/test/
+	$(GET) https://www.lua.org/ftp/lua-$*.tar.gz
 
-LuaJIT-%/src/luajit: | LuaJIT-%/
+build/test/LuaJIT-%/src/luajit: | build/test/LuaJIT-%/
 	$(MAKE) -C $|
 
-LuaJIT-%/: | LuaJIT-%.tar.gz
+build/test/LuaJIT-%/: | build/test/LuaJIT-%.tar.gz
 	$(GUNZIP)
 
-LuaJIT-%.tar.gz:
-	$(GET) https://github.com/LuaJIT/LuaJIT/archive/v$*/$@
+build/test/LuaJIT-%.tar.gz: | build/test/
+	$(GET) https://github.com/LuaJIT/LuaJIT/archive/v$*/LuaJIT-$*.tar.gz
 
-luarocks-%/installation/bin/luacov: | luarocks-%/installation/
+build/test/luarocks-%/installation/bin/luacov: | build/test/luarocks-%/installation/
 	$|/bin/luarocks install luacov
 
-luarocks-%/installation/: | luarocks-%/ $(word 1,$(LUA_BUILDS))/installation/
-	cd luarocks-$* && ./configure --with-lua='$(CURDIR)/$(word 2,$|)' --prefix='$(CURDIR)/$@'
-	$(MAKE) -C luarocks-$* build
-	$(MAKE) -C luarocks-$* install
+build/test/luarocks-%/installation/: | build/test/luarocks-%/ $(word 1,$(LUA_BUILDS))/installation/
+	cd build/test/luarocks-$* \
+	  && ./configure --with-lua='$(CURDIR)/$(word 2,$|)' --prefix='$(CURDIR)/$@' \
+	  && $(MAKE) build \
+	  && $(MAKE) install
 
-luarocks-%/: | luarocks-%.tar.gz
+build/test/luarocks-%/: | build/test/luarocks-%.tar.gz
 	$(GUNZIP)
 
-luarocks-%.tar.gz:
-	$(GET) https://keplerproject.github.io/luarocks/releases/$@
+build/test/luarocks-%.tar.gz: | build/test/
+	$(GET) https://keplerproject.github.io/luarocks/releases/$(@F)
+
+build/test/:
+	mkdir -p $@
 
 check: all
 	@$(LUA) $(LUAFLAGS) runtests.lua
@@ -74,9 +81,9 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 
 check-pkgconfig:
 	$(MAKE) -s clean-obj print-lua-v check
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua5.3
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua5.2
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua5.1
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua53
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua52
+	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua51
 	$(MAKE) -s clean-obj print-lua-v check LUA_PC=luajit
 	$(MAKE) -s clean-obj print-lua-v check LUA_PC=luajit LUAFLAGS=-joff
 
@@ -85,18 +92,18 @@ check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 	@+for t in $^; do printf " \33[32mPASSED\33[0m  make $$t\n"; done
 	@echo
 
-$(CHECK_LUA_ALL): check-lua-%: | lua-%/src/lua
+$(CHECK_LUA_ALL): check-lua-%: | build/test/lua-%/src/lua
 	@$(MAKE) -s clean-obj print-lua-v check USE_LOCAL_LIBGUMBO=1 \
-	  LUA_CFLAGS=-Ilua-$*/src LUA=lua-$*/src/lua  LUA_PC=none
+	  LUA_CFLAGS=-I$(dir $|) LUA=$| LUA_PC=none
 
-$(CHECK_LJ_ALL): check-LuaJIT-%: | LuaJIT-%/src/luajit
+$(CHECK_LJ_ALL): check-LuaJIT-%: | build/test/LuaJIT-%/src/luajit
 	@$(MAKE) -s clean-obj print-lua-v check USE_LOCAL_LIBGUMBO=1 \
-	  LUA_CFLAGS=-ILuaJIT-$*/src LUA=LuaJIT-$*/src/luajit LUA_PC=none
+	  LUA_CFLAGS=-I$(dir $|) LUA=$| LUA_PC=none
 	@$(MAKE) -s print-lua-v print-lua-flags check USE_LOCAL_LIBGUMBO=1 \
-	  LUA=LuaJIT-$*/src/luajit LUAFLAGS=-joff LUA_PC=none
+	  LUA_CFLAGS=-I$(dir $|) LUA=$| LUAFLAGS=-joff LUA_PC=none
 
 luacov-stats: | $(LUAROCKS_BUILD)/installation/bin/luacov
-	$(MAKE) --no-print-directory check-$(word 1,$(LUA_BUILDS)) LUAFLAGS=-lluacov \
+	$(MAKE) --no-print-directory check-$(word 1,$(CHECK_LUAS)) LUAFLAGS=-lluacov \
 	  LUA_PATH='./?.lua;$(LUAROCKS_BUILD)/installation/share/lua/5.3/?.lua'
 
 check-install: DESTDIR = TMP

@@ -1,4 +1,4 @@
-GUMBO_TARDIR ?= gumbo-parser-0.10.1
+GUMBO_TARDIR ?= build/gumbo-parser-0.10.1
 GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
 
 ifdef AMALG
@@ -23,15 +23,18 @@ else
  GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs gumbo)
 endif
 
-gumbo-parser-%/.libs/: | gumbo-parser-%/
+build/gumbo-parser-%/.libs/: | build/gumbo-parser-%/
 	cd $| && ./autogen.sh && ./configure
 	$(MAKE) -C $|
 
-gumbo-parser-%/: | gumbo-parser-%.tar.gz
+build/gumbo-parser-%/: | build/gumbo-parser-%.tar.gz
 	$(GUNZIP)
 
-gumbo-parser-%.tar.gz:
+build/gumbo-parser-%.tar.gz: | build/
 	$(GET) https://github.com/google/gumbo-parser/archive/v$*.tar.gz
+
+build/:
+	mkdir -p $@
 
 gumbo/ffi-cdef.lua: $(GUMBO_HEADER)
 	@printf 'local ffi = require "ffi"\n\nffi.cdef [=[\n' > $@

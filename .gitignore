@@ -1,7 +1,7 @@
+build/
 local.mk
 *.so
 *.o
-gumbo-parser-*/
 lua-gumbo-*.tar.gz
 gumbo-*.rockspec
 gumbo-*.rock
@@ -11,6 +11,3 @@ tags
 doc/style.css.inc
 public/
 test/data/*MiB.html
-lua-*/
-LuaJIT-*/
-luarocks-*/
