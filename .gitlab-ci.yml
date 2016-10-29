@@ -1,11 +1,11 @@
 tests:
-    image: craigbarnes/lua-testing-extra
+    image: quay.io/craigbarnes/lua-testing-extra
     script:
         - make -j4 local-libgumbo
         - make check-pkgconfig USE_LOCAL_LIBGUMBO=1
 
 pages:
-    image: craigbarnes/pandoc
+    image: quay.io/craigbarnes/pandoc
     artifacts: {paths: [public]}
     only: [master]
     script:
