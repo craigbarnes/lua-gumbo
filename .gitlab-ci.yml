@@ -3,6 +3,9 @@ tests:
     script:
         - make -j4 local-libgumbo
         - make check-pkgconfig USE_LOCAL_LIBGUMBO=1
+        - make clean-obj check LUA_PC=lua53 LUAFLAGS=-lluacov LUA_PATH=';;'
+          USE_LOCAL_LIBGUMBO=1
+        - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
 
 pages:
     image: quay.io/craigbarnes/pandoc
