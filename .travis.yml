@@ -4,11 +4,7 @@ branches: {only: master}
 os: [linux, osx]
 compiler: [clang, gcc]
 before_script:
-    - make -j8 prep
-    - build/test/luarocks-2.3.0/installation/bin/luarocks install luacov-coveralls
+    - make -j`nproc` prep
 script:
     - make print-vars USERVARS='CC LDFLAGS'
     - make check-lua-all
-    - make luacov-stats
-after_success:
-    - build/test/luarocks-2.3.0/installation/bin/luacov-coveralls -t "$COVERALLS_TOKEN"

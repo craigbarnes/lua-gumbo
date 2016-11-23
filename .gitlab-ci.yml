@@ -1,11 +1,18 @@
 tests:
     image: quay.io/craigbarnes/lua-testing-extra
+    artifacts: {paths: [coverage.txt, .luacov-stats.txt]}
     script:
         - make -j4 local-libgumbo
         - make check-pkgconfig USE_LOCAL_LIBGUMBO=1
         - make clean-obj check LUA_PC=lua53 LUAFLAGS=-lluacov LUA_PATH=';;'
           USE_LOCAL_LIBGUMBO=1
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
+
+coveralls:
+    stage: deploy
+    only: [master]
+    script:
+        - luacov-coveralls-5.3 -t "$COVERALLS_TOKEN"
 
 pages:
     image: quay.io/craigbarnes/pandoc
