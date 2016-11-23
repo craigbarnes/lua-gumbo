@@ -7,11 +7,6 @@ tests:
         - make clean-obj check LUA_PC=lua53 LUAFLAGS=-lluacov LUA_PATH=';;'
           USE_LOCAL_LIBGUMBO=1
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
-
-coveralls:
-    stage: deploy
-    only: [master]
-    script:
         - luacov-coveralls-5.3 -t "$COVERALLS_TOKEN"
 
 pages:
