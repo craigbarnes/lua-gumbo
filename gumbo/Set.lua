@@ -43,12 +43,12 @@ end
 local function constructor(members)
     local set = {}
     if members ~= nil then
-        local type = type(members)
-        if type == "table" then
+        local argtype = type(members)
+        if argtype == "table" then
             for i = 1, #members do
                 set[members[i]] = true
             end
-        elseif type == "string" then
+        elseif argtype == "string" then
             for member in members:gmatch("%S+") do
                 set[member] = true
             end

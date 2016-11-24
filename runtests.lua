@@ -56,7 +56,7 @@ local function handler(err)
     return s:format(err, line:match("^%s*(.-)%s*$"), traceback())
 end
 
-local function run(tests)
+local function runTests()
     local function iterate()
         for i, filename in ipairs(tests) do
             local loaded, loadError = loadfile(filename, "t")
@@ -83,7 +83,7 @@ local bold = function(s) return termfmt(s, "1") end
 do
     local passed, failed = 0, 0
     write "\n"
-    for ok, filename, err in run(tests) do
+    for ok, filename, err in runTests() do
         if ok then
             passed = passed + 1
             write(" ", green "PASSED", "  ", filename, "\n")
