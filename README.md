@@ -1,9 +1,8 @@
 Synopsis
 --------
 
-[Lua][] [C API] and [LuaJIT][] [FFI] bindings for the [Gumbo][] [HTML5]
-parsing library, including a small set of core [DOM] APIs implemented in
-pure Lua.
+[Lua] bindings for the [Gumbo][] [HTML5] parsing library, including a
+small set of core [DOM] APIs implemented in pure Lua.
 
 Requirements
 ------------
@@ -113,7 +112,6 @@ Testing
 [Lua]: https://www.lua.org/
 [LuaJIT]: http://luajit.org/
 [C API]: https://www.lua.org/manual/5.2/manual.html#4
-[FFI]: http://luajit.org/ext_ffi.html
 [HTML5]: https://html.spec.whatwg.org/multipage/introduction.html#is-this-html5?
 [DOM]: https://dom.spec.whatwg.org/
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant

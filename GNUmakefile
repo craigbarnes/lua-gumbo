@@ -17,7 +17,6 @@ DOM_IFACES = \
 
 DOM_MODULES = $(addprefix gumbo/dom/, $(addsuffix .lua, $(DOM_IFACES) util))
 SLZ_MODULES = $(addprefix gumbo/serialize/, Indent.lua html.lua)
-FFI_MODULES = $(addprefix gumbo/, ffi-cdef.lua ffi-parse.lua)
 TOP_MODULES = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua sanitize.lua)
 
 all: gumbo/parse.so
@@ -33,7 +32,6 @@ install: all
 	$(INSTALL) $(TOP_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALL) $(SLZ_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/serialize/'
 	$(INSTALL) $(DOM_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/dom/'
-	$(INSTALL) $(FFI_MODULES) '$(DESTDIR)$(LUA_LMOD_DIR)/gumbo/'
 	$(INSTALLX) gumbo/parse.so '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'
 	$(INSTALL) gumbo.lua '$(DESTDIR)$(LUA_LMOD_DIR)/'
 

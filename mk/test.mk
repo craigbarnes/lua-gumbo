@@ -85,7 +85,6 @@ check-pkgconfig:
 	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=lua52
 	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=lua51
 	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=luajit
-	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=luajit LUAFLAGS=-joff
 
 check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 	@echo
