@@ -1,5 +1,13 @@
+GUMBO_PKG = gumbo >= 0.10.0
 GUMBO_TARDIR ?= build/gumbo-parser-0.10.1
 GUMBO_HEADER ?= $(GUMBO_INCDIR)/gumbo.h
+
+PKGCHECK = $(if \
+    $(shell $(PKGCONFIG) --short-errors --modversion '$(GUMBO_PKG)'),, \
+    $(info Install $(GUMBO_PKG) or use "make AMALG=1") \
+    $(info See README.md file for details) \
+    $(error pkg-config error) \
+)
 
 ifdef AMALG
  CFLAGS ?= -g -O2 -Wall
@@ -17,10 +25,10 @@ else ifdef USE_LOCAL_LIBGUMBO
  gumbo/parse.o: | $(GUMBO_TARDIR)/
  gumbo/parse.so: | $(GUMBO_LIBDIR)/
 else
- GUMBO_INCDIR ?= $(shell $(PKGCONFIG) --variable=includedir gumbo)
- GUMBO_LIBDIR ?= $(shell $(PKGCONFIG) --variable=libdir gumbo)
- GUMBO_CFLAGS ?= $(shell $(PKGCONFIG) --cflags gumbo)
- GUMBO_LDFLAGS ?= $(shell $(PKGCONFIG) --libs gumbo)
+ GUMBO_INCDIR ?= $(PKGCHECK) $(shell $(PKGCONFIG) --variable=includedir gumbo)
+ GUMBO_LIBDIR ?= $(PKGCHECK) $(shell $(PKGCONFIG) --variable=libdir gumbo)
+ GUMBO_CFLAGS ?= $(PKGCHECK) $(shell $(PKGCONFIG) --cflags gumbo)
+ GUMBO_LDFLAGS ?= $(PKGCHECK) $(shell $(PKGCONFIG) --libs gumbo)
 endif
 
 build/gumbo-parser-%/.libs/: | build/gumbo-parser-%/
