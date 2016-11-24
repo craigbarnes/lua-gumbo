@@ -68,7 +68,7 @@ function Node:walk()
             level = level + 1
             for index = 1, length do
                 local child = childNodes[index]
-                yield(child, level, index, length)
+                yield(child)
                 iter(child)
             end
             level = level - 1
