@@ -15,15 +15,10 @@ CHECK_LUA_ALL = $(addprefix check-, $(CHECK_LUAS))
 CHECK_LJ_ALL  = $(addprefix check-, $(CHECK_LUAJITS))
 LUA_BUILDS    = $(addprefix build/test/, $(CHECK_LUAS))
 LJ_BUILDS     = $(addprefix build/test/, $(CHECK_LUAJITS))
-LUAROCKS_BUILD= $(addprefix build/test/, $(CHECK_LUAROCKS))
 
 USERVARS = \
-    CFLAGS LDFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS \
+    CFLAGS LIBFLAGS GUMBO_CFLAGS GUMBO_LDFLAGS \
     LUA_PC LUA_CFLAGS LUA_LMOD_DIR LUA_CMOD_DIR LUA
-
-# Ensure the tests only load modules from within the current directory
-export LUA_PATH = ./?.lua
-export LUA_CPATH = ./?.so
 
 build/test/lua-%/installation/: | build/test/lua-%/src/lua
 	$(MAKE) -C build/test/lua-$* install INSTALL_TOP='$(CURDIR)/$@'
@@ -45,21 +40,6 @@ build/test/LuaJIT-%/: | build/test/LuaJIT-%.tar.gz
 
 build/test/LuaJIT-%.tar.gz: | build/test/
 	$(GET) https://github.com/LuaJIT/LuaJIT/archive/v$*/LuaJIT-$*.tar.gz
-
-build/test/luarocks-%/installation/bin/luacov: | build/test/luarocks-%/installation/
-	$|/bin/luarocks install luacov
-
-build/test/luarocks-%/installation/: | build/test/luarocks-%/ $(word 1,$(LUA_BUILDS))/installation/
-	cd build/test/luarocks-$* \
-	  && ./configure --with-lua='$(CURDIR)/$(word 2,$|)' --prefix='$(CURDIR)/$@' \
-	  && $(MAKE) build \
-	  && $(MAKE) install
-
-build/test/luarocks-%/: | build/test/luarocks-%.tar.gz
-	$(GUNZIP)
-
-build/test/luarocks-%.tar.gz: | build/test/
-	$(GET) https://keplerproject.github.io/luarocks/releases/$(@F)
 
 build/test/:
 	mkdir -p $@
@@ -101,10 +81,6 @@ $(CHECK_LJ_ALL): check-LuaJIT-%: | build/test/LuaJIT-%/src/luajit
 	@$(MAKE) -s print-lua-v print-lua-flags check USE_LOCAL_LIBGUMBO=1 \
 	  LUA_CFLAGS=-I$(dir $|) LUA=$| LUAFLAGS=-joff LUA_PC=none
 
-luacov-stats: | $(LUAROCKS_BUILD)/installation/bin/luacov
-	$(MAKE) --no-print-directory check-$(word 1,$(CHECK_LUAS)) LUAFLAGS=-lluacov \
-	  LUA_PATH='./?.lua;$(LUAROCKS_BUILD)/installation/share/lua/5.3/?.lua'
-
 check-install: DESTDIR = TMP
 check-install: export LUA_PATH = $(DESTDIR)$(LUA_LMOD_DIR)/?.lua
 check-install: export LUA_CPATH = $(DESTDIR)$(LUA_CMOD_DIR)/?.so
@@ -113,23 +89,17 @@ check-install: install check uninstall
 	$(LUA) -e 'assert(package.cpath == "$(LUA_CPATH)")'
 	$(RM) -r '$(DESTDIR)'
 
-check-rockspec: LUA_PATH = ;;
-check-rockspec: dist gumbo-scm-1.rockspec
-	$(LUAROCKS) lint gumbo-$(VERSION)-1.rockspec
-	$(LUAROCKS) lint gumbo-scm-1.rockspec
+check-rockspec: gumbo-scm-1.rockspec
+	$(LUAROCKS) lint $<
 
-check-luarocks-make: LUA_PATH = ;;
-check-luarocks-make: MAKEFLAGS += -B
-check-luarocks-make: gumbo-scm-1.rockspec
-	$(LUAROCKS) --tree='$(CURDIR)/ROCKS' make $< \
-	    GUMBO_INCDIR='$(GUMBO_INCDIR)' \
-	    GUMBO_LIBDIR='$(GUMBO_LIBDIR)'
-	$(RM) -r ROCKS
+check-luarocks-build check-luarocks-make: \
+check-luarocks-%: | gumbo-scm-1.rockspec
+	$(LUAROCKS) --tree='$(CURDIR)/build/$@' $* $|
+	$(RM) -r build/$@/
 
 luacheck:
 	@luacheck gumbo.lua runtests.lua gumbo test examples
 
-coverage.txt: export LUA_PATH = ./?.lua;;
 coverage.txt: .luacov gumbo/parse.so gumbo.lua gumbo/Buffer.lua gumbo/Set.lua \
               $(DOM_MODULES) test/misc.lua test/dom/interfaces.lua runtests.lua
 	@$(LUA) $(LUAFLAGS) -lluacov runtests.lua >/dev/null
@@ -161,22 +131,21 @@ print-lua-v:
 print-lua-flags:
 	@echo 'LUAFLAGS = $(LUAFLAGS)'
 
-local-libgumbo: $(GUMBO_TARDIR)/.libs/
+local-libgumbo: $(GUMBO_TARDIR)/.libs/libgumbo.a
 
 prep: \
     local-libgumbo \
     $(addsuffix /src/lua, $(LUA_BUILDS)) \
-    $(addsuffix /src/luajit, $(LJ_BUILDS)) \
-    $(LUAROCKS_BUILD)/installation/bin/luacov
+    $(addsuffix /src/luajit, $(LJ_BUILDS))
 
 .PHONY: \
     print-vars env print-lua-v print-lua-flags local-libgumbo prep \
     check check-html5lib check-pkgconfig check-install luacheck \
-    check-rockspec check-luarocks-make luacov-stats \
+    check-rockspec check-luarocks-make check-luarocks-build \
     check-serialize check-serialize-ns check-serialize-t1 \
     check-lua-all $(CHECK_LUA_ALL) $(CHECK_LJ_ALL) \
     bench-parse bench-serialize
 
 .SECONDARY: \
-    $(addsuffix /, $(LUA_BUILDS) $(LJ_BUILDS) $(LUAROCKS_BUILD)) \
-    $(addsuffix /installation/, $(LUA_BUILDS) $(LJ_BUILDS) $(LUAROCKS_BUILD))
+    $(addsuffix /, $(LUA_BUILDS) $(LJ_BUILDS)) \
+    $(addsuffix /installation/, $(LUA_BUILDS) $(LJ_BUILDS))

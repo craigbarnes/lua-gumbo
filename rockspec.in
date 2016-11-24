@@ -17,30 +17,8 @@ dependencies = {
     "lua >= 5.1"
 }
 
-external_dependencies = {
-    GUMBO = {
-        library = "gumbo",
-        header = "gumbo.h"
-    }
-}
-
 build = {
-    type = "make",
-    variables = {
-        LUA = "$(LUA)",
-        LUA_INCDIR = "$(LUA_INCDIR)",
-        LUA_LIBDIR = "$(LUA_LIBDIR)",
-        LUA_CFLAGS = "-I$(LUA_INCDIR)",
-        LUA_PC = "none"
-    },
-    build_variables = {
-        CFLAGS = "$(CFLAGS)",
-        LDFLAGS = "$(LIBFLAG)",
-        GUMBO_CFLAGS = "-I$(GUMBO_INCDIR)",
-        GUMBO_LDFLAGS = "-L$(GUMBO_LIBDIR) -lgumbo"
-    },
-    install_variables = {
-        LUA_CMOD_DIR = "$(LIBDIR)",
-        LUA_LMOD_DIR = "$(LUADIR)"
-    }
+    type = "command",
+    build_command = "make CFLAGS='$(CFLAGS)' LIBFLAGS='$(LIBFLAG)' LUA_CFLAGS='-I$(LUA_INCDIR)' LUA='$(LUA)' LUA_PC=none USE_LOCAL_LIBGUMBO=1",
+    install_command = "make install LUA_CMOD_DIR='$(LIBDIR)' LUA_LMOD_DIR='$(LUADIR)' LUA_PC=none"
 }

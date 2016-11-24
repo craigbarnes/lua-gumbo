@@ -6,5 +6,5 @@ compiler: [clang, gcc]
 before_script:
     - make -j`nproc` prep
 script:
-    - make print-vars USERVARS='CC LDFLAGS'
+    - make print-vars USERVARS='CC LIBFLAGS'
     - make check-lua-all

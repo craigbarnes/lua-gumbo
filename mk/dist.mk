@@ -1,5 +1,5 @@
 HOMEURL = https://craigbarnes.gitlab.io/lua-gumbo
-GITURL  = https://gitlab.com/craigbarnes/lua-gumbo.git
+GITURL  = git+https://gitlab.com/craigbarnes/lua-gumbo.git
 TAGS    = 0.4 0.3 0.2 0.1
 
 dist: $(addprefix public/dist/lua-gumbo-, $(addsuffix .tar.gz, $(TAGS)))
