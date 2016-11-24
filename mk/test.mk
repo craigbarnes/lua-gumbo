@@ -80,12 +80,12 @@ check-serialize-%: all test/data/%.html test/data/%.out.html
 	@$(TOHTML) test/data/$*.html | $(TOHTML) | diff -u2 test/data/$*.out.html -
 
 check-pkgconfig:
-	$(MAKE) -s clean-obj print-lua-v check
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua53
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua52
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=lua51
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=luajit
-	$(MAKE) -s clean-obj print-lua-v check LUA_PC=luajit LUAFLAGS=-joff
+	$(MAKE) -s clean-obj all print-lua-v check
+	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=lua53
+	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=lua52
+	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=lua51
+	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=luajit
+	$(MAKE) -s clean-obj all print-lua-v check LUA_PC=luajit LUAFLAGS=-joff
 
 check-lua-all: $(CHECK_LUA_ALL) $(CHECK_LJ_ALL)
 	@echo
