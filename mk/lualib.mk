@@ -19,15 +19,19 @@ CC        ?= gcc
 LDFLAGS   ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
 XLDFLAGS  += $(if $(ISLINUX), $(NOASNEEDED))
 NOASNEEDED = -Wl,--no-as-needed
-PKGCONFIG ?= pkg-config --silence-errors 2>/dev/null
+
 MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
 INSTALLX  ?= install -p -m 0755
 RM        ?= rm -f
 LUA       ?= $(or $(LUA_WHICH), $(error No Lua interpreter found))
 
-PC_EXISTS  = $(PKGCONFIG) --exists $(1) && echo $(1)
-FIND_PC    = $(shell for P in $(1); do $(call PC_EXISTS, $$P) && break; done)
+PKGCONFIG ?= pkg-config
+PKGCONFIG_Q = $(PKGCONFIG) --silence-errors 2>/dev/null
+LUA_PCQUERY = $(shell $(PKGCONFIG_Q) $(1) $(_LUA_PC) $(2))
+PC_EXISTS = $(PKGCONFIG_Q) --exists $(1) && echo $(1)
+FIND_PC = $(shell for P in $(1); do $(call PC_EXISTS, $$P) && break; done)
+
 EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 UNAME      = $(shell uname)
 ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
@@ -62,19 +66,17 @@ _LUA_PC = $(or \
     $(error No pkg-config file found with name '$(LUA_PC)') \
 )
 
-# Some distros put the Lua headers in versioned sub-directories
-# and thus require extra CFLAGS
-LUA_CFLAGS   ?= $(shell $(PKGCONFIG) --cflags $(_LUA_PC))
+LUA_CFLAGS ?= $(call LUA_PCQUERY, --cflags)
 
 # Some pkg-config files have convenient variables for module paths
-LUA_PC_LMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_LMOD $(_LUA_PC))
-LUA_PC_CMOD   = $(shell $(PKGCONFIG) --variable=INSTALL_CMOD $(_LUA_PC))
+LUA_PC_LMOD = $(call LUA_PCQUERY, --variable=INSTALL_LMOD)
+LUA_PC_CMOD = $(call LUA_PCQUERY, --variable=INSTALL_CMOD)
 
 # Others force us to piece them together from parts...
-LUA_PREFIX   ?= $(shell $(PKGCONFIG) --variable=prefix $(_LUA_PC))
-LUA_LIBDIR   ?= $(shell $(PKGCONFIG) --variable=libdir $(_LUA_PC))
-LUA_INCDIR   ?= $(shell $(PKGCONFIG) --variable=includedir $(_LUA_PC))
-LUA_VERSION  ?= $(shell $(PKGCONFIG) --modversion $(_LUA_PC) | grep -o '^.\..')
+LUA_PREFIX ?= $(call LUA_PCQUERY, --variable=prefix)
+LUA_LIBDIR ?= $(call LUA_PCQUERY, --variable=libdir)
+LUA_INCDIR ?= $(call LUA_PCQUERY, --variable=includedir)
+LUA_VERSION ?= $(call LUA_PCQUERY, --modversion, | grep -o '^.\..')
 
 LUA_LMOD_DIR ?= $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
                 $(LUA_PREFIX)/share/lua/$(LUA_VERSION)))
