@@ -83,12 +83,12 @@ function Document:serialize(buffer)
     assertDocument(self)
     local buf = buffer or Buffer()
     for i, node in ipairs(self.childNodes) do
-        local type = node.type
-        if type == "element" then
+        local nodetype = node.type
+        if nodetype == "element" then
             buf:write(node.outerHTML)
-        elseif type == "comment" then
+        elseif nodetype == "comment" then
             buf:write("<!--", node.data, "-->\n")
-        elseif type == "doctype" then
+        elseif nodetype == "doctype" then
             buf:write("<!DOCTYPE ", node.name, ">\n")
         end
     end

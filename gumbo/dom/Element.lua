@@ -223,8 +223,8 @@ function Element.getters:classList()
 end
 
 local function serialize(node, buf)
-    local type = node.type
-    if type == "element" then
+    local nodetype = node.type
+    if nodetype == "element" then
         local tag = node.localName
         buf:write("<", tag)
         for i, attr in ipairs(node.attributes) do
@@ -244,15 +244,15 @@ local function serialize(node, buf)
             end
             buf:write("</", tag, ">")
         end
-    elseif type == "text" then
+    elseif nodetype == "text" then
         if rcdataElements[node.parentNode.localName] then
             buf:write(node.data)
         else
             buf:write(node.escapedData)
         end
-    elseif type == "whitespace" then
+    elseif nodetype == "whitespace" then
         buf:write(node.data)
-    elseif type == "comment" then
+    elseif nodetype == "comment" then
         buf:write("<!--", node.data, "-->")
     end
 end
