@@ -21,6 +21,7 @@ else
  GUMBO_LDFLAGS ?= $(PKGCHECK) $(shell $(PKGCONFIG) --libs gumbo)
 endif
 
+build/gumbo-parser-%/.libs/libgumbo.a: private MAKEOVERRIDES =
 build/gumbo-parser-%/.libs/libgumbo.a: | build/gumbo-parser-%/
 	cd $| && ./autogen.sh && ./configure
 	$(MAKE) -C $| CFLAGS='-O2 -fPIC'
