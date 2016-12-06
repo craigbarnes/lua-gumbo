@@ -77,14 +77,13 @@ LUA_PREFIX ?= $(call PKGCONFIG_LUA, --variable=prefix)
 LUA_LIBDIR ?= $(call PKGCONFIG_LUA, --variable=libdir)
 LUA_INCDIR ?= $(call PKGCONFIG_LUA, --variable=includedir)
 LUA_VERSION ?= $(call PKGCONFIG_LUA, --modversion, | grep -o '^.\..')
+LUA_GUESS_LMOD ?= $(LUA_PREFIX)/share/lua/$(LUA_VERSION)
+LUA_GUESS_CMOD ?= $(LUA_LIBDIR)/lua/$(LUA_VERSION)
 
-LUA_LMOD_DIR ?= $(strip $(if $(LUA_PC_LMOD), $(LUA_PC_LMOD), \
-                $(LUA_PREFIX)/share/lua/$(LUA_VERSION)))
+LUA_LMOD_DIR ?= $(strip $(or $(LUA_PC_LMOD), $(LUA_GUESS_LMOD)))
+LUA_CMOD_DIR ?= $(strip $(or $(LUA_PC_CMOD), $(LUA_GUESS_CMOD)))
 
-LUA_CMOD_DIR ?= $(strip $(if $(LUA_PC_CMOD), $(LUA_PC_CMOD), \
-                $(LUA_LIBDIR)/lua/$(LUA_VERSION)))
-
-LUA_HEADERS  ?= $(addprefix $(LUA_INCDIR)/, lua.h lauxlib.h)
+LUA_HEADERS ?= $(addprefix $(LUA_INCDIR)/, lua.h lauxlib.h)
 
 
 %.so: %.o
