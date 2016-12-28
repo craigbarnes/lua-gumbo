@@ -1,5 +1,7 @@
--- Pandoc uses the obsolete "align" attribute on th and td elements.
--- This example replaces all such occurrences with the CSS text-align property.
+-- Replaces all "align" attributes with the CSS "text-align" property.
+-- This can be used to filter Pandoc HTML output, which uses the
+-- (deprecated) "align" attribute on th and td elements.
+
 local gumbo = require "gumbo"
 local document = assert(gumbo.parseFile(arg[1] or io.stdin))
 

@@ -159,6 +159,7 @@ pre code {
 code > span.kw {font-weight: bold}
 code > span.st {color: goldenrod}
 code > span.co {color: gray}
+code > span.do {color: gray}
 code > span.dv {color: blue}
 code > span.bn {color: blue}
 code > span.fl {color: purple}
