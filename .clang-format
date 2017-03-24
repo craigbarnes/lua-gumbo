@@ -18,6 +18,7 @@ IndentCaseLabels: false
 MaxEmptyLinesToKeep: 1
 PenaltyReturnTypeOnItsOwnLine: 0
 PointerAlignment: Left
+SortIncludes: false
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: ControlStatements

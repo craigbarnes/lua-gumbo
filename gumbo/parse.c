@@ -45,15 +45,8 @@ typedef enum {
     nupvalues = AttributeList
 } Upvalue;
 
-// clang-format off
-
-#define add_field(T, L, k, v) ( \
-    lua_pushliteral(L, k), \
-    lua_push##T(L, v), \
-    lua_rawset(L, -3) \
-)
-
-// clang-format on
+#define add_field(T, L, k, v) \
+    (lua_pushliteral(L, k), lua_push##T(L, v), lua_rawset(L, -3))
 
 #define add_literal(L, k, v) add_field(literal, L, k, v)
 #define add_string(L, k, v) add_field(string, L, k, v)
