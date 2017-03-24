@@ -102,7 +102,6 @@ do -- Check that passing invalid arguments throws an error
     assert(pcall(parseFile, file, 8, "table", nil))
     assert(pcall(parseFile, file, 8, nil, nil))
     assert(not pcall(parseFile, file, true))
-    assert(not pcall(parseFile, file, {}))
     assert(not pcall(parseFile, file, 8, "div", "badns"))
     assert(not pcall(parseFile, file, nil, "div", "badns"))
     assert(not pcall(parseFile, file, "div", "badns"))
@@ -118,3 +117,17 @@ assert(not parseFile"_", "Passing a non-existant filename should return nil")
 
 -- Check that parse_file alias is present (for API backwards compatibility)
 assert(gumbo.parse_file == gumbo.parseFile)
+
+-- Check that new options API works
+do
+    local document = assert(gumbo.parse("\t\t\t<h1>xyz</h1>", {tabStop = 4}))
+    local h1 = assert(document:getElementsByTagName("h1")[1])
+    assert(h1.type == "element")
+    assert(h1.localName == "h1")
+    assert(h1.outerHTML == "<h1>xyz</h1>")
+    assert(h1.column == 12)
+    local text = assert(h1.childNodes[1])
+    assert(text.type == "text")
+    assert(text.data == "xyz")
+    assert(text.column == 16)
+end

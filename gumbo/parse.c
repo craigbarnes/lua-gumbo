@@ -47,18 +47,6 @@ typedef enum {
 
 // clang-format off
 
-static const char *const modules[] = {
-    [Text] = "gumbo.dom.Text",
-    [Comment] = "gumbo.dom.Comment",
-    [Element] = "gumbo.dom.Element",
-    [Attribute] = "gumbo.dom.Attribute",
-    [Document] = "gumbo.dom.Document",
-    [DocumentType] = "gumbo.dom.DocumentType",
-    [DocumentFragment] = "gumbo.dom.DocumentFragment",
-    [NodeList] = "gumbo.dom.NodeList",
-    [AttributeList] = "gumbo.dom.AttributeList"
-};
-
 #define add_field(T, L, k, v) ( \
     lua_pushliteral(L, k), \
     lua_push##T(L, v), \
@@ -261,7 +249,7 @@ static int parse(lua_State *L) {
     options.fragment_namespace = luaL_checkoption(L, 4, "html", namespaces);
     options.allocator = xmalloc;
     for (unsigned int i = 1; i <= nupvalues; i++) {
-        lua_pushvalue(L, lua_upvalueindex(i));
+        luaL_checktype(L, i + 4, LUA_TTABLE);
     }
     lua_pushcclosure(L, push_document, nupvalues);
     GumboOutput *output = gumbo_parse_with_options(&options, input, input_len);
@@ -284,15 +272,6 @@ static int parse(lua_State *L) {
 }
 
 int luaopen_gumbo_parse(lua_State *L) {
-    for (unsigned int i = 1; i <= nupvalues; i++) {
-        const char *modname = modules[i];
-        lua_getglobal(L, "require");
-        lua_pushstring(L, modname);
-        lua_call(L, 1, 1);
-        if (!lua_istable(L, -1)) {
-            luaL_error(L, "require('%s') returned invalid module", modname);
-        }
-    }
-    lua_pushcclosure(L, parse, nupvalues);
+    lua_pushcfunction(L, parse);
     return 1;
 }
