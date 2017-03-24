@@ -1,6 +1,8 @@
 [attr]code text whitespace=tab-in-indent,trailing-space,tabwidth=4
 [attr]makefile text whitespace=trailing-space
 
+.distinfo export-subst
+
 .git* export-ignore
 .clang-format export-ignore
 .editorconfig export-ignore
