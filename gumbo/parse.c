@@ -44,13 +44,13 @@ typedef enum {
     nupvalues = AttributeList
 } Upvalue;
 
-#define add_field(T, L, k, v) \
+#define set_field(T, L, k, v) \
     (lua_pushliteral(L, k), lua_push##T(L, v), lua_rawset(L, -3))
 
-#define add_literal(L, k, v) add_field(literal, L, k, v)
-#define add_string(L, k, v) add_field(string, L, k, v)
-#define add_integer(L, k, v) add_field(integer, L, k, v)
-#define add_value(L, k, v) add_field(value, L, k, (v) < 0 ? (v)-1 : (v))
+#define set_literal(L, k, v) set_field(literal, L, k, v)
+#define set_string(L, k, v) set_field(string, L, k, v)
+#define set_integer(L, k, v) set_field(integer, L, k, v)
+#define set_value(L, k, v) set_field(value, L, k, (v) < 0 ? (v)-1 : (v))
 
 static void *xmalloc(void *userdata, size_t size) {
     (void)userdata;
@@ -66,15 +66,15 @@ static inline void setmetatable(lua_State *L, Upvalue index) {
     lua_setmetatable(L, -2);
 }
 
-static inline void add_position(lua_State *L, const GumboSourcePosition pos) {
+static inline void set_position(lua_State *L, const GumboSourcePosition pos) {
     if (pos.line != 0) {
-        add_integer(L, "line", pos.line);
-        add_integer(L, "column", pos.column);
-        add_integer(L, "offset", pos.offset);
+        set_integer(L, "line", pos.line);
+        set_integer(L, "column", pos.column);
+        set_integer(L, "offset", pos.offset);
     }
 }
 
-static void add_attributes(lua_State *L, const GumboVector *attrs) {
+static void set_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length > 0) {
         lua_createtable(L, length, length);
@@ -84,11 +84,11 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
                 lua_createtable(L, 0, 5);
             } else {
                 lua_createtable(L, 0, 6);
-                add_string(L, "prefix", attrnsmap[attr->attr_namespace]);
+                set_string(L, "prefix", attrnsmap[attr->attr_namespace]);
             }
-            add_string(L, "name", attr->name);
-            add_string(L, "value", attr->value);
-            add_position(L, attr->name_start);
+            set_string(L, "name", attr->name);
+            set_string(L, "value", attr->value);
+            set_position(L, attr->name_start);
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
             setmetatable(L, Attribute);
@@ -99,18 +99,18 @@ static void add_attributes(lua_State *L, const GumboVector *attrs) {
     }
 }
 
-static void add_tag(lua_State *L, const GumboElement *element) {
+static void set_tag(lua_State *L, const GumboElement *element) {
     if (element->tag_namespace == GUMBO_NAMESPACE_SVG) {
-        add_literal(L, "namespace", "svg");
+        set_literal(L, "namespace", "svg");
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
         const char *normalized = gumbo_normalize_svg_tagname(&original_tag);
         if (normalized) {
-            add_string(L, "localName", normalized);
+            set_string(L, "localName", normalized);
             return;
         }
     } else if (element->tag_namespace == GUMBO_NAMESPACE_MATHML) {
-        add_literal(L, "namespace", "math");
+        set_literal(L, "namespace", "math");
     }
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
@@ -130,16 +130,16 @@ static void add_tag(lua_State *L, const GumboElement *element) {
 
 static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
     lua_createtable(L, 0, 5);
-    add_string(L, "data", t->text);
-    add_position(L, t->start_pos);
+    set_string(L, "data", t->text);
+    set_position(L, t->start_pos);
     setmetatable(L, i);
 }
 
-// Forward declaration, to allow mutual recursion with add_children()
+// Forward declaration, to allow mutual recursion with set_children()
 static void push_node(lua_State *L, const GumboNode *node, uint depth);
 
 static void
-add_children(lua_State *L, const GumboVector *vec, uint start, uint depth) {
+set_children(lua_State *L, const GumboVector *vec, uint start, uint depth) {
     const unsigned int length = vec->length;
     if (depth >= 800) {
         luaL_error(L, "Tree depth limit of 800 exceeded");
@@ -148,7 +148,7 @@ add_children(lua_State *L, const GumboVector *vec, uint start, uint depth) {
     setmetatable(L, NodeList);
     for (unsigned int i = 0; i < length; i++) {
         push_node(L, (const GumboNode *)vec->data[i], depth + 1);
-        add_value(L, "parentNode", -3); // child.parentNode = parent
+        set_value(L, "parentNode", -3); // child.parentNode = parent
         lua_rawseti(L, -2, i + start); // parent.childNodes[i+start] = child
     }
     lua_setfield(L, -2, "childNodes");
@@ -160,28 +160,28 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
     case GUMBO_NODE_ELEMENT: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, 0, 7);
-        add_tag(L, element);
-        add_position(L, element->start_pos);
+        set_tag(L, element);
+        set_position(L, element->start_pos);
         if (node->parse_flags != GUMBO_INSERTION_NORMAL) {
-            add_integer(L, "parseFlags", node->parse_flags);
+            set_integer(L, "parseFlags", node->parse_flags);
         }
-        add_attributes(L, &element->attributes);
-        add_children(L, &element->children, 1, depth);
+        set_attributes(L, &element->attributes);
+        set_children(L, &element->children, 1, depth);
         setmetatable(L, Element);
         return;
     }
     case GUMBO_NODE_TEMPLATE: {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, 0, 8);
-        add_literal(L, "type", "template");
-        add_literal(L, "localName", "template");
-        add_position(L, element->start_pos);
-        add_attributes(L, &element->attributes);
+        set_literal(L, "type", "template");
+        set_literal(L, "localName", "template");
+        set_position(L, element->start_pos);
+        set_attributes(L, &element->attributes);
         lua_createtable(L, 0, 0);
         setmetatable(L, NodeList);
         lua_setfield(L, -2, "childNodes");
         lua_createtable(L, 0, 1);
-        add_children(L, &element->children, 1, depth);
+        set_children(L, &element->children, 1, depth);
         setmetatable(L, DocumentFragment);
         lua_setfield(L, -2, "content");
         setmetatable(L, Element);
@@ -192,14 +192,14 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
         return;
     case GUMBO_NODE_WHITESPACE:
         create_text_node(L, &node->v.text, Text);
-        add_literal(L, "type", "whitespace");
+        set_literal(L, "type", "whitespace");
         return;
     case GUMBO_NODE_COMMENT:
         create_text_node(L, &node->v.text, Comment);
         return;
     case GUMBO_NODE_CDATA:
         create_text_node(L, &node->v.text, Text);
-        add_literal(L, "type", "cdata");
+        set_literal(L, "type", "cdata");
         return;
     default:
         luaL_error(L, "GumboNodeType value out of bounds: %d", node->type);
@@ -211,18 +211,18 @@ static int push_document(lua_State *L) {
     const GumboDocument *document = lua_touserdata(L, 1);
     lua_createtable(L, 0, 4);
     if (document->has_doctype) {
-        add_integer(L, "quirksModeEnum", document->doc_type_quirks_mode);
-        add_children(L, &document->children, 2, 0);
+        set_integer(L, "quirksModeEnum", document->doc_type_quirks_mode);
+        set_children(L, &document->children, 2, 0);
         lua_getfield(L, -1, "childNodes");
         lua_createtable(L, 0, 3); // doctype
-        add_string(L, "name", document->name);
-        add_string(L, "publicId", document->public_identifier);
-        add_string(L, "systemId", document->system_identifier);
+        set_string(L, "name", document->name);
+        set_string(L, "publicId", document->public_identifier);
+        set_string(L, "systemId", document->system_identifier);
         setmetatable(L, DocumentType);
         lua_rawseti(L, -2, 1); // childNodes[1] = doctype
         lua_pop(L, 1);
     } else {
-        add_children(L, &document->children, 1, 0);
+        set_children(L, &document->children, 1, 0);
     }
     setmetatable(L, Document);
     return 1;
