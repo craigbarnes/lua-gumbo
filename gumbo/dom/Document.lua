@@ -20,7 +20,6 @@ local Document = util.merge(Node, ParentNode, {
     type = "document",
     nodeName = "#document",
     nodeType = 9,
-    quirksMode = "quirks",
     contentType = "text/html",
     characterSet = "UTF-8",
     URL = "about:blank",
@@ -212,6 +211,15 @@ end
 
 function Document.getters:documentURI()
     return self.URL
+end
+
+function Document.getters:quirksMode()
+    local modes = {
+        [0] = "no-quirks",
+        [1] = "quirks",
+        [2] = "limited-quirks"
+    }
+    return modes[self.quirksModeEnum] or "quirks"
 end
 
 function Document.getters:compatMode()

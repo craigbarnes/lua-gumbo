@@ -29,7 +29,6 @@
 typedef unsigned int uint;
 
 static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
-static const char quirksmap[][15] = {"no-quirks", "quirks", "limited-quirks"};
 static const char *namespaces[] = {"html", "svg", "math", NULL};
 
 typedef enum {
@@ -212,8 +211,7 @@ static int push_document(lua_State *L) {
     const GumboDocument *document = lua_touserdata(L, 1);
     lua_createtable(L, 0, 4);
     if (document->has_doctype) {
-        const char *quirksmode = quirksmap[document->doc_type_quirks_mode];
-        add_string(L, "quirksMode", quirksmode);
+        add_integer(L, "quirksModeEnum", document->doc_type_quirks_mode);
         add_children(L, &document->children, 2, 0);
         lua_getfield(L, -1, "childNodes");
         lua_createtable(L, 0, 3); // doctype
