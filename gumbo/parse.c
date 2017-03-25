@@ -66,7 +66,7 @@ static inline void setmetatable(lua_State *L, Upvalue index) {
     lua_setmetatable(L, -2);
 }
 
-static inline void set_position(lua_State *L, const GumboSourcePosition pos) {
+static inline void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
     if (pos.line != 0) {
         set_integer(L, "line", pos.line);
         set_integer(L, "column", pos.column);
@@ -88,7 +88,7 @@ static void set_attributes(lua_State *L, const GumboVector *attrs) {
             }
             set_string(L, "name", attr->name);
             set_string(L, "value", attr->value);
-            set_position(L, attr->name_start);
+            set_sourcepos(L, attr->name_start);
             lua_pushvalue(L, -1);
             lua_setfield(L, -3, attr->name);
             setmetatable(L, Attribute);
@@ -131,7 +131,7 @@ static void set_tag(lua_State *L, const GumboElement *element) {
 static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
     lua_createtable(L, 0, 5);
     set_string(L, "data", t->text);
-    set_position(L, t->start_pos);
+    set_sourcepos(L, t->start_pos);
     setmetatable(L, i);
 }
 
@@ -161,7 +161,7 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
         const GumboElement *element = &node->v.element;
         lua_createtable(L, 0, 7);
         set_tag(L, element);
-        set_position(L, element->start_pos);
+        set_sourcepos(L, element->start_pos);
         if (node->parse_flags != GUMBO_INSERTION_NORMAL) {
             set_integer(L, "parseFlags", node->parse_flags);
         }
@@ -175,7 +175,7 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
         lua_createtable(L, 0, 8);
         set_literal(L, "type", "template");
         set_literal(L, "localName", "template");
-        set_position(L, element->start_pos);
+        set_sourcepos(L, element->start_pos);
         set_attributes(L, &element->attributes);
         lua_createtable(L, 0, 0);
         setmetatable(L, NodeList);
