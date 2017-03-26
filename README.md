@@ -72,7 +72,7 @@ function, which both return a [`Document`] node containing a tree of
 the [DOM] Level 4 Core specification.
 
 For full API documentation, see:
-<https://craigbarnes.gitlab.io/lua-gumbo/#parser-api>.
+<https://craigbarnes.gitlab.io/lua-gumbo/>.
 
 ### Example
 
