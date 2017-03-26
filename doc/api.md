@@ -67,8 +67,6 @@ types.
 
 ### `Element`
 
-*TODO:* brief description of the `Element` type.
-
 **Implements:**
 
 * [`Node`]
@@ -145,8 +143,6 @@ types.
 
 ### `Text`
 
-*TODO:* brief description of the `Text` type.
-
 **Implements:**
 
 * [`Node`]
@@ -164,8 +160,6 @@ types.
 :   TODO
 
 ### `Comment`
-
-*TODO:* brief description of the `Comment` type.
 
 **Implements:**
 
@@ -257,8 +251,6 @@ or [`Comment`] nodes.
 
 ### `DocumentType`
 
-*TODO:* brief description of the `DocumentType` type.
-
 **Implements:**
 
 * [`Node`]
@@ -276,8 +268,6 @@ or [`Comment`] nodes.
 :   TODO
 
 ### `DocumentFragment`
-
-*TODO:* brief description of the `DocumentFragment` type.
 
 **Implements:**
 
@@ -377,11 +367,20 @@ The `Node` interface is implemented by *all* DOM [nodes].
 :   Adds the [`Node`] passed as the `node` parameter to the end of the
     `childNodes` list.
 
-`insertBefore(node, child)`
-:   TODO
+`insertBefore(newNode, referenceNode)`
+:   Inserts `newNode` immediately before `referenceNode` as a child of
+    the current node.
 
-`removeChild(child)`
-:   TODO
+    If `referenceNode` is `nil`, `newNode` is inserted at the end of
+    the list of child nodes.
+
+    The returned value is the inserted node.
+
+`removeChild(childNode)`
+:   Removes `childNode` from the DOM tree and returns the removed node.
+
+    If the given `childNode` is not a child of the caller, the method
+    throws an error.
 
 `walk()`
 :   TODO
