@@ -114,26 +114,34 @@ types.
 
 **Methods:**
 
-`getElementsByTagName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/getElementsByTagName))
+`getElementsByTagName(tagName)`
+:   Returns an [`ElementList`] containing every child [`Element`] node
+    whose `locaName` is equal to the given `tagName` argument.
 
-`getElementsByClassName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/getElementsByClassName))
+`getElementsByClassName(classNames)`
+:   Returns an [`ElementList`] containing every child [`Element`] node
+    that has *all* of the given class names. Multiple class names can be
+    specified by passing a string with several names separated by whitespace.
 
 `hasAttributes()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttributes))
+:   Returns `true` if the element has 1 or more attributes or `false` if
+    it has none.
 
-`hasAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttribute))
+`hasAttribute(name)`
+:   Returns `true` if the element has an attribute whose name matches the
+    given `name` argument.
 
-`getAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/getAttribute))
+`getAttribute(name)`
+:   Returns the value of the attribute whose name matches the `name`
+    argument or `nil` if no such attribute exists.
 
-`setAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/setAttribute))
+`setAttribute(name, value)`
+:   Sets the attribute specified with `name` to the given `value`. This
+    method can be used either to create a new attribute or change an
+    existing one.
 
-`removeAttribute()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/removeAttribute))
+`removeAttribute(name)`
+:   Remove the attribute with the specified `name` from the element.
 
 ### `Text`
 
@@ -224,23 +232,28 @@ or [`Comment`] nodes.
 :   Returns the first [`Element`] node in the tree whose `id` property
     is equal to the `elementId` *string*.
 
-`getElementsByTagName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/getElementsByTagName))
+`getElementsByTagName(tagName)`
+:   Returns an [`ElementList`] containing every child [`Element`] node
+    whose `locaName` is equal to the given `tagName` argument.
 
-`getElementsByClassName()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementsByClassName))
+`getElementsByClassName(classNames)`
+:   Returns an [`ElementList`] containing every child [`Element`] node
+    that has *all* of the given class names. Multiple class names can be
+    specified by passing a string with several names separated by whitespace.
 
-`createElement()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/createElement))
+`createElement(tagName)`
+:   Creates and returns a new [`Element`] node with the given tag name.
 
-`createTextNode()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/createTextNode))
+`createTextNode(data)`
+:   Creates and returns a new [`Text`] node with the given text contents.
 
-`createComment()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/createComment))
+`createComment(data)`
+:   Creates and returns a new [`Comment`] node with the given text contents.
 
-`adoptNode()`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/document/adoptNode))
+`adoptNode(externalNode)`
+:   Removes a node and its subtree from another [`Document`][] (if any) and
+    change its `ownerDocument` to the current document. The node can then be
+    inserted into the current document tree.
 
 ### `DocumentType`
 
