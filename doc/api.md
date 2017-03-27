@@ -246,8 +246,8 @@ or [`Comment`] nodes.
 
 `adoptNode(externalNode)`
 :   Removes a node and its subtree from another [`Document`][] (if any) and
-    change its `ownerDocument` to the current document. The node can then be
-    inserted into the current document tree.
+    changes its `ownerDocument` to the current document. The node can then
+    be inserted into the current document tree.
 
 ### `DocumentType`
 
@@ -360,7 +360,7 @@ The `Node` interface is implemented by *all* DOM [nodes].
 :   Returns `true` if the node has any child nodes and `false` otherwise.
 
 `contains(other)`
-:   Returns `true` if `other` is an inclusive [descendant] [`Node`] and
+:   Returns `true` if `other` is an inclusive [descendant][] [`Node`] and
     `false` otherwise.
 
 `appendChild(node)`
