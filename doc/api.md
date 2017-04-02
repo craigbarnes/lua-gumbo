@@ -6,19 +6,13 @@ The `gumbo` module provides 2 functions:
 ### parse
 
 ```lua
-local document = gumbo.parse(html, tabStop, ctx, ctxns)
+local document = gumbo.parse(html, options)
 ```
 
 **Parameters:**
 
 1. `html`: A *string* of UTF-8 encoded HTML.
-2. `tabStop`: The *number* of columns to count for tab characters
-   when computing source positions (*optional*; defaults to `8`).
-3. `ctx`: A *string* containing the name of an element to use as context
-   for [HTML fragment parsing][] (*optional*). This is for *fragment*
-   parsing only -- leave as `nil` to parse HTML *documents*.
-4. `ctxns`: The namespace to use for the `ctx` parameter; either `"html"`,
-   `"svg"` or `"math"` (*optional*; defaults to `"html"`).
+2. `options`: A *table* of [parsing options](#parsing-options).
 
 **Returns:**
 
@@ -28,20 +22,32 @@ failure.
 ### parseFile
 
 ```lua
-local document = gumbo.parseFile(pathOrFile, tabStop, ctx, ctxns)
+local document = gumbo.parseFile(pathOrFile, options)
 ```
 
 **Parameters:**
 
 1. `pathOrFile`: Either a [file handle] or filename *string* that refers
    to a file containing UTF-8 encoded HTML.
-2. `tabStop`: As [above](#parse).
-3. `ctx`: As [above](#parse).
-4. `ctxns`: As [above](#parse).
+2. `options`: A *table* of [parsing options](#parsing-options).
 
 **Returns:**
 
 As [above](#parse).
+
+### Parsing Options
+
+A table of options can be passed as the second argument to both parse
+functions. The field names and their specified effects are as follows:
+
+* `tabStop`: The *number* of columns to count for tab characters
+  when computing source positions (defaults to `8`).
+* `contextElement`: A *string* containing the name of an element to use
+  as context for [HTML fragment parsing][]. This is for *fragment*
+  parsing only -- leave as `nil` to parse HTML *documents*.
+* `contextNamespace`: The namespace to use for the `contextElement`
+  parameter; either `"html"`, `"svg"` or `"math"` (defaults
+  to `"html"`).
 
 DOM API
 =======
