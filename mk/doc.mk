@@ -7,8 +7,9 @@ DOC_FILES = README.md doc/api.md build/examples.md
 docs: public/index.html public/api.html
 
 public/index.html: $(DOC_FILES) doc/template.html doc/style.css.inc | public/
-	$(PANDOC) --smart --toc --include-in-header=doc/style.css.inc \
-	  --template=doc/template.html --output=$@ $(DOC_FILES)
+	sed '/^For full API documentation/d' $(DOC_FILES) | \
+	  $(PANDOC) --smart --toc --include-in-header=doc/style.css.inc \
+	  --template=doc/template.html --output=$@
 
 public/api.html: doc/redir.html | public/
 	cp $< $@

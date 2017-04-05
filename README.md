@@ -71,8 +71,7 @@ function, which both return a [`Document`] node containing a tree of
 [descendant] nodes. The structure and API of this tree mostly follows
 the [DOM] Level 4 Core specification.
 
-For full API documentation, see:
-<https://craigbarnes.gitlab.io/lua-gumbo/>.
+For full API documentation, see: <https://craigbarnes.gitlab.io/lua-gumbo/>.
 
 ### Example
 
