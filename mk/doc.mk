@@ -9,7 +9,7 @@ PANDOCFLAGS = \
     --template=doc/template.html \
     --include-in-header=doc/style.css.inc
 
-docs: $(DOCS) public/api.html
+docs: $(DOCS) public/api.html $(patsubst %, %.gz, $(DOCS))
 
 public/index.html: README.md doc/api.md build/examples.md
 public/dist/index.html: doc/releases.md | public/dist/
@@ -19,6 +19,9 @@ $(DOCS): public/%.html: doc/template.html doc/style.css.inc | public/
 
 public/api.html: doc/redir.html | public/
 	cp $< $@
+
+public/%.gz: public/%
+	gzip -9 < $< > $@
 
 doc/style.css.inc: doc/layout.css doc/style.css
 	echo '<style>' > $@
