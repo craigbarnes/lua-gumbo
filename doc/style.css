@@ -3,26 +3,8 @@ html, body {
 }
 
 body {
-    margin: 0;
-}
-
-header {
-    background: rgba(0, 0, 0, 0.75);
-    color: white;
-    font-size: large;
-}
-
-main {
-    color: #333;
-}
-
-.container {
-    margin: 0 auto;
-    padding: 20px;
-}
-
-header .container {
-    padding: 15px 20px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAQAAAD8IX00AAAAE0lEQVR4AWNgYNgsvRlCgCgwBAA6YQXPi9F1OAAAAABJRU5ErkJggg==');
+    margin: 1em;
 }
 
 a {
@@ -165,37 +147,3 @@ code > span.bn {color: blue}
 code > span.fl {color: purple}
 code > span.al {color: green; font-weight: bold}
 code > span.er {color: red; font-weight: bold}
-
-#toc {
-    margin-bottom: 1.5em;
-    padding-bottom: 1.8em;
-    border-bottom: 2px dashed #ccc;
-}
-
-#toc ul {
-    margin: 0 0 0 1.2em;
-    padding: 0.1em;
-}
-
-@media only screen and (min-width: 920px) and (min-device-width: 700px) {
-    .container {
-        max-width: 1080px;
-    }
-
-    #toc {
-        float: left;
-        margin-right: 40px;
-        width: 220px;
-        border-bottom: none;
-        font-size: 0.9em;
-    }
-
-    main {
-        float: left;
-        width: calc(100% - 280px);
-    }
-
-    h1 {
-        margin-top: 0;
-    }
-}

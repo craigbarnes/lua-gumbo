@@ -20,9 +20,9 @@ $(DOCS): public/%.html: doc/template.html doc/style.css.inc | public/
 public/api.html: doc/redir.html | public/
 	cp $< $@
 
-doc/style.css.inc: doc/style.css
+doc/style.css.inc: doc/layout.css doc/style.css
 	echo '<style>' > $@
-	cat $< >> $@
+	cat $^ >> $@
 	echo '</style>' >> $@
 
 build/examples.md: $(EXAMPLE_FILES) | build/
