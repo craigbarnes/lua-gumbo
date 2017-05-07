@@ -31,6 +31,7 @@ local tests = {
     "test/tostring.lua",
     "test/tree-construction.lua",
     "test/sanitize.lua",
+    "test/selector.lua",
 }
 
 local function getline(filename, linenumber)
