@@ -2,14 +2,20 @@ CHECKURL = curl -sSI -w "%{http_code}  $$URL  %{redirect_url}\n" -o /dev/null
 PANDOC = pandoc
 EXAMPLE_NAMES = find_links get_title remove_by_id table_align_fix text_content
 EXAMPLE_FILES = $(addprefix examples/, $(addsuffix .lua, $(EXAMPLE_NAMES)))
-DOC_FILES = README.md doc/api.md build/examples.md
+DOCS = public/index.html public/dist/index.html
 
-docs: public/index.html public/api.html
+PANDOCFLAGS = \
+    --smart --toc \
+    --template=doc/template.html \
+    --include-in-header=doc/style.css.inc
 
-public/index.html: $(DOC_FILES) doc/template.html doc/style.css.inc | public/
-	sed '/^For full API documentation/d' $(DOC_FILES) | \
-	  $(PANDOC) --smart --toc --include-in-header=doc/style.css.inc \
-	  --template=doc/template.html --output=$@
+docs: $(DOCS) public/api.html
+
+public/index.html: README.md doc/api.md build/examples.md
+public/dist/index.html: doc/releases.md | public/dist/
+
+$(DOCS): public/%.html: doc/template.html doc/style.css.inc | public/
+	$(PANDOC) $(PANDOCFLAGS) -o '$@' $(filter %.md, $^)
 
 public/api.html: doc/redir.html | public/
 	cp $< $@
@@ -30,9 +36,11 @@ build/examples.md: $(EXAMPLE_FILES) | build/
 public/:
 	$(MKDIR) $@
 
-check-docs: public/index.html all
-	@$(LUA) examples/find_links.lua $< | grep '^https\?:' | \
-	  while read URL; do $(CHECKURL) "$$URL" || exit 1; done
+check-docs: $(DOCS) | all
+	@for file in $^; do \
+	  $(LUA) examples/find_links.lua $$file | grep '^https\?:' | \
+	    while read URL; do $(CHECKURL) "$$URL" || exit 1; done \
+	done
 
 clean-docs:
 	$(RM) doc/style.css.inc
