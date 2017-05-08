@@ -1,4 +1,5 @@
 build/
+config.mk
 local.mk
 *.so
 *.o

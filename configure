@@ -1,0 +1,58 @@
+#!/bin/sh
+
+pkgfind() {
+    for P in $*; do
+        if pkg-config --exists "$P"; then
+            echo "$P"
+            return 0
+        fi
+    done
+    return 1
+}
+
+pkgmatch() {
+    test "$3" || return 1
+    if pkg-config --exists "$1 $2; $1 $3"; then
+        echo "$1"
+        return 0
+    fi
+    return 1
+}
+
+# TODO: Add fallback for when INSTALL_*MOD vars aren't available
+getluavars() {
+    test "$3" || return 1
+    cat << EOF
+LUA$1_PC       = $3
+LUA$1_CFLAGS  ?= $(pkg-config --cflags $3)
+LUA$1_PREFIX  ?= $(pkg-config --variable=prefix $3)
+LUA$1_LIBDIR  ?= $(pkg-config --variable=libdir $3)
+LUA$1_INCDIR  ?= $(pkg-config --variable=includedir $3)
+LUA$1_LMODDIR ?= $(pkg-config --variable=INSTALL_LMOD $3)
+LUA$1_CMODDIR ?= $(pkg-config --variable=INSTALL_CMOD $3)
+LUA$1         ?= $(which lua$2 lua-$2 lua$1 2>/dev/null | head -n1)
+LUAS_FOUND    += lua$1
+EOF
+}
+
+which pkg-config >/dev/null 2>&1 || {
+    echo 'Error: required command "pkg-config" not found' >&2
+    exit 1
+}
+
+LUA53_PC=$(pkgfind lua53 lua5.3 lua-5.3 || pkgmatch lua '>= 5.3' '< 5.4')
+LUA52_PC=$(pkgfind lua52 lua5.2 lua-5.2 || pkgmatch lua '>= 5.2' '< 5.3')
+LUA51_PC=$(pkgfind lua51 lua5.1 lua-5.1 || pkgmatch lua '>= 5.1' '< 5.2' || \
+           pkgmatch luajit '>= 2.0.0' '< 2.2.0')
+
+LUA53_VARS=$(getluavars 53 5.3 "$LUA53_PC")
+LUA52_VARS=$(getluavars 52 5.2 "$LUA52_PC")
+LUA51_VARS=$(getluavars 51 5.1 "$LUA51_PC")
+
+cat > config.mk << EOF
+$LUA53_VARS
+
+$LUA52_VARS
+
+$LUA51_VARS
+EOF

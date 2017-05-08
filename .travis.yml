@@ -1,10 +1,18 @@
 language: c
-sudo: false
+sudo: required
 branches: {only: master}
 os: [linux, osx]
 compiler: [clang, gcc]
+install:
+    - |
+      if test "$TRAVIS_OS_NAME" = osx; then
+          brew update;
+          brew install lua52 lua51;
+      else
+          sudo apt-get update -qq;
+          sudo apt-get -y install lua5.2 lua5.1 liblua5.2-dev liblua5.1-dev;
+      fi
 before_script:
-    - make -j`nproc` prep
+    - make -j`nproc` local-libgumbo
 script:
-    - make print-vars USERVARS='CC LIBFLAGS'
-    - make check-lua-all
+    - make -j`nproc` check-lua52 check-lua51 USE_LOCAL_LIBGUMBO=1

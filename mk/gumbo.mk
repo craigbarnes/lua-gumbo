@@ -1,3 +1,6 @@
+PKGCONFIG = pkg-config
+GET = curl -s -L -o $@
+GUNZIP = cd '$(dir $|)' && gzip -d < '$(notdir $|)' | tar -xf -
 GUMBO_PKG = gumbo >= 0.10.0
 GUMBO_TARDIR ?= build/gumbo-parser-0.10.1
 
@@ -11,15 +14,17 @@ PKGCHECK = $(if \
 ifdef AMALG
  CFLAGS ?= -g -O2 -Wall
  GUMBO_CFLAGS ?= -I$(GUMBO_TARDIR)/src -DAMALG
- gumbo/parse.o: gumbo/amalg.h | $(GUMBO_TARDIR)/
+ $(OBJ_ALL): gumbo/amalg.h | $(GUMBO_TARDIR)/
 else ifdef USE_LOCAL_LIBGUMBO
  GUMBO_CFLAGS = -I$(GUMBO_TARDIR)/src
- gumbo/parse.so: $(GUMBO_TARDIR)/.libs/libgumbo.a
- gumbo/parse.o: | $(GUMBO_TARDIR)/
+ $(BUILD_ALL): $(GUMBO_TARDIR)/.libs/libgumbo.a
+ $(OBJ_ALL): | $(GUMBO_TARDIR)/
 else
  GUMBO_CFLAGS ?= $(PKGCHECK) $(shell $(PKGCONFIG) --cflags gumbo)
  GUMBO_LDFLAGS ?= $(PKGCHECK) $(shell $(PKGCONFIG) --libs gumbo)
 endif
+
+local-libgumbo: $(GUMBO_TARDIR)/.libs/libgumbo.a
 
 build/gumbo-parser-%/.libs/libgumbo.a: private MAKEOVERRIDES =
 build/gumbo-parser-%/.libs/libgumbo.a: | build/gumbo-parser-%/
@@ -36,4 +41,5 @@ build/:
 	mkdir -p $@
 
 
+.PHONY: local-libgumbo
 .SECONDARY: $(GUMBO_TARDIR)/
