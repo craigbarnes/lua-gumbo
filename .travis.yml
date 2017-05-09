@@ -8,4 +8,5 @@ install:
 before_script:
     - make -j`nproc` local-libgumbo
 script:
-    - make -j`nproc` check-lua52 check-lua51 USE_LOCAL_LIBGUMBO=1
+    - make -j`nproc` build-lua52 build-lua51 USE_LOCAL_LIBGUMBO=1
+    - make check-lua52 check-lua51
