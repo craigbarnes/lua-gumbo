@@ -15,6 +15,8 @@ SLZ_MODULES = $(addprefix gumbo/serialize/, Indent.lua html.lua)
 TOP_MODULES = $(addprefix gumbo/, Buffer.lua Set.lua constants.lua sanitize.lua)
 INSTALL_ALL = $(addprefix install-, $(BUILD_VERS))
 
+all: build-any
+
 install-all: $(INSTALL_ALL)
 
 $(INSTALL_ALL): LUA_LMOD_DIR = $(LUA$*_LMODDIR)
@@ -39,6 +41,6 @@ clean: clean-obj clean-docs
 	  lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
 
 
-.DEFAULT_GOAL = build-any
-.PHONY: install-all $(INSTALL_ALL) clean clean-obj
+.DEFAULT_GOAL = all
+.PHONY: all install-all $(INSTALL_ALL) clean clean-obj
 .DELETE_ON_ERROR:
