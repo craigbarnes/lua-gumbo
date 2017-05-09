@@ -17,8 +17,8 @@ INSTALL_ALL = $(addprefix install-, $(BUILD_VERS))
 
 install-all: $(INSTALL_ALL)
 
-$(INSTALL_ALL): private LUA_LMOD_DIR = $(LUA$*_LMODDIR)
-$(INSTALL_ALL): private LUA_CMOD_DIR = $(LUA$*_CMODDIR)
+$(INSTALL_ALL): LUA_LMOD_DIR = $(LUA$*_LMODDIR)
+$(INSTALL_ALL): LUA_CMOD_DIR = $(LUA$*_CMODDIR)
 $(INSTALL_ALL): install-lua%: build-lua%
 	@test "$(LUA_LMOD_DIR)" -a "$(LUA_CMOD_DIR)" || { echo error; exit 1; }
 	$(MKDIR) '$(DESTDIR)$(LUA_CMOD_DIR)/gumbo/'

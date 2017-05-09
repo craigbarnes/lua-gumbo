@@ -31,9 +31,9 @@ build-lua53: build/lua53/gumbo/parse.so
 build-lua52: build/lua52/gumbo/parse.so
 build-lua51: build/lua51/gumbo/parse.so
 
-build/lua53/gumbo/parse.o: private CCOPTS += $(LUA53_CFLAGS) -DNEED_LUA_VER=503
-build/lua52/gumbo/parse.o: private CCOPTS += $(LUA52_CFLAGS) -DNEED_LUA_VER=502
-build/lua51/gumbo/parse.o: private CCOPTS += $(LUA51_CFLAGS) -DNEED_LUA_VER=501
+build/lua53/gumbo/parse.o: CCOPTS += $(LUA53_CFLAGS) -DNEED_LUA_VER=503
+build/lua52/gumbo/parse.o: CCOPTS += $(LUA52_CFLAGS) -DNEED_LUA_VER=502
+build/lua51/gumbo/parse.o: CCOPTS += $(LUA51_CFLAGS) -DNEED_LUA_VER=501
 
 $(BUILD_ALL): build/%/gumbo/parse.so: build/%/gumbo/parse.o
 	$(E) LINK '$@'
