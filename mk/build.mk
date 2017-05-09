@@ -1,4 +1,4 @@
-include config.mk
+-include config.mk
 
 CC        ?= gcc
 LIBFLAGS  ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)

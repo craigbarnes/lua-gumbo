@@ -11,6 +11,14 @@ tests:
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
         - luacov-coveralls-5.3 -t "$COVERALLS_TOKEN"
 
+test-pages:
+    stage: test
+    image: quay.io/craigbarnes/pandoc
+    script:
+        - git fetch --tags
+        - make -j`nproc` docs dist
+        - make check-dist
+
 pages:
     stage: deploy
     image: quay.io/craigbarnes/pandoc
