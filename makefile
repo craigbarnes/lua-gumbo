@@ -1,4 +1,5 @@
 .POSIX:
+.SUFFIXES:
 
 all:
 	+gmake -f GNUmakefile all
