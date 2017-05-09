@@ -1,6 +1,6 @@
 tests:
     stage: test
-    image: quay.io/craigbarnes/lua-testing-extra
+    image: registry.gitlab.com/craigbarnes/container-lua-testing/image
     script:
         - make -j`nproc` local-libgumbo
         - make check-all USE_LOCAL_LIBGUMBO=1
