@@ -36,7 +36,7 @@ EOF
 }
 
 which pkg-config >/dev/null 2>&1 || {
-    echo 'Error: required command "pkg-config" not found' >&2
+    echo "configure:$LINENO: Command 'pkg-config' not found" >&2
     exit 1
 }
 

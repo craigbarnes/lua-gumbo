@@ -25,7 +25,7 @@ BUILD_ALL = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(BUILD_VERS)))
 BUILD_ANY = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(LUAS_FOUND)))
 OBJ_ALL = $(BUILD_ALL:%.so=%.o)
 
-build-any: $(or $(BUILD_ANY), $(warning No Lua packages found via pkg-config))
+build-any: $(BUILD_ANY)
 build-all: $(BUILD_ALL)
 build-lua53: build/lua53/gumbo/parse.so
 build-lua52: build/lua52/gumbo/parse.so
