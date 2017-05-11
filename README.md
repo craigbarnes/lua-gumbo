@@ -90,15 +90,12 @@ print(text) --> Hello World
 Production code should wrap each step with [`assert()`] or some other,
 application-specific error handling.
 
-See also:
-
-* [find_links.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/find_links.lua)
-* [remove_by_id.lua](https://github.com/craigbarnes/lua-gumbo/blob/master/examples/remove_by_id.lua)
+See also: <https://craigbarnes.gitlab.io/lua-gumbo/#examples>.
 
 Testing
 -------
 
-[![Build Status](https://travis-ci.org/craigbarnes/lua-gumbo.png?branch=master)](https://travis-ci.org/craigbarnes/lua-gumbo)
+[![Build Status](https://gitlab.com/craigbarnes/lua-gumbo/badges/master/build.svg)](https://gitlab.com/craigbarnes/lua-gumbo/commits/master)
 [![Coverage Status](https://coveralls.io/repos/craigbarnes/lua-gumbo/badge.svg?branch=master&service=github)](https://coveralls.io/github/craigbarnes/lua-gumbo?branch=master)
 
 * `make check`: Runs all unit tests.
