@@ -1,4 +1,13 @@
-tests:
+test-system-libgumbo:
+    stage: test
+    image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
+    script:
+        - apt-get update
+        - apt-get install -qy libgumbo-dev
+        - make -j`nproc` build-all DEBUG=1
+        - make -j`nproc` --output-sync=line check-all
+
+test-local-libgumbo:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing-extra
     script:
