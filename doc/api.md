@@ -389,10 +389,23 @@ The `Node` interface is implemented by *all* DOM [nodes].
     throws an error.
 
 `walk()`
-:   TODO
+:   Returns an iterator function that, each time it is called, returns the
+    next [descendant] node in the subtree, in [document order]. This is
+    typically used to iterate over every node in a document via a generic
+    `for` loop. For example:
 
-`reverseWalk()`
-:   TODO
+    ```lua
+    local gumbo = require "gumbo"
+    local document = assert(gumbo.parse("<p>1</p><p>2</p><p>3</p>"))
+
+    for node in document.body:walk() do
+        print(node)
+    end
+    ```
+
+    *Note:* this method is an extension; not a part of any specification.
+    It is similar in purpose to the [`Document.createTreeWalker()`]
+    method, but has a different, much simpler API.
 
 ### `ParentNode`
 
@@ -513,7 +526,9 @@ by various [`Node`] and [`ParentNode`] methods.
 [file handle]: https://www.lua.org/manual/5.2/manual.html#6.8
 [DOM]: https://dom.spec.whatwg.org/
 [SVG elements]: https://developer.mozilla.org/en-US/docs/Web/SVG/Element#SVG_elements
+[`Document.createTreeWalker()`]: https://developer.mozilla.org/en-US/docs/Web/API/Document/createTreeWalker
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
+[document order]: https://www.w3.org/TR/DOM-Level-2-Traversal-Range/glossary.html#dt-documentorder
 [escapingString]: https://html.spec.whatwg.org/multipage/syntax.html#escapingString
 [HTML fragment parsing]: https://html.spec.whatwg.org/multipage/syntax.html#parsing-html-fragments
 [HTML fragment serialization]: https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-serialisation-algorithm
