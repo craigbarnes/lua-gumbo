@@ -1,6 +1,6 @@
 tests:
     stage: test
-    image: registry.gitlab.com/craigbarnes/container-lua-testing/image
+    image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     script:
         - make -j`nproc` local-libgumbo
         - make build-all USE_LOCAL_LIBGUMBO=1 DEBUG=1
