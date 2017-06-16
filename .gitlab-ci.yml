@@ -3,8 +3,8 @@ tests:
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing-extra
     script:
         - make -j`nproc` local-libgumbo
-        - make build-all USE_LOCAL_LIBGUMBO=1 DEBUG=1
-        - make check-all USE_LOCAL_LIBGUMBO=1
+        - make -j`nproc` build-all USE_LOCAL_LIBGUMBO=1 DEBUG=1
+        - make -j`nproc` --output-sync=line check-all USE_LOCAL_LIBGUMBO=1
 #        - make clean check-luarocks-make LUAROCKS=luarocks-5.3
 #        - make check-luarocks-build LUAROCKS=luarocks-5.3
         - make coverage.txt USE_LOCAL_LIBGUMBO=1
