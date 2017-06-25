@@ -1,5 +1,12 @@
 #!/bin/sh
 
+cmdfind() {
+    for C in $*; do
+        command -v "$C" && return 0
+    done
+    return 1
+}
+
 pkgfind() {
     for P in $*; do
         if pkg-config --exists "$P"; then
@@ -30,15 +37,15 @@ LUA$1_LIBDIR  ?= $(pkg-config --variable=libdir $3)
 LUA$1_INCDIR  ?= $(pkg-config --variable=includedir $3)
 LUA$1_LMODDIR ?= $(pkg-config --variable=INSTALL_LMOD $3)
 LUA$1_CMODDIR ?= $(pkg-config --variable=INSTALL_CMOD $3)
-LUA$1         ?= $(which lua$2 lua-$2 lua$1 2>/dev/null | head -n1)
+LUA$1         ?= $(cmdfind lua$2 lua-$2 lua$1)
 LUAS_FOUND    += lua$1
 EOF
 }
 
-which pkg-config >/dev/null 2>&1 || {
+if ! command -v pkg-config >/dev/null; then
     echo "configure:$LINENO: Command 'pkg-config' not found" >&2
     exit 1
-}
+fi
 
 LUA53_PC=$(pkgfind lua53 lua5.3 lua-5.3 || pkgmatch lua '>= 5.3' '< 5.4')
 LUA52_PC=$(pkgfind lua52 lua5.2 lua-5.2 || pkgmatch lua '>= 5.2' '< 5.3')
