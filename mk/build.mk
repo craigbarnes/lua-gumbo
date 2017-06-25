@@ -48,8 +48,7 @@ build/lua%/gumbo/:
 	$(Q) $(MKDIR) $@
 
 config.mk: configure
-	$(E) CONFIGURE '$@'
-	$(Q) test -f '$@' || ./configure
+	@test -f '$@' || ./configure
 
 
 .PHONY: build-all build-any build-lua53 build-lua52 build-lua51
