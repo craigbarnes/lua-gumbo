@@ -22,7 +22,7 @@ test-local-libgumbo:
 
 pages-test:
     stage: test
-    image: quay.io/craigbarnes/pandoc
+    image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
     except: [master]
     script:
         - git fetch --tags
@@ -31,7 +31,7 @@ pages-test:
 
 pages:
     stage: deploy
-    image: quay.io/craigbarnes/pandoc
+    image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
     artifacts: {paths: [public]}
     only: [master]
     script:
