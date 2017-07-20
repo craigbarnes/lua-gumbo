@@ -1,5 +1,5 @@
-ifneq "$(MAKECMDGOALS)" "clean"
--include config.mk
+ifneq "" "$(filter-out clean clean-%,$(or $(MAKECMDGOALS),all))"
+include config.mk
 endif
 
 CC        ?= gcc
