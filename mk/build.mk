@@ -1,4 +1,6 @@
+ifneq "$(MAKECMDGOALS)" "clean"
 -include config.mk
+endif
 
 CC        ?= gcc
 LIBFLAGS  ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
@@ -39,7 +41,7 @@ $(BUILD_ALL): build/%/gumbo/parse.so: build/%/gumbo/parse.o
 	@$(PRINT) LINK '$@'
 	@$(CC) $(LDOPTS) -o $@ $^
 
-$(OBJ_ALL): build/%/gumbo/parse.o: gumbo/parse.c | build/%/gumbo/
+$(OBJ_ALL): build/%/gumbo/parse.o: gumbo/parse.c config.mk | build/%/gumbo/
 	@$(PRINT) CC '$@'
 	@$(CC) $(CCOPTS) -c -o $@ $<
 
