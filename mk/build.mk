@@ -36,27 +36,30 @@ build/lua52/gumbo/parse.o: CCOPTS += $(LUA52_CFLAGS) -DNEED_LUA_VER=502
 build/lua51/gumbo/parse.o: CCOPTS += $(LUA51_CFLAGS) -DNEED_LUA_VER=501
 
 $(BUILD_ALL): build/%/gumbo/parse.so: build/%/gumbo/parse.o
-	$(E) LINK '$@'
-	$(Q) $(CC) $(LDOPTS) -o $@ $^
+	@$(PRINT) LINK '$@'
+	@$(CC) $(LDOPTS) -o $@ $^
 
 $(OBJ_ALL): build/%/gumbo/parse.o: gumbo/parse.c | build/%/gumbo/
-	$(E) CC '$@'
-	$(Q) $(CC) $(CCOPTS) -c -o $@ $<
+	@$(PRINT) CC '$@'
+	@$(CC) $(CCOPTS) -c -o $@ $<
 
 build/lua%/gumbo/:
-	$(E) MKDIR '$@'
-	$(Q) $(MKDIR) $@
+	@$(PRINT) MKDIR '$@'
+	@$(MKDIR) $@
 
 config.mk: configure
-	@test -f '$@' || ./configure
+	@if test ! -f $@; then \
+	 $(PRINT) CONFIGURE '$@'; \
+	 ./configure; \
+	fi
 
 
 .PHONY: build-all build-any build-lua53 build-lua52 build-lua51
 .SECONDARY: $(dir $(BUILD_ALL))
 
 ifdef DEBUG
-E = @:
+ MAKEFLAGS += --trace
+ PRINT = printf '\c' # Makes printf "ignore any remaining string operands"
 else
-E = @printf '%-11s  %s\n'
-Q = @
+ PRINT = printf '%-9s  %s\n'
 endif
