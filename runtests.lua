@@ -30,7 +30,7 @@ local tests = {
     "test/misc.lua",
     "test/tostring.lua",
     "test/tree-construction.lua",
-    "test/sanitize.lua",
+    "test/sanitize-href.lua",
 }
 
 local function getline(filename, linenumber)
