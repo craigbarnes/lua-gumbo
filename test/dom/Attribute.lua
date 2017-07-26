@@ -29,7 +29,8 @@ local root = assert(document.documentElement)
 assertAttr(root.attributes[3], "en", "xml:lang", "xml:lang", nil, nil)
 
 local svg = assert(document:getElementsByTagName("svg")[1])
-assertAttr(svg.attributes[1], "http://www.w3.org/2000/svg", "xmlns", "xmlns", "xmlns", "http://www.w3.org/2000/xmlns/")
-assertAttr(svg.attributes[2], "http://www.w3.org/1999/xlink", "xlink", "xlink", "xmlns", "http://www.w3.org/2000/xmlns/")
+local XMLNS = "http://www.w3.org/2000/xmlns/"
+assertAttr(svg.attributes[1], "http://www.w3.org/2000/svg", "xmlns", "xmlns", "xmlns", XMLNS)
+assertAttr(svg.attributes[2], "http://www.w3.org/1999/xlink", "xlink", "xlink", "xmlns", XMLNS)
 
 -- TODO: Add tests from github.com/w3c/web-platform-tests/blob/master/dom/nodes/attributes.html

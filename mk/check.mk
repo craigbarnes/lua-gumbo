@@ -17,7 +17,7 @@ coverage.txt: build-lua53
 	LUA_CPATH=build/lua53/?.so $(LUA53) -lluacov runtests.lua
 
 luacheck:
-	@luacheck gumbo.lua runtests.lua gumbo test examples
+	@luacheck .
 
 
 .PHONY: check-all $(CHECK_ALL) check-luajit luacheck
