@@ -96,7 +96,6 @@ do -- Check that passing invalid arguments throws an error
 end
 
 -- Check that file open/read errors are handled
-assert(not parseFile".", "Passing a directory name should return nil")
 assert(not parseFile"_", "Passing a non-existant filename should return nil")
 
 -- Check that parse_file alias is present (for API backwards compatibility)
