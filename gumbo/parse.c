@@ -141,8 +141,8 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth);
 static void
 set_children(lua_State *L, const GumboVector *vec, uint start, uint depth) {
     const unsigned int length = vec->length;
-    if (depth >= 800) {
-        luaL_error(L, "Tree depth limit of 800 exceeded");
+    if (depth >= 400) {
+        luaL_error(L, "Tree depth limit of 400 exceeded");
     }
     lua_createtable(L, length, 0);
     setmetatable(L, NodeList);

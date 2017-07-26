@@ -46,22 +46,6 @@ do -- Check that Text.escapedData works correctly
     assert(text.escapedData == [[x&nbsp;&amp;foo bar&gt;&lt;&lt; &nbsp;]])
 end
 
-do -- Make sure deeply nested elements don't cause a stack overflow
-    local n = 500
-    local input = ("<div>"):rep(n)
-    local document = assert(parse(input), "stack check failed")
-    assert(document.body.childNodes[1].childNodes[1].localName == "div")
-    assert(document.body.innerHTML == input .. ("</div>"):rep(n))
-end
-
-do -- Make sure maximum tree depth limit is enforced
-    local input = ("<div>"):rep(801)
-    local document, errmsg = parse(input)
-    assert(document == nil)
-    assert(errmsg ~= nil)
-    assert(errmsg:find("depth limit"))
-end
-
 do -- Check that parseFile works the same with a filename as with a file
     local a = assert(parseFile(open("test/data/t1.html")))
     local b = assert(parseFile("test/data/t1.html"))
