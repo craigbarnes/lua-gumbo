@@ -59,7 +59,10 @@ config.mk: configure
 .PHONY: build-all build-any build-lua53 build-lua52 build-lua51
 .SECONDARY: $(dir $(BUILD_ALL))
 
-ifdef DEBUG
+S_FLAG := $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
+ifdef S_FLAG
+ PRINT = printf '\c'
+else ifdef DEBUG
  MAKEFLAGS += --trace
  PRINT = printf '\c' # Makes printf "ignore any remaining string operands"
 else
