@@ -4,7 +4,10 @@ LUAJIT ?= $(or \
 )
 
 CHECK_ALL = $(addprefix check-, $(BUILD_VERS))
+CHECK_ANY = $(addprefix check-, $(LUAS_FOUND))
 
+check: check-any
+check-any: $(CHECK_ANY)
 check-all: $(CHECK_ALL) check-luajit
 
 $(CHECK_ALL): check-lua%: build-lua%
@@ -20,4 +23,4 @@ luacheck:
 	@luacheck .
 
 
-.PHONY: check-all $(CHECK_ALL) check-luajit luacheck
+.PHONY: check check-all check-any $(CHECK_ALL) check-luajit luacheck
