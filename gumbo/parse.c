@@ -231,6 +231,7 @@ static int push_document(lua_State *L) {
 static int parse(lua_State *L) {
     size_t input_len, tagname_len;
     GumboOptions options = kGumboDefaultOptions;
+    options.max_errors = 0;
     const char *input = luaL_checklstring(L, 1, &input_len);
     options.tab_stop = (int)luaL_optinteger(L, 2, 8);
     const char *tagname = luaL_optlstring(L, 3, NULL, &tagname_len);
