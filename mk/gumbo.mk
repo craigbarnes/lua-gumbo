@@ -38,7 +38,7 @@ build/gumbo-parser-%.tar.gz: | build/
 	$(GET) https://github.com/google/gumbo-parser/archive/v$*.tar.gz
 
 build/:
-	mkdir -p $@
+	@$(MKDIR) $@
 
 
 .PHONY: local-libgumbo

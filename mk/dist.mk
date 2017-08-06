@@ -8,7 +8,8 @@ check-dist: dist
 	sha1sum -c test/dist-sha1sums.txt
 
 public/dist/lua-gumbo-%.tar.gz: | public/dist/
-	git archive --prefix=lua-gumbo-$*/ -o $@ $*
+	@$(PRINT) ARCHIVE '$@'
+	@git archive --prefix=lua-gumbo-$*/ -o $@ $*
 
 gumbo-%-1.rockspec: URL = $(HOMEURL)/dist/lua-gumbo-$*.tar.gz
 gumbo-%-1.rockspec: MD5 = `md5sum $(word 2, $^) | cut -d' ' -f1`
@@ -22,7 +23,7 @@ gumbo-scm-1.rockspec: rockspec.in
 	@echo 'Generated: $@'
 
 public/dist/: | public/
-	$(MKDIR) $@
+	@$(MKDIR) $@
 
 
 .PHONY: dist check-dist

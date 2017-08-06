@@ -46,7 +46,6 @@ $(OBJ_ALL): build/%/gumbo/parse.o: gumbo/parse.c config.mk | build/%/gumbo/
 	@$(CC) $(CCOPTS) -c -o $@ $<
 
 build/lua%/gumbo/:
-	@$(PRINT) MKDIR '$@'
 	@$(MKDIR) $@
 
 config.mk: configure
