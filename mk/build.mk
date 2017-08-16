@@ -23,6 +23,7 @@ CCOPTS = $(XCFLAGS) $(GUMBO_CFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTS = $(XLDFLAGS) $(GUMBO_LDFLAGS) $(LIBFLAGS)
 
 BUILD_VERS = lua53 lua52 lua51
+BUILD_ALL_PHONY = $(addprefix build-, $(BUILD_VERS))
 BUILD_ALL = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(BUILD_VERS)))
 BUILD_ANY = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(LUAS_FOUND)))
 OBJ_ALL = $(BUILD_ALL:%.so=%.o)
@@ -30,22 +31,20 @@ OBJ_ALL = $(BUILD_ALL:%.so=%.o)
 build-any: $(BUILD_ANY)
 	@: $(if $^,, $(error No Lua installations found via pkg-config))
 
-build-all: $(BUILD_ALL)
-build-lua53: build/lua53/gumbo/parse.so
-build-lua52: build/lua52/gumbo/parse.so
-build-lua51: build/lua51/gumbo/parse.so
+build-all: $(BUILD_ALL_PHONY)
+$(BUILD_ALL_PHONY): build-lua%: build/lua%/gumbo/parse.so
 
-build/lua53/gumbo/parse.o: CCOPTS += $(LUA53_CFLAGS) -DNEED_LUA_VER=503
-build/lua52/gumbo/parse.o: CCOPTS += $(LUA52_CFLAGS) -DNEED_LUA_VER=502
-build/lua51/gumbo/parse.o: CCOPTS += $(LUA51_CFLAGS) -DNEED_LUA_VER=501
+build/lua53/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=503
+build/lua52/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=502
+build/lua51/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=501
 
 $(BUILD_ALL): build/%/gumbo/parse.so: build/%/gumbo/parse.o
 	@$(PRINT) LINK '$@'
 	@$(CC) $(LDOPTS) -o $@ $^
 
-$(OBJ_ALL): build/%/gumbo/parse.o: gumbo/parse.c config.mk | build/%/gumbo/
+$(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c config.mk | build/lua%/gumbo/
 	@$(PRINT) CC '$@'
-	@$(CC) $(CCOPTS) -c -o $@ $<
+	@$(CC) $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
 
 build/lua%/gumbo/:
 	@$(MKDIR) $@
@@ -57,7 +56,7 @@ config.mk: configure
 	fi
 
 
-.PHONY: build-all build-any build-lua53 build-lua52 build-lua51
+.PHONY: build-all build-any $(BUILD_ALL_PHONY)
 .SECONDARY: $(dir $(BUILD_ALL))
 
 S_FLAG := $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
