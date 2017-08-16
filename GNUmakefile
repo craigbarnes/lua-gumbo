@@ -4,6 +4,7 @@ include mk/gumbo.mk
 include mk/check.mk
 include mk/dist.mk
 include mk/doc.mk
+-include mk/dev.mk
 
 DOM_IFACES = \
     Element Text Comment Document DocumentFragment DocumentType \

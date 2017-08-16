@@ -8,6 +8,8 @@
 .editorconfig export-ignore
 .travis.yml export-ignore
 CONTRIBUTING.md export-ignore
+mk/dev.mk export-ignore
+mk/git-hooks/ export-ignore
 
 *.[ch] code
 *.lua code
@@ -16,3 +18,4 @@ CONTRIBUTING.md export-ignore
 rockspec.in code
 Makefile makefile
 mk/*.mk makefile
+mk/git-hooks/* code
