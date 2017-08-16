@@ -59,8 +59,7 @@ config.mk: configure
 .PHONY: build-all build-any $(BUILD_ALL_PHONY)
 .SECONDARY: $(dir $(BUILD_ALL))
 
-S_FLAG := $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
-ifdef S_FLAG
+ifneq "$(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))" ""
  PRINT = printf '\c'
 else ifdef DEBUG
  MAKEFLAGS += --trace

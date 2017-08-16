@@ -36,9 +36,7 @@ clean-obj:
 	$(RM) $(BUILD_ALL) $(OBJ_ALL)
 
 clean: clean-obj clean-docs
-	$(RM) \
-	  coverage.txt .luacov-stats.txt test/data/*MiB.html \
-	  lua-gumbo-*.tar.gz gumbo-*.rockspec gumbo-*.rock
+	$(RM) $(CLEANFILES)
 
 
 .DEFAULT_GOAL = all

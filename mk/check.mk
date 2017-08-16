@@ -23,4 +23,5 @@ luacheck:
 	@luacheck .
 
 
+CLEANFILES += coverage.txt .luacov-stats.txt
 .PHONY: check check-all check-any $(CHECK_ALL) check-luajit luacheck
