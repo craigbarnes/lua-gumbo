@@ -44,7 +44,7 @@
     margin: 0 auto;
 }
 
-@media only screen and (min-width: 920px) and (min-device-width: 700px) {
+@media only screen and (min-width: 1000px) and (min-device-width: 700px) {
     #main-grid {
         grid-template-areas:
             "header  header"
