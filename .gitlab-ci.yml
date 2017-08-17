@@ -25,6 +25,7 @@ test:alpine:static:
     image: alpine:3.6
     script:
         - apk --update add make gcc binutils pkgconf curl gzip tar
+          g++ autoconf automake libtool
           libc-dev lua5.3-dev lua5.2-dev lua5.1-dev luajit
         - export USE_LOCAL_LIBGUMBO=1 DEBUG=1 MAKEFLAGS="-j$(mk/nproc.sh)"
         - make local-libgumbo
