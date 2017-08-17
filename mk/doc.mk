@@ -1,6 +1,6 @@
 CHECKURL = curl -sSI -w "%{http_code}  $$URL  %{redirect_url}\n" -o /dev/null
 PANDOC = pandoc
-FIND_LINKS = LUA_CPATH=build/lua53/?.so $(LUA53) examples/find_links.lua
+FIND_LINKS = $(LUA53_UTIL) examples/find_links.lua
 EXAMPLE_NAMES = find_links get_title remove_by_id table_align_fix text_content
 EXAMPLE_FILES = $(addprefix examples/, $(addsuffix .lua, $(EXAMPLE_NAMES)))
 DOCS = public/index.html public/dist/index.html

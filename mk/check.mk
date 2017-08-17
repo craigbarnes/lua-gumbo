@@ -3,6 +3,8 @@ LUAJIT ?= $(or \
     $(error Unable to find luajit command) \
 )
 
+LUA53_UTIL = LUA_CPATH=build/lua53/?.so LUA_PATH='./?.lua;;' $(LUA53)
+
 CHECK_ALL = $(addprefix check-, $(BUILD_VERS))
 CHECK_ANY = $(addprefix check-, $(LUAS_FOUND))
 
@@ -11,13 +13,13 @@ check-any: $(CHECK_ANY)
 check-all: $(CHECK_ALL) check-luajit
 
 $(CHECK_ALL): check-lua%: build-lua%
-	LUA_CPATH=build/lua$*/?.so $(LUA$*) runtests.lua
+	LUA_CPATH=build/lua$*/?.so LUA_PATH=./?.lua $(LUA$*) runtests.lua
 
 check-luajit: build-lua51
-	LUA_CPATH=build/lua51/?.so $(LUAJIT) runtests.lua
+	LUA_CPATH=build/lua51/?.so LUA_PATH=./?.lua $(LUAJIT) runtests.lua
 
 coverage.txt: build-lua53
-	LUA_CPATH=build/lua53/?.so $(LUA53) -lluacov runtests.lua
+	$(LUA53_UTIL) -lluacov runtests.lua
 
 luacheck:
 	@luacheck .
