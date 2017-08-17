@@ -1,21 +1,23 @@
+stages: [test, dist]
+
 test:debian:dynamic:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     script:
         - apt-get update
         - apt-get install -qy libgumbo-dev
-        - export MAKEFLAGS="-j$(mk/nproc.sh)"
+        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
         - make build-all DEBUG=1
-        - make --output-sync=line check-all
+        - make check-all
 
 test:debian:static:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing-extra
     script:
-        - export MAKEFLAGS="-j$(mk/nproc.sh)" USE_LOCAL_LIBGUMBO=1
+        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" USE_LOCAL_LIBGUMBO=1
         - make local-libgumbo
         - make build-all DEBUG=1
-        - make --output-sync=line check-all
+        - make check-all
 #        - make clean check-luarocks-make LUAROCKS=luarocks-5.3
 #        - make check-luarocks-build LUAROCKS=luarocks-5.3
         - make coverage.txt
@@ -29,10 +31,10 @@ test:alpine:static:
         - apk --update add make gcc binutils pkgconf curl gzip tar
           g++ autoconf automake libtool
           libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
-        - export MAKEFLAGS="-j$(mk/nproc.sh)" USE_LOCAL_LIBGUMBO=1
+        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" USE_LOCAL_LIBGUMBO=1
         - make local-libgumbo
         - make build-all DEBUG=1
-        - make --output-sync=line check-lua53 check-lua52 check-lua51
+        - make check-lua53 check-lua52 check-lua51
 
 pages-test:
     stage: test
@@ -44,7 +46,7 @@ pages-test:
         - make check-dist
 
 pages:
-    stage: deploy
+    stage: dist
     image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
     artifacts: {paths: [public]}
     only: [master]

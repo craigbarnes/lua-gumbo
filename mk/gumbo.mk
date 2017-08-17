@@ -29,7 +29,7 @@ local-libgumbo: $(GUMBO_TARDIR)/.libs/libgumbo.a
 build/gumbo-parser-%/.libs/libgumbo.a: MAKEOVERRIDES =
 build/gumbo-parser-%/.libs/libgumbo.a: | build/gumbo-parser-%/
 	cd $| && ./autogen.sh && ./configure
-	$(MAKE) -C $| CFLAGS='-O2 -fPIC'
+	$(MAKE) -C $| --no-print-directory CFLAGS='-O2 -fPIC'
 
 build/gumbo-parser-%/: | build/gumbo-parser-%.tar.gz
 	$(GUNZIP)
