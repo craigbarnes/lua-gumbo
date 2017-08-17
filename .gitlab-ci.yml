@@ -4,19 +4,21 @@ test:debian:dynamic:
     script:
         - apt-get update
         - apt-get install -qy libgumbo-dev
-        - make -j`nproc` build-all DEBUG=1
-        - make -j`nproc` --output-sync=line check-all
+        - export MAKEFLAGS="-j$(mk/nproc.sh)"
+        - make build-all DEBUG=1
+        - make --output-sync=line check-all
 
 test:debian:static:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing-extra
     script:
-        - make -j`nproc` local-libgumbo
-        - make -j`nproc` build-all USE_LOCAL_LIBGUMBO=1 DEBUG=1
-        - make -j`nproc` --output-sync=line check-all USE_LOCAL_LIBGUMBO=1
+        - export MAKEFLAGS="-j$(mk/nproc.sh)" USE_LOCAL_LIBGUMBO=1
+        - make local-libgumbo
+        - make build-all DEBUG=1
+        - make --output-sync=line check-all
 #        - make clean check-luarocks-make LUAROCKS=luarocks-5.3
 #        - make check-luarocks-build LUAROCKS=luarocks-5.3
-        - make coverage.txt USE_LOCAL_LIBGUMBO=1
+        - make coverage.txt
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
         - luacov-coveralls-5.3 -t "$COVERALLS_TOKEN"
 
@@ -27,9 +29,9 @@ test:alpine:static:
         - apk --update add make gcc binutils pkgconf curl gzip tar
           g++ autoconf automake libtool
           libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
-        - export USE_LOCAL_LIBGUMBO=1 DEBUG=1 MAKEFLAGS="-j$(mk/nproc.sh)"
+        - export MAKEFLAGS="-j$(mk/nproc.sh)" USE_LOCAL_LIBGUMBO=1
         - make local-libgumbo
-        - make build-all
+        - make build-all DEBUG=1
         - make --output-sync=line check-lua53 check-lua52 check-lua51
 
 pages-test:
@@ -38,7 +40,7 @@ pages-test:
     except: [master]
     script:
         - git fetch --tags
-        - make -j`nproc` docs dist
+        - make -j"$(mk/nproc.sh)" docs dist
         - make check-dist
 
 pages:
@@ -48,5 +50,5 @@ pages:
     only: [master]
     script:
         - git fetch --tags
-        - make -j`nproc` docs dist
+        - make -j"$(mk/nproc.sh)" docs dist
         - make check-dist
