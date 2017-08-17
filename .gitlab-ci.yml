@@ -26,11 +26,11 @@ test:alpine:static:
     script:
         - apk --update add make gcc binutils pkgconf curl gzip tar
           g++ autoconf automake libtool
-          libc-dev lua5.3-dev lua5.2-dev lua5.1-dev luajit
+          libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
         - export USE_LOCAL_LIBGUMBO=1 DEBUG=1 MAKEFLAGS="-j$(mk/nproc.sh)"
         - make local-libgumbo
         - make build-all
-        - make --output-sync=line check-all
+        - make --output-sync=line check-lua53 check-lua52 check-lua51
 
 pages-test:
     stage: test
