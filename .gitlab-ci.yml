@@ -8,7 +8,7 @@ test:debian:dynamic:
         - apt-get install -qy libgumbo-dev
         - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
         - make build-all DEBUG=1
-        - make check-all
+        - make check-all check-luajit
 
 test:debian:static:
     stage: test
@@ -17,7 +17,7 @@ test:debian:static:
         - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" USE_LOCAL_LIBGUMBO=1
         - make local-libgumbo
         - make build-all DEBUG=1
-        - make check-all
+        - make check-all check-luajit
 #        - make clean check-luarocks-make LUAROCKS=luarocks-5.3
 #        - make check-luarocks-build LUAROCKS=luarocks-5.3
         - make coverage.txt
@@ -34,7 +34,7 @@ test:alpine:static:
         - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" USE_LOCAL_LIBGUMBO=1
         - make local-libgumbo
         - make build-all DEBUG=1
-        - make check-lua53 check-lua52 check-lua51
+        - make check-all
 
 pages-test:
     stage: test

@@ -10,7 +10,7 @@ CHECK_ANY = $(addprefix check-, $(LUAS_FOUND))
 
 check: check-any
 check-any: $(CHECK_ANY)
-check-all: $(CHECK_ALL) check-luajit
+check-all: $(CHECK_ALL)
 
 $(CHECK_ALL): check-lua%: build-lua%
 	LUA_CPATH=build/lua$*/?.so LUA_PATH=./?.lua $(LUA$*) runtests.lua
