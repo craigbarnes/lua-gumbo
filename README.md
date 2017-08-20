@@ -95,7 +95,7 @@ See also: <https://craigbarnes.gitlab.io/lua-gumbo/#examples>.
 Testing
 -------
 
-[![Build Status](https://gitlab.com/craigbarnes/lua-gumbo/badges/master/build.svg)](https://gitlab.com/craigbarnes/lua-gumbo/commits/master)
+[![Build Status](https://gitlab.com/craigbarnes/lua-gumbo/badges/master/build.svg)](https://gitlab.com/craigbarnes/lua-gumbo/pipelines)
 [![Coverage Status](https://coveralls.io/repos/craigbarnes/lua-gumbo/badge.svg?branch=master&service=github)](https://coveralls.io/github/craigbarnes/lua-gumbo?branch=master)
 
 * `make check`: Runs all unit tests.
