@@ -22,6 +22,7 @@ local tests = {
     "test/dom/Comment-constructor.lua",
     "test/dom/Node-appendChild.lua",
     "test/dom/Node-insertBefore.lua",
+    "test/dom/Node-replaceChild.lua",
     "test/dom/Node-constants.lua",
     "test/dom/Node-textContent.lua",
     "test/dom/Node-isEqualNode.lua",

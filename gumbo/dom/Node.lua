@@ -176,7 +176,6 @@ end
 -- TODO: function Node:cloneNode(deep)
 
 -- TODO: Node.baseURI
--- TODO: function Node:replaceChild(node, child)
 -- TODO: function Node:normalize()
 -- TODO: function Node:compareDocumentPosition(other)
 -- TODO: function Node:lookupPrefix(namespace)
@@ -281,6 +280,81 @@ function Node:removeChild(child)
         end
     end
     assert(false, "NotFoundError")
+end
+
+function Node:replaceChild(node, child)
+    assertNode(self)
+    assertNode(node)
+    assertNode(child)
+    local parent = self
+
+    assert(isValidParent[parent.nodeType] == true, "HierarchyRequestError")
+    assert(parent ~= node, "HierarchyRequestError")
+    assert(node:contains(parent) == false, "HierarchyRequestError")
+    assert(child.parentNode == parent, "NotFoundError")
+    assert(isValidChild[node.nodeType] == true, "HierarchyRequestError")
+
+    if parent.type == "document" then
+        assert(node.nodeName ~= "#text", "HierarchyRequestError")
+    else
+        assert(node.type ~= "doctype", "HierarchyRequestError")
+    end
+
+    if parent.type == "document" then
+        if node.type == "fragment" then
+            -- TODO:
+            -- "If node has more than one element child or has a Text node
+            -- child. Otherwise, if node has one element child and either
+            -- parent has an element child that is not child or a doctype
+            -- is following child."
+            error("HierarchyRequestError")
+        elseif node.type == "element" then
+            local seenChild = false
+            for i, c in ipairs(parent.childNodes) do
+                if c == child then
+                    seenChild = true
+                elseif c.type == "element" then
+                    -- "parent has an element child that is not child"
+                    error("HierarchyRequestError")
+                elseif c.type == "doctype" and seenChild == true then
+                    -- "or a doctype is following child."
+                    error("HierarchyRequestError")
+                end
+            end
+        elseif node.type == "doctype" then
+            local seenChild = false
+            for i, c in ipairs(parent.childNodes) do
+                if c == child then
+                    seenChild = true
+                elseif c.type == "doctype" then
+                    -- "parent has a doctype child that is not child"
+                    error("HierarchyRequestError")
+                elseif c.type == "element" and seenChild == false then
+                    -- "or an element is preceding child"
+                    error("HierarchyRequestError")
+                end
+            end
+        end
+    end
+
+    -- Note: The above statements differ from the pre-insert algorithm
+
+    local referenceChild = child.nextSibling
+    if referenceChild == node then
+        referenceChild = node.nextSibling
+    end
+
+    parent.ownerDocument:adoptNode(node)
+
+    if child.parentNode then
+        child.parentNode:removeChild(child)
+    else
+        -- "The above can only be false if child is node"
+        assert(child == node)
+    end
+
+    parent:insertBefore(node, referenceChild)
+    return child
 end
 
 function Node:contains(other)
