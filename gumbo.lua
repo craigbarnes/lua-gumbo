@@ -1,28 +1,22 @@
 local _parse = require "gumbo.parse"
 local type, open, iotype, error = type, io.open, io.type, error
-local assert = assert
+local pairs, assert = pairs, assert
 
-local defaultOptions = {
-    tabStop = 8,
-    contextElement = nil,
-    contextNamespace = "html",
-    metatables = {
-        text = require "gumbo.dom.Text",
-        comment = require "gumbo.dom.Comment",
-        element = require "gumbo.dom.Element",
-        attribute = require "gumbo.dom.Attribute",
-        document = require "gumbo.dom.Document",
-        documentType = require "gumbo.dom.DocumentType",
-        documentFragment = require "gumbo.dom.DocumentFragment",
-        nodeList = require "gumbo.dom.NodeList",
-        attributeList = require "gumbo.dom.AttributeList"
-    }
+local defaultMetatables = {
+    text = require "gumbo.dom.Text",
+    comment = require "gumbo.dom.Comment",
+    element = require "gumbo.dom.Element",
+    attribute = require "gumbo.dom.Attribute",
+    document = require "gumbo.dom.Document",
+    documentType = require "gumbo.dom.DocumentType",
+    documentFragment = require "gumbo.dom.DocumentFragment",
+    nodeList = require "gumbo.dom.NodeList",
+    attributeList = require "gumbo.dom.AttributeList"
 }
 
 local _ENV = nil
 
--- TODO: Check validity of fields
-local function checkMetatables(mt)
+local function unpackMetatables(mt)
     return
         assert(mt.text),
         assert(mt.comment),
@@ -35,17 +29,35 @@ local function checkMetatables(mt)
         assert(mt.attributeList)
 end
 
--- TODO: Full argument checking
+local function checkMetatables(mt)
+    if mt == nil then
+        return unpackMetatables(defaultMetatables)
+    elseif type(mt) ~= "table" then
+        local s = "Error: 'options.metatables' must be a table or nil (got %s)"
+        error(s:format(type(mt)), 4)
+    end
+    for k in pairs(defaultMetatables) do
+        local valtype = type(mt[k])
+        if valtype ~= "table" then
+            local s = "Error: 'options.metatables.%s' must be a table (got %s)"
+            error(s:format(k, valtype), 4)
+        end
+    end
+    return unpackMetatables(mt)
+end
+
 local function checkArgs(arg2, ctx, ctxns)
     if type(arg2) == "table" then
+        -- Use new table-of-options API
         local options = arg2
         return
             options.tabStop,
             options.contextElement,
             options.contextNamespace,
-            checkMetatables(options.metatables or defaultOptions.metatables)
+            checkMetatables(options.metatables)
     else
-        return arg2, ctx, ctxns, checkMetatables(defaultOptions.metatables)
+        -- Fall back to old API for backwards compat
+        return arg2, ctx, ctxns, unpackMetatables(defaultMetatables)
     end
 end
 
@@ -72,7 +84,7 @@ local function parseFile(pathOrFile, arg2, ctx, ctxns)
         file:close()
     end
     if text then
-        return parse(text, arg2, ctx, ctxns)
+        return _parse(text, checkArgs(arg2, ctx, ctxns))
     else
         return nil, readerr
     end

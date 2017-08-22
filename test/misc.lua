@@ -93,6 +93,8 @@ do -- Check that passing invalid arguments throws an error
     assert(not pcall(parseFile, file, "div"))
     assert(not pcall(parseFile, file, "div", "html", 8))
     assert(not pcall(parseFile, file, nil, nil, 8))
+    assert(not pcall(parseFile, file, {metatables = {}}))
+    assert(not pcall(parseFile, file, {metatables = {text = true}}))
 end
 
 -- Check that file open/read errors are handled
@@ -101,16 +103,50 @@ assert(not parseFile"_", "Passing a non-existant filename should return nil")
 -- Check that parse_file alias is present (for API backwards compatibility)
 assert(gumbo.parse_file == gumbo.parseFile)
 
--- Check that new options API works
-do
+do -- Check that using options works
     local document = assert(gumbo.parse("\t\t\t<h1>xyz</h1>", {tabStop = 4}))
     local h1 = assert(document:getElementsByTagName("h1")[1])
     assert(h1.type == "element")
     assert(h1.localName == "h1")
     assert(h1.outerHTML == "<h1>xyz</h1>")
+    assert(h1.line == 1)
     assert(h1.column == 12)
+    assert(h1.offset == 3)
     local text = assert(h1.childNodes[1])
     assert(text.type == "text")
     assert(text.data == "xyz")
+    assert(text.line == 1)
     assert(text.column == 16)
+    assert(text.offset == 7)
+end
+
+do -- Check that using custom metatables works
+    local metatables = {
+        text = {},
+        comment = {},
+        element = {__index = {mtfield = 42}},
+        attribute = {},
+        document = {__index = {mtfield = true}},
+        documentType = {},
+        documentFragment = {},
+        nodeList = {},
+        attributeList = {}
+    }
+    local options = {metatables = metatables}
+    local input = "<h1>test</h1>"
+
+    local document = assert(parse(input, options))
+    assert(document.mtfield == true)
+    local element = assert(document.childNodes[1].childNodes[2].childNodes[1])
+    assert(element.localName == "h1")
+    assert(element.mtfield == 42)
+
+    options.metatables.text = nil
+    assert(not pcall(parse, input, options))
+    options.metatables.text = false
+    assert(not pcall(parse, input, options))
+    options.metatables.text = ""
+    assert(not pcall(parse, input, options))
+    options.metatables.text = {}
+    assert(parse(input, options))
 end
