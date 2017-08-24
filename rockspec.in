@@ -1,5 +1,5 @@
 package = "gumbo"
-version = "%VERSION%-1"
+version = "%VERSION%.%VSUFFIX%-1"
 supported_platforms = {"unix"}
 
 description = {
@@ -9,28 +9,28 @@ description = {
 }
 
 source = {
-    url = "%URL%",
-    %SRCX%
+    url = "https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-%VERSION%.tar.gz"
 }
 
 dependencies = {
-    "lua >= 5.1"
+    "lua == %LUA_VER%"
 }
 
 build = {
     type = "make",
+    makefile = "GNUmakefile",
+    build_target = "build-lua%VSUFFIX%",
+    install_target = "install-lua%VSUFFIX%",
     variables = {
-        LUA = "$(LUA)",
-        LUA_CFLAGS = "-I$(LUA_INCDIR)",
-        LUA_PC = "_disabled"
+        LUA%VSUFFIX% = "$(LUA)",
+        LUA%VSUFFIX%_CFLAGS = "-I$(LUA_INCDIR)"
     },
     build_variables = {
         CFLAGS = "$(CFLAGS)",
-        LIBFLAGS = "$(LIBFLAG)",
-        USE_LOCAL_LIBGUMBO = "1"
+        LIBFLAGS = "$(LIBFLAG)"
     },
     install_variables = {
-        LUA_CMOD_DIR = "$(LIBDIR)",
-        LUA_LMOD_DIR = "$(LUADIR)"
+        LUA%VSUFFIX%_CMODDIR = "$(LIBDIR)",
+        LUA%VSUFFIX%_LMODDIR = "$(LUADIR)"
     }
 }
