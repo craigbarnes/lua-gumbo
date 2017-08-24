@@ -12,7 +12,7 @@ PANDOCFLAGS = \
 
 docs: $(DOCS) public/api.html $(patsubst %, %.gz, $(DOCS))
 
-public/index.html: README.md doc/api.md build/examples.md
+public/index.html: README.md doc/api.md build/doc/examples.md
 public/dist/index.html: doc/releases.md | public/dist/
 
 $(DOCS): public/%.html: doc/template.html doc/style.css.inc | public/
@@ -33,7 +33,7 @@ doc/style.css.inc: doc/layout.css doc/style.css
 	@cat $^ >> $@
 	@echo '</style>' >> $@
 
-build/examples.md: $(EXAMPLE_FILES) | build/
+build/doc/examples.md: $(EXAMPLE_FILES) | build/doc/
 	@$(PRINT) MDCAT '$@'
 	@printf "## Examples\n\n" > $@
 	@for file in $^; do \
@@ -42,7 +42,7 @@ build/examples.md: $(EXAMPLE_FILES) | build/
 	  printf '```\n\n' >> $@; \
 	done
 
-public/:
+build/doc/ public/:
 	@$(MKDIR) $@
 
 check-docs: $(DOCS) | build-lua53
