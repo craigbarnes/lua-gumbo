@@ -30,11 +30,8 @@ pkgmatch() {
 getluavars() {
     test "$3" || return 1
     cat << EOF
-LUA$1_PC       = $3
+# $(pkg-config --path $3)
 LUA$1_CFLAGS  ?= $(pkg-config --cflags $3)
-LUA$1_PREFIX  ?= $(pkg-config --variable=prefix $3)
-LUA$1_LIBDIR  ?= $(pkg-config --variable=libdir $3)
-LUA$1_INCDIR  ?= $(pkg-config --variable=includedir $3)
 LUA$1_LMODDIR ?= $(pkg-config --variable=INSTALL_LMOD $3)
 LUA$1_CMODDIR ?= $(pkg-config --variable=INSTALL_CMOD $3)
 LUA$1         ?= $(cmdfind lua$2 lua-$2 lua$1)
@@ -56,7 +53,7 @@ LUA53_VARS=$(getluavars 53 5.3 "$LUA53_PC")
 LUA52_VARS=$(getluavars 52 5.2 "$LUA52_PC")
 LUA51_VARS=$(getluavars 51 5.1 "$LUA51_PC")
 
-cat > config.mk << EOF
+sed 's/ *$//' > config.mk << EOF
 $LUA53_VARS
 
 $LUA52_VARS
