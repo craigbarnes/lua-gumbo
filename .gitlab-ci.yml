@@ -7,11 +7,13 @@ test:debian:
         - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
         - make build-all DEBUG=1
         - make check-all check-luajit
-        - make clean-obj rockspecs
+        - make clean-obj
+        - make rockspecs
         - luarocks-5.3 make && lua5.3 -lluarocks.loader -e 'require "gumbo"'
         - luarocks-5.2 make && lua5.2 -lluarocks.loader -e 'require "gumbo"'
         - luarocks-5.1 make && lua5.1 -lluarocks.loader -e 'require "gumbo"'
-        - make clean-obj coverage.txt
+        - make clean-obj
+        - make coverage.txt
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
         - luacov-coveralls-5.3 -t "$COVERALLS_TOKEN"
 
