@@ -19,12 +19,8 @@
 #include <stdlib.h>
 #include <lua.h>
 #include <lauxlib.h>
-#include <gumbo.h>
+#include "gumbo.h"
 #include "compat.h"
-
-#ifdef AMALG
-#include "amalg.h"
-#endif
 
 typedef unsigned int uint;
 

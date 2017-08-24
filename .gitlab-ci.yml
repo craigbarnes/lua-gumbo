@@ -1,21 +1,10 @@
 stages: [test, dist]
 
-test:debian:dynamic:
+test:debian:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     script:
-        - apt-get update
-        - apt-get install -qy libgumbo-dev
         - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
-        - make build-all DEBUG=1
-        - make check-all check-luajit
-
-test:debian:static:
-    stage: test
-    image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing-extra
-    script:
-        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" USE_LOCAL_LIBGUMBO=1
-        - make local-libgumbo
         - make build-all DEBUG=1
         - make check-all check-luajit
 #        - make clean check-luarocks-make LUAROCKS=luarocks-5.3
@@ -24,15 +13,13 @@ test:debian:static:
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
         - luacov-coveralls-5.3 -t "$COVERALLS_TOKEN"
 
-test:alpine:static:
+test:alpine:
     stage: test
     image: alpine:3.6
     script:
-        - apk --update add make gcc binutils pkgconf curl gzip tar
-          g++ autoconf automake libtool
+        - apk --update add make gcc binutils pkgconf
           libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
-        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" USE_LOCAL_LIBGUMBO=1
-        - make local-libgumbo
+        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
         - make build-all DEBUG=1
         - make check-all
 

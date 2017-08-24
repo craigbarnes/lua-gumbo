@@ -17,10 +17,10 @@ UNAME      = $(shell uname)
 ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
 ISLINUX    = $(call EQUAL, $(UNAME), Linux)
 
-CFLAGS   ?= -g -O2 -Wall -Wextra -Wwrite-strings -Wshadow
-XCFLAGS  += -std=c99 -pedantic-errors -fpic
-CCOPTS = $(XCFLAGS) $(GUMBO_CFLAGS) $(CPPFLAGS) $(CFLAGS)
-LDOPTS = $(XLDFLAGS) $(GUMBO_LDFLAGS) $(LIBFLAGS)
+CFLAGS ?= -g -O2
+XCFLAGS += -std=c99 -pedantic-errors -fpic
+CCOPTS = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
+LDOPTS = $(XLDFLAGS) $(LIBFLAGS)
 
 BUILD_VERS = lua53 lua52 lua51
 BUILD_ALL_PHONY = $(addprefix build-, $(BUILD_VERS))
@@ -37,14 +37,15 @@ $(BUILD_ALL_PHONY): build-lua%: build/lua%/gumbo/parse.so
 build/lua53/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=503
 build/lua52/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=502
 build/lua51/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=501
+$(OBJ_ALL): CFLAGS += -Wall -Wextra -Wwrite-strings -Wshadow
 
-$(BUILD_ALL): build/%/gumbo/parse.so: build/%/gumbo/parse.o
+$(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_A)
 	@$(PRINT) LINK '$@'
 	@$(CC) $(LDOPTS) -o $@ $^
 
 $(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c config.mk | build/lua%/gumbo/
 	@$(PRINT) CC '$@'
-	@$(CC) $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
+	@$(CC) -Ilib $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
 
 build/lua%/gumbo/:
 	@$(MKDIR) $@

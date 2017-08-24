@@ -1,6 +1,6 @@
 include mk/compat.mk
+include mk/lib.mk
 include mk/build.mk
-include mk/gumbo.mk
 include mk/check.mk
 include mk/dist.mk
 include mk/doc.mk
