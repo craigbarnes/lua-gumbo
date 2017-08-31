@@ -14,53 +14,12 @@ Requirements
 Installation
 ------------
 
-### Using LuaRocks
-
-To install the latest lua-gumbo release via [LuaRocks], first ensure
-the requirements listed above are installed, then use the command:
+To install the latest release via [LuaRocks], first ensure the
+requirements listed above are installed, then use the command:
 
     luarocks install gumbo
 
-### Using GNU Make
-
-First, download and extract the latest release tarball:
-
-    curl -LO https://craigbarnes.gitlab.io/lua-gumbo/dist/lua-gumbo-0.4.tar.gz
-    tar -xzf lua-gumbo-0.4.tar.gz
-    cd lua-gumbo-0.4
-
-By default, the Makefile will consult [pkg-config] for the appropriate
-build variables. Usually the following commands will be sufficient:
-
-    make
-    make check
-    [sudo] make install
-
-The following pkg-config names are searched in order and the first one
-to be found is used:
-
-    lua53 lua5.3 lua-5.3 lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua luajit
-
-If, for example, your system has both `lua5.3.pc` and `luajit.pc` installed
-then `lua5.3.pc` will be used by default. You can override this default
-behavior by specifying the `LUA_PC` variable. To build for LuaJIT, in
-this case, use:
-
-    make LUA_PC=luajit
-    make check LUA_PC=luajit
-    [sudo] make install LUA_PC=luajit
-
-If your Lua installation doesn't include a pkg-config file,
-running `make` will simply complain and exit. In this case, the
-relevant variables will have to be specified manually, for example:
-
-    make LUA_CFLAGS=-I/usr/include/lua5.2
-    make check LUA=/usr/bin/lua5.2
-    make install LUA_LMOD_DIR=/usr/share/lua/5.2 LUA_CMOD_DIR=/usr/lib/lua/5.2
-
-For convenience, variable overrides can be stored persistently in a file
-named `local.mk`. This may be useful when building and testing against
-the same configuration multiple times.
+Note: Installing on Windows is *not* supported.
 
 Usage
 -----
