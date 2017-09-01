@@ -39,7 +39,7 @@ build/lua52/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=502
 build/lua51/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=501
 $(OBJ_ALL): CFLAGS += -Wall -Wextra -Wwrite-strings -Wshadow
 
-$(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_A)
+$(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_OBJ)
 	@$(PRINT) LINK '$@'
 	@$(CC) $(LDOPTS) -o $@ $^
 
