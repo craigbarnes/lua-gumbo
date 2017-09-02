@@ -30,7 +30,7 @@ pkgmatch() {
 getluavars() {
     test "$3" || return 1
     cat << EOF
-# $(pkg-config --path $3)
+# Lua $2 vars from $(pkg-config --path $3 2>/dev/null || echo "$3.pc")
 LUA$1_CFLAGS  ?= $(pkg-config --cflags $3)
 LUA$1_LMODDIR ?= $(pkg-config --variable=INSTALL_LMOD $3)
 LUA$1_CMODDIR ?= $(pkg-config --variable=INSTALL_CMOD $3)
