@@ -98,8 +98,6 @@ function Document:serialize(buffer)
     end
 end
 
--- TODO: function Document:getElementsByTagNameNS(namespace, localName)
--- TODO: function Document:createElementNS(namespace, qualifiedName)
 -- TODO: function Document:createDocumentFragment()
 -- TODO: function Document:importNode(node, deep)
 

@@ -194,15 +194,6 @@ function Element:cloneNode(deep)
     return setmetatable(clone, Element)
 end
 
--- TODO: Element.prefix
--- TODO: function Element.getAttributeNS(namespace, localName)
--- TODO: function Element.setAttributeNS(namespace, name, value)
--- TODO: function Element.removeAttributeNS(namespace, localName)
--- TODO: function Element.hasAttributeNS(namespace, localName)
--- TODO: function Element.closest(selectors)
--- TODO: function Element.matches(selectors)
--- TODO: function Element.getElementsByTagNameNS(namespace, localName)
-
 function Element.getters:namespaceURI()
     return namespaces[self.namespace]
 end

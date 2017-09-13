@@ -173,14 +173,8 @@ function Node:isEqualNode(other)
     return true
 end
 
--- TODO: function Node:cloneNode(deep)
-
--- TODO: Node.baseURI
 -- TODO: function Node:normalize()
 -- TODO: function Node:compareDocumentPosition(other)
--- TODO: function Node:lookupPrefix(namespace)
--- TODO: function Node:lookupNamespaceURI(prefix)
--- TODO: function Node:isDefaultNamespace(namespace)
 
 local function getChildIndex(parent, child)
     for i, node in ipairs(parent.childNodes) do
