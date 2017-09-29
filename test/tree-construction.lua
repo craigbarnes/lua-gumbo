@@ -140,7 +140,12 @@ do
         local tests = parseTestData(filename)
         for i, test in ipairs(tests) do
             local input = assert(test.data)
-            if input:find("<noscript>") then
+            if
+                input:find("<noscript>")
+                or input:find("<menuitem>")
+                or input:find("<dialog>")
+                or input:find("<isindex")
+            then
                 skipped = skipped + 1
             else
                 local expected = assert(test.document)
