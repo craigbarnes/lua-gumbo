@@ -1,17 +1,34 @@
-LIBGUMBO_FILES = \
-    attribute error string_buffer tag tag_lookup utf8 vector char_ref \
-    parser string_piece tokenizer util
+CXX = g++
+CXXFLAGS = -I ./lib
 
-LIBGUMBO_OBJ = $(addprefix build/lib/, $(addsuffix .o, $(LIBGUMBO_FILES)))
+LIBGUMBO_OBJ = $(addprefix build/lib/, $(addsuffix .o, \
+    attribute error string_buffer tag tag_lookup utf8 vector char_ref \
+    parser string_piece tokenizer util \
+))
+
+TEST_OBJ = $(addprefix build/lib/test_, $(addsuffix .o, \
+    attribute char_ref parser string_buffer string_piece test_utils \
+    tokenizer utf8 vector \
+))
 
 $(LIBGUMBO_OBJ): CFLAGS += -Wall
-
 $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
 	@$(PRINT) CC '$@'
 	@$(CC) $(XCFLAGS) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
+$(TEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
+	@$(PRINT) CXX '$@'
+	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
+	@$(PRINT) LINK '$@'
+	@$(CXX) `pkg-config --libs gtest` -o $@ $^
+
 build/lib/:
 	@$(MKDIR) '$@'
+
+check-lib: build/lib/test
+	./$<
 
 ragel-gen: | build/lib/
 	ragel -F0 -o build/lib/char_ref.c.tmp lib/char_ref.rl
@@ -21,8 +38,8 @@ gperf-gen:
 	gperf -LANSI-C -m200 lib/tag_lookup.gperf > lib/tag_lookup.c
 
 
-CLEANFILES += $(LIBGUMBO_OBJ)
-.PHONY: ragel-gen gperf-gen
+CLEANFILES += $(LIBGUMBO_OBJ) $(TEST_OBJ) build/lib/test
+.PHONY: ragel-gen gperf-gen check-lib
 
 # sed -i '/^# sed/,$ { /^# sed/b; /^  gcc/b; d }' mk/lib.mk && \
   gcc -MM lib/*.c | sed 's|^\([^: ]\+:\)|build/lib/\1|' >> mk/lib.mk
