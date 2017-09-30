@@ -14,7 +14,7 @@ build/lib/:
 	@$(MKDIR) '$@'
 
 ragel-gen:
-	ragel -F0 -o lib/char_ref.c lib/char_ref.rl
+	cd lib && ragel -F0 -o char_ref.c char_ref.rl
 
 gperf-gen:
 	gperf -LANSI-C -m200 lib/tag_lookup.gperf > lib/tag_lookup.c
