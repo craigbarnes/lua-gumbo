@@ -13,8 +13,9 @@ $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
 build/lib/:
 	@$(MKDIR) '$@'
 
-ragel-gen:
-	cd lib && ragel -F0 -o char_ref.c char_ref.rl
+ragel-gen: | build/lib/
+	ragel -F0 -o build/lib/char_ref.c.tmp lib/char_ref.rl
+	sed '/^#line/d' build/lib/char_ref.c.tmp > lib/char_ref.c
 
 gperf-gen:
 	gperf -LANSI-C -m200 lib/tag_lookup.gperf > lib/tag_lookup.c
