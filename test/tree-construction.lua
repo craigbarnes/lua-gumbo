@@ -143,7 +143,6 @@ do
             if
                 input:find("<noscript>")
                 or input:find("<menuitem>")
-                or input:find("<dialog>")
                 or input:find("<isindex")
             then
                 skipped = skipped + 1
