@@ -3,6 +3,7 @@ stages: [test, dist]
 test:debian:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
+    coverage: '/^Total\s+\d+\s+\d+\s+(\d+\.\d+\%)$/'
     script:
         - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
         - make build-all DEBUG=1
