@@ -49,6 +49,11 @@ LUA52_PC=$(pkgfind lua52 lua5.2 lua-5.2 || pkgmatch lua '>= 5.2' '< 5.3')
 LUA51_PC=$(pkgfind lua51 lua5.1 lua-5.1 || pkgmatch lua '>= 5.1' '< 5.2' || \
            pkgmatch luajit '>= 2.0.0' '< 2.2.0')
 
+if test -z "${LUA53_PC}${LUA52_PC}${LUA51_PC}"; then
+    echo "configure:$LINENO: No Lua installations found via pkg-config" >&2
+    exit 1
+fi
+
 LUA53_VARS=$(getluavars 53 5.3 "$LUA53_PC")
 LUA52_VARS=$(getluavars 52 5.2 "$LUA52_PC")
 LUA51_VARS=$(getluavars 51 5.1 "$LUA51_PC")

@@ -1,5 +1,8 @@
+ifndef DISABLE_CONFIG_MK
+config.mk = config.mk
 ifneq "" "$(filter-out clean clean-%,$(or $(MAKECMDGOALS),all))"
-include config.mk
+include $(config.mk)
+endif
 endif
 
 CC        ?= gcc
@@ -43,7 +46,7 @@ $(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_OBJ
 	@$(PRINT) LINK '$@'
 	@$(CC) $(LDOPTS) -o $@ $^
 
-$(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c config.mk | build/lua%/gumbo/
+$(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c $(config.mk) | build/lua%/gumbo/
 	@$(PRINT) CC '$@'
 	@$(CC) -Ilib $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
 
