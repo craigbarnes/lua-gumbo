@@ -1,6 +1,7 @@
 ifndef DISABLE_CONFIG_MK
 config.mk = config.mk
-ifneq "" "$(filter-out clean clean-%,$(or $(MAKECMDGOALS),all))"
+NO_CONFIG_TARGETS := clean clean-% docs dist check-dist
+ifneq "" "$(filter-out $(NO_CONFIG_TARGETS),$(or $(MAKECMDGOALS),all))"
 include $(config.mk)
 endif
 endif
