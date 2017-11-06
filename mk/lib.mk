@@ -1,9 +1,12 @@
 CXX = g++
 CXXFLAGS = -I ./lib
+GPERF = gperf
+GPERF_GEN = $(GPERF) -m100 $(1:.c=.gperf) | sed '/^\#line/d' > $(1)
 
 LIBGUMBO_OBJ = $(addprefix build/lib/, $(addsuffix .o, \
     attribute error string_buffer tag tag_lookup utf8 vector char_ref \
     parser string_piece tokenizer util \
+    svg_attrs \
 ))
 
 TEST_OBJ = $(addprefix build/lib/test_, $(addsuffix .o, \
@@ -35,7 +38,8 @@ ragel-gen: | build/lib/
 	sed '/^#line/d' build/lib/char_ref.c.tmp > lib/char_ref.c
 
 gperf-gen:
-	gperf -LANSI-C -m200 lib/tag_lookup.gperf > lib/tag_lookup.c
+	$(call GPERF_GEN, lib/tag_lookup.c)
+	$(call GPERF_GEN, lib/svg_attrs.c)
 
 
 .PHONY: ragel-gen gperf-gen check-lib
