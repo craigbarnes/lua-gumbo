@@ -1,19 +1,21 @@
 stages: [test, dist]
 
+before_script:
+    - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" DEBUG=1
+
 test:debian:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     coverage: '/^Total\s+\d+\s+\d+\s+(\d+\.\d+\%)$/'
     script:
-        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
-        - make build-all DEBUG=1
+        - make build-all
         - make check-all check-luajit
 
         - make clean-obj
         - make rockspecs
-        - luarocks-5.3 make gumbo-*.53-1.rockspec
-        - luarocks-5.2 make gumbo-*.52-1.rockspec
-        - luarocks-5.1 make gumbo-*.51-1.rockspec
+        - luarocks-5.3 --verbose make gumbo-*.53-1.rockspec
+        - luarocks-5.2 --verbose make gumbo-*.52-1.rockspec
+        - luarocks-5.1 --verbose make gumbo-*.51-1.rockspec
         - lua5.3 -e 'require "gumbo"'
         - lua5.2 -e 'require "gumbo"'
         - lua5.1 -e 'require "gumbo"'
@@ -29,17 +31,16 @@ test:alpine:
     script:
         - apk --update add make gcc binutils pkgconf
           libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
-        - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget"
-        - make build-all DEBUG=1
+        - make build-all
         - make check-all
 
 pages-test:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
     except: [master]
-    script:
+    script: &PAGES_SCRIPT
         - git fetch --tags
-        - make -j"$(mk/nproc.sh)" docs dist
+        - make docs dist
         - make check-dist
 
 pages:
@@ -47,7 +48,4 @@ pages:
     image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
     artifacts: {paths: [public]}
     only: [master]
-    script:
-        - git fetch --tags
-        - make -j"$(mk/nproc.sh)" docs dist
-        - make check-dist
+    script: *PAGES_SCRIPT
