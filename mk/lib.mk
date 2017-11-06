@@ -6,7 +6,7 @@ GPERF_GEN = $(GPERF) -m100 $(1:.c=.gperf) | sed '/^\#line/d' > $(1)
 LIBGUMBO_OBJ = $(addprefix build/lib/, $(addsuffix .o, \
     attribute error string_buffer tag tag_lookup utf8 vector char_ref \
     parser string_piece tokenizer util \
-    svg_attrs \
+    svg_tags svg_attrs \
 ))
 
 TEST_OBJ = $(addprefix build/lib/test_, $(addsuffix .o, \
@@ -39,6 +39,7 @@ ragel-gen: | build/lib/
 
 gperf-gen:
 	$(call GPERF_GEN, lib/tag_lookup.c)
+	$(call GPERF_GEN, lib/svg_tags.c)
 	$(call GPERF_GEN, lib/svg_attrs.c)
 
 
@@ -62,6 +63,7 @@ build/lib/string_buffer.o: lib/string_buffer.c lib/string_buffer.h lib/gumbo.h \
 build/lib/string_piece.o: lib/string_piece.c lib/string_piece.h lib/gumbo.h \
  lib/util.h
 build/lib/svg_attrs.o: lib/svg_attrs.c lib/replacement.h
+build/lib/svg_tags.o: lib/svg_tags.c lib/replacement.h
 build/lib/tag.o: lib/tag.c lib/gumbo.h lib/tag_lookup.h
 build/lib/tag_lookup.o: lib/tag_lookup.c lib/tag_lookup.h lib/gumbo.h
 build/lib/tokenizer.o: lib/tokenizer.c lib/tokenizer.h lib/gumbo.h lib/token_type.h \

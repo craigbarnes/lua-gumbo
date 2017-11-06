@@ -13,6 +13,7 @@ mk/git-hooks/ export-ignore
 
 lib/char_ref.c linguist-generated
 lib/tag_lookup.c linguist-generated
+lib/svg_tags.c linguist-generated
 lib/svg_attrs.c linguist-generated
 
 *.[ch] code
