@@ -36,7 +36,8 @@ $(INSTALL_ALL): install-lua%: build-lua%
 clean-obj:
 	$(RM) $(BUILD_ALL) $(OBJ_ALL)
 
-clean: clean-obj clean-docs
+clean: clean-docs
+	$(RM) -r build/
 	$(RM) $(CLEANFILES)
 
 

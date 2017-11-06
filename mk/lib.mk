@@ -38,7 +38,6 @@ gperf-gen:
 	gperf -LANSI-C -m200 lib/tag_lookup.gperf > lib/tag_lookup.c
 
 
-CLEANFILES += $(LIBGUMBO_OBJ) $(TEST_OBJ) build/lib/test
 .PHONY: ragel-gen gperf-gen check-lib
 
 # sed -i '/^# sed/,$ { /^# sed/b; /^  gcc/b; d }' mk/lib.mk && \
