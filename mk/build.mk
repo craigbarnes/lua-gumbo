@@ -1,11 +1,3 @@
-ifndef DISABLE_CONFIG_MK
-config.mk = config.mk
-NO_CONFIG_TARGETS := clean clean-% docs dist check-dist
-ifneq "" "$(filter-out $(NO_CONFIG_TARGETS),$(or $(MAKECMDGOALS),all))"
-include $(config.mk)
-endif
-endif
-
 CC        ?= gcc
 LIBFLAGS  ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
 XLDFLAGS  += $(if $(ISLINUX), $(NOASNEEDED))
@@ -47,18 +39,12 @@ $(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_OBJ
 	@$(PRINT) LINK '$@'
 	@$(CC) $(LDOPTS) -o $@ $^
 
-$(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c $(config.mk) | build/lua%/gumbo/
+$(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c | build/lua%/gumbo/
 	@$(PRINT) CC '$@'
 	@$(CC) -Ilib $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
 
 build/lua%/gumbo/:
 	@$(MKDIR) $@
-
-config.mk: configure
-	@if test ! -f $@; then \
-	 $(PRINT) CONFIGURE '$@'; \
-	 ./configure; \
-	fi
 
 
 .PHONY: build-all build-any $(BUILD_ALL_PHONY)
