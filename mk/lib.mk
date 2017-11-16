@@ -64,7 +64,7 @@ build/lib/string_piece.o: lib/string_piece.c lib/string_piece.h lib/gumbo.h \
  lib/util.h
 build/lib/svg_attrs.o: lib/svg_attrs.c lib/replacement.h
 build/lib/svg_tags.o: lib/svg_tags.c lib/replacement.h
-build/lib/tag.o: lib/tag.c lib/gumbo.h lib/tag_lookup.h
+build/lib/tag.o: lib/tag.c lib/gumbo.h lib/util.h lib/tag_lookup.h
 build/lib/tag_lookup.o: lib/tag_lookup.c lib/tag_lookup.h lib/gumbo.h
 build/lib/tokenizer.o: lib/tokenizer.c lib/tokenizer.h lib/gumbo.h lib/token_type.h \
  lib/tokenizer_states.h lib/attribute.h lib/char_ref.h lib/error.h \
