@@ -5,9 +5,8 @@ compiler: [clang, gcc]
 install:
     - export DEBIAN_FRONTEND=noninteractive
     - sudo apt-get update -qq
-    - sudo apt-get -y install lua5.2 lua5.1 liblua5.2-dev liblua5.1-dev googletest
+    - sudo apt-get -y install lua5.2 lua5.1 liblua5.2-dev liblua5.1-dev
 script:
     - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" DEBUG=1
     - make build-lua52 build-lua51
-    - make check-lib
     - make check-lua52 check-lua51
