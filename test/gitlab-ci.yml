@@ -9,6 +9,7 @@ test:debian:
     coverage: '/^Total\s+\d+\s+\d+\s+(\d+\.\d+\%)$/'
     script:
         - make build-all
+        - make check-lib
         - make check-all check-luajit
 
         - make clean-obj
@@ -29,9 +30,10 @@ test:alpine:
     stage: test
     image: alpine:3.6
     script:
-        - apk --update add make gcc binutils pkgconf
-          libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
+        - apk --update add make gcc g++ binutils pkgconf gtest
+          gtest-dev libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
         - make build-all
+        - make check-lib
         - make check-all
 
 pages-test:
