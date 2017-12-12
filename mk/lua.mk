@@ -33,12 +33,10 @@ else
   $(warning Expect much slower build speeds)
 endif
 
-LUA_VERSIONS_FOUND = \
-    $(if $(LUA53_PC), 53) \
-    $(if $(LUA52_PC), 52) \
-    $(if $(LUA51_PC), 51)
-
-LUAS_FOUND = $(addprefix lua, $(LUA_VERSIONS_FOUND))
+LUAS_FOUND = \
+    $(if $(LUA53_PC), lua53) \
+    $(if $(LUA52_PC), lua52) \
+    $(if $(LUA51_PC), lua51)
 
 LUA53_CFLAGS ?= $(shell $(PKGCONFIG_Q) --cflags $(LUA53_PC))
 LUA52_CFLAGS ?= $(shell $(PKGCONFIG_Q) --cflags $(LUA52_PC))
