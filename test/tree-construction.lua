@@ -54,18 +54,19 @@ local function serialize(document)
             else
                 childNodes = node.childNodes
             end
-
-            local n = #childNodes
-            for i = 1, n do
-                if childNodes[i].type == "text" and childNodes[i+1]
-                   and childNodes[i+1].type == "text"
+            for i = 1, #childNodes do
+                local child = assert(childNodes[i])
+                local nextChild = childNodes[i+1]
+                if
+                    child.type == "text"
+                    and nextChild
+                    and nextChild.type == "text"
                 then
                     -- Merge adjacent text nodes, as expected by the
                     -- spec and the html5lib tests
                     -- TODO: Why doesn't Gumbo do this during parsing?
-                    local text = childNodes[i+1].data
-                    childNodes[i+1] = childNodes[i]
-                    childNodes[i+1].data = childNodes[i+1].data .. text
+                    child.data = child.data .. nextChild.data
+                    childNodes[i+1] = child
                 else
                     writeNode(childNodes[i], depth + 1)
                 end
