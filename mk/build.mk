@@ -1,7 +1,5 @@
 CC        ?= gcc
 LIBFLAGS  ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
-XLDFLAGS  += $(if $(ISLINUX), $(NOASNEEDED))
-NOASNEEDED = -Wl,--no-as-needed
 
 MKDIR     ?= mkdir -p
 INSTALL   ?= install -p -m 0644
@@ -11,7 +9,6 @@ RM        ?= rm -f
 EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 UNAME      = $(shell uname)
 ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
-ISLINUX    = $(call EQUAL, $(UNAME), Linux)
 
 CFLAGS ?= -g -O2
 XCFLAGS += -std=c99 -pedantic-errors -fpic
