@@ -22,7 +22,6 @@ build = {
     build_target = "build-lua%VSUFFIX%",
     install_target = "install-lua%VSUFFIX%",
     variables = {
-        DISABLE_CONFIG_MK = "1",
         LUA%VSUFFIX% = "$(LUA)",
         LUA%VSUFFIX%_CFLAGS = "-I$(LUA_INCDIR)"
     },
