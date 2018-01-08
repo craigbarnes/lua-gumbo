@@ -49,13 +49,18 @@ local function getline(filename, linenumber)
 end
 
 local function handler(err)
-    if type(err) ~= "string" then return traceback("Unknown error") end
+    if type(err) ~= "string" then
+        return traceback("Unknown error")
+    end
     local filename, linenumber = err:match("^(.*):([0-9]+): ")
-    if not filename then return traceback(err) end
-    local line = getline(filename, tonumber(linenumber))
-    if not line then return traceback(err) end
-    local s = "%s\n   --->  \27[33m%s\27[0m\n     %s"
-    return s:format(err, line:match("^%s*(.-)%s*$"), traceback())
+    if filename then
+        local line = getline(filename, tonumber(linenumber))
+        if line then
+            local s = "%s\n   --->  \27[33m%s\27[0m\n     %s"
+            return s:format(err, line:match("^%s*(.-)%s*$"), traceback())
+        end
+    end
+    return traceback(err)
 end
 
 local function runTests()
