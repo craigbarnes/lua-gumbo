@@ -6,9 +6,10 @@ EXAMPLE_FILES = $(addprefix examples/, $(addsuffix .lua, $(EXAMPLE_NAMES)))
 DOCS = public/index.html public/dist/index.html
 
 PANDOCFLAGS = \
-    --smart --toc \
+    --toc \
     --template=doc/template.html \
-    --include-in-header=doc/style.css.inc
+    --include-in-header=doc/style.css.inc \
+    -Mtitle=_
 
 docs: $(DOCS) public/api.html $(patsubst %, %.gz, $(DOCS))
 

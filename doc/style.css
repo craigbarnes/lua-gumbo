@@ -138,12 +138,14 @@ pre code {
     border: none;
 }
 
-code > span.kw {font-weight: bold}
-code > span.st {color: goldenrod}
-code > span.co {color: gray}
-code > span.do {color: gray}
-code > span.dv {color: blue}
-code > span.bn {color: blue}
-code > span.fl {color: purple}
-code > span.al {color: green; font-weight: bold}
-code > span.er {color: red; font-weight: bold}
+.sourceLine {color: black}
+.sourceCode span.kw {font-weight: bold}
+.sourceCode span.st {color: goldenrod}
+.sourceCode span.co {color: gray}
+.sourceCode span.do {color: gray}
+.sourceCode span.dv {color: blue}
+.sourceCode span.bn {color: blue}
+.sourceCode span.fl {color: purple}
+.sourceCode span.dt {color: purple}
+.sourceCode span.al {color: green; font-weight: bold}
+.sourceCode span.er {color: red; font-weight: bold}
