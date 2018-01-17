@@ -16,16 +16,16 @@ TEST_OBJ = $(addprefix build/lib/test_, $(addsuffix .o, \
 
 $(LIBGUMBO_OBJ): CFLAGS += -Wall
 $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
-	@$(PRINT) CC '$@'
-	@$(CC) $(XCFLAGS) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+	$(E) CC '$@'
+	$(Q) $(CC) $(XCFLAGS) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(TEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
-	@$(PRINT) CXX '$@'
-	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(E) CXX '$@'
+	$(Q) $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
-	@$(PRINT) LINK '$@'
-	@$(CXX) `pkg-config --libs gtest` -o $@ $^
+	$(E) LINK '$@'
+	$(Q) $(CXX) `pkg-config --libs gtest` -o $@ $^
 
 build/lib/:
 	@$(MKDIR) '$@'

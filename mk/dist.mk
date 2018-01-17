@@ -8,12 +8,12 @@ check-dist: dist
 	sha1sum -c test/dist-sha1sums.txt
 
 public/dist/lua-gumbo-%.tar.gz: | public/dist/
-	@$(PRINT) ARCHIVE '$@'
-	@git archive --prefix=lua-gumbo-$*/ -o $@ $*
+	$(E) ARCHIVE '$@'
+	$(Q) git archive --prefix=lua-gumbo-$*/ -o $@ $*
 
 gumbo-%-1.rockspec: rockspec.in mk/rockspec.sh
-	@$(PRINT) ROCKSPEC $@
-	@mk/rockspec.sh '$*' < $< > $@
+	$(E) GEN $@
+	$(Q) mk/rockspec.sh '$*' < $< > $@
 
 public/dist/: | public/
 	@$(MKDIR) $@

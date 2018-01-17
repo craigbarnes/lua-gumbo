@@ -1,19 +1,15 @@
-CC        ?= gcc
-LIBFLAGS  ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
-
-MKDIR     ?= mkdir -p
-INSTALL   ?= install -p -m 0644
-INSTALLX  ?= install -p -m 0755
-RM        ?= rm -f
-
-EQUAL      = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
-UNAME      = $(shell uname)
-ISDARWIN   = $(call EQUAL, $(UNAME), Darwin)
-
+CC ?= gcc
 CFLAGS ?= -g -O2
 XCFLAGS += -std=c99 -pedantic-errors -fpic
 CCOPTS = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LDOPTS = $(XLDFLAGS) $(LIBFLAGS)
+LIBFLAGS ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
+MKDIR ?= mkdir -p
+RM = rm -f
+EQUAL = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
+UNAME = $(shell uname)
+ISDARWIN = $(call EQUAL, $(UNAME), Darwin)
+MAKE_S = $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
 
 BUILD_VERS = lua53 lua52 lua51
 BUILD_ALL_PHONY = $(addprefix build-, $(BUILD_VERS))
@@ -34,12 +30,12 @@ $(OBJ_ALL): CFLAGS += -Wall -Wextra -Wwrite-strings -Wshadow
 $(OBJ_ALL): gumbo/compat.h lib/gumbo.h
 
 $(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_OBJ)
-	@$(PRINT) LINK '$@'
-	@$(CC) $(LDOPTS) -o $@ $^
+	$(E) LINK '$@'
+	$(Q) $(CC) $(LDOPTS) -o $@ $^
 
 $(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c | build/lua%/gumbo/
-	@$(PRINT) CC '$@'
-	@$(CC) -Ilib $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
+	$(E) CC '$@'
+	$(Q) $(CC) -Ilib $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
 
 build/lua%/gumbo/:
 	@$(MKDIR) $@
@@ -48,11 +44,16 @@ build/lua%/gumbo/:
 .PHONY: build-all build-any $(BUILD_ALL_PHONY)
 .SECONDARY: $(dir $(BUILD_ALL))
 
-ifneq "$(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))" ""
- PRINT = printf '\c'
-else ifdef DEBUG
- MAKEFLAGS += --trace
- PRINT = printf '\c' # Makes printf "ignore any remaining string operands"
+ifneq "$(MAKE_S)" ""
+  # Make "-s" flag was used (silent build)
+  Q = @
+  E = @:
+else ifeq "$(V)" "1"
+  # "V=1" variable was set (verbose build)
+  Q =
+  E = @:
 else
- PRINT = printf '%-9s  %s\n'
+  # Normal build
+  Q = @
+  E = @printf ' %7s  %s\n'
 endif

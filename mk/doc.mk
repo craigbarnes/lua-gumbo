@@ -17,27 +17,27 @@ public/index.html: README.md doc/api.md build/doc/examples.md
 public/dist/index.html: doc/releases.md | public/dist/
 
 $(DOCS): public/%.html: doc/template.html doc/style.css.inc | public/
-	@$(PRINT) PANDOC '$@'
-	@$(PANDOC) $(PANDOCFLAGS) -o '$@' $(filter %.md, $^)
+	$(E) PANDOC '$@'
+	$(Q) $(PANDOC) $(PANDOCFLAGS) -o '$@' $(filter %.md, $^)
 
 public/api.html: doc/redir.html | public/
-	@$(PRINT) CP '$@'
-	@cp $< $@
+	$(E) CP '$@'
+	$(Q) cp $< $@
 
 public/%.gz: public/%
-	@$(PRINT) GZIP '$@'
-	@gzip -9 < $< > $@
+	$(E) GZIP '$@'
+	$(Q) gzip -9 < $< > $@
 
 doc/style.css.inc: doc/layout.css doc/style.css
-	@$(PRINT) CSSCAT '$@'
-	@echo '<style>' > $@
-	@cat $^ >> $@
-	@echo '</style>' >> $@
+	$(E) CSSCAT '$@'
+	$(Q) echo '<style>' > $@
+	$(Q) cat $^ >> $@
+	$(Q) echo '</style>' >> $@
 
 build/doc/examples.md: $(EXAMPLE_FILES) | build/doc/
-	@$(PRINT) MDCAT '$@'
-	@printf "## Examples\n\n" > $@
-	@for file in $^; do \
+	$(E) MDCAT '$@'
+	$(Q) printf "## Examples\n\n" > $@
+	$(Q) for file in $^; do \
 	  printf '```lua\n' >> $@; \
 	  cat $$file >> $@; \
 	  printf '```\n\n' >> $@; \
