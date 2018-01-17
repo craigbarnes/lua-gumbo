@@ -21,6 +21,7 @@ build = {
     makefile = "GNUmakefile",
     build_target = "build-lua%VSUFFIX%",
     install_target = "install-lua%VSUFFIX%",
+    copy_directories = {}, -- Override the default: {"doc"}
     variables = {
         LUA%VSUFFIX% = "$(LUA)",
         LUA%VSUFFIX%_CFLAGS = "-I$(LUA_INCDIR)"
