@@ -12,7 +12,6 @@ local clock, exit = os.clock, os.exit
 local verbose = os.getenv "VERBOSE"
 local _ENV = nil
 local ELEMENT_NODE, TEXT_NODE, COMMENT_NODE = 1, 3, 8
-local filenames = {}
 
 local function serialize(document)
     local buf = Buffer()
@@ -120,18 +119,27 @@ local function parseTestData(filename)
     return tests
 end
 
-do
-    local pipe = assert(popen("echo test/tree-construction/*.dat"))
-    local text = assert(pipe:read("*a"))
-    pipe:close()
-    assert(text:len() > 0, "No test data found")
-    local i = 0
-    for filename in text:gmatch("%S+") do
-        i = i + 1
-        filenames[i] = filename
+local function expand_filenames(t)
+    for i = 1, #t do
+        local filename = assert(t[i])
+        t[i] = "test/tree-construction/" .. filename .. ".dat"
     end
-    assert(i > 0, "No test data found")
+    return t
 end
+
+local filenames = expand_filenames {
+    "adoption01", "adoption02", "blocks", "comments01", "doctype01",
+    "domjs-unsafe", "entities01", "entities02", "foreign-fragment",
+    "html5test-com", "inbody01", "isindex", "main-element", "math",
+    "menuitem-element", "namespace-sensitivity", "noscript01",
+    "pending-spec-changes", "pending-spec-changes-plain-text-unsafe",
+    "plain-text-unsafe", "ruby", "scriptdata01", "tables01", "template",
+    "tests1", "tests2", "tests3", "tests4", "tests5", "tests6",
+    "tests7", "tests8", "tests9", "tests10", "tests11", "tests12",
+    "tests14", "tests15", "tests16", "tests17", "tests18", "tests19",
+    "tests20", "tests21", "tests22", "tests23", "tests24", "tests25",
+    "tests26", "tests_innerHTML_1", "tricky01", "webkit01", "webkit02"
+}
 
 do
     local hrule = ("="):rep(76)
