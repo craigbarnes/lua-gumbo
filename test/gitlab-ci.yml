@@ -27,10 +27,9 @@ test:debian:
 
 test:alpine:
     stage: test
-    image: alpine:3.6
+    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-alpine
     script:
-        - apk --update add make gcc binutils pkgconf
-          libc-dev lua5.3-dev lua5.2-dev lua5.1-dev
+        - apk --update add lua5.3-dev lua5.2-dev lua5.1-dev
         - make build-all
         - make check-all
 
