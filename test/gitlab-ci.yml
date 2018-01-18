@@ -13,9 +13,9 @@ test:debian:
 
         - make clean-obj
         - make rockspecs
-        - luarocks-5.3 --verbose make gumbo-*.53-1.rockspec
-        - luarocks-5.2 --verbose make gumbo-*.52-1.rockspec
-        - luarocks-5.1 --verbose make gumbo-*.51-1.rockspec
+        - luarocks-5.3 make gumbo-*.53-1.rockspec
+        - luarocks-5.2 make gumbo-*.52-1.rockspec
+        - luarocks-5.1 make gumbo-*.51-1.rockspec
         - lua5.3 -e 'require "gumbo"'
         - lua5.2 -e 'require "gumbo"'
         - lua5.1 -e 'require "gumbo"'
