@@ -70,6 +70,16 @@ static inline void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
     }
 }
 
+static inline void pushstring_lower(lua_State *L, const char *s, size_t len) {
+    luaL_Buffer b;
+    luaL_buffinit(L, &b);
+    for (size_t i = 0; i < len; i++) {
+        const char c = s[i];
+        luaL_addchar(&b, (c <= 'Z' && c >= 'A') ? c | 0x20 : c);
+    }
+    luaL_pushresult(&b);
+}
+
 static void set_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
     if (length > 0) {
@@ -111,13 +121,7 @@ static void set_tag(lua_State *L, const GumboElement *element) {
     if (element->tag == GUMBO_TAG_UNKNOWN) {
         GumboStringPiece original_tag = element->original_tag;
         gumbo_tag_from_original_text(&original_tag);
-        luaL_Buffer b;
-        luaL_buffinit(L, &b);
-        for (size_t i = 0, n = original_tag.length; i < n; i++) {
-            const char c = original_tag.data[i];
-            luaL_addchar(&b, (c <= 'Z' && c >= 'A') ? c + 32 : c);
-        }
-        luaL_pushresult(&b);
+        pushstring_lower(L, original_tag.data, original_tag.length);
     } else {
         lua_pushstring(L, gumbo_normalized_tagname(element->tag));
     }
