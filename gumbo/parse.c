@@ -70,6 +70,18 @@ static inline void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
     }
 }
 
+#if LUA_VERSION_NUM >= 502
+static inline void pushstring_lower(lua_State *L, const char *s, size_t len) {
+    luaL_Buffer b;
+    char *lower = luaL_buffinitsize(L, &b, len);
+    for (size_t i = 0; i < len; i++) {
+        const char c = s[i];
+        lower[i] = (c <= 'Z' && c >= 'A') ? c | 0x20 : c;
+    }
+    luaL_addsize(&b, len);
+    luaL_pushresult(&b);
+}
+#else
 static inline void pushstring_lower(lua_State *L, const char *s, size_t len) {
     luaL_Buffer b;
     luaL_buffinit(L, &b);
@@ -79,6 +91,7 @@ static inline void pushstring_lower(lua_State *L, const char *s, size_t len) {
     }
     luaL_pushresult(&b);
 }
+#endif
 
 static void set_attributes(lua_State *L, const GumboVector *attrs) {
     const unsigned int length = attrs->length;
