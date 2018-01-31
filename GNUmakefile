@@ -42,10 +42,9 @@ $(INSTALL_ALL): install-lua%: build-lua%
 	$(INSTALL_LMOD) gumbo.lua '$(LMOD_DIR)/'
 
 clean-obj:
-	$(RM) $(BUILD_ALL) $(OBJ_ALL)
-
-clean: clean-docs
 	$(RM) -r build/
+
+clean: clean-obj clean-docs
 	$(RM) $(CLEANFILES)
 
 
