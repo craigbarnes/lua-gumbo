@@ -1,27 +1,31 @@
 CXX ?= g++
-CXXFLAGS = -I ./lib
+CXXFLAGS = -Wall -Wextra
 GPERF = gperf
 GPERF_GEN = $(GPERF) -m100 $(1:.c=.gperf) | sed '/^\#line/d' > $(1)
+PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
 
-LIBGUMBO_OBJ = $(addprefix build/lib/, $(addsuffix .o, \
-    attribute error string_buffer tag tag_lookup utf8 vector char_ref \
-    parser string_piece tokenizer util \
-    svg_tags svg_attrs \
-))
+LIBGUMBO_OBJ_GPERF = $(call PREFIX_OBJ, build/lib/, \
+    svg_attrs svg_tags tag_lookup )
 
-TEST_OBJ = $(addprefix build/lib/test_, $(addsuffix .o, \
+LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
+    attribute error string_buffer tag utf8 vector char_ref parser \
+    string_piece tokenizer util ) \
+    $(LIBGUMBO_OBJ_GPERF)
+
+TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
     attribute char_ref parser string_buffer string_piece test_utils \
-    tokenizer utf8 vector \
-))
+    tokenizer utf8 vector )
 
-$(LIBGUMBO_OBJ): CFLAGS += -Wall
+$(LIBGUMBO_OBJ): CFLAGS += -Wall -Wextra -Wno-unused-parameter
+$(LIBGUMBO_OBJ_GPERF): CFLAGS += -Wno-missing-field-initializers
+
 $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
 	$(E) CC '$@'
 	$(Q) $(CC) $(XCFLAGS) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 $(TEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
 	$(E) CXX '$@'
-	$(Q) $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(Q) $(CXX) $(CPPFLAGS) $(CXXFLAGS) -Ilib -c -o $@ $<
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
 	$(E) LINK '$@'
