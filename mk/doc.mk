@@ -1,5 +1,6 @@
 CHECKURL = curl -sSI -w "%{http_code}  $$URL  %{redirect_url}\n" -o /dev/null
 PANDOC = pandoc
+DOXYGEN = doxygen
 FIND_LINKS = $(LUA53_UTIL) examples/find_links.lua
 EXAMPLE_NAMES = find_links get_title remove_by_id table_align_fix text_content
 EXAMPLE_FILES = $(addprefix examples/, $(addsuffix .lua, $(EXAMPLE_NAMES)))
@@ -12,6 +13,7 @@ PANDOCFLAGS = \
     -Mtitle=_
 
 docs: $(DOCS) public/api.html $(patsubst %, %.gz, $(DOCS))
+doxygen: public/libgumbo/index.html
 
 public/index.html: README.md doc/api.md build/doc/examples.md
 public/dist/index.html: doc/releases.md | public/dist/
@@ -43,6 +45,11 @@ build/doc/examples.md: $(EXAMPLE_FILES) | build/doc/
 	  printf '```\n\n' >> $@; \
 	done
 
+public/libgumbo/index.html: doc/doxygen-layout.xml doc/doxygen-footer.html
+public/libgumbo/index.html: doc/libgumbo.doxy lib/gumbo.h | public/
+	$(E) DOXYGEN $(@D)/
+	$(Q) $(DOXYGEN) $<
+
 build/doc/ public/:
 	@$(MKDIR) $@
 
@@ -57,4 +64,4 @@ clean-docs:
 	$(RM) -r public/
 
 
-.PHONY: docs check-docs clean-docs
+.PHONY: docs doxygen check-docs clean-docs

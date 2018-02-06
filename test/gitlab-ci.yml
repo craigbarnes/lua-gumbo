@@ -41,7 +41,7 @@ pages-test:
     except: [master]
     script: &PAGES_SCRIPT
         - git fetch --tags
-        - make docs dist
+        - make docs doxygen dist
         - make check-dist
 
 pages:
