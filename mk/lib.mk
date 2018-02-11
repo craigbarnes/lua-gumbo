@@ -31,10 +31,21 @@ build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
 	$(E) LINK '$@'
 	$(Q) $(CXX) `pkg-config --libs gtest` -o $@ $^
 
+build/lib/benchmark.o: test/benchmark/benchmark.cc | build/lib/
+	$(E) CXX '$@'
+	$(Q) $(CXX) $(CPPFLAGS) $(CXXFLAGS) -Ilib -c -o $@ $<
+
+build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
+	$(E) LINK '$@'
+	$(Q) $(CXX) -o $@ $^
+
 build/lib/:
 	@$(MKDIR) '$@'
 
 check-lib: build/lib/test
+	./$<
+
+benchmark: build/lib/benchmark
 	./$<
 
 ragel-gen: | build/lib/
@@ -47,7 +58,7 @@ gperf-gen:
 	$(call GPERF_GEN, lib/svg_attrs.c)
 
 
-.PHONY: ragel-gen gperf-gen check-lib
+.PHONY: ragel-gen gperf-gen check-lib benchmark
 
 # sed -i '/^# sed/,$ { /^# sed/b; /^  gcc/b; d }' mk/lib.mk && \
   gcc -MM lib/*.c | sed 's|^\([^: ]\+:\)|build/lib/\1|' >> mk/lib.mk
