@@ -276,7 +276,7 @@ static int parse(lua_State *L) {
     }
 }
 
-int luaopen_gumbo_parse(lua_State *L) {
+EXPORT int luaopen_gumbo_parse(lua_State *L) {
     lua_pushcfunction(L, parse);
     return 1;
 }
