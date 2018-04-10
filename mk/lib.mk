@@ -1,5 +1,5 @@
 CXX ?= g++
-CXXFLAGS = -Wall -Wextra
+CXXFLAGS ?= -g -Og
 GPERF = gperf
 GPERF_GEN = $(GPERF) -m100 $(1:.c=.gperf) | sed '/^\#line/d' > $(1)
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
@@ -18,6 +18,8 @@ TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
 
 $(LIBGUMBO_OBJ): CFLAGS += -Wall -Wextra -Wno-unused-parameter
 $(LIBGUMBO_OBJ_GPERF): CFLAGS += -Wno-missing-field-initializers
+$(TEST_OBJ): CXXFLAGS += -Wall -Wextra
+build/lib/benchmark.o: CXXFLAGS += -Wall -Wextra -Wno-unused-parameter
 
 $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
 	$(E) CC '$@'
