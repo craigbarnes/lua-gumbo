@@ -88,10 +88,18 @@ elseif(WIN32)
 endif()
 
 if(INSTALL_LIB_DIR)
+  if(WIN32)
+    # avoid Invalid escape sequence \X errors from backslashes in the path
+    string(REPLACE "\\" "/" INSTALL_LIB_DIR "${INSTALL_LIB_DIR}")
+  endif()
   install(TARGETS parse ARCHIVE DESTINATION "${INSTALL_LIB_DIR}/gumbo" LIBRARY DESTINATION "${INSTALL_LIB_DIR}/gumbo")
 endif()
 
 if(LUAROCKS_INSTALL_LUADIR)
+  if(WIN32)
+    # avoid Invalid escape sequence \X errors from backslashes in the path
+    string(REPLACE "\\" "/" LUAROCKS_INSTALL_LUADIR "${LUAROCKS_INSTALL_LUADIR}")
+  endif()
   install(FILES gumbo.lua DESTINATION "${LUAROCKS_INSTALL_LUADIR}")
   install(DIRECTORY gumbo/ DESTINATION "${LUAROCKS_INSTALL_LUADIR}/gumbo" FILES_MATCHING PATTERN "*.lua")
 endif()
