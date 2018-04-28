@@ -61,6 +61,7 @@ endforeach(LIB_NAME)
 
 # Lua-Gumbo
 add_library( parse MODULE gumbo/parse.c )
+set_target_properties( parse PROPERTIES PREFIX "" )
 target_link_libraries ( parse ${LIBGUMBO_OBJ} )
 target_include_directories( parse PRIVATE ${LUA_INCLUDE_DIR} )
 if(WIN32)
@@ -87,5 +88,10 @@ elseif(WIN32)
 endif()
 
 if(INSTALL_LIB_DIR)
-  install(TARGETS parse ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" LIBRARY DESTINATION "${INSTALL_LIB_DIR}")
+  install(TARGETS parse ARCHIVE DESTINATION "${INSTALL_LIB_DIR}/gumbo" LIBRARY DESTINATION "${INSTALL_LIB_DIR}/gumbo")
+endif()
+
+if(LUAROCKS_INSTALL_LUADIR)
+  install(FILES gumbo.lua DESTINATION "${LUAROCKS_INSTALL_LUADIR}")
+  install(DIRECTORY gumbo/ DESTINATION "${LUAROCKS_INSTALL_LUADIR}/gumbo" FILES_MATCHING PATTERN "*.lua")
 endif()
