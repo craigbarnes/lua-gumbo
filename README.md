@@ -1,8 +1,9 @@
 Synopsis
 --------
 
-[Lua] bindings for the [Gumbo][] [HTML5] parsing library, including a
-small set of core [DOM] APIs implemented in pure Lua.
+`lua-gumbo` is a [HTML5] parser and [DOM] library for [Lua]. It
+originally started out as a set of Lua bindings for the [Gumbo] C
+library, but has now absorbed an improved [fork] of it.
 
 Requirements
 ------------
@@ -67,6 +68,7 @@ Testing
 [`parseFile`]: https://craigbarnes.gitlab.io/lua-gumbo/#parsefile
 [`Document`]: https://craigbarnes.gitlab.io/lua-gumbo/#document
 [Gumbo]: https://github.com/google/gumbo-parser
+[fork]: https://github.com/craigbarnes/lua-gumbo/tree/master/lib
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: https://luarocks.org/modules/craigb/gumbo
 [pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
