@@ -26,3 +26,4 @@ rockspec.in code
 Makefile makefile
 mk/*.mk makefile
 mk/git-hooks/* code
+*.dat text eol=lf
