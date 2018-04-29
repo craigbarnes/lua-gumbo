@@ -24,45 +24,45 @@ set(LIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib)
 set(WINDOWS_LIB_INCLUDE_DIR ${LIB_INCLUDE_DIR}/visualc/include)
 set(LIBGUMBO_OBJ attribute char_ref error parser string_buffer string_piece svg_attrs svg_tags tag tag_lookup tokenizer utf8 util vector)
 
-add_library( attribute lib/attribute.c lib/attribute.h lib/gumbo.h lib/util.h )
-add_library( char_ref lib/char_ref.c lib/char_ref.h lib/error.h lib/gumbo.h
+add_library( attribute OBJECT lib/attribute.c lib/attribute.h lib/gumbo.h lib/util.h )
+add_library( char_ref OBJECT lib/char_ref.c lib/char_ref.h lib/error.h lib/gumbo.h
  lib/insertion_mode.h lib/string_buffer.h lib/token_type.h
  lib/string_piece.h lib/utf8.h lib/util.h )
-add_library( error lib/error.c lib/error.h lib/gumbo.h lib/insertion_mode.h
+add_library( error OBJECT lib/error.c lib/error.h lib/gumbo.h lib/insertion_mode.h
  lib/string_buffer.h lib/token_type.h lib/parser.h lib/util.h
  lib/vector.h )
-add_library( parser lib/parser.c lib/attribute.h lib/gumbo.h lib/error.h
+add_library( parser OBJECT lib/parser.c lib/attribute.h lib/gumbo.h lib/error.h
  lib/insertion_mode.h lib/string_buffer.h lib/token_type.h lib/parser.h
  lib/tokenizer.h lib/tokenizer_states.h lib/utf8.h lib/util.h
  lib/vector.h lib/replacement.h )
-add_library( string_buffer lib/string_buffer.c lib/string_buffer.h lib/gumbo.h
+add_library( string_buffer OBJECT lib/string_buffer.c lib/string_buffer.h lib/gumbo.h
  lib/string_piece.h lib/util.h )
-add_library( string_piece lib/string_piece.c lib/string_piece.h lib/gumbo.h lib/util.h )
-add_library( svg_attrs lib/svg_attrs.c lib/replacement.h )
-add_library( svg_tags lib/svg_tags.c lib/replacement.h )
-add_library( tag lib/tag.c lib/gumbo.h lib/util.h lib/tag_lookup.h )
-add_library( tag_lookup lib/tag_lookup.c lib/tag_lookup.h lib/gumbo.h )
-add_library( tokenizer lib/tokenizer.c lib/tokenizer.h lib/gumbo.h lib/token_type.h
+add_library( string_piece OBJECT lib/string_piece.c lib/string_piece.h lib/gumbo.h lib/util.h )
+add_library( svg_attrs OBJECT lib/svg_attrs.c lib/replacement.h )
+add_library( svg_tags OBJECT lib/svg_tags.c lib/replacement.h )
+add_library( tag OBJECT lib/tag.c lib/gumbo.h lib/util.h lib/tag_lookup.h )
+add_library( tag_lookup OBJECT lib/tag_lookup.c lib/tag_lookup.h lib/gumbo.h )
+add_library( tokenizer OBJECT lib/tokenizer.c lib/tokenizer.h lib/gumbo.h lib/token_type.h
  lib/tokenizer_states.h lib/attribute.h lib/char_ref.h lib/error.h
  lib/insertion_mode.h lib/string_buffer.h lib/parser.h lib/string_piece.h
  lib/utf8.h lib/util.h lib/vector.h )
-add_library( utf8 lib/utf8.c lib/utf8.h lib/gumbo.h lib/error.h
+add_library( utf8 OBJECT lib/utf8.c lib/utf8.h lib/gumbo.h lib/error.h
  lib/insertion_mode.h lib/string_buffer.h lib/token_type.h lib/parser.h
  lib/util.h lib/vector.h )
-add_library( util lib/util.c lib/util.h lib/gumbo.h lib/parser.h )
-add_library( vector lib/vector.c lib/vector.h lib/gumbo.h lib/util.h )
+add_library( util OBJECT lib/util.c lib/util.h lib/gumbo.h lib/parser.h )
+add_library( vector OBJECT lib/vector.c lib/vector.h lib/gumbo.h lib/util.h )
 
 foreach(LIB_NAME ${LIBGUMBO_OBJ})
-  target_include_directories( ${LIB_NAME} PUBLIC ${LIB_INCLUDE_DIR} )
+  include_directories( ${LIB_INCLUDE_DIR} )
   if (WIN32)
-    target_include_directories( ${LIB_NAME} PRIVATE ${WINDOWS_LIB_INCLUDE_DIR} )
+    include_directories( ${WINDOWS_LIB_INCLUDE_DIR} )
   endif()
+  list(APPEND LIBGUMBO_TARGET_OBJECTS "$<TARGET_OBJECTS:${LIB_NAME}>")
 endforeach(LIB_NAME)
 
 # Lua-Gumbo
-add_library( parse MODULE gumbo/parse.c )
+add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_TARGET_OBJECTS} )
 set_target_properties( parse PROPERTIES PREFIX "" )
-target_link_libraries ( parse ${LIBGUMBO_OBJ} )
 target_include_directories( parse PRIVATE ${LUA_INCLUDE_DIR} )
 if(WIN32)
   target_compile_definitions( parse PRIVATE _CRT_SECURE_NO_WARNINGS )
