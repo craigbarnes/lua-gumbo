@@ -53,12 +53,13 @@ add_library( util OBJECT lib/util.c lib/util.h lib/gumbo.h lib/parser.h )
 add_library( vector OBJECT lib/vector.c lib/vector.h lib/gumbo.h lib/util.h )
 
 foreach(LIB_NAME ${LIBGUMBO_OBJ})
-  include_directories( ${LIB_INCLUDE_DIR} )
-  if (WIN32)
-    include_directories( ${WINDOWS_LIB_INCLUDE_DIR} )
-  endif()
   list(APPEND LIBGUMBO_TARGET_OBJECTS "$<TARGET_OBJECTS:${LIB_NAME}>")
 endforeach(LIB_NAME)
+
+include_directories( ${LIB_INCLUDE_DIR} )
+if (WIN32)
+  include_directories( ${WINDOWS_LIB_INCLUDE_DIR} )
+endif()
 
 # Lua-Gumbo
 add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_TARGET_OBJECTS} )
@@ -78,7 +79,21 @@ if(APPLE)
   set(CMAKE_SHARED_MODULE_CREATE_C_FLAGS "${CMAKE_SHARED_MODULE_CREATE_C_FLAGS} -undefined dynamic_lookup")
 endif()
 
+# avoid 'Invalid escape sequence \X' errors from backslashes in the path
+FUNCTION(win32_safe_slashes var)
+  if(WIN32)
+    string(REPLACE "\\" "/" safe "${${var}}")
+    set(${var} "${safe}" PARENT_SCOPE)
+  endif()
+ENDFUNCTION()
+
 # Install targets for Luarocks and non-Luarocks
+# Luarocks: Install *.lua and binary to the Luarocks systree
+# UNIX: Install *.lua and *.so to default Lua package.path/cpath directory
+# WIN32: Default package.path/cpath is relative to the running Lua exe, so there
+#        is no standard install path that can be used. Instead, only parse.dll
+#        is copied to gumbo/ relative to the project source dir, so that require('gumbo')
+#        works if Lua is run from the project source dir.
 if(LUAROCKS_INSTALL_LIBDIR)
   SET(INSTALL_LIB_DIR ${LUAROCKS_INSTALL_LIBDIR})
 elseif(UNIX)
@@ -88,10 +103,7 @@ elseif(WIN32)
 endif()
 
 if(INSTALL_LIB_DIR)
-  if(WIN32)
-    # avoid Invalid escape sequence \X errors from backslashes in the path
-    string(REPLACE "\\" "/" INSTALL_LIB_DIR "${INSTALL_LIB_DIR}")
-  endif()
+  win32_safe_slashes(INSTALL_LIB_DIR)
   install(TARGETS parse ARCHIVE DESTINATION "${INSTALL_LIB_DIR}/gumbo" LIBRARY DESTINATION "${INSTALL_LIB_DIR}/gumbo")
 endif()
 
@@ -102,10 +114,7 @@ elseif(UNIX)
 endif()
 
 if(INSTALL_LUA_DIR)
-  if(WIN32)
-    # avoid Invalid escape sequence \X errors from backslashes in the path
-    string(REPLACE "\\" "/" INSTALL_LUA_DIR "${INSTALL_LUA_DIR}")
-  endif()
+  win32_safe_slashes(INSTALL_LUA_DIR)
   install(FILES gumbo.lua DESTINATION "${INSTALL_LUA_DIR}")
   install(DIRECTORY gumbo/ DESTINATION "${INSTALL_LUA_DIR}/gumbo" FILES_MATCHING PATTERN "*.lua")
 endif()
