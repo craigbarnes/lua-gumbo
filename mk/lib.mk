@@ -54,7 +54,7 @@ benchmark: build/lib/benchmark
 
 ragel-gen: | build/lib/
 	ragel -F0 -o build/lib/char_ref.c.tmp lib/char_ref.rl
-	sed '/^#line/d' build/lib/char_ref.c.tmp > lib/char_ref.c
+	sed '/^\#line/d; 1{/^$$/d}' build/lib/char_ref.c.tmp > lib/char_ref.c
 
 gperf-gen:
 	$(call GPERF_GEN, lib/tag_lookup.c)
