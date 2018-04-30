@@ -19,7 +19,7 @@ local rcdataElements = Set {
 }
 
 local booleanAttributes = {
-    [""] = Set{"hidden", "irrelevant"},
+    [""] = Set{"hidden", "irrelevant", "itemscope"},
     audio = Set{"autoplay", "controls"},
     button = Set{"disabled", "autofocus"},
     command = Set{"hidden", "disabled", "checked", "default"},
