@@ -25,7 +25,7 @@
 
 #include "gumbo.h"
 
-static const int kNumReps = 10;
+static const unsigned int kNumReps = 100;
 
 int main(int argc, char** argv) {
   if (argc != 1) {
@@ -59,13 +59,21 @@ int main(int argc, char** argv) {
       in.read(&contents[0], contents.size());
       in.close();
 
-      clock_t start_time = clock();
-      for (int i = 0; i < kNumReps; ++i) {
-        GumboOutput* output = gumbo_parse(contents.c_str());
-        gumbo_destroy_output(&kGumboDefaultOptions, output);
+      const char *const str = contents.c_str();
+      const size_t len = contents.length();
+      GumboOptions options = kGumboDefaultOptions;
+      options.max_errors = 0;
+
+      const clock_t start_time = clock();
+      for (unsigned int i = kNumReps; i != 0; i--) {
+        GumboOutput* output = gumbo_parse_with_options(&options, str, len);
+        gumbo_destroy_output(&options, output);
       }
-      clock_t end_time = clock();
-      std::cout << filename << ": "
+      const clock_t end_time = clock();
+
+      std::cout
+          << filename
+          << ": "
           << (1000000 * (end_time - start_time) / (kNumReps * CLOCKS_PER_SEC))
           << " microseconds.\n";
     }

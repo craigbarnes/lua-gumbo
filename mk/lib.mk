@@ -33,7 +33,7 @@ $(TEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
 	$(E) LINK '$@'
-	$(Q) $(CXX) `pkg-config --libs gtest` -o $@ $^
+	$(Q) $(CXX) $(LDFLAGS) `pkg-config --libs gtest` -o $@ $^
 
 build/lib/benchmark.o: test/benchmark/benchmark.cc | build/lib/
 	$(E) CXX '$@'
@@ -41,7 +41,7 @@ build/lib/benchmark.o: test/benchmark/benchmark.cc | build/lib/
 
 build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
 	$(E) LINK '$@'
-	$(Q) $(CXX) -o $@ $^
+	$(Q) $(CXX) $(LDFLAGS) -o $@ $^
 
 build/lib/:
 	@$(MKDIR) '$@'
