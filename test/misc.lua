@@ -1,6 +1,6 @@
 local gumbo = require "gumbo"
 local parse, parseFile = gumbo.parse, gumbo.parseFile
-local assert, open, pcall = assert, io.open, pcall
+local assert, type, open, pcall = assert, type, io.open, pcall
 local _ENV = nil
 
 do
@@ -102,6 +102,12 @@ assert(not parseFile"_", "Passing a non-existant filename should return nil")
 
 -- Check that parse_file alias is present (for API backwards compatibility)
 assert(gumbo.parse_file == gumbo.parseFile)
+
+do -- Check that VERSION string is present
+    local VERSION = assert(gumbo.VERSION)
+    assert(type(VERSION) == "string")
+    assert(VERSION:match("^%d%.%d"))
+end
 
 do -- Check that using options works
     local document = assert(gumbo.parse("\t\t\t<h1>xyz</h1>", {tabStop = 4}))

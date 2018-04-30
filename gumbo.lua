@@ -91,6 +91,7 @@ local function parseFile(pathOrFile, arg2, ctx, ctxns)
 end
 
 return {
+    VERSION = "0.4-dev",
     parse = parse,
     parseFile = parseFile,
     parse_file = parseFile -- Alias for backwards compatibility
