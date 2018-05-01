@@ -64,6 +64,7 @@ gperf-gen:
 lib-deps-gen:
 	$(CC) -MM $(LIBGUMBO_SRC) | \
 	  sed 's|^\([^: ]\+:\)|build/lib/\1|' > mk/lib-deps.mk
+	lua mk/mk2cmake.lua mk/lib-deps.mk > mk/lib-deps.cmake
 
 
 .PHONY: ragel-gen gperf-gen lib-deps-gen check-lib benchmark
