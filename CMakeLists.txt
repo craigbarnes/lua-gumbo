@@ -22,13 +22,16 @@ endif()
 # Gumbo
 set(LIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib)
 set(WINDOWS_LIB_INCLUDE_DIR ${LIB_INCLUDE_DIR}/visualc/include)
-set(LIBGUMBO_OBJ attribute char_ref error parser string_buffer string_piece svg_attrs svg_tags tag tag_lookup tokenizer utf8 util vector)
 
-include(mk/lib-deps.cmake)
-
-foreach(LIB_NAME ${LIBGUMBO_OBJ})
-  list(APPEND LIBGUMBO_TARGET_OBJECTS "$<TARGET_OBJECTS:${LIB_NAME}>")
-endforeach(LIB_NAME)
+set ( LIBGUMBO_SRC
+  lib/attribute.c lib/attribute.h lib/char_ref.c lib/char_ref.h
+  lib/error.c lib/error.h lib/gumbo.h lib/insertion_mode.h lib/macros.h
+  lib/parser.c lib/parser.h lib/replacement.h lib/string_buffer.c
+  lib/string_buffer.h lib/string_piece.c lib/svg_attrs.c lib/svg_tags.c
+  lib/tag.c lib/tag_lookup.c lib/tag_lookup.h lib/tokenizer.c
+  lib/tokenizer.h lib/tokenizer_states.h lib/token_type.h lib/utf8.c
+  lib/utf8.h lib/util.c lib/util.h lib/vector.c lib/vector.h
+)
 
 include_directories( ${LIB_INCLUDE_DIR} )
 if (WIN32)
@@ -36,7 +39,7 @@ if (WIN32)
 endif()
 
 # Lua-Gumbo
-add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_TARGET_OBJECTS} )
+add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_SRC} )
 set_target_properties( parse PROPERTIES PREFIX "" )
 target_include_directories( parse PRIVATE ${LUA_INCLUDE_DIR} )
 if(WIN32)
