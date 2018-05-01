@@ -20,9 +20,6 @@ else()
 endif()
 
 # Gumbo
-set(LIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib)
-set(WINDOWS_LIB_INCLUDE_DIR ${LIB_INCLUDE_DIR}/visualc/include)
-
 set ( LIBGUMBO_SRC
   lib/attribute.c lib/attribute.h lib/char_ref.c lib/char_ref.h
   lib/error.c lib/error.h lib/gumbo.h lib/insertion_mode.h lib/macros.h
@@ -33,10 +30,8 @@ set ( LIBGUMBO_SRC
   lib/utf8.h lib/util.c lib/util.h lib/vector.c lib/vector.h
 )
 
+set(LIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib)
 include_directories( ${LIB_INCLUDE_DIR} )
-if (WIN32)
-  include_directories( ${WINDOWS_LIB_INCLUDE_DIR} )
-endif()
 
 # Lua-Gumbo
 add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_SRC} )

@@ -47,12 +47,12 @@ typedef enum {
 #define set_integer(L, k, v) set_field(integer, L, k, v)
 #define set_value(L, k, v) set_field(value, L, k, (v) < 0 ? (v)-1 : (v))
 
-static inline void setmetatable(lua_State *L, Upvalue index) {
+static void setmetatable(lua_State *L, Upvalue index) {
     lua_pushvalue(L, lua_upvalueindex(index));
     lua_setmetatable(L, -2);
 }
 
-static inline void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
+static void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
     if (pos.line != 0) {
         set_integer(L, "line", pos.line);
         set_integer(L, "column", pos.column);
@@ -61,7 +61,7 @@ static inline void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
 }
 
 #if LUA_VERSION_NUM >= 502
-static inline void pushstring_lower(lua_State *L, const char *s, size_t len) {
+static void pushstring_lower(lua_State *L, const char *s, size_t len) {
     luaL_Buffer b;
     char *lower = luaL_buffinitsize(L, &b, len);
     for (size_t i = 0; i < len; i++) {
@@ -72,7 +72,7 @@ static inline void pushstring_lower(lua_State *L, const char *s, size_t len) {
     luaL_pushresult(&b);
 }
 #else
-static inline void pushstring_lower(lua_State *L, const char *s, size_t len) {
+static void pushstring_lower(lua_State *L, const char *s, size_t len) {
     luaL_Buffer b;
     luaL_buffinit(L, &b);
     for (size_t i = 0; i < len; i++) {
