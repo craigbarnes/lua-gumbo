@@ -16,7 +16,6 @@
 */
 
 #include <stddef.h>
-#include <stdlib.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include "gumbo.h"
@@ -47,15 +46,6 @@ typedef enum {
 #define set_string(L, k, v) set_field(string, L, k, v)
 #define set_integer(L, k, v) set_field(integer, L, k, v)
 #define set_value(L, k, v) set_field(value, L, k, (v) < 0 ? (v)-1 : (v))
-
-static void *xmalloc(void *userdata, size_t size) {
-    (void)userdata;
-    void *ptr = malloc(size);
-    if (ptr == NULL) {
-        abort();
-    }
-    return ptr;
-}
 
 static inline void setmetatable(lua_State *L, Upvalue index) {
     lua_pushvalue(L, lua_upvalueindex(index));
@@ -252,7 +242,6 @@ static int parse(lua_State *L) {
         options.fragment_context = gumbo_tagn_enum(tagname, tagname_len);
     }
     options.fragment_namespace = luaL_checkoption(L, 4, "html", namespaces);
-    options.allocator = xmalloc;
     for (unsigned int i = 1; i <= nupvalues; i++) {
         luaL_checktype(L, i + 4, LUA_TTABLE);
     }
