@@ -38,9 +38,8 @@ add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_SRC} )
 set_target_properties( parse PROPERTIES PREFIX "" )
 target_include_directories( parse PRIVATE ${LUA_INCLUDE_DIR} )
 
+# Only link against the Lua library on Windows
 if(WIN32)
-  target_compile_definitions( parse PRIVATE _CRT_SECURE_NO_WARNINGS )
-  # Only link against the Lua library on Windows
   target_link_libraries( parse ${LUA_LIBRARIES} )
 endif()
 
