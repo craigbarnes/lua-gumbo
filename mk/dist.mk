@@ -19,5 +19,5 @@ public/dist/: | public/
 	@$(MKDIR) $@
 
 
-CLEANFILES += gumbo-*.rockspec gumbo-*.rock
+CLEANFILES += gumbo-[0-9]*.rockspec gumbo-*.rock
 .PHONY: dist rockspecs check-dist
