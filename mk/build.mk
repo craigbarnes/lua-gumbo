@@ -1,8 +1,8 @@
 CC ?= gcc
 CFLAGS ?= -g -O2
-XCFLAGS += -std=c99 -pedantic-errors -fpic
+WARNINGS = -Wall -Wextra -Wwrite-strings -Wshadow -pedantic-errors
+XCFLAGS += -std=c99 $(WARNINGS)
 CCOPTS = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
-LDOPTS = $(XLDFLAGS) $(LIBFLAGS)
 LIBFLAGS ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
 MKDIR ?= mkdir -p
 RM = rm -f
@@ -26,12 +26,12 @@ $(BUILD_ALL_PHONY): build-lua%: build/lua%/gumbo/parse.so
 build/lua53/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=503
 build/lua52/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=502
 build/lua51/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER=501
-$(OBJ_ALL): CFLAGS += -Wall -Wextra -Wwrite-strings -Wshadow
+$(OBJ_ALL) $(LIBGUMBO_OBJ): XCFLAGS += -fpic
 $(OBJ_ALL): gumbo/compat.h lib/gumbo.h
 
 $(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_OBJ)
 	$(E) LINK '$@'
-	$(Q) $(CC) $(LDOPTS) -o $@ $^
+	$(Q) $(CC) $(XLDFLAGS) $(LIBFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c | build/lua%/gumbo/
 	$(E) CC '$@'

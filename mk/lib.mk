@@ -1,5 +1,7 @@
 CXX ?= g++
 CXXFLAGS ?= -g -Og
+XCXXFLAGS += -std=c++11 $(WARNINGS)
+CXXOPTS = $(XCXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 GPERF = gperf
 GPERF_GEN = $(GPERF) -m100 $(1:.c=.gperf) | sed '/^\#line/d' > $(1)
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
@@ -18,30 +20,29 @@ TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
     attribute char_ref parser string_buffer string_piece test_utils \
     tokenizer utf8 vector )
 
-$(LIBGUMBO_OBJ): CFLAGS += -Wall -Wextra -Wno-unused-parameter
-$(LIBGUMBO_OBJ_GPERF): CFLAGS += -Wno-missing-field-initializers
-$(TEST_OBJ): CXXFLAGS += -Wall -Wextra
-build/lib/benchmark.o: CXXFLAGS += -Wall -Wextra -Wno-unused-parameter
+build/lib/test: XLDFLAGS += $(shell $(PKGCONFIG) --libs-only-L gtest)
+build/lib/test: LDLIBS += $(shell $(PKGCONFIG) --libs-only-l gtest)
+build/lib/parser.o: XCFLAGS += -Wno-shadow
+$(LIBGUMBO_OBJ): XCFLAGS += -Wno-unused-parameter
+
+build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
+build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
+
+build/lib/test build/lib/benchmark:
+	$(E) LINK '$@'
+	$(Q) $(CXX) $(XLDFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
 	$(E) CC '$@'
-	$(Q) $(CC) $(XCFLAGS) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+	$(Q) $(CC) $(CCOPTS) -c -o $@ $<
 
 $(TEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
 	$(E) CXX '$@'
-	$(Q) $(CXX) $(CPPFLAGS) $(CXXFLAGS) -Ilib -c -o $@ $<
-
-build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
-	$(E) LINK '$@'
-	$(Q) $(CXX) $(LDFLAGS) `pkg-config --libs gtest` -o $@ $^
+	$(Q) $(CXX) $(CXXOPTS) -Ilib -c -o $@ $<
 
 build/lib/benchmark.o: test/benchmark/benchmark.cc | build/lib/
 	$(E) CXX '$@'
-	$(Q) $(CXX) $(CPPFLAGS) $(CXXFLAGS) -Ilib -c -o $@ $<
-
-build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
-	$(E) LINK '$@'
-	$(Q) $(CXX) $(LDFLAGS) -o $@ $^
+	$(Q) $(CXX) $(CXXOPTS) -Ilib -c -o $@ $<
 
 build/lib/:
 	@$(MKDIR) '$@'

@@ -22,12 +22,12 @@
 #include <stdlib.h>
 #include <string>
 #include <time.h>
-
 #include "gumbo.h"
+#include "macros.h"
 
 static const unsigned int kNumReps = 100;
 
-int main(int argc, char** argv) {
+int main(int argc, char** UNUSED(argv)) {
   if (argc != 1) {
     std::cout << "Usage: benchmarks\n";
     exit(EXIT_FAILURE);
