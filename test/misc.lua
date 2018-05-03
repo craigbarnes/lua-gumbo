@@ -156,3 +156,11 @@ do -- Check that using custom metatables works
     options.metatables.text = {}
     assert(parse(input, options))
 end
+
+do -- Check tag name case normalization works
+    local input = "<AZHPEazkw0912zZ id=test>"
+    local document = assert(parse(input))
+    local element = assert(document:getElementById("test"))
+    local tagname = assert(element.localName)
+    assert(tagname == "azhpeazkw0912zz")
+end
