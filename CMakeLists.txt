@@ -8,7 +8,6 @@ if(UNIX)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
-# Lua
 if(WIN32)
   find_package (Lua REQUIRED)
 else()
@@ -19,21 +18,15 @@ else()
   endif()
 endif()
 
-# Gumbo
 set ( LIBGUMBO_SRC
-  lib/attribute.c lib/attribute.h lib/char_ref.c lib/char_ref.h
-  lib/error.c lib/error.h lib/gumbo.h lib/insertion_mode.h lib/macros.h
-  lib/parser.c lib/parser.h lib/replacement.h lib/string_buffer.c
-  lib/string_buffer.h lib/string_piece.c lib/svg_attrs.c lib/svg_tags.c
-  lib/tag.c lib/tag_lookup.c lib/tag_lookup.h lib/tokenizer.c
-  lib/tokenizer.h lib/tokenizer_states.h lib/token_type.h lib/utf8.c
-  lib/utf8.h lib/util.c lib/util.h lib/vector.c lib/vector.h
-)
+  lib/attribute.c lib/char_ref.c lib/error.c lib/parser.c
+  lib/string_buffer.c lib/string_piece.c lib/svg_attrs.c lib/svg_tags.c
+  lib/tag.c lib/tag_lookup.c lib/tokenizer.c lib/utf8.c lib/util.c
+  lib/vector.c )
 
 set(LIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib)
 include_directories( ${LIB_INCLUDE_DIR} )
 
-# Lua-Gumbo
 add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_SRC} )
 set_target_properties( parse PROPERTIES PREFIX "" )
 target_include_directories( parse PRIVATE ${LUA_INCLUDE_DIR} )
@@ -48,7 +41,7 @@ if(APPLE)
   set(CMAKE_SHARED_MODULE_CREATE_C_FLAGS "${CMAKE_SHARED_MODULE_CREATE_C_FLAGS} -undefined dynamic_lookup")
 endif()
 
-# avoid 'Invalid escape sequence \X' errors from backslashes in the path
+# Avoid 'invalid escape sequence \X' errors from backslashes in paths
 FUNCTION(win32_safe_slashes var)
   if(WIN32)
     string(REPLACE "\\" "/" safe "${${var}}")
