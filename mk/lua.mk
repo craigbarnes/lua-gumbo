@@ -1,4 +1,10 @@
-PKGCONFIG = pkg-config
+PKGCONFIG = $(or \
+    $(shell command -v pkg-config 2>/dev/null), \
+    $(error pkg-config program not found) \
+)
+
+$(call make-lazy,PKGCONFIG)
+
 PKGEXISTS = $(PKGCONFIG) --exists $(1) && echo $(1)
 PKGFIND = $(shell for P in $(1); do $(call PKGEXISTS, $$P) && break; done)
 PKGMATCH = $(shell $(PKGCONFIG) --exists '$(1) $(2); $(1) $(3)' && echo $(1))
