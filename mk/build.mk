@@ -1,6 +1,5 @@
 CC ?= gcc
 CFLAGS ?= -g -O2
-WARNINGS = -Wall -Wextra -Wwrite-strings -Wshadow -pedantic-errors
 XCFLAGS += -std=c99 $(WARNINGS)
 CCOPTS = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
 LIBFLAGS ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
@@ -10,6 +9,10 @@ EQUAL = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 UNAME = $(shell uname)
 ISDARWIN = $(call EQUAL, $(UNAME), Darwin)
 MAKE_S = $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
+
+WARNINGS = \
+    -Wall -Wextra -Wwrite-strings -Wshadow -pedantic-errors \
+    -Wformat=2
 
 BUILD_VERS = lua53 lua52 lua51
 BUILD_ALL_PHONY = $(addprefix build-, $(BUILD_VERS))
