@@ -1,5 +1,5 @@
 build/
-local.mk
+Config.mk
 lua-gumbo-*.tar.gz
 gumbo-*.rockspec
 gumbo-*.rock
