@@ -1,7 +1,7 @@
 local gumbo = require "gumbo"
 local parse = gumbo.parse
 local assert = assert
-local tree_depth_limit = 512
+local tree_depth_limit = 400
 local _ENV = nil
 
 do -- Make sure the stack doesn't overflow before the depth limit is reached
