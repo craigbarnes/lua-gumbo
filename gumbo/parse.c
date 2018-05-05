@@ -139,25 +139,22 @@ static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
 }
 
 // Forward declaration, to allow mutual recursion with set_children()
-static void push_node(lua_State *L, const GumboNode *node, uint depth);
+static void push_node(lua_State *L, const GumboNode *node);
 
 static void
-set_children(lua_State *L, const GumboVector *vec, uint start, uint depth) {
+set_children(lua_State *L, const GumboVector *vec, uint start) {
     const unsigned int length = vec->length;
-    if (depth >= 400) {
-        luaL_error(L, "Tree depth limit of 400 exceeded");
-    }
     lua_createtable(L, length, 0);
     setmetatable(L, NodeList);
     for (unsigned int i = 0; i < length; i++) {
-        push_node(L, (const GumboNode *)vec->data[i], depth + 1);
+        push_node(L, (const GumboNode *)vec->data[i]);
         set_value(L, "parentNode", -3); // child.parentNode = parent
         lua_rawseti(L, -2, i + start); // parent.childNodes[i+start] = child
     }
     lua_setfield(L, -2, "childNodes");
 }
 
-static void push_node(lua_State *L, const GumboNode *node, uint depth) {
+static void push_node(lua_State *L, const GumboNode *node) {
     luaL_checkstack(L, 10, "Unable to allocate Lua stack space");
     switch (node->type) {
     case GUMBO_NODE_ELEMENT: {
@@ -169,7 +166,7 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
             set_integer(L, "parseFlags", node->parse_flags);
         }
         set_attributes(L, &element->attributes);
-        set_children(L, &element->children, 1, depth);
+        set_children(L, &element->children, 1);
         setmetatable(L, Element);
         return;
     }
@@ -184,7 +181,7 @@ static void push_node(lua_State *L, const GumboNode *node, uint depth) {
         setmetatable(L, NodeList);
         lua_setfield(L, -2, "childNodes");
         lua_createtable(L, 0, 1);
-        set_children(L, &element->children, 1, depth);
+        set_children(L, &element->children, 1);
         setmetatable(L, DocumentFragment);
         lua_setfield(L, -2, "content");
         setmetatable(L, Element);
@@ -215,7 +212,7 @@ static int push_document(lua_State *L) {
     lua_createtable(L, 0, 4);
     if (document->has_doctype) {
         set_integer(L, "quirksModeEnum", document->doc_type_quirks_mode);
-        set_children(L, &document->children, 2, 0);
+        set_children(L, &document->children, 2);
         lua_getfield(L, -1, "childNodes");
         lua_createtable(L, 0, 3); // doctype
         set_string(L, "name", document->name);
@@ -225,7 +222,7 @@ static int push_document(lua_State *L) {
         lua_rawseti(L, -2, 1); // childNodes[1] = doctype
         lua_pop(L, 1);
     } else {
-        set_children(L, &document->children, 1, 0);
+        set_children(L, &document->children, 1);
     }
     setmetatable(L, Document);
     return 1;
@@ -247,20 +244,26 @@ static int parse(lua_State *L) {
     }
     lua_pushcclosure(L, push_document, nupvalues);
     GumboOutput *output = gumbo_parse_with_options(&options, input, input_len);
-    if (output) {
-        lua_pushlightuserdata(L, &output->document->v.document);
-        int err = lua_pcall(L, 1, 1, 0);
+    if (output == NULL) {
+        lua_pushnil(L);
+        lua_pushliteral(L, "gumbo_parse_with_options() returned NULL");
+        return 2;
+    }
+    GumboOutputStatus status = output->status;
+    if (status != GUMBO_STATUS_OK) {
         gumbo_destroy_output(&options, output);
-        if (err == 0) { // LUA_OK
-            return 1;
-        } else {
-            lua_pushnil(L);
-            lua_pushvalue(L, -2);
-            return 2;
-        }
+        lua_pushnil(L);
+        lua_pushstring(L, gumbo_status_to_string(status));
+        return 2;
+    }
+    lua_pushlightuserdata(L, &output->document->v.document);
+    int err = lua_pcall(L, 1, 1, 0);
+    gumbo_destroy_output(&options, output);
+    if (err == 0) { // LUA_OK
+        return 1;
     } else {
         lua_pushnil(L);
-        lua_pushliteral(L, "Failed to parse");
+        lua_pushvalue(L, -2);
         return 2;
     }
 }
