@@ -24,6 +24,7 @@ build/lib/test: XLDFLAGS += $(shell $(PKGCONFIG) --libs-only-L gtest)
 build/lib/test: LDLIBS += $(shell $(PKGCONFIG) --libs-only-l gtest)
 build/lib/parser.o: XCFLAGS += -Wno-shadow
 $(LIBGUMBO_OBJ): XCFLAGS += -Wno-unused-parameter
+$(LIBGUMBO_OBJ_GPERF): XCFLAGS += -Wno-missing-field-initializers
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
 build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
