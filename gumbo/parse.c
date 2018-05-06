@@ -251,14 +251,14 @@ static int parse(lua_State *L) {
     }
     GumboOutputStatus status = output->status;
     if (status != GUMBO_STATUS_OK) {
-        gumbo_destroy_output(&options, output);
+        gumbo_destroy_output(output);
         lua_pushnil(L);
         lua_pushstring(L, gumbo_status_to_string(status));
         return 2;
     }
     lua_pushlightuserdata(L, &output->document->v.document);
     int err = lua_pcall(L, 1, 1, 0);
-    gumbo_destroy_output(&options, output);
+    gumbo_destroy_output(output);
     if (err == 0) { // LUA_OK
         return 1;
     } else {
