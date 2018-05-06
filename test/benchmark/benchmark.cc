@@ -67,7 +67,7 @@ int main(int argc, char** UNUSED(argv)) {
       const clock_t start_time = clock();
       for (unsigned int i = kNumReps; i != 0; i--) {
         GumboOutput* output = gumbo_parse_with_options(&options, str, len);
-        gumbo_destroy_output(&options, output);
+        gumbo_destroy_output(output);
       }
       const clock_t end_time = clock();
 
