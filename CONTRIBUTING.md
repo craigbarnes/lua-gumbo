@@ -1,12 +1,11 @@
 Bug Reports
 -----------
 
-* Check if the bug already exists in the [issue tracker]. If not, open a
+* Check if the bug already exists in the [issue tracker] before opening a
   [new issue].
 * Include any relevant error messages and test cases, formatted as
   Markdown [code blocks]. Avoid linking to external paste services.
 * Make test cases as minimal as possible.
-* For general suggestions or feedback, leave a message in the [chat room].
 
 Pull Requests
 -------------
