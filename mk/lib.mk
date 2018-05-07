@@ -4,6 +4,7 @@ XCXXFLAGS += -std=c++11 $(WARNINGS)
 CXXOPTS = $(XCXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 GPERF = gperf
 GPERF_GEN = $(GPERF) -m100 $(1:.c=.gperf) | sed '/^\#line/d' > $(1)
+MKDEPS_GEN = $(CC) -Ilib -MM $(1) | sed 's|^\([^: ]\+:\)|$(strip $(2))\1|'
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
 
 LIBGUMBO_OBJ_GPERF = $(call PREFIX_OBJ, build/lib/, \
@@ -14,11 +15,12 @@ LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
     string_piece tokenizer util ) \
     $(LIBGUMBO_OBJ_GPERF)
 
-LIBGUMBO_SRC = $(patsubst build/lib/%.o,lib/%.c, $(LIBGUMBO_OBJ))
-
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
     attribute char_ref parser string_buffer string_piece test_utils \
     tokenizer utf8 vector )
+
+LIBGUMBO_SRC = $(patsubst build/lib/%.o,lib/%.c, $(LIBGUMBO_OBJ))
+TEST_SRC = $(patsubst build/lib/test_%.o,test/parser/%.cc, $(TEST_OBJ))
 
 build/lib/test: XLDFLAGS += $(shell $(PKGCONFIG) --libs-only-L gtest)
 build/lib/test: LDLIBS += $(shell $(PKGCONFIG) --libs-only-l gtest)
@@ -27,6 +29,7 @@ $(LIBGUMBO_OBJ_GPERF): XCFLAGS += -Wno-missing-field-initializers
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
 build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
+build/lib/benchmark.o: lib/gumbo.h lib/macros.h
 
 build/lib/test build/lib/benchmark:
 	$(E) LINK '$@'
@@ -63,10 +66,11 @@ gperf-gen:
 	$(call GPERF_GEN, lib/svg_attrs.c)
 
 lib-deps-gen:
-	$(CC) -MM $(LIBGUMBO_SRC) | \
-	  sed 's|^\([^: ]\+:\)|build/lib/\1|' > mk/lib-deps.mk
+	$(call MKDEPS_GEN, $(LIBGUMBO_SRC), build/lib/) > mk/deps.mk
+	echo >> mk/deps.mk
+	$(call MKDEPS_GEN, $(TEST_SRC), build/lib/test_) >> mk/deps.mk
 
 
 .PHONY: ragel-gen gperf-gen lib-deps-gen check-lib benchmark
 
-include mk/lib-deps.mk
+include mk/deps.mk
