@@ -236,7 +236,8 @@ local function serialize(node, buf)
             buf:write("</", tag, ">")
         end
     elseif nodetype == "text" then
-        if rcdataElements[node.parentNode.localName] then
+        local parent = node.parentNode
+        if parent and rcdataElements[parent.localName] then
             buf:write(node.data)
         else
             buf:write(node.escapedData)
