@@ -382,11 +382,22 @@ The `Node` interface is implemented by *all* DOM [nodes].
 
     The returned value is the inserted node.
 
+`replaceChild(newChild, oldChild)`
+:   Remove `oldChild` node from the `childNodes` list and insert `newChild`
+    in its place. If `newChild` is part of an existing DOM tree, it is
+    first removed from its parent.
+
+    The returned value is the removed node.
+
 `removeChild(childNode)`
 :   Removes `childNode` from the DOM tree and returns the removed node.
 
     If the given `childNode` is not a child of the caller, the method
     throws an error.
+
+`cloneNode(deep)`
+:   Returns a duplicate copy of the node on which the method is called.
+    If `deep` is `true` all [descendant] nodes are also copied.
 
 `walk()`
 :   Returns an iterator function that, each time it is called, returns the
