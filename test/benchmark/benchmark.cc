@@ -37,8 +37,10 @@ int main(int argc, char** UNUSED(argv)) {
   struct dirent* file;
 
   if ((dir = opendir("test/benchmark")) == NULL) {
-    std::cout << "Couldn't find 'benchmarks' directory.  "
-              << "Run from root of distribution.\n";
+    std::cout <<
+      "Couldn't find 'benchmarks' directory. "
+      "Run from root of distribution.\n"
+    ;
     exit(EXIT_FAILURE);
   }
 
