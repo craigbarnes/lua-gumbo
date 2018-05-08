@@ -7,7 +7,7 @@ local assertStringOrNil = util.assertStringOrNil
 local yield, wrap = coroutine.yield, coroutine.wrap
 local tinsert, tremove = table.insert, table.remove
 local ipairs, type, error, assert = ipairs, type, error, assert
-local setmetatable = setmetatable
+local setmetatable, rawget = setmetatable, rawget
 local _ENV = nil
 
 local Node = {
@@ -381,6 +381,7 @@ function Node.getters:ownerDocument()
     if node.type == "document" then
         return node
     end
+    return rawget(node, "ownerDocument")
 end
 
 function Node.getters:parentElement()

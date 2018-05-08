@@ -75,7 +75,7 @@ function Document:adoptNode(node)
     if node.parentNode ~= nil then
         node:remove()
     end
-    node.ownerDocument = nil
+    node.ownerDocument = self
     return node
 end
 
