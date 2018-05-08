@@ -303,7 +303,7 @@ The `Node` interface is implemented by *all* DOM [nodes].
 :   The parent [`Element`] of the node, if it has one, otherwise `nil`.
 
 `ownerDocument`
-:   The [`Document`] to which the node belongs, or `nil`.
+:   The [`Document`] to which the node belongs.
 
 `nodeType`
 :   An *integer* code representing the type of the node.
