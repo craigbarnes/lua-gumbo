@@ -5,6 +5,7 @@ local ParentNode = require "gumbo.dom.ParentNode"
 local AttributeList = require "gumbo.dom.AttributeList"
 local Attribute = require "gumbo.dom.Attribute"
 local ElementList = require "gumbo.dom.ElementList"
+local NodeList = require "gumbo.dom.NodeList"
 local DOMTokenList = require "gumbo.dom.DOMTokenList"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
@@ -172,11 +173,12 @@ end
 
 function Element:cloneNode(deep)
     assertElement(self)
-    if deep then NYI() end -- << TODO
     local clone = {
         localName = self.localName,
         namespace = self.namespace,
-        prefix = self.prefix
+        prefix = self.prefix,
+        ownerDocument = self.ownerDocument,
+        childNodes = setmetatable({}, NodeList)
     }
     if self:hasAttributes() then
         local attrs = {} -- TODO: attrs = createtable(#self.attributes, 0)
@@ -190,6 +192,14 @@ function Element:cloneNode(deep)
             attrs[attr.name] = t
         end
         clone.attributes = setmetatable(attrs, AttributeList)
+    end
+    if deep then
+        local cloneChildNodes = clone.childNodes
+        for i, child in ipairs(self.childNodes) do
+            local newChild = child:cloneNode(true)
+            cloneChildNodes[i] = newChild
+            newChild.parentNode = clone
+        end
     end
     return setmetatable(clone, Element)
 end
