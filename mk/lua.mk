@@ -12,6 +12,16 @@ LFLAG = $(shell $(PKGCONFIG) $(1) $(LUA$(strip $(2))_PC))
 LVAR = $(call LFLAG, --variable=$(strip $(1)), $(2))
 CMDFIND = $(shell for C in $(1); do command -v $$C && break; done)
 
+GET_LMOD_DIR = $(or \
+    $(call LVAR, INSTALL_LMOD, $(1)), \
+    $(strip $(call LVAR, prefix, $(1)))/share/lua/$(strip $(2)) \
+)
+
+GET_CMOD_DIR = $(or \
+    $(call LVAR, INSTALL_CMOD, $(1)), \
+    $(strip $(call LVAR, libdir, $(1)))/lua/$(strip $(2)) \
+)
+
 LUA53_PC ?= $(or \
     $(call PKGFIND, lua53 lua5.3 lua-5.3), \
     $(call PKGMATCH, lua, >= 5.3, < 5.4) \
@@ -39,13 +49,13 @@ LUA53_CFLAGS ?= $(call LFLAG, --cflags, 53)
 LUA52_CFLAGS ?= $(call LFLAG, --cflags, 52)
 LUA51_CFLAGS ?= $(call LFLAG, --cflags, 51)
 
-LUA53_LMODDIR ?= $(call LVAR, INSTALL_LMOD, 53)
-LUA52_LMODDIR ?= $(call LVAR, INSTALL_LMOD, 52)
-LUA51_LMODDIR ?= $(call LVAR, INSTALL_LMOD, 51)
+LUA53_LMODDIR ?= $(call GET_LMOD_DIR, 53, 5.3)
+LUA52_LMODDIR ?= $(call GET_LMOD_DIR, 52, 5.2)
+LUA51_LMODDIR ?= $(call GET_LMOD_DIR, 51, 5.1)
 
-LUA53_CMODDIR ?= $(call LVAR, INSTALL_CMOD, 53)
-LUA52_CMODDIR ?= $(call LVAR, INSTALL_CMOD, 52)
-LUA51_CMODDIR ?= $(call LVAR, INSTALL_CMOD, 51)
+LUA53_CMODDIR ?= $(call GET_CMOD_DIR, 53, 5.3)
+LUA52_CMODDIR ?= $(call GET_CMOD_DIR, 52, 5.2)
+LUA51_CMODDIR ?= $(call GET_CMOD_DIR, 51, 5.1)
 
 LUA53 ?= $(call CMDFIND, $(LUA53_PC) lua5.3 lua-5.3 lua53)
 LUA52 ?= $(call CMDFIND, $(LUA52_PC) lua5.2 lua-5.2 lua52)
