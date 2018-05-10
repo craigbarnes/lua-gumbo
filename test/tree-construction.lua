@@ -150,7 +150,7 @@ do
         for i, test in ipairs(tests) do
             local input = assert(test.data)
             if
-                input:find("<noscript>")
+                test["script-on"]
                 or input:find("<menuitem>")
             then
                 skipped = skipped + 1
