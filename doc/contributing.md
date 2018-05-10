@@ -20,12 +20,7 @@ Commit Messages
 ---------------
 
 * Hard wrap lines at 72 columns.
-* Use proper sentence case and punctuation.
-* Don't use GitHub-specific features/references (e.g. "fixes issue #9").
-* The first line should be a single-sentence summary.
-* If writing more than just a summary, add an ellipsis (`...`) to the end
-  of the first line, followed by a blank line, followed by any number of
-  wrapped paragraphs.
+* Avoid GitHub-specific references (e.g. "fixes issue #9").
 
 Coding Style
 ------------
@@ -36,5 +31,4 @@ Coding Style
 [issue tracker]: https://github.com/craigbarnes/lua-gumbo/issues
 [new issue]: https://github.com/craigbarnes/lua-gumbo/issues/new
 [code blocks]: https://help.github.com/articles/github-flavored-markdown/#fenced-code-blocks
-[chat room]: https://gitter.im/craigbarnes/lua-gumbo
 [pull request]: https://github.com/craigbarnes/lua-gumbo/pulls
