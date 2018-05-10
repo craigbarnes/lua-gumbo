@@ -149,10 +149,10 @@ do
         local tests = parseTestData(filename)
         for i, test in ipairs(tests) do
             local input = assert(test.data)
-            if
-                test["script-on"]
-                or input:find("<menuitem>")
-            then
+            if test["script-on"] then
+                -- The "script-on" tests are not relevant to a non-scripted
+                -- parser, so they are just ignored instead of "skipped".
+            elseif input:find("<menuitem>") then
                 skipped = skipped + 1
             else
                 local expected = assert(test.document)
