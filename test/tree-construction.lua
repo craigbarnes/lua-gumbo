@@ -152,8 +152,6 @@ do
             if test["script-on"] then
                 -- The "script-on" tests are not relevant to a non-scripted
                 -- parser, so they are just ignored instead of "skipped".
-            elseif input:find("<menuitem>") then
-                skipped = skipped + 1
             else
                 local expected = assert(test.document)
                 assert(#expected > 0)
