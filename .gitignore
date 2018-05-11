@@ -1,4 +1,5 @@
 build/
+public/
 Config.mk
 lua-gumbo-*.tar.gz
 gumbo-*.rockspec
@@ -6,6 +7,4 @@ gumbo-*.rock
 coverage.txt
 .luacov-stats.txt
 tags
-docs/style.css.inc
-public/
 test/data/*MiB.html
