@@ -6,6 +6,6 @@ gumbo-*.rock
 coverage.txt
 .luacov-stats.txt
 tags
-doc/style.css.inc
+docs/style.css.inc
 public/
 test/data/*MiB.html

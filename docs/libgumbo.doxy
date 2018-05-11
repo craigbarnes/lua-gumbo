@@ -2,8 +2,8 @@ PROJECT_NAME = "Gumbo"
 PROJECT_BRIEF = "A C library for parsing HTML"
 INPUT = lib/gumbo.h
 STRIP_FROM_PATH = lib/
-LAYOUT_FILE = doc/doxygen-layout.xml
-HTML_FOOTER = doc/doxygen-footer.html
+LAYOUT_FILE = docs/doxygen-layout.xml
+HTML_FOOTER = docs/doxygen-footer.html
 MARKDOWN_SUPPORT = YES
 
 HTML_OUTPUT = public/libgumbo/
