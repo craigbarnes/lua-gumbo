@@ -540,6 +540,6 @@ by various [`Node`] and [`ParentNode`] methods.
 [`Document.createTreeWalker()`]: https://developer.mozilla.org/en-US/docs/Web/API/Document/createTreeWalker
 [descendant]: https://dom.spec.whatwg.org/#concept-tree-descendant
 [document order]: https://www.w3.org/TR/DOM-Level-2-Traversal-Range/glossary.html#dt-documentorder
-[escapingString]: https://html.spec.whatwg.org/multipage/syntax.html#escapingString
-[HTML fragment parsing]: https://html.spec.whatwg.org/multipage/syntax.html#parsing-html-fragments
-[HTML fragment serialization]: https://html.spec.whatwg.org/multipage/syntax.html#html-fragment-serialisation-algorithm
+[escapingString]: https://html.spec.whatwg.org/multipage/parsing.html#escapingString
+[HTML fragment parsing]: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+[HTML fragment serialization]: https://html.spec.whatwg.org/multipage/parsing.html#html-fragment-serialisation-algorithm
