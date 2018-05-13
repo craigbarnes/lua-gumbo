@@ -9,7 +9,12 @@ max_line_length = 80
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[{Makefile,mk/*.mk}]
+# libgumbo still has the original 2 space indents
+[{lib/,test/parser/,test/benchmark/}*.{c,cc,h,rl}]
+indent_style = space
+indent_size = 2
+
+[{GNUmakefile,makefile,mk/*.mk}]
 indent_style = tab
 indent_size = 8
 

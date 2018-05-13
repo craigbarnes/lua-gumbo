@@ -74,10 +74,10 @@ int main(int argc, char** UNUSED(argv)) {
       const clock_t end_time = clock();
 
       std::cout
-          << filename
-          << ": "
-          << (1000000 * (end_time - start_time) / (kNumReps * CLOCKS_PER_SEC))
-          << " microseconds.\n";
+        << filename
+        << ": "
+        << (1000000 * (end_time - start_time) / (kNumReps * CLOCKS_PER_SEC))
+        << " microseconds.\n";
     }
   }
   closedir(dir);

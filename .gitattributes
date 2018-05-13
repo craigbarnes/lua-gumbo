@@ -1,4 +1,5 @@
 [attr]code text whitespace=tab-in-indent,trailing-space,tabwidth=4
+[attr]libgumbo text whitespace=tab-in-indent,trailing-space,tabwidth=2
 [attr]makefile text whitespace=trailing-space
 
 .distinfo export-subst
@@ -18,11 +19,17 @@ lib/svg_attrs.c linguist-generated
 test/tree-construction/*.dat linguist-vendored
 test/benchmark/*.html linguist-vendored
 
-*.[ch] code
+gumbo/*.[ch] code
 *.lua code
 *.md code
 *.yml code
 rockspec.in code
+
+lib/*.[ch] libgumbo
+lib/char_ref.rl libgumbo
+test/parser/* libgumbo
+test/benchmark/benchmark.cc libgumbo
+
 Makefile makefile
 mk/*.mk makefile
 mk/git-hooks/* code
