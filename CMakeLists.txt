@@ -28,7 +28,7 @@ set(LIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib)
 include_directories( ${LIB_INCLUDE_DIR} )
 
 add_library( parse MODULE gumbo/parse.c ${LIBGUMBO_SRC} )
-set_target_properties( parse PROPERTIES PREFIX "" )
+set_target_properties( parse PROPERTIES PREFIX "" C_VISIBILITY_PRESET hidden )
 target_include_directories( parse PRIVATE ${LUA_INCLUDE_DIR} )
 
 if(WIN32)

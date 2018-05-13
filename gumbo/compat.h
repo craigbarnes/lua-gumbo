@@ -1,9 +1,13 @@
 #ifdef _WIN32
 # define EXPORT __declspec(dllexport)
 #else
-# define EXPORT
 # if !defined(__STDC_VERSION__) || !(__STDC_VERSION__ >= 199901L)
 #  error C99 compiler required.
+# endif
+# ifdef __GNUC__
+#  define EXPORT __attribute__((__visibility__("default")))
+# else
+#  define EXPORT
 # endif
 #endif
 
