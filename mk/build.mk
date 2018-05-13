@@ -11,7 +11,7 @@ ISDARWIN = $(call EQUAL, $(UNAME), Darwin)
 MAKE_S = $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
 
 WARNINGS = \
-    -Wall -Wextra -Wwrite-strings -Wshadow -pedantic-errors \
+    -Wall -Wextra -Wwrite-strings -Wshadow -pedantic \
     -Wformat=2
 
 BUILD_VERS = lua53 lua52 lua51
