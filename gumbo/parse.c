@@ -21,11 +21,6 @@
 #include "gumbo.h"
 #include "compat.h"
 
-typedef unsigned int uint;
-
-static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
-static const char *namespaces[] = {"html", "svg", "math", NULL};
-
 typedef enum {
     Text = 1,
     Comment,
@@ -84,6 +79,7 @@ static void pushstring_lower(lua_State *L, const char *s, size_t len) {
 #endif
 
 static void set_attributes(lua_State *L, const GumboVector *attrs) {
+    static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
     const unsigned int length = attrs->length;
     if (length > 0) {
         lua_createtable(L, length, length);
@@ -142,7 +138,7 @@ static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
 static void push_node(lua_State *L, const GumboNode *node);
 
 static void
-set_children(lua_State *L, const GumboVector *vec, uint start) {
+set_children(lua_State *L, const GumboVector *vec, unsigned int start) {
     const unsigned int length = vec->length;
     lua_createtable(L, length, 0);
     setmetatable(L, NodeList);
@@ -238,8 +234,9 @@ static int parse(lua_State *L) {
     if (tagname != NULL) {
         options.fragment_context = gumbo_tagn_enum(tagname, tagname_len);
     }
+    static const char *namespaces[] = {"html", "svg", "math", NULL};
     options.fragment_namespace = luaL_checkoption(L, 4, "html", namespaces);
-    for (unsigned int i = 1; i <= nupvalues; i++) {
+    for (int i = 1; i <= nupvalues; i++) {
         luaL_checktype(L, i + 4, LUA_TTABLE);
     }
     lua_pushcclosure(L, push_document, nupvalues);
