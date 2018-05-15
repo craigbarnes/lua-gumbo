@@ -8,7 +8,7 @@ MKDEPS_GEN = $(CC) -Ilib -MM $(1) | sed 's|^\([^: ]\+:\)|$(strip $(2))\1|'
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
 
 LIBGUMBO_OBJ_GPERF = $(call PREFIX_OBJ, build/lib/, \
-    svg_attrs svg_tags tag_lookup )
+    foreign_attrs svg_attrs svg_tags tag_lookup )
 
 LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
     attribute error string_buffer tag utf8 vector char_ref parser \
@@ -64,6 +64,7 @@ gperf-gen:
 	$(call GPERF_GEN, lib/tag_lookup.c)
 	$(call GPERF_GEN, lib/svg_tags.c)
 	$(call GPERF_GEN, lib/svg_attrs.c)
+	$(call GPERF_GEN, lib/foreign_attrs.c)
 
 lib-deps-gen:
 	$(call MKDEPS_GEN, $(LIBGUMBO_SRC), build/lib/) > mk/deps.mk
