@@ -55,7 +55,7 @@ Testing
 -------
 
 [![Build Status](https://gitlab.com/craigbarnes/lua-gumbo/badges/master/build.svg)](https://gitlab.com/craigbarnes/lua-gumbo/pipelines)
-[![Coverage Status](https://coveralls.io/repos/craigbarnes/lua-gumbo/badge.svg?branch=master&service=github)](https://coveralls.io/github/craigbarnes/lua-gumbo?branch=master)
+[![Coverage Status](https://gitlab.com/craigbarnes/lua-gumbo/badges/master/coverage.svg)](https://gitlab.com/craigbarnes/lua-gumbo/-/jobs)
 
 
 [Lua]: https://www.lua.org/
