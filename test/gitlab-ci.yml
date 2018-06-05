@@ -25,7 +25,6 @@ test:debian:
 
         - make clean-obj
         - make coverage.txt
-        - luacov-coveralls-5.3 -t "$COVERALLS_TOKEN"
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
 
 test:alpine:
