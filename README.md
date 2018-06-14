@@ -2,7 +2,7 @@ Synopsis
 --------
 
 `lua-gumbo` is a [HTML5] parser and [DOM] library for [Lua]. It
-originally started out as a set of Lua bindings for the [Gumbo] C
+originally started out as a set of Lua bindings for the Gumbo C
 library, but has now absorbed an improved [fork] of it.
 
 Requirements
@@ -67,12 +67,8 @@ Testing
 [`parse`]: https://craigbarnes.gitlab.io/lua-gumbo/#parse
 [`parseFile`]: https://craigbarnes.gitlab.io/lua-gumbo/#parsefile
 [`Document`]: https://craigbarnes.gitlab.io/lua-gumbo/#document
-[Gumbo]: https://github.com/google/gumbo-parser
-[fork]: https://github.com/craigbarnes/lua-gumbo/tree/master/lib
+[fork]: https://gitlab.com/craigbarnes/lua-gumbo/tree/master/lib
 [GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: https://luarocks.org/modules/craigb/gumbo
-[pkg-config]: https://en.wikipedia.org/wiki/Pkg-config
-[tree-construction tests]: https://github.com/html5lib/html5lib-tests/tree/master/tree-construction
-[MDN DOM reference]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model#DOM_interfaces
 [luacov]: https://keplerproject.github.io/luacov/
 [`assert()`]: https://www.lua.org/manual/5.3/manual.html#pdf-assert

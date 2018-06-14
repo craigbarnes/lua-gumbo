@@ -7,10 +7,10 @@ Bug Reports
   Markdown [code blocks]. Avoid linking to external paste services.
 * Make test cases as minimal as possible.
 
-Pull Requests
--------------
+Merge Requests
+--------------
 
-* Create a feature branch and submit a separate [pull request] for each
+* Create a feature branch and submit a separate [merge request] for each
   issue. Avoid mixing unrelated changes in a single request.
 * Include as few commits as necessary, without any merge commits.
 * Add test coverage for new code. Update tests for modified code. All new
@@ -20,7 +20,7 @@ Commit Messages
 ---------------
 
 * Hard wrap lines at 72 columns.
-* Avoid GitHub-specific references (e.g. "fixes issue #9").
+* Avoid references to external issues (e.g. "fixes issue #9").
 
 Coding Style
 ------------
@@ -28,7 +28,7 @@ Coding Style
 * Above all else, be consistent with the existing code.
 
 
-[issue tracker]: https://github.com/craigbarnes/lua-gumbo/issues
-[new issue]: https://github.com/craigbarnes/lua-gumbo/issues/new
-[code blocks]: https://help.github.com/articles/github-flavored-markdown/#fenced-code-blocks
-[pull request]: https://github.com/craigbarnes/lua-gumbo/pulls
+[issue tracker]: https://gitlab.com/craigbarnes/lua-gumbo/issues
+[new issue]: https://gitlab.com/craigbarnes/lua-gumbo/issues/new
+[code blocks]: https://docs.gitlab.com/ee/user/markdown.html#code-and-syntax-highlighting
+[merge request]: https://gitlab.com/craigbarnes/lua-gumbo/merge_requests
