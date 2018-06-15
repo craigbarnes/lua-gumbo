@@ -51,12 +51,6 @@ application-specific error handling.
 
 See also: <https://craigbarnes.gitlab.io/lua-gumbo/#examples>.
 
-Testing
--------
-
-[![Build Status](https://gitlab.com/craigbarnes/lua-gumbo/badges/master/build.svg)](https://gitlab.com/craigbarnes/lua-gumbo/pipelines)
-[![Coverage Status](https://gitlab.com/craigbarnes/lua-gumbo/badges/master/coverage.svg)](https://gitlab.com/craigbarnes/lua-gumbo/-/jobs)
-
 
 [Lua]: https://www.lua.org/
 [LuaJIT]: http://luajit.org/
