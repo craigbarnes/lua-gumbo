@@ -3,9 +3,14 @@ CXXFLAGS ?= -g -Og
 XCXXFLAGS += -std=c++11 $(WARNINGS)
 CXXOPTS = $(XCXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 GPERF = gperf
-GPERF_GEN = $(GPERF) -m100 $(1:.c=.gperf) | sed '/^\#line/d' > $(1)
+GPERF_FILTER = sed -f mk/gperf-filter.sed
 MKDEPS_GEN = $(CC) -Ilib -MM $(1) | sed 's|^\([^: ]\+:\)|$(strip $(2))\1|'
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
+
+define GPERF_GEN
+  $(E) GPERF $(1)
+  $(Q) $(GPERF) -m100 $(2) $(1:.c=.gperf) | $(GPERF_FILTER) > $(1)
+endef
 
 LIBGUMBO_OBJ_GPERF = $(call PREFIX_OBJ, build/lib/, \
     foreign_attrs svg_attrs svg_tags tag_lookup )
