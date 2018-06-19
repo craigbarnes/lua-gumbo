@@ -69,7 +69,7 @@ gperf-gen:
 	$(call GPERF_GEN, lib/tag_lookup.c)
 	$(call GPERF_GEN, lib/svg_tags.c)
 	$(call GPERF_GEN, lib/svg_attrs.c)
-	$(call GPERF_GEN, lib/foreign_attrs.c)
+	$(call GPERF_GEN, lib/foreign_attrs.c, -n)
 
 lib-deps-gen:
 	$(call MKDEPS_GEN, $(LIBGUMBO_SRC), build/lib/) > mk/deps.mk
