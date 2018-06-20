@@ -7,4 +7,3 @@ gumbo-*.rock
 coverage.txt
 .luacov-stats.txt
 tags
-test/data/*MiB.html

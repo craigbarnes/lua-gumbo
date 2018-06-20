@@ -77,7 +77,7 @@ local function parseFile(pathOrFile, arg2, ctx, ctxns)
     elseif iotype(pathOrFile) == "file" then
         file = pathOrFile
     else
-        error("Invalid argument #1: not a file handle or filename string")
+        error("Invalid argument #1: not a file handle or filename string", 2)
     end
     local text, readerr = file:read("*a")
     if closeAfterRead == true then
