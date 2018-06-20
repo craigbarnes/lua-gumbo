@@ -41,10 +41,10 @@ div2:removeAttribute("id")
 assert(div1:isEqualNode(div2))
 assert(div2:isEqualNode(div1))
 
--- TODO:
--- local clone = assert(div1:cloneNode(true))
--- assert(clone:isEqualNode(div1))
--- assert(clone:isEqualNode(div2))
+local clone = assert(div1:cloneNode(true))
+assert(rawequal(div1, clone) == false)
+assert(clone:isEqualNode(div1))
+assert(clone:isEqualNode(div2))
 
 assert(div1.childNodes.length == div2.childNodes.length)
 div1.childNodes[2]:remove()
