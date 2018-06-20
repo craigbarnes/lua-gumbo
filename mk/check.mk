@@ -3,7 +3,7 @@ LUAJIT ?= $(or \
     $(error Unable to find luajit command) \
 )
 
-LUA53_UTIL = LUA_CPATH=build/lua53/?.so LUA_PATH='./?.lua;;' $(LUA53)
+LUA53_UTIL = LUA_CPATH='build/lua53/?.so;;' LUA_PATH='./?.lua;;' $(LUA53)
 
 CHECK_ALL = $(addprefix check-, $(BUILD_VERS))
 CHECK_ANY = $(addprefix check-, $(LUAS_FOUND))
