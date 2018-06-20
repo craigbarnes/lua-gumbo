@@ -1,4 +1,6 @@
 local gumbo = require "gumbo"
+local assert, rawequal = assert, rawequal
+local _ENV = nil
 
 local document = assert(gumbo.parse [[
 <!DOCTYPE html>
@@ -42,7 +44,7 @@ assert(div1:isEqualNode(div2))
 assert(div2:isEqualNode(div1))
 
 local clone = assert(div1:cloneNode(true))
-assert(rawequal(div1, clone) == false)
+assert(not rawequal(div1, clone))
 assert(clone:isEqualNode(div1))
 assert(clone:isEqualNode(div2))
 
