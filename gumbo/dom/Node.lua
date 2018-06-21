@@ -200,8 +200,9 @@ local function ensurePreInsertionValidity(node, parent, child)
 
     assert(node.nodeName ~= "#text", "HierarchyRequestError")
 
-    --[[ TODO:
     if node.type == "fragment" then
+        util.NYI()
+        --[[ TODO:
         if "node has more than one element child or has a Text node child"
             error("HierarchyRequestError")
         elseif
@@ -211,7 +212,8 @@ local function ensurePreInsertionValidity(node, parent, child)
         then
             error("HierarchyRequestError")
         end
-    ]]
+        ]]
+    end
 
     if node.type == "element" then
         if child then
