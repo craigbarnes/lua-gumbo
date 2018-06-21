@@ -193,33 +193,62 @@ local function ensurePreInsertionValidity(node, parent, child)
     assert(child == nil or child.parentNode == parent, "NotFoundError")
     assert(isValidChild[node.nodeType] == true, "HierarchyRequestError")
 
-    if parent.type == "document" then
-        assert(node.nodeName ~= "#text", "HierarchyRequestError")
-    else
+    if parent.type ~= "document" then
         assert(node.type ~= "doctype", "HierarchyRequestError")
+        return
     end
 
-    if parent.type == "document" then
-        -- TODO: Implement the steps for DocumentFragment nodes, when they
-        --       are supported.
+    assert(node.nodeName ~= "#text", "HierarchyRequestError")
 
-        local parentHasElementChild = parent.firstElementChild and true or false
-
-        if node.type == "element" then
-            if parentHasElementChild == true
-            or child.type == "doctype"
-            -- TODO: "or child is not null and a doctype is following child"
-            then
-                assert(false, "HierarchyRequestError")
-            end
+    --[[ TODO:
+    if node.type == "fragment" then
+        if "node has more than one element child or has a Text node child"
+            error("HierarchyRequestError")
+        elseif
+            "node has one element child and either parent has an element child"
+            or "child is a doctype"
+            or "child is not null and a doctype is following child"
+        then
+            error("HierarchyRequestError")
         end
+    ]]
 
-        if node.type == "doctype" then
-            if parent.doctype
-            -- TODO: "an element is preceding child"
-            or (child == nil and parentHasElementChild == true)
-            then
-                assert(false, "HierarchyRequestError")
+    if node.type == "element" then
+        if child then
+            assert(child.type ~= "doctype", "HierarchyRequestError")
+            local seenChild = false
+            for i, c in ipairs(parent.childNodes) do
+                local t = assert(c.type)
+                if t == "element" or (seenChild and t == "doctype") then
+                    error("HierarchyRequestError")
+                elseif c == child then
+                    seenChild = true
+                end
+            end
+        else
+            assert(not parent.firstElementChild)
+        end
+    end
+
+    if node.type == "doctype" then
+        if child then
+            local seenChild = false
+            for i, c in ipairs(parent.childNodes) do
+                local t = assert(c.type)
+                if t == "doctype" then
+                    error("HierarchyRequestError")
+                elseif c == child then
+                    seenChild = true
+                elseif not seenChild and t == "element" then
+                    error("HierarchyRequestError")
+                end
+            end
+        else
+            for i, c in ipairs(parent.childNodes) do
+                local t = assert(c.type)
+                if t == "doctype" or t == "element" then
+                    error("HierarchyRequestError")
+                end
             end
         end
     end
