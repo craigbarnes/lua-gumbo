@@ -1,0 +1,7 @@
+This has since been removed from the makefile, but it's worth noting
+that it wasn't the right solution, even when this commit was created.
+
+The correct solution would have been to put $(LDLIBS) *after* the list
+of object files in the linker command-line, so that the "--as-needed"
+option (which is the default on Ubuntu) didn't detect the libraries
+refered to in $(LDLIBS) as being unused.
