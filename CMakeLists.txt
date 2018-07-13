@@ -33,6 +33,7 @@ target_include_directories( parse PRIVATE ${LUA_INCLUDE_DIR} )
 
 if(${CMAKE_C_COMPILER_ID} MATCHES GNU|Clang)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
+  set(CMAKE_C_FLAGS_DEBUG "-g -O2")
 endif()
 
 if(WIN32)
