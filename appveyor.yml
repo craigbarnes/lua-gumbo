@@ -25,10 +25,10 @@ before_build:
 - cmake -G %generator% ..
 
 build_script:
-- cmake --build . --config Release
+- cmake --build . --config Debug
 
 after_build:
-- cmake --build . --config Release --target install
+- cmake --build . --config Debug --target install
 
 test_script:
 - cd "%APPVEYOR_BUILD_FOLDER%"
