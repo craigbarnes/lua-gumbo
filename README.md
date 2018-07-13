@@ -9,8 +9,8 @@ Requirements
 ------------
 
 * C99 compiler
-* [GNU Make] `>= 3.81`
-* [Lua] `>= 5.1` **or** [LuaJIT] `>= 2.0`
+* [GNU Make] 3.81+
+* [Lua] 5.1+ **or** [LuaJIT] 2.0+
 
 Installation
 ------------
