@@ -1,6 +1,11 @@
 cmake_minimum_required (VERSION 2.6)
 project (LuaGumbo C)
 
+# Default to release build, if not otherwise specified
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(CMAKE_C_STANDARD_REQUIRED true)
 set(CMAKE_C_STANDARD 99)
 
