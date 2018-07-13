@@ -329,6 +329,29 @@ The `Node` interface is implemented by *all* DOM [nodes].
     | [`DocumentType`]     | The value of `DocumentType.name` |
     | [`DocumentFragment`] | `"#document-fragment"`           |
 
+`type`
+:   A *string* corresponding to the type of the node, as understood by
+    the original Gumbo C API. This is subtly different from the node
+    types in the DOM specification. The `whitespace` type is a [`Text`]
+    node whose `data` property consists of only whitespace characters.
+
+    | `type` value   | Node type            |
+    |----------------|----------------------|
+    | `"element"`    | [`Element`]          |
+    | `"text"`       | [`Text`]             |
+    | `"whitespace"` | [`Text`]             |
+    | `"comment"`    | [`Comment`]          |
+    | `"document"`   | [`Document`]         |
+    | `"doctype"`    | [`DocumentType`]     |
+    | `"fragment"`   | [`DocumentFragment`] |
+
+    **Note:** in DOM-specified properties and methods, `whitespace` and
+    `text` nodes are treated exactly the same. This disparity may be
+    confusing, but the `type` property is retained for the sake of
+    backwards compatibility with previous releases. It may also be
+    useful for efficiently skipping whitespace-only [`Text`] nodes when
+    traversing a document.
+
 `firstChild`
 :   The first child [`Node`] of the node, or `nil` if it has no children.
 
