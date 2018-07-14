@@ -23,13 +23,14 @@ build/lib/tokenizer.o: lib/tokenizer.c lib/tokenizer.h lib/gumbo.h lib/token_typ
  lib/insertion_mode.h lib/string_buffer.h lib/parser.h lib/utf8.h \
  lib/macros.h lib/util.h lib/vector.h
 build/lib/util.o: lib/util.c lib/util.h lib/macros.h lib/gumbo.h
-build/lib/foreign_attrs.o: lib/foreign_attrs.c lib/replacement.h lib/gumbo.h
-build/lib/svg_attrs.o: lib/svg_attrs.c lib/replacement.h lib/gumbo.h lib/util.h \
+build/lib/foreign_attrs.o: lib/foreign_attrs.c lib/replacement.h lib/gumbo.h \
  lib/macros.h
-build/lib/svg_tags.o: lib/svg_tags.c lib/replacement.h lib/gumbo.h lib/util.h \
- lib/macros.h
-build/lib/tag_lookup.o: lib/tag_lookup.c lib/tag_lookup.h lib/gumbo.h lib/util.h \
- lib/macros.h
+build/lib/svg_attrs.o: lib/svg_attrs.c lib/replacement.h lib/gumbo.h lib/macros.h \
+ lib/util.h
+build/lib/svg_tags.o: lib/svg_tags.c lib/replacement.h lib/gumbo.h lib/macros.h \
+ lib/util.h
+build/lib/tag_lookup.o: lib/tag_lookup.c lib/tag_lookup.h lib/gumbo.h lib/macros.h \
+ lib/util.h
 
 build/lib/test_attribute.o: test/parser/attribute.cc lib/attribute.h lib/gumbo.h \
  test/parser/test_utils.h lib/gumbo.h lib/parser.h lib/vector.h
