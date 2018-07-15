@@ -2,7 +2,6 @@ stages: [test, dist]
 
 before_script:
     - export MAKEFLAGS="-j$(mk/nproc.sh) -Otarget" V=1
-    - ulimit -a || true
 
 test:debian:
     stage: test
