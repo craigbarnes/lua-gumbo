@@ -35,6 +35,13 @@ test:alpine:
         - make build-all
         - make check-all
 
+test:void-musl:
+    stage: test
+    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-void-musl
+    script:
+        - make build-all
+        - make check-all
+
 pages-test:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
