@@ -1,5 +1,5 @@
 PKGCONFIG = $(or \
-    $(shell command -v pkg-config 2>/dev/null), \
+    $(shell command -v pkg-config || command -v pkgconf), \
     $(error pkg-config program not found) \
 )
 
