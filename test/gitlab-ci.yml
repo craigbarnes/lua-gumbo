@@ -29,17 +29,14 @@ test:debian:
 test:alpine:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-alpine
-    script:
-        - apk --update add lua5.3-dev lua5.2-dev lua5.1-dev
+    script: &SCRIPT
         - make build-all
         - make check-all
 
 test:void-musl:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-void-musl
-    script:
-        - make build-all
-        - make check-all
+    script: *SCRIPT
 
 pages-test:
     stage: test
