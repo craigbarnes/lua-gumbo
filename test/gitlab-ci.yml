@@ -8,6 +8,7 @@ test:debian:
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     coverage: '/^Total\s+\d+\s+\d+\s+(\d+\.\d+\%)$/'
     script:
+        - make vars
         - make build-all
         - make check-all check-luajit
 
@@ -30,6 +31,7 @@ test:alpine:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-alpine
     script: &SCRIPT
+        - make vars
         - make build-all
         - make check-all
 

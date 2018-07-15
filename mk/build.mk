@@ -2,13 +2,10 @@ CC ?= gcc
 CFLAGS ?= -g -O2
 XCFLAGS += -std=c99 $(WARNINGS)
 CCOPTS = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
+ISDARWIN = $(call streq, $(KERNEL), Darwin)
 LIBFLAGS ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
 MKDIR ?= mkdir -p
 RM = rm -f
-EQUAL = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
-UNAME = $(shell uname)
-ISDARWIN = $(call EQUAL, $(UNAME), Darwin)
-MAKE_S = $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
 
 WARNINGS = \
     -Wall -Wextra -Wwrite-strings -Wshadow -pedantic -Wformat=2 \
@@ -46,17 +43,3 @@ build/lua%/gumbo/:
 
 .PHONY: build-all build-any $(BUILD_ALL_PHONY)
 .SECONDARY: $(dir $(BUILD_ALL))
-
-ifneq "$(MAKE_S)" ""
-  # Make "-s" flag was used (silent build)
-  Q = @
-  E = @:
-else ifeq "$(V)" "1"
-  # "V=1" variable was set (verbose build)
-  Q =
-  E = @:
-else
-  # Normal build
-  Q = @
-  E = @printf ' %7s  %s\n'
-endif

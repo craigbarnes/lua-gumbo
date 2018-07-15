@@ -1,4 +1,5 @@
 include mk/compat.mk
+include mk/util.mk
 -include Config.mk
 include mk/lua.mk
 include mk/lib.mk
