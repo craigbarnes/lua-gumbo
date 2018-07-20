@@ -108,13 +108,14 @@ types.
 :   The value of the element's `id` attribute, if it has one, otherwise `nil`.
 
 `className`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/className))
+:   The value of the element's `class` attribute, if it has one, otherwise `nil`.
 
 `innerHTML`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML))
+:   A *string* containing the HTML serialization of the element's descendants.
 
 `outerHTML`
-:   TODO ([MDN](https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML))
+:   Like `innerHTML`, but operating on the element itself, in addition to its
+    descendants.
 
 **Methods:**
 
