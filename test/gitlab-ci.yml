@@ -40,18 +40,18 @@ test:void-musl:
     image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-void-musl
     script: *SCRIPT
 
-pages-test:
-    stage: test
-    image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
-    except: [master]
-    script: &PAGES_SCRIPT
-        - git fetch --tags
-        - make docs doxygen dist
-        - make check-dist
-
 pages:
     stage: dist
     image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
     artifacts: {paths: [public]}
     only: [master]
+    script: &PAGES_SCRIPT
+        - git fetch --tags
+        - make docs doxygen dist
+        - make check-dist
+
+pages:non-master:
+    stage: test
+    image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
+    except: [master]
     script: *PAGES_SCRIPT
