@@ -16,7 +16,7 @@ LIBGUMBO_OBJ_GPERF = $(call PREFIX_OBJ, build/lib/, \
     foreign_attrs svg_attrs svg_tags tag_lookup )
 
 LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
-    attribute error string_buffer tag utf8 vector char_ref parser \
+    ascii attribute error string_buffer tag utf8 vector char_ref parser \
     string_piece tokenizer util ) \
     $(LIBGUMBO_OBJ_GPERF)
 
