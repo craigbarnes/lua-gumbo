@@ -4,6 +4,8 @@ XCXXFLAGS += -std=c++11 $(WARNINGS)
 CXXOPTS = $(XCXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 GPERF = gperf
 GPERF_FILTER = sed -f mk/gperf-filter.sed
+RAGEL = ragel
+RAGEL_FILTER = sed -f mk/ragel-filter.sed
 MKDEPS_GEN = $(CC) -Ilib -MM $(1) | sed 's|^\([^: ]\+:\)|$(strip $(2))\1|'
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
 
@@ -61,8 +63,8 @@ benchmark: build/lib/benchmark
 	./$<
 
 ragel-gen: | build/lib/
-	ragel -F0 -o build/lib/char_ref.c.tmp lib/char_ref.rl
-	sed '/^\#line/d; 1{/^$$/d}' build/lib/char_ref.c.tmp > lib/char_ref.c
+	$(RAGEL) -F0 -o build/lib/char_ref.c.tmp lib/char_ref.rl
+	$(RAGEL_FILTER) build/lib/char_ref.c.tmp > lib/char_ref.c
 
 gperf-gen:
 	$(call GPERF_GEN, lib/tag_lookup.c)
