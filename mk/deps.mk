@@ -20,9 +20,9 @@ build/lib/parser.o: lib/parser.c lib/ascii.h lib/macros.h lib/attribute.h \
  lib/tokenizer_states.h lib/utf8.h lib/util.h lib/vector.h
 build/lib/string_piece.o: lib/string_piece.c lib/gumbo.h lib/ascii.h lib/macros.h
 build/lib/tokenizer.o: lib/tokenizer.c lib/tokenizer.h lib/gumbo.h lib/token_type.h \
- lib/tokenizer_states.h lib/attribute.h lib/char_ref.h lib/error.h \
- lib/insertion_mode.h lib/string_buffer.h lib/parser.h lib/utf8.h \
- lib/macros.h lib/util.h lib/vector.h
+ lib/tokenizer_states.h lib/ascii.h lib/macros.h lib/attribute.h \
+ lib/char_ref.h lib/error.h lib/insertion_mode.h lib/string_buffer.h \
+ lib/parser.h lib/utf8.h lib/util.h lib/vector.h
 build/lib/util.o: lib/util.c lib/util.h lib/macros.h lib/gumbo.h
 build/lib/foreign_attrs.o: lib/foreign_attrs.c lib/replacement.h lib/gumbo.h \
  lib/macros.h

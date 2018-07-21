@@ -24,10 +24,10 @@ else()
 endif()
 
 set ( LIBGUMBO_SRC
-  lib/attribute.c lib/char_ref.c lib/error.c lib/foreign_attrs.c lib/parser.c
-  lib/string_buffer.c lib/string_piece.c lib/svg_attrs.c lib/svg_tags.c
-  lib/tag.c lib/tag_lookup.c lib/tokenizer.c lib/utf8.c lib/util.c
-  lib/vector.c )
+  lib/ascii.c lib/attribute.c lib/char_ref.c lib/error.c lib/foreign_attrs.c
+  lib/parser.c lib/string_buffer.c lib/string_piece.c lib/svg_attrs.c
+  lib/svg_tags.c lib/tag.c lib/tag_lookup.c lib/tokenizer.c lib/utf8.c
+  lib/util.c lib/vector.c )
 
 set(LIB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib)
 include_directories( ${LIB_INCLUDE_DIR} )
