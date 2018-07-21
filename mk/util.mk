@@ -11,16 +11,20 @@ MAKE_S = $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
 PRINTVAR = printf '\033[1m%15s\033[0m = %s$(2)\n' '$(1)' '$(strip $($(1)))' $(3)
 PRINTVARX = $(call PRINTVAR,$(1), \033[32m(%s)\033[0m, '$(origin $(1))')
 USERVARS = CC CFLAGS LDFLAGS
+LUAVARS = LUAS_FOUND LUA53_PC LUA52_PC LUA51_PC LUA53 LUA52 LUA51
+
 
 AUTOVARS = \
     KERNEL \
     $(if $(call streq,$(KERNEL),Linux), DISTRO) \
-    ARCH NPROC MAKE_VERSION SHELL CC_VERSION
+    ARCH NPROC MAKE_VERSION CC_VERSION
 
 vars:
 	@echo
 	@$(foreach VAR, $(AUTOVARS), $(call PRINTVAR,$(VAR));)
 	@$(foreach VAR, $(USERVARS), $(call PRINTVARX,$(VAR));)
+	@echo
+	@$(foreach VAR, $(LUAVARS), $(call PRINTVAR,$(VAR));)
 	@echo
 
 
