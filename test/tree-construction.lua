@@ -20,7 +20,7 @@ local function serialize(document)
         local type = node.nodeType
         if type == ELEMENT_NODE then
             local i1, i2 = indent[depth], indent[depth+1]
-            buf:write("| ", i1, "<")
+            buf:write(i1, "<")
             local namespace = node.namespace
             if namespace ~= "html" then
                 buf:write(namespace, " ")
@@ -42,12 +42,12 @@ local function serialize(document)
             for i = 1, attrLength do
                 local a = attr[attrIndex[i]]
                 local prefix = a.prefix and (a.prefix .. " ") or ""
-                buf:write("| ", i2, prefix, a.name, '="', a.value, '"\n')
+                buf:write(i2, prefix, a.name, '="', a.value, '"\n')
             end
 
             local childNodes
             if node.type == "template" then
-                buf:write("| ", i2, "content\n")
+                buf:write(i2, "content\n")
                 depth = depth + 1
                 childNodes = node.content.childNodes
             else
@@ -71,14 +71,14 @@ local function serialize(document)
                 end
             end
         elseif type == TEXT_NODE then
-            buf:write("| ", indent[depth], '"', node.data, '"\n')
+            buf:write(indent[depth], '"', node.data, '"\n')
         elseif type == COMMENT_NODE then
-            buf:write("| ", indent[depth], "<!-- ", node.data, " -->\n")
+            buf:write(indent[depth], "<!-- ", node.data, " -->\n")
         end
     end
     local doctype = document.doctype
     if doctype then
-        buf:write("| <!DOCTYPE ", doctype.name)
+        buf:write("<!DOCTYPE ", doctype.name)
         local publicId, systemId = doctype.publicId, doctype.systemId
         if publicId ~= "" or systemId ~= "" then
             buf:write(' "', publicId, '" "', systemId, '"')
@@ -110,6 +110,8 @@ local function parseTestData(filename)
                 testnum = testnum + 1
                 tests[testnum] = {line = linenum}
             end
+        elseif field == "document" and line:find("^| ") then
+            buffer:write(line:sub(3), "\n")
         else
             buffer:write(line, "\n")
         end
