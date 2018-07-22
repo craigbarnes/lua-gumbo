@@ -5,6 +5,7 @@ local traceback = debug.traceback
 local _ENV = nil
 
 local tests = {
+    "test/dom/metatables.lua",
     "test/dom/interfaces.lua",
     "test/dom/ElementList.lua",
     "test/dom/getElementsByTagName.lua",

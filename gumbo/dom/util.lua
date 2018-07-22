@@ -26,6 +26,7 @@ end
 
 function util.indexFactory(t)
     local getters = assert(t.getters)
+    t.__metatable = t
     return function(self, k)
         local field = t[k]
         if field then
