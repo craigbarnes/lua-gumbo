@@ -43,21 +43,6 @@ local isElementOrDocumentFragment = Set {
     Node.ELEMENT_NODE
 }
 
-local isValidParent = Set {
-    Node.DOCUMENT_NODE,
-    Node.DOCUMENT_FRAGMENT_NODE,
-    Node.ELEMENT_NODE
-}
-
-local isValidChild = Set {
-    Node.DOCUMENT_FRAGMENT_NODE,
-    Node.DOCUMENT_TYPE_NODE,
-    Node.ELEMENT_NODE,
-    Node.TEXT_NODE,
-    Node.PROCESSING_INSTRUCTION_NODE,
-    Node.COMMENT_NODE
-}
-
 function Node:walk()
     assertNode(self)
     local level = 0
@@ -187,11 +172,11 @@ end
 
 -- https://dom.spec.whatwg.org/#concept-node-ensure-pre-insertion-validity
 local function ensurePreInsertionValidity(node, parent, child)
-    assert(isValidParent[parent.nodeType] == true, "HierarchyRequestError")
+    assert(parent.implementsParentNode == true, "HierarchyRequestError")
     assert(parent ~= node, "HierarchyRequestError")
     assert(node:contains(parent) == false, "HierarchyRequestError")
     assert(child == nil or child.parentNode == parent, "NotFoundError")
-    assert(isValidChild[node.nodeType] == true, "HierarchyRequestError")
+    assert(node.implementsChildNode == true, "HierarchyRequestError")
 
     if parent.type ~= "document" then
         assert(node.type ~= "doctype", "HierarchyRequestError")
@@ -313,11 +298,11 @@ function Node:replaceChild(node, child)
     assertNode(child)
     local parent = self
 
-    assert(isValidParent[parent.nodeType] == true, "HierarchyRequestError")
+    assert(parent.implementsParentNode == true, "HierarchyRequestError")
     assert(parent ~= node, "HierarchyRequestError")
     assert(node:contains(parent) == false, "HierarchyRequestError")
     assert(child.parentNode == parent, "NotFoundError")
-    assert(isValidChild[node.nodeType] == true, "HierarchyRequestError")
+    assert(node.implementsChildNode == true, "HierarchyRequestError")
 
     if parent.type == "document" then
         assert(node.nodeName ~= "#text", "HierarchyRequestError")

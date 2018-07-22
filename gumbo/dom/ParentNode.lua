@@ -4,6 +4,7 @@ local ipairs, setmetatable = ipairs, setmetatable
 local _ENV = nil
 
 local ParentNode = {
+    implementsParentNode = true,
     getters = {},
     readonly = Set {
         "children", "firstElementChild", "lastElementChild",
