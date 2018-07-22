@@ -25,7 +25,8 @@ local function serialize(document)
             if namespace ~= "html" then
                 buf:write(namespace, " ")
             end
-            buf:write(node.localName, ">\n")
+            local localName = node.localName
+            buf:write(localName, ">\n")
 
             -- The html5lib tree format expects attributes to be sorted by
             -- name, in lexicographic order. Instead of sorting in-place or
@@ -46,7 +47,7 @@ local function serialize(document)
             end
 
             local childNodes
-            if node.type == "template" then
+            if localName == "template" and namespace == "html" then
                 buf:write(i2, "content\n")
                 depth = depth + 1
                 childNodes = node.content.childNodes
