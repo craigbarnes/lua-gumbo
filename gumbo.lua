@@ -18,15 +18,15 @@ local _ENV = nil
 
 local function unpackMetatables(mt)
     return
-        assert(mt.text),
-        assert(mt.comment),
-        assert(mt.element),
-        assert(mt.attribute),
-        assert(mt.document),
-        assert(mt.documentType),
-        assert(mt.documentFragment),
-        assert(mt.nodeList),
-        assert(mt.attributeList)
+        mt.text,
+        mt.comment,
+        mt.element,
+        mt.attribute,
+        mt.document,
+        mt.documentType,
+        mt.documentFragment,
+        mt.nodeList,
+        mt.attributeList
 end
 
 local function checkMetatables(mt)
