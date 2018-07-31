@@ -20,7 +20,9 @@ requirements listed above are installed, then use the command:
 
     luarocks install gumbo
 
-Note: Installing on Windows is *not* supported.
+**Note**: The 0.4 release only supports Unix-like systems. However,
+the current git `master` branch has support for Windows (via CMake),
+which will be available in the next release.
 
 Usage
 -----
