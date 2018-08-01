@@ -1,7 +1,7 @@
 CC ?= gcc
 CFLAGS ?= -g -O2
 XCFLAGS += -std=c99 $(WARNINGS)
-CCOPTS = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS)
+CCOPTS = $(XCFLAGS) $(CPPFLAGS) $(CFLAGS) $(DEPFLAGS)
 ISDARWIN = $(call streq, $(KERNEL), Darwin)
 LIBFLAGS ?= $(if $(ISDARWIN), -bundle -undefined dynamic_lookup, -shared)
 MKDIR ?= mkdir -p
@@ -16,6 +16,15 @@ BUILD_ALL_PHONY = $(addprefix build-, $(BUILD_VERS))
 BUILD_ALL = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(BUILD_VERS)))
 BUILD_ANY = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(LUAS_FOUND)))
 OBJ_ALL = $(BUILD_ALL:%.so=%.o)
+
+ifndef NO_DEPS
+  ifneq '' '$(call cc-option,-MMD -MP -MF /dev/null)'
+    $(OBJ_ALL) $(LIBGUMBO_OBJ) $(TEST_OBJ): DEPFLAGS = -MMD -MP -MF $(@:.o=.mk)
+  else ifneq '' '$(call cc-option,-MD -MF /dev/null)'
+    $(OBJ_ALL) $(LIBGUMBO_OBJ) $(TEST_OBJ): DEPFLAGS = -MD -MF $(@:.o=.mk)
+  endif
+  -include $(patsubst %.o, %.mk, $(OBJ_ALL) $(LIBGUMBO_OBJ) $(TEST_OBJ))
+endif
 
 build-any: $(BUILD_ANY)
 	@: $(if $^,, $(error No Lua installations found via pkg-config))

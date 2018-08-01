@@ -1,12 +1,11 @@
 CXX ?= g++
 CXXFLAGS ?= -g -Og
 XCXXFLAGS += -std=c++11 $(WARNINGS)
-CXXOPTS = $(XCXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+CXXOPTS = $(XCXXFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS)
 GPERF = gperf
 GPERF_FILTER = sed -f mk/gperf-filter.sed
 RAGEL = ragel
 RAGEL_FILTER = sed -f mk/ragel-filter.sed
-MKDEPS_GEN = $(CC) -Ilib -MM $(1) | sed 's|^\([^: ]\+:\)|$(strip $(2))\1|'
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
 
 define GPERF_GEN
@@ -72,12 +71,5 @@ gperf-gen:
 	$(call GPERF_GEN, lib/svg_attrs.c)
 	$(call GPERF_GEN, lib/foreign_attrs.c, -n)
 
-lib-deps-gen:
-	$(call MKDEPS_GEN, $(LIBGUMBO_SRC), build/lib/) > mk/deps.mk
-	echo >> mk/deps.mk
-	$(call MKDEPS_GEN, $(TEST_SRC), build/lib/test_) >> mk/deps.mk
 
-
-.PHONY: ragel-gen gperf-gen lib-deps-gen check-lib benchmark
-
-include mk/deps.mk
+.PHONY: ragel-gen gperf-gen check-lib benchmark
