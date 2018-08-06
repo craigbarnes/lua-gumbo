@@ -5,6 +5,8 @@ PKGCONFIG = $(or \
 
 $(call make-lazy,PKGCONFIG)
 
+LUA_VERSIONS = 5.3 5.2 5.1
+LUA_SUFFIXES = $(subst .,,$(LUA_VERSIONS))
 PKGEXISTS = $(PKGCONFIG) --exists $(1) && echo $(1)
 PKGFIND = $(shell for P in $(1); do $(call PKGEXISTS, $$P) && break; done)
 PKGMATCH = $(shell $(PKGCONFIG) --exists '$(1) $(2); $(1) $(3)' && echo $(1))
@@ -38,12 +40,11 @@ LUA51_PC ?= $(or \
     $(call PKGMATCH, luajit, >= 2.0.0, < 2.2.0) \
 )
 
-$(foreach VER, 53 52 51, $(call make-lazy,LUA$(VER)_PC))
+$(foreach S, $(LUA_SUFFIXES), $(call make-lazy,LUA$(S)_PC))
 
-LUAS_FOUND = \
-    $(if $(LUA53_PC), lua53) \
-    $(if $(LUA52_PC), lua52) \
-    $(if $(LUA51_PC), lua51)
+LUAS_FOUND = $(foreach S, $(LUA_SUFFIXES), $(if $(LUA$(S)_PC), lua$(S)))
+
+$(call make-lazy,LUAS_FOUND)
 
 LUA53_CFLAGS ?= $(call LFLAG, --cflags, 53)
 LUA52_CFLAGS ?= $(call LFLAG, --cflags, 52)

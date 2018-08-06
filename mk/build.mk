@@ -11,7 +11,7 @@ WARNINGS = \
     -Wall -Wextra -Wwrite-strings -Wshadow -pedantic -Wformat=2 \
     -Werror=div-by-zero -Werror=implicit-function-declaration
 
-BUILD_VERS = lua53 lua52 lua51
+BUILD_VERS = $(addprefix lua, $(LUA_SUFFIXES))
 BUILD_ALL_PHONY = $(addprefix build-, $(BUILD_VERS))
 BUILD_ALL = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(BUILD_VERS)))
 BUILD_ANY = $(addprefix build/, $(addsuffix /gumbo/parse.so, $(LUAS_FOUND)))
