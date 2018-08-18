@@ -21,7 +21,7 @@
 #include <assert.h>
 #include <string.h>
 
-static const char kGumboTagNames[GUMBO_TAG_LAST+1][15] = {
+static const char kGumboTagNames[GUMBO_TAG_LAST+1][16] = {
     [GUMBO_TAG_HTML] = "html",
     [GUMBO_TAG_HEAD] = "head",
     [GUMBO_TAG_TITLE] = "title",
