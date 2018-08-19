@@ -1220,7 +1220,6 @@ static StateResult handle_rcdata_end_tag_open_state (
     gumbo_tokenizer_set_state(parser, GUMBO_LEX_RCDATA);
     return emit_temporary_buffer(parser, output);
   }
-  return true;
 }
 
 // https://html.spec.whatwg.org/multipage/parsing.html#rcdata-end-tag-name-state
