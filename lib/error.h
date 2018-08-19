@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-struct GumboInternalParser;
+struct GumboParser;
 
 typedef enum {
   GUMBO_ERR_UTF8_INVALID,
@@ -60,7 +60,7 @@ typedef enum {
 } GumboErrorType;
 
 // Additional data for duplicated attributes.
-typedef struct GumboInternalDuplicateAttrError {
+typedef struct GumboDuplicateAttrError {
   // The name of the attribute. Owned by this struct.
   const char* name;
 
@@ -96,7 +96,7 @@ typedef enum {
 // Additional data for tokenizer errors.
 // This records the current state and codepoint encountered - this is usually
 // enough to reconstruct what went wrong and provide a friendly error message.
-typedef struct GumboInternalTokenizerError {
+typedef struct GumboTokenizerError {
   // The bad codepoint encountered.
   int codepoint;
 
@@ -105,7 +105,7 @@ typedef struct GumboInternalTokenizerError {
 } GumboTokenizerError;
 
 // Additional data for parse errors.
-typedef struct GumboInternalParserError {
+typedef struct GumboParserError {
   // The type of input token that resulted in this error.
   GumboTokenType input_type;
 
@@ -124,7 +124,7 @@ typedef struct GumboInternalParserError {
 // The overall error struct representing an error in decoding/tokenizing/parsing
 // the HTML. This contains an enumerated type flag, a source position, and then
 // a union of fields containing data specific to the error.
-typedef struct GumboInternalError {
+typedef struct GumboError {
   // The type of error.
   GumboErrorType type;
 
@@ -158,20 +158,20 @@ typedef struct GumboInternalError {
 
     // Parser state, for GUMBO_ERR_PARSER and
     // GUMBO_ERR_UNACKNOWLEDGE_SELF_CLOSING_TAG.
-    struct GumboInternalParserError parser;
+    struct GumboParserError parser;
   } v;
 } GumboError;
 
 // Adds a new error to the parser's error list, and returns a pointer to it so
 // that clients can fill out the rest of its fields. May return NULL if we're
 // already over the max_errors field specified in GumboOptions.
-GumboError* gumbo_add_error(struct GumboInternalParser* parser);
+GumboError* gumbo_add_error(struct GumboParser* parser);
 
 // Initializes the errors vector in the parser.
-void gumbo_init_errors(struct GumboInternalParser* errors);
+void gumbo_init_errors(struct GumboParser* errors);
 
 // Frees all the errors in the 'errors_' field of the parser.
-void gumbo_destroy_errors(struct GumboInternalParser* errors);
+void gumbo_destroy_errors(struct GumboParser* errors);
 
 // Frees the memory used for a single GumboError.
 void gumbo_error_destroy(GumboError* error);

@@ -21,7 +21,7 @@
 #include "macros.h"
 #include "utf8.h"
 
-struct GumboInternalParser;
+struct GumboParser;
 
 const int kGumboNoChar = -1;
 
@@ -51,7 +51,7 @@ static int CONST_FN parse_digit(int c, bool allow_hex) {
 }
 
 static void add_no_digit_error (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   Utf8Iterator* input
 ) {
   GumboError* error = gumbo_add_error(parser);
@@ -63,7 +63,7 @@ static void add_no_digit_error (
 }
 
 static void add_codepoint_error (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   Utf8Iterator* input,
   GumboErrorType type,
   int codepoint
@@ -78,7 +78,7 @@ static void add_codepoint_error (
 }
 
 static void add_named_reference_error (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   Utf8Iterator* input,
   GumboErrorType type,
   GumboStringPiece text
@@ -97,7 +97,7 @@ static uint32_t PURE maybe_replace_codepoint(uint32_t codepoint) {
 }
 
 static bool consume_numeric_ref (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   Utf8Iterator* input,
   int* output
 ) {
@@ -177,7 +177,7 @@ static bool consume_numeric_ref (
 }
 
 static bool maybe_add_invalid_named_reference (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   Utf8Iterator* input
 ) {
   // The iterator will always be reset in this code path, so we don't need to
@@ -2464,7 +2464,7 @@ static inline bool PURE ascii_isalnum(unsigned char ch) {
 }
 
 static bool consume_named_ref (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   Utf8Iterator* input,
   bool is_in_attribute,
   OneOrTwoCodepoints* output
@@ -2525,8 +2525,8 @@ static bool consume_named_ref (
 }
 
 bool gumbo_consume_char_ref (
-  struct GumboInternalParser* parser,
-  struct GumboInternalUtf8Iterator* input,
+  struct GumboParser* parser,
+  struct GumboUtf8Iterator* input,
   int additional_allowed_char,
   bool is_in_attribute,
   OneOrTwoCodepoints* output

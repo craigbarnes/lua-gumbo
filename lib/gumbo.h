@@ -441,7 +441,7 @@ typedef enum {
  * Forward declaration of GumboNode so it can be used recursively in
  * GumboNode.parent.
  */
-typedef struct GumboInternalNode GumboNode;
+typedef struct GumboNode GumboNode;
 
 /** https://dom.spec.whatwg.org/#concept-document-quirks */
 typedef enum {
@@ -649,7 +649,7 @@ typedef struct {
  * include one generic type in lists of children and cast as necessary
  * to subtypes.
  */
-struct GumboInternalNode {
+struct GumboNode {
   /** The type of node that this is. */
   GumboNodeType type;
 
@@ -680,7 +680,7 @@ struct GumboInternalNode {
  * error handling, etc. Use `kGumboDefaultOptions` for sensible
  * defaults and only set what you need.
  */
-typedef struct GumboInternalOptions {
+typedef struct GumboOptions {
   /**
    * The tab-stop size, for computing positions in HTML files that
    * use tabs. Default: `8`.
@@ -738,7 +738,7 @@ typedef enum {
 
 
 /** The output struct containing the results of the parse. */
-typedef struct GumboInternalOutput {
+typedef struct GumboOutput {
   /**
    * Pointer to the document node. This is a `GumboNode` of type
    * `NODE_DOCUMENT` that contains the entire document as its child.

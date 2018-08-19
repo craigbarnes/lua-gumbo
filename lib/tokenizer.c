@@ -73,7 +73,7 @@ typedef enum {
 
 // This is a struct containing state necessary to build up a tag token,
 // character by character.
-typedef struct GumboInternalTagState {
+typedef struct GumboTagState {
   // A buffer to accumulate characters for various GumboStringPiece fields.
   GumboStringBuffer _buffer;
 
@@ -119,7 +119,7 @@ typedef struct GumboInternalTagState {
 
 // This is the main tokenizer state struct, containing all state used by in
 // tokenizing the input stream.
-typedef struct GumboInternalTokenizerState {
+typedef struct GumboTokenizerState {
   // The current lexer state. Starts in GUMBO_LEX_DATA.
   GumboTokenizerEnum _state;
 

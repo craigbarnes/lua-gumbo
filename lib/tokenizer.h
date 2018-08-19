@@ -15,10 +15,10 @@
 extern "C" {
 #endif
 
-struct GumboInternalParser;
+struct GumboParser;
 
 // Struct containing all information pertaining to doctype tokens.
-typedef struct GumboInternalTokenDocType {
+typedef struct GumboTokenDocType {
   const char* name;
   const char* public_identifier;
   const char* system_identifier;
@@ -31,7 +31,7 @@ typedef struct GumboInternalTokenDocType {
 } GumboTokenDocType;
 
 // Struct containing all information pertaining to start tag tokens.
-typedef struct GumboInternalTokenStartTag {
+typedef struct GumboTokenStartTag {
   GumboTag tag;
   GumboVector /* GumboAttribute */ attributes;
   bool is_self_closing;
@@ -40,7 +40,7 @@ typedef struct GumboInternalTokenStartTag {
 // A data structure representing a single token in the input stream. This
 // contains an enum for the type, the source position, a GumboStringPiece
 // pointing to the original text, and then a union for any parsed data.
-typedef struct GumboInternalToken {
+typedef struct GumboToken {
   GumboTokenType type;
   GumboSourcePosition position;
   GumboStringPiece original_text;
@@ -56,20 +56,20 @@ typedef struct GumboInternalToken {
 // Initializes the tokenizer state within the GumboParser object, setting up a
 // parse of the specified text.
 void gumbo_tokenizer_state_init (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   const char* text,
   size_t text_length
 );
 
 // Destroys the tokenizer state within the GumboParser object, freeing any
 // dynamically-allocated structures within it.
-void gumbo_tokenizer_state_destroy(struct GumboInternalParser* parser);
+void gumbo_tokenizer_state_destroy(struct GumboParser* parser);
 
 // Sets the tokenizer state to the specified value. This is needed by some
 // parser states, which alter the state of the tokenizer in response to tags
 // seen.
 void gumbo_tokenizer_set_state (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   GumboTokenizerEnum state
 );
 
@@ -78,7 +78,7 @@ void gumbo_tokenizer_set_state (
 // aware of the state of the parser to properly tokenize bad comment tags.
 // https://html.spec.whatwg.org/multipage/parsing.html#markup-declaration-open-state
 void gumbo_tokenizer_set_is_current_node_foreign (
-  struct GumboInternalParser* parser,
+  struct GumboParser* parser,
   bool is_foreign
 );
 
@@ -87,7 +87,7 @@ void gumbo_tokenizer_set_is_current_node_foreign (
 // tokenization, false if a parse error occurs.
 //
 // Example:
-//   struct GumboInternalParser parser;
+//   struct GumboParser parser;
 //   GumboToken output;
 //   gumbo_tokenizer_state_init(&parser, text, strlen(text));
 //   while (gumbo_lex(&parser, &output)) {
@@ -95,7 +95,7 @@ void gumbo_tokenizer_set_is_current_node_foreign (
 //     gumbo_token_destroy(&token);
 //   }
 //   gumbo_tokenizer_state_destroy(&parser);
-bool gumbo_lex(struct GumboInternalParser* parser, GumboToken* output);
+bool gumbo_lex(struct GumboParser* parser, GumboToken* output);
 
 // Frees the internally-allocated pointers within a GumboToken. Note that this
 // doesn't free the token itself, since oftentimes it will be allocated on the
