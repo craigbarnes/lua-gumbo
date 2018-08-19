@@ -498,10 +498,12 @@ static bool is_in_static_list (
   const GumboStringPiece* haystack,
   bool exact_match
 ) {
-  for (unsigned int i = 0; haystack[i].length > 0; ++i) {
+  for (size_t i = 0; haystack[i].length > 0; i++) {
+    const char *const data = haystack[i].data;
+    const size_t length = haystack[i].length;
     if (
-      (exact_match && !strcmp(needle, haystack[i].data))
-      || (!exact_match && !gumbo_ascii_strcasecmp(needle, haystack[i].data))
+      (exact_match && !strncmp(needle, data, length))
+      || (!exact_match && !gumbo_ascii_strncasecmp(needle, data, length))
     ) {
       return true;
     }
@@ -1916,9 +1918,9 @@ static bool doctype_matches (
   bool allow_missing_system_id
 ) {
   return
-    !strcmp(doctype->public_identifier, public_id->data)
+    !strncmp(doctype->public_identifier, public_id->data, public_id->length)
     && (allow_missing_system_id || doctype->has_system_identifier)
-    && !strcmp(doctype->system_identifier, system_id->data);
+    && !strncmp(doctype->system_identifier, system_id->data, system_id->length);
 }
 
 static bool maybe_add_doctype_error (
