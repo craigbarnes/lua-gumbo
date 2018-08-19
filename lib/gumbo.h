@@ -790,8 +790,6 @@ typedef struct GumboOutput {
  * Parses a buffer of UTF-8 text into an `GumboNode` parse tree. The
  * buffer must live at least as long as the parse tree, as some fields
  * (eg. `original_text`) point directly into the original buffer.
- *
- * This doesn't support buffers longer than 4 gigabytes.
  */
 GumboOutput* gumbo_parse(const char* buffer);
 
