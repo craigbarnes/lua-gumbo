@@ -29,6 +29,7 @@
 #include "macros.h"
 #include "parser.h"
 #include "replacement.h"
+#include "string_piece.h"
 #include "tokenizer.h"
 #include "tokenizer_states.h"
 #include "utf8.h"
@@ -54,7 +55,7 @@ const GumboOptions kGumboDefaultOptions = {
   .fragment_namespace = GUMBO_NAMESPACE_HTML
 };
 
-#define STRING(s) {.data = s, .length = sizeof(s) - 1}
+#define STRING(s) STRING_PIECE(s)
 #define TERMINATOR {.data = "", .length = 0}
 
 static const GumboStringPiece kPublicIdHtml4_0 =
@@ -499,11 +500,9 @@ static bool is_in_static_list (
   bool exact_match
 ) {
   for (size_t i = 0; haystack[i].length > 0; i++) {
-    const char *const data = haystack[i].data;
-    const size_t length = haystack[i].length;
     if (
-      (exact_match && !strncmp(needle, data, length))
-      || (!exact_match && !gumbo_ascii_strncasecmp(needle, data, length))
+      (exact_match && string_piece_equal_cstr(&haystack[i], needle))
+      || (!exact_match && string_piece_equal_cstr_icase(&haystack[i], needle))
     ) {
       return true;
     }
@@ -941,10 +940,11 @@ static void record_end_of_element (
   GumboElement* element
 ) {
   element->end_pos = current_token->position;
-  element->original_end_tag =
-    (current_token->type == GUMBO_TOKEN_END_TAG)
-      ? current_token->original_text
-      : kGumboEmptyString;
+  if (current_token->type == GUMBO_TOKEN_END_TAG) {
+    element->original_end_tag = current_token->original_text;
+  } else {
+    element->original_end_tag = STRING_PIECE_INIT;
+  }
 }
 
 static GumboNode* pop_current_node(GumboParser* parser) {
@@ -1039,8 +1039,8 @@ static GumboNode* create_element(GumboParser* parser, GumboTag tag) {
   gumbo_vector_init(0, &element->attributes);
   element->tag = tag;
   element->tag_namespace = GUMBO_NAMESPACE_HTML;
-  element->original_tag = kGumboEmptyString;
-  element->original_end_tag = kGumboEmptyString;
+  element->original_tag = STRING_PIECE_INIT;
+  element->original_end_tag = STRING_PIECE_INIT;
   element->start_pos = (parser->_parser_state->_current_token)
     ? parser->_parser_state->_current_token->position
     : kGumboEmptySourcePosition
@@ -1078,7 +1078,7 @@ static GumboNode* create_element_from_token (
   assert(token->original_text.data[token->original_text.length - 1] == '>');
   element->original_tag = token->original_text;
   element->start_pos = token->position;
-  element->original_end_tag = kGumboEmptyString;
+  element->original_end_tag = STRING_PIECE_INIT;
   element->end_pos = kGumboEmptySourcePosition;
 
   // The element takes ownership of the attributes from the token, so any
@@ -1926,9 +1926,9 @@ static bool doctype_matches (
   bool allow_missing_system_id
 ) {
   return
-    !strncmp(doctype->public_identifier, public_id->data, public_id->length)
-    && (allow_missing_system_id || doctype->has_system_identifier)
-    && !strncmp(doctype->system_identifier, system_id->data, system_id->length);
+    (allow_missing_system_id || doctype->has_system_identifier)
+    && string_piece_equal_cstr(public_id, doctype->public_identifier)
+    && string_piece_equal_cstr(system_id, doctype->system_identifier);
 }
 
 static bool maybe_add_doctype_error (
@@ -1937,18 +1937,25 @@ static bool maybe_add_doctype_error (
 ) {
   const GumboTokenDocType* doctype = &token->v.doc_type;
   bool html_doctype = !strcmp(doctype->name, "html");
-  if ((!html_doctype || doctype->has_public_identifier ||
-          (doctype->has_system_identifier &&
-              !strcmp(
-                  doctype->system_identifier, kSystemIdLegacyCompat.data))) &&
-      !(html_doctype && (doctype_matches(doctype, &kPublicIdHtml4_0,
-                             &kSystemIdRecHtml4_0, true) ||
-                            doctype_matches(doctype, &kPublicIdHtml4_01,
-                                &kSystemIdHtml4, true) ||
-                            doctype_matches(doctype, &kPublicIdXhtml1_0,
-                                &kSystemIdXhtmlStrict1_1, false) ||
-                            doctype_matches(doctype, &kPublicIdXhtml1_1,
-                                &kSystemIdXhtml1_1, false)))) {
+  if (
+    (
+      !html_doctype
+      || doctype->has_public_identifier
+      || (
+        doctype->has_system_identifier &&
+        string_piece_equal_cstr(&kSystemIdLegacyCompat, doctype->system_identifier)
+      )
+    )
+    && !(
+      html_doctype
+      && (
+        doctype_matches(doctype, &kPublicIdHtml4_0, &kSystemIdRecHtml4_0, true)
+        || doctype_matches(doctype, &kPublicIdHtml4_01, &kSystemIdHtml4, true)
+        || doctype_matches(doctype, &kPublicIdXhtml1_0, &kSystemIdXhtmlStrict1_1, false)
+        || doctype_matches(doctype, &kPublicIdXhtml1_1, &kSystemIdXhtml1_1, false)
+      )
+    )
+  ) {
     parser_add_parse_error(parser, token);
     return false;
   }
@@ -4242,7 +4249,7 @@ static bool handle_in_foreign_content(GumboParser* parser, GumboToken* token) {
     gumbo_tag_from_original_text(&node_tagname);
 
     bool is_success = true;
-    if (!gumbo_string_equals_ignore_case(&node_tagname, &token_tagname)) {
+    if (!string_piece_equal_icase(&node_tagname, &token_tagname)) {
       parser_add_parse_error(parser, token);
       is_success = false;
     }
@@ -4258,7 +4265,7 @@ static bool handle_in_foreign_content(GumboParser* parser, GumboToken* token) {
         node_tagname.data,
         i
       );
-      if (gumbo_string_equals_ignore_case(&node_tagname, &token_tagname)) {
+      if (string_piece_equal_icase(&node_tagname, &token_tagname)) {
         gumbo_debug("Matches.\n");
         while (pop_current_node(parser) != node) {
           // Pop all the nodes below the current one. Node is guaranteed to

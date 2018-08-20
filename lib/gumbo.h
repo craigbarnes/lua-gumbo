@@ -64,27 +64,6 @@ typedef struct {
   size_t length;
 } GumboStringPiece;
 
-/** A constant to represent a 0-length null string. */
-extern const GumboStringPiece kGumboEmptyString;
-
-/**
- * Compares two `GumboStringPiece`s, and returns `true` if they're
- * equal or `false` otherwise.
- */
-bool gumbo_string_equals (
-  const GumboStringPiece* str1,
-  const GumboStringPiece* str2
-);
-
-/**
- * Compares two `GumboStringPiece`s, ignoring case, and returns `true`
- * if they're equal or `false` otherwise.
- */
-bool gumbo_string_equals_ignore_case (
-  const GumboStringPiece* str1,
-  const GumboStringPiece* str2
-);
-
 /**
  * A simple vector implementation. This stores a pointer to a data array
  * and a length. All elements are stored as `void*`; client code must

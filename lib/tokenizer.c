@@ -54,6 +54,7 @@
 #include "gumbo.h"
 #include "parser.h"
 #include "string_buffer.h"
+#include "string_piece.h"
 #include "token_type.h"
 #include "tokenizer_states.h"
 #include "utf8.h"
@@ -1634,7 +1635,7 @@ static StateResult handle_script_double_escaped_start_state (
     case '>':
       gumbo_tokenizer_set_state (
         parser,
-        gumbo_string_equals (
+        string_piece_equal (
           &kScriptTag,
           (GumboStringPiece*) &tokenizer->_script_data_buffer
         )
@@ -1772,7 +1773,7 @@ static StateResult handle_script_double_escaped_end_state (
     case '/':
     case '>':
       gumbo_tokenizer_set_state(
-          parser, gumbo_string_equals(&kScriptTag,
+          parser, string_piece_equal(&kScriptTag,
                       (GumboStringPiece*) &tokenizer->_script_data_buffer)
                       ? GUMBO_LEX_SCRIPT_ESCAPED
                       : GUMBO_LEX_SCRIPT_DOUBLE_ESCAPED);

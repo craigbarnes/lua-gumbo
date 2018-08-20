@@ -22,12 +22,12 @@ LIBGUMBO_OBJ_GPERF = $(call PREFIX_OBJ, build/lib/, \
 
 LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
     ascii attribute error string_buffer tag utf8 vector char_ref parser \
-    string_piece tokenizer util ) \
+    tokenizer util ) \
     $(LIBGUMBO_OBJ_GPERF)
 
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    attribute char_ref parser string_buffer string_piece test_utils \
-    tokenizer utf8 vector )
+    attribute char_ref parser string_buffer test_utils tokenizer utf8 \
+    vector )
 
 LIBGUMBO_SRC = $(patsubst build/lib/%.o,lib/%.c, $(LIBGUMBO_OBJ))
 TEST_SRC = $(patsubst build/lib/test_%.o,test/parser/%.cc, $(TEST_OBJ))
