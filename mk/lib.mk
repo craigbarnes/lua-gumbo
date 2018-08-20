@@ -26,22 +26,26 @@ LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
     $(LIBGUMBO_OBJ_GPERF)
 
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    attribute char_ref parser string_buffer test_utils tokenizer utf8 \
-    vector )
+    attribute string_buffer test main )
 
-LIBGUMBO_SRC = $(patsubst build/lib/%.o,lib/%.c, $(LIBGUMBO_OBJ))
-TEST_SRC = $(patsubst build/lib/test_%.o,test/parser/%.cc, $(TEST_OBJ))
+GTEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
+    char_ref parser test_utils tokenizer utf8 vector )
 
-$(TEST_OBJ): CXXFLAGS += $(GTEST_CXXFLAGS)
-build/lib/test: XLDFLAGS += $(GTEST_LDFLAGS)
-build/lib/test: LDLIBS += $(GTEST_LDLIBS)
+$(GTEST_OBJ): CXXFLAGS += $(GTEST_CXXFLAGS)
+build/lib/gtest: XLDFLAGS += $(GTEST_LDFLAGS)
+build/lib/gtest: LDLIBS += $(GTEST_LDLIBS)
 build/lib/parser.o: XCFLAGS += -Wno-shadow
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
+build/lib/gtest: $(LIBGUMBO_OBJ) $(GTEST_OBJ)
 build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
 build/lib/benchmark.o: lib/gumbo.h lib/macros.h
 
-build/lib/test build/lib/benchmark:
+build/lib/test:
+	$(E) LINK '$@'
+	$(Q) $(CC) $(XLDFLAGS) $(LDFLAGS) -o $@ $^
+
+build/lib/gtest build/lib/benchmark:
 	$(E) LINK '$@'
 	$(Q) $(CXX) $(XLDFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
@@ -49,7 +53,11 @@ $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
 	$(E) CC '$@'
 	$(Q) $(CC) $(CCOPTS) -c -o $@ $<
 
-$(TEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
+$(TEST_OBJ): build/lib/test_%.o: test/parser/%.c | build/lib/
+	$(E) CC '$@'
+	$(Q) $(CC) $(CCOPTS) -Ilib -c -o $@ $<
+
+$(GTEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
 	$(E) CXX '$@'
 	$(Q) $(CXX) $(CXXOPTS) -Ilib -c -o $@ $<
 
@@ -61,6 +69,10 @@ build/lib/:
 	@$(MKDIR) '$@'
 
 check-lib: build/lib/test
+	$(E) TEST '$<'
+	$(Q) $<
+
+check-gtest: build/lib/gtest
 	./$<
 
 benchmark: build/lib/benchmark
@@ -77,4 +89,4 @@ gperf-gen:
 	$(call GPERF_GEN, lib/foreign_attrs.c, -n)
 
 
-.PHONY: ragel-gen gperf-gen check-lib benchmark
+.PHONY: ragel-gen gperf-gen check-lib check-gtest benchmark

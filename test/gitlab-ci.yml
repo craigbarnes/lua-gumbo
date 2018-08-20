@@ -44,6 +44,7 @@ test:debian:gtest:
         - export GTEST_LDFLAGS="-pthread"
         - make vars
         - make check-lib
+        - make check-gtest
 
 test:alpine:
     stage: test
