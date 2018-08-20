@@ -27,6 +27,24 @@ test:debian:
         - make coverage.txt
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
 
+test:debian:gtest:
+    stage: test
+    image: registry.gitlab.com/craigbarnes/dockerfiles/cxxdev-debian
+    script:
+        - curl -LO https://github.com/google/googletest/archive/release-1.8.0.tar.gz
+        - tar -xzf release-1.8.0.tar.gz
+        - export GTEST_DIR=googletest-release-1.8.0/googletest
+        - g++ -isystem $GTEST_DIR/include -I$GTEST_DIR -pthread -c $GTEST_DIR/src/gtest-all.cc
+        - g++ -isystem $GTEST_DIR/include -I$GTEST_DIR -pthread -c $GTEST_DIR/src/gtest_main.cc
+        - ar -rv gtest.a gtest-all.o
+        - ar -rv gtest_main.a gtest_main.o
+
+        - export GTEST_CXXFLAGS="-isystem $GTEST_DIR/include -pthread"
+        - export GTEST_LDLIBS="gtest.a gtest_main.a"
+        - export GTEST_LDFLAGS="-pthread"
+        - make vars
+        - make check-lib
+
 test:alpine:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-alpine

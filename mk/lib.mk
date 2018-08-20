@@ -8,6 +8,10 @@ RAGEL = ragel
 RAGEL_FILTER = sed -f mk/ragel-filter.sed
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
 
+GTEST_CXXFLAGS ?= $(shell $(PKGCONFIG) --cflags gtest)
+GTEST_LDFLAGS ?= $(shell $(PKGCONFIG) --libs-only-L gtest)
+GTEST_LDLIBS ?= $(shell $(PKGCONFIG) --libs-only-l gtest)
+
 define GPERF_GEN
   $(E) GPERF $(1)
   $(Q) $(GPERF) -m100 $(2) $(1:.c=.gperf) | $(GPERF_FILTER) > $(1)
@@ -28,8 +32,9 @@ TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
 LIBGUMBO_SRC = $(patsubst build/lib/%.o,lib/%.c, $(LIBGUMBO_OBJ))
 TEST_SRC = $(patsubst build/lib/test_%.o,test/parser/%.cc, $(TEST_OBJ))
 
-build/lib/test: XLDFLAGS += $(shell $(PKGCONFIG) --libs-only-L gtest)
-build/lib/test: LDLIBS += $(shell $(PKGCONFIG) --libs-only-l gtest)
+$(TEST_OBJ): CXXFLAGS += $(GTEST_CXXFLAGS)
+build/lib/test: XLDFLAGS += $(GTEST_LDFLAGS)
+build/lib/test: LDLIBS += $(GTEST_LDLIBS)
 build/lib/parser.o: XCFLAGS += -Wno-shadow
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
