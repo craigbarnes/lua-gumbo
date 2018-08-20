@@ -1529,6 +1529,14 @@ static bool has_open_element(const GumboParser* parser, GumboTag tag) {
   TAG_SVG(DESC), \
   TAG_SVG(TITLE)
 
+static const TagSet default_scope_tags = {
+  DEFAULT_SCOPE_TAGS
+};
+
+static const TagSet head_body_html_br_tags = {
+  TAG(HEAD), TAG(BODY), TAG(HTML), TAG(BR)
+};
+
 static const TagSet heading_tags = {
   TAG(H1), TAG(H2), TAG(H3), TAG(H4), TAG(H5), TAG(H6)
 };
@@ -1543,8 +1551,8 @@ static const TagSet dd_dt_tags = {
 
 // https://html.spec.whatwg.org/multipage/parsing.html#has-an-element-in-scope
 static bool has_an_element_in_scope(const GumboParser* parser, GumboTag tag) {
-  static const TagSet tags = {DEFAULT_SCOPE_TAGS};
-  return has_an_element_in_specific_scope(parser, 1, &tag, false, &tags);
+  const TagSet* tags = &default_scope_tags;
+  return has_an_element_in_specific_scope(parser, 1, &tag, false, tags);
 }
 
 // Like "has an element in scope", but for the specific case of looking for a
@@ -1554,7 +1562,7 @@ static bool has_an_element_in_scope(const GumboParser* parser, GumboTag tag) {
 // faster just to duplicate the code for this one case than to try and
 // parameterize it.
 static bool has_node_in_scope(const GumboParser* parser, const GumboNode* node) {
-  static const TagSet tags = {DEFAULT_SCOPE_TAGS};
+  const TagSet* tags = &default_scope_tags;
   const GumboVector* open_elements = &parser->_parser_state->_open_elements;
   for (int i = open_elements->length; --i >= 0;) {
     const GumboNode* current = open_elements->data[i];
@@ -1563,7 +1571,7 @@ static bool has_node_in_scope(const GumboParser* parser, const GumboNode* node) 
       return true;
     } else if (type != GUMBO_NODE_ELEMENT && type != GUMBO_NODE_TEMPLATE) {
       continue;
-    } else if (node_tag_in_set(current, &tags)) {
+    } else if (node_tag_in_set(current, tags)) {
       return false;
     }
   }
@@ -1578,8 +1586,8 @@ static bool has_an_element_in_scope_with_tagname (
   int len,
   const GumboTag expected[]
 ) {
-  static const TagSet tags = {DEFAULT_SCOPE_TAGS};
-  return has_an_element_in_specific_scope(parser, len, expected, false, &tags);
+  const TagSet* tags = &default_scope_tags;
+  return has_an_element_in_specific_scope(parser, len, expected, false, tags);
 }
 
 // https://html.spec.whatwg.org/multipage/parsing.html#has-an-element-in-list-item-scope
@@ -2345,7 +2353,7 @@ static bool handle_before_html(GumboParser* parser, GumboToken* token) {
     return true;
   } else if (
     token->type == GUMBO_TOKEN_END_TAG
-    && !tag_in(token, false, &(const TagSet){TAG(HEAD), TAG(BODY), TAG(HTML), TAG(BR)})
+    && !tag_in(token, false, &head_body_html_br_tags)
   ) {
     parser_add_parse_error(parser, token);
     ignore_token(parser);
@@ -2383,7 +2391,7 @@ static bool handle_before_head(GumboParser* parser, GumboToken* token) {
     return true;
   } else if (
     token->type == GUMBO_TOKEN_END_TAG
-    && !tag_in(token, false, &(const TagSet){TAG(HEAD), TAG(BODY), TAG(HTML), TAG(BR)})
+    && !tag_in(token, false, &head_body_html_br_tags)
   ) {
     parser_add_parse_error(parser, token);
     ignore_token(parser);
