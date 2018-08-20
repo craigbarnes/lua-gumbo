@@ -1,4 +1,5 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+// Copyright 2018 Craig Barnes.
+// Copyright 2011 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,119 +12,126 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-// Author: jdtang@google.com (Jonathan Tang)
 
 #include <stddef.h>
 #include "vector.h"
-#include "gtest/gtest.h"
-#include "test_utils.h"
+#include "test.h"
 
-namespace {
+#define SETUP() \
+  int one_ = 1, two_ = 2, three_ = 3; \
+  GumboVector vector_; \
+  gumbo_vector_init(2, &vector_)
 
-class GumboVectorTest : public GumboTest {
- protected:
-  GumboVectorTest(): one_(1), two_(2), three_(3) {
-    gumbo_vector_init(2, &vector_);
-  }
-
-  ~GumboVectorTest() { gumbo_vector_destroy(&vector_); }
-
-  GumboVector vector_;
-
-  // dummy ints that we can use to take addresses of.
-  int one_;
-  int two_;
-  int three_;
-};
+#define TEARDOWN() \
+  gumbo_vector_destroy(&vector_)
 
 TEST_F(GumboVectorTest, Init) {
+  SETUP();
   EXPECT_EQ(0, vector_.length);
   EXPECT_EQ(2, vector_.capacity);
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, InitZeroCapacity) {
+  SETUP();
   gumbo_vector_destroy(&vector_);
   gumbo_vector_init(0, &vector_);
 
   gumbo_vector_add(&one_, &vector_);
   EXPECT_EQ(1, vector_.length);
-  EXPECT_EQ(1, *(static_cast<int*>(vector_.data[0])));
+  EXPECT_EQ(1, *((int*)(vector_.data[0])));
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, Add) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
   EXPECT_EQ(1, vector_.length);
-  EXPECT_EQ(1, *(static_cast<int*>(vector_.data[0])));
+  EXPECT_EQ(1, *(int*)(vector_.data[0]));
   EXPECT_EQ(0, gumbo_vector_index_of(&vector_, &one_));
   EXPECT_EQ(-1, gumbo_vector_index_of(&vector_, &two_));
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, AddMultiple) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
   EXPECT_EQ(2, vector_.length);
-  EXPECT_EQ(2, *(static_cast<int*>(vector_.data[1])));
+  EXPECT_EQ(2, *((int*)(vector_.data[1])));
   EXPECT_EQ(1, gumbo_vector_index_of(&vector_, &two_));
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, Realloc) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
   gumbo_vector_add(&three_, &vector_);
   EXPECT_EQ(3, vector_.length);
   EXPECT_EQ(4, vector_.capacity);
-  EXPECT_EQ(3, *(static_cast<int*>(vector_.data[2])));
+  EXPECT_EQ(3, *((int*)(vector_.data[2])));
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, Pop) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
-  int result = *static_cast<int*>(gumbo_vector_pop(&vector_));
+  int result = *(int*)(gumbo_vector_pop(&vector_));
   EXPECT_EQ(1, result);
   EXPECT_EQ(0, vector_.length);
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, PopEmpty) {
+  SETUP();
   EXPECT_EQ(NULL, gumbo_vector_pop(&vector_));
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, InsertAtFirst) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
   gumbo_vector_insert_at(&three_, 0, &vector_);
   EXPECT_EQ(3, vector_.length);
-  int result = *static_cast<int*>(vector_.data[0]);
+  int result = *(int*)(vector_.data[0]);
   EXPECT_EQ(3, result);
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, InsertAtLast) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
   gumbo_vector_insert_at(&three_, 2, &vector_);
   EXPECT_EQ(3, vector_.length);
-  int result = *static_cast<int*>(vector_.data[2]);
+  int result = *(int*)(vector_.data[2]);
   EXPECT_EQ(3, result);
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, Remove) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
   gumbo_vector_add(&three_, &vector_);
   gumbo_vector_remove(&two_, &vector_);
   EXPECT_EQ(2, vector_.length);
-  int three = *static_cast<int*>(vector_.data[1]);
+  int three = *(int*)(vector_.data[1]);
   EXPECT_EQ(3, three);
+  TEARDOWN();
 }
 
 TEST_F(GumboVectorTest, RemoveAt) {
+  SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
   gumbo_vector_add(&three_, &vector_);
-  int result = *static_cast<int*>(gumbo_vector_remove_at(1, &vector_));
+  int result = *(int*)(gumbo_vector_remove_at(1, &vector_));
   EXPECT_EQ(2, result);
   EXPECT_EQ(2, vector_.length);
-  int three = *static_cast<int*>(vector_.data[1]);
+  int three = *(int*)(vector_.data[1]);
   EXPECT_EQ(3, three);
+  TEARDOWN();
 }
-
-}  // namespace
