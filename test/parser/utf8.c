@@ -1,4 +1,5 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+// Copyright 2018 Craig Barnes.
+// Copyright 2011 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,49 +12,42 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-// Author: jdtang@google.com (Jonathan Tang)
 
 #include "utf8.h"
+#include "test.h"
 
-#include <string.h>
+#define SETUP() \
+  Utf8Iterator input_; \
+  BASE_SETUP();
 
-#include "gtest/gtest.h"
-#include "error.h"
-#include "gumbo.h"
-#include "test_utils.h"
+#define TEARDOWN() \
+  BASE_TEARDOWN();
 
-namespace {
+#define Advance(num_chars) do { \
+  for (size_t i = 0; i < num_chars; ++i) { \
+    utf8iterator_next(&input_); \
+  } \
+} while (0)
 
-// Tests for utf8.c
-class Utf8Test : public GumboTest {
- protected:
-  void Advance(int num_chars) {
-    for (int i = 0; i < num_chars; ++i) {
-      utf8iterator_next(&input_);
-    }
-  }
+#define ResetText(text) do { \
+  utf8iterator_init(&parser_, text, strlen(text), &input_); \
+} while (0)
 
-  void ResetText(const char* text) {
-    text_ = text;
-    utf8iterator_init(&parser_, text, strlen(text), &input_);
-  }
+#define GetFirstError() \
+  (GumboError*)(parser_._output->errors.data[0])
 
-  GumboError* GetFirstError() {
-    return static_cast<GumboError*>(parser_._output->errors.data[0]);
-  }
-
-  int GetNumErrors() { return parser_._output->errors.length; }
-
-  Utf8Iterator input_;
-};
+#define GetNumErrors() \
+  parser_._output->errors.length
 
 TEST_F(Utf8Test, EmptyString) {
+  SETUP();
   ResetText("");
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, GetPosition_EmptyString) {
+  SETUP();
   ResetText("");
   GumboSourcePosition pos;
 
@@ -61,21 +55,25 @@ TEST_F(Utf8Test, GetPosition_EmptyString) {
   EXPECT_EQ(1, pos.line);
   EXPECT_EQ(1, pos.column);
   EXPECT_EQ(0, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, Null) {
+  SETUP();
   // Can't use ResetText, as the implicit strlen will choke on the null.
-  text_ = "\0f";
-  utf8iterator_init(&parser_, text_, 2, &input_);
+  const char *text = "\0f";
+  utf8iterator_init(&parser_, text, 2, &input_);
 
   EXPECT_EQ(0, utf8iterator_current(&input_));
   EXPECT_EQ('\0', *utf8iterator_get_char_pointer(&input_));
   utf8iterator_next(&input_);
   EXPECT_EQ('f', utf8iterator_current(&input_));
   EXPECT_EQ('f', *utf8iterator_get_char_pointer(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, OneByteChar) {
+  SETUP();
   ResetText("a");
 
   EXPECT_EQ(0, GetNumErrors());
@@ -90,16 +88,17 @@ TEST_F(Utf8Test, OneByteChar) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, ContinuationByte) {
+  SETUP();
   ResetText("\x85");
 
   EXPECT_EQ(1, GetNumErrors());
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
   EXPECT_EQ('\x85', *utf8iterator_get_char_pointer(&input_));
 
-  errors_are_expected_ = true;
   GumboError* error = GetFirstError();
   EXPECT_EQ(GUMBO_ERR_UTF8_INVALID, error->type);
   EXPECT_EQ('\x85', *error->original_text);
@@ -107,9 +106,11 @@ TEST_F(Utf8Test, ContinuationByte) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MultipleContinuationBytes) {
+  SETUP();
   ResetText("a\x85\xA0\xC2x\x9A");
   EXPECT_EQ('a', utf8iterator_current(&input_));
 
@@ -133,9 +134,11 @@ TEST_F(Utf8Test, MultipleContinuationBytes) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(4, GetNumErrors());
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, OverlongEncoding) {
+  SETUP();
   // \xC0\x75 = 11000000 01110101.
   ResetText("\xC0\x75");
 
@@ -143,7 +146,6 @@ TEST_F(Utf8Test, OverlongEncoding) {
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
   EXPECT_EQ('\xC0', *utf8iterator_get_char_pointer(&input_));
 
-  errors_are_expected_ = true;
   GumboError* error = GetFirstError();
   EXPECT_EQ(GUMBO_ERR_UTF8_INVALID, error->type);
   EXPECT_EQ(1, error->position.line);
@@ -158,9 +160,11 @@ TEST_F(Utf8Test, OverlongEncoding) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, OverlongEncodingWithContinuationByte) {
+  SETUP();
   // \xC0\x85 = 11000000 10000101.
   ResetText("\xC0\x85");
 
@@ -171,7 +175,6 @@ TEST_F(Utf8Test, OverlongEncodingWithContinuationByte) {
   utf8iterator_next(&input_);
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
 
-  errors_are_expected_ = true;
   GumboError* error = GetFirstError();
   EXPECT_EQ(GUMBO_ERR_UTF8_INVALID, error->type);
   EXPECT_EQ(1, error->position.line);
@@ -182,9 +185,11 @@ TEST_F(Utf8Test, OverlongEncodingWithContinuationByte) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, TwoByteChar) {
+  SETUP();
   // \xC3\xA5 = 11000011 10100101.
   ResetText("\xC3\xA5o");
 
@@ -206,9 +211,11 @@ TEST_F(Utf8Test, TwoByteChar) {
   EXPECT_EQ(1, pos.line);
   EXPECT_EQ(2, pos.column);
   EXPECT_EQ(2, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, TwoByteChar2) {
+  SETUP();
   // \xC2\xA5 = 11000010 10100101.
   ResetText("\xC2\xA5");
 
@@ -219,9 +226,11 @@ TEST_F(Utf8Test, TwoByteChar2) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, ThreeByteChar) {
+  SETUP();
   // \xE3\xA7\xA7 = 11100011 10100111 10100111
   ResetText("\xE3\xA7\xA7\xB0");
 
@@ -243,9 +252,11 @@ TEST_F(Utf8Test, ThreeByteChar) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, FourByteChar) {
+  SETUP();
   // \xC3\x9A = 11000011 10011010
   // \xF1\xA7\xA7\xA7 = 11110001 10100111 10100111 10100111
   ResetText("\xC3\x9A\xF1\xA7\xA7\xA7");
@@ -261,9 +272,11 @@ TEST_F(Utf8Test, FourByteChar) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, FourByteCharWithoutContinuationChars) {
+  SETUP();
   // \xF1\xA7\xA7\xA7 = 11110001 10100111 10100111 10100111
   ResetText("\xF1\xA7\xA7-");
 
@@ -276,9 +289,11 @@ TEST_F(Utf8Test, FourByteCharWithoutContinuationChars) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, FiveByteCharIsError) {
+  SETUP();
   ResetText("\xF6\xA7\xA7\xA7\xA7x");
 
   EXPECT_EQ(1, GetNumErrors());
@@ -291,9 +306,11 @@ TEST_F(Utf8Test, FiveByteCharIsError) {
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
   utf8iterator_next(&input_);
   EXPECT_EQ('x', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, SixByteCharIsError) {
+  SETUP();
   ResetText("\xF8\xA7\xA7\xA7\xA7\xA7x");
 
   EXPECT_EQ(1, GetNumErrors());
@@ -307,9 +324,11 @@ TEST_F(Utf8Test, SixByteCharIsError) {
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
   utf8iterator_next(&input_);
   EXPECT_EQ('x', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, SevenByteCharIsError) {
+  SETUP();
   ResetText("\xFC\xA7\xA7\xA7\xA7\xA7\xA7x");
 
   EXPECT_EQ(1, GetNumErrors());
@@ -324,9 +343,11 @@ TEST_F(Utf8Test, SevenByteCharIsError) {
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
   utf8iterator_next(&input_);
   EXPECT_EQ('x', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
-TEST_F(Utf8Test, 0xFFIsError) {
+TEST_F(Utf8Test, xFFIsError) {
+  SETUP();
   ResetText("\xFFx");
 
   EXPECT_EQ(1, GetNumErrors());
@@ -334,9 +355,11 @@ TEST_F(Utf8Test, 0xFFIsError) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ('x', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, InvalidControlCharIsError) {
+  SETUP();
   ResetText("\x1Bx");
 
   EXPECT_EQ(1, GetNumErrors());
@@ -344,15 +367,16 @@ TEST_F(Utf8Test, InvalidControlCharIsError) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ('x', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, TruncatedInput) {
+  SETUP();
   ResetText("\xF1\xA7");
 
   EXPECT_EQ(1, GetNumErrors());
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
 
-  errors_are_expected_ = true;
   GumboError* error = GetFirstError();
   EXPECT_EQ(GUMBO_ERR_UTF8_TRUNCATED, error->type);
   EXPECT_EQ(1, error->position.line);
@@ -363,9 +387,11 @@ TEST_F(Utf8Test, TruncatedInput) {
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, Html5SpecExample) {
+  SETUP();
   // This example has since been removed from the spec, and the spec has been
   // changed to reference the Unicode Standard 6.2, 5.22 "Best practices for
   // U+FFFD substitution."
@@ -396,18 +422,22 @@ TEST_F(Utf8Test, Html5SpecExample) {
   utf8iterator_next(&input_);
   EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
   utf8iterator_next(&input_);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MultipleEOFReads) {
+  SETUP();
   ResetText("a");
   Advance(2);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
 
   utf8iterator_next(&input_);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, AsciiOnly) {
+  SETUP();
   ResetText("hello");
   Advance(4);
 
@@ -422,9 +452,11 @@ TEST_F(Utf8Test, AsciiOnly) {
 
   Advance(1);
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, NewlinePosition) {
+  SETUP();
   ResetText("a\nnewline");
   Advance(1);
 
@@ -441,9 +473,11 @@ TEST_F(Utf8Test, NewlinePosition) {
   EXPECT_EQ(2, pos.line);
   EXPECT_EQ(1, pos.column);
   EXPECT_EQ(2, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, TabPositionFreshTabstop) {
+  SETUP();
   ResetText("a\n\ttab");
   Advance(sizeof("a\n\t") - 1);
 
@@ -452,9 +486,11 @@ TEST_F(Utf8Test, TabPositionFreshTabstop) {
   EXPECT_EQ(2, pos.line);
   EXPECT_EQ(8, pos.column);
   EXPECT_EQ(3, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, TabPositionMidTabstop) {
+  SETUP();
   ResetText("a tab\tinline");
   Advance(sizeof("a tab\t") - 1);
 
@@ -463,9 +499,11 @@ TEST_F(Utf8Test, TabPositionMidTabstop) {
   EXPECT_EQ(1, pos.line);
   EXPECT_EQ(8, pos.column);
   EXPECT_EQ(6, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, ConfigurableTabstop) {
+  SETUP();
   options_.tab_stop = 4;
   ResetText("a\n\ttab");
   Advance(sizeof("a\n\t") - 1);
@@ -475,9 +513,11 @@ TEST_F(Utf8Test, ConfigurableTabstop) {
   EXPECT_EQ(2, pos.line);
   EXPECT_EQ(4, pos.column);
   EXPECT_EQ(3, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, CRLF) {
+  SETUP();
   ResetText("Windows\r\nlinefeeds");
   Advance(sizeof("Windows") - 1);
 
@@ -494,9 +534,11 @@ TEST_F(Utf8Test, CRLF) {
   // used by other tools to index into the original buffer. We don't expect
   // other unicode-aware tools to have the same \r\n handling as HTML5.
   EXPECT_EQ(8, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, CarriageReturn) {
+  SETUP();
   ResetText("Mac\rlinefeeds");
   Advance(sizeof("Mac") - 1);
 
@@ -520,43 +562,55 @@ TEST_F(Utf8Test, CarriageReturn) {
   EXPECT_EQ(2, pos.line);
   EXPECT_EQ(1, pos.column);
   EXPECT_EQ(4, pos.offset);
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, Matches) {
+  SETUP();
   ResetText("\xC2\xA5goobar");
   Advance(1);
   EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goo", 3, true));
   EXPECT_EQ('b', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MatchesOverflow) {
+  SETUP();
   ResetText("goo");
   EXPECT_FALSE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, true));
   EXPECT_EQ('g', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MatchesEof) {
+  SETUP();
   ResetText("goo");
   EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goo", 3, true));
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MatchesCaseSensitivity) {
+  SETUP();
   ResetText("gooBAR");
   EXPECT_FALSE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, true));
   EXPECT_EQ('g', utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MatchesCaseInsensitive) {
+  SETUP();
   ResetText("gooBAR");
   EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, false));
   EXPECT_EQ(-1, utf8iterator_current(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MatchFollowedByNullByte) {
+  SETUP();
   // Can't use ResetText, as the implicit strlen will choke on the null.
-  text_ = "CDATA\0f";
-  utf8iterator_init(&parser_, text_, 7, &input_);
+  const char *text = "CDATA\0f";
+  utf8iterator_init(&parser_, text, 7, &input_);
 
   EXPECT_TRUE(utf8iterator_maybe_consume_match(
       &input_, "cdata", sizeof("cdata") - 1, false));
@@ -566,9 +620,11 @@ TEST_F(Utf8Test, MatchFollowedByNullByte) {
   utf8iterator_next(&input_);
   EXPECT_EQ('f', utf8iterator_current(&input_));
   EXPECT_EQ('f', *utf8iterator_get_char_pointer(&input_));
+  TEARDOWN();
 }
 
 TEST_F(Utf8Test, MarkReset) {
+  SETUP();
   ResetText("this is a test");
   Advance(5);
   EXPECT_EQ('i', utf8iterator_current(&input_));
@@ -593,6 +649,5 @@ TEST_F(Utf8Test, MarkReset) {
   EXPECT_EQ(1, error.position.line);
   EXPECT_EQ(6, error.position.column);
   EXPECT_EQ(5, error.position.offset);
+  TEARDOWN();
 }
-
-}  // namespace

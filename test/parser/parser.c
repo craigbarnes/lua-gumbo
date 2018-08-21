@@ -14,11 +14,8 @@
 // limitations under the License.
 
 #include "parser.h"
-#include "gumbo.h"
-#include "error.h"
 #include "string_piece.h"
 #include "test.h"
-#include "util.h"
 
 #define SETUP() \
   GumboOutput* output_ = NULL; \

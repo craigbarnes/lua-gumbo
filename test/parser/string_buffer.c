@@ -13,11 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <stdlib.h>
-#include <string.h>
 #include "string_buffer.h"
 #include "string_piece.h"
-#include "util.h"
 #include "test.h"
 
 #define SETUP() GumboStringBuffer buffer_; gumbo_string_buffer_init(&buffer_)

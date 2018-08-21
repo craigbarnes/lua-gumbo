@@ -13,14 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string.h>
 #include "char_ref.h"
-#include "error.h"
-#include "gumbo.h"
-#include "parser.h"
 #include "test.h"
 #include "utf8.h"
-#include "util.h"
 
 #define SETUP() \
   Utf8Iterator iter_; \

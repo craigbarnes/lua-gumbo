@@ -2,8 +2,8 @@
 // Copyright 2011 Google Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-#include "test.h"
 #include "string_piece.h"
+#include "test.h"
 
 TEST_F(GumboStringPieceTest, Equal) {
   const GumboStringPiece str1 = STRING_PIECE("foo");

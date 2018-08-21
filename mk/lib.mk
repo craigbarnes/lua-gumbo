@@ -8,10 +8,6 @@ RAGEL = ragel
 RAGEL_FILTER = sed -f mk/ragel-filter.sed
 PREFIX_OBJ = $(addprefix $(1), $(addsuffix .o, $(2)))
 
-GTEST_CXXFLAGS ?= $(shell $(PKGCONFIG) --cflags gtest)
-GTEST_LDFLAGS ?= $(shell $(PKGCONFIG) --libs-only-L gtest)
-GTEST_LDLIBS ?= $(shell $(PKGCONFIG) --libs-only-l gtest)
-
 define GPERF_GEN
   $(E) GPERF $(1)
   $(Q) $(GPERF) -m100 $(2) $(1:.c=.gperf) | $(GPERF_FILTER) > $(1)
@@ -27,18 +23,10 @@ LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
 
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
     attribute char_ref string_buffer string_piece test tokenizer \
-    main parser vector )
+    main parser utf8 vector )
 
-GTEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    test_utils utf8 )
-
-$(GTEST_OBJ): CXXFLAGS += $(GTEST_CXXFLAGS)
-build/lib/gtest: XLDFLAGS += $(GTEST_LDFLAGS)
-build/lib/gtest: LDLIBS += $(GTEST_LDLIBS)
 build/lib/parser.o: XCFLAGS += -Wno-shadow
-
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
-build/lib/gtest: $(LIBGUMBO_OBJ) $(GTEST_OBJ)
 build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
 build/lib/benchmark.o: lib/gumbo.h lib/macros.h
 
@@ -46,7 +34,7 @@ build/lib/test:
 	$(E) LINK '$@'
 	$(Q) $(CC) $(XLDFLAGS) $(LDFLAGS) -o $@ $^
 
-build/lib/gtest build/lib/benchmark:
+build/lib/benchmark:
 	$(E) LINK '$@'
 	$(Q) $(CXX) $(XLDFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
@@ -58,10 +46,6 @@ $(TEST_OBJ): build/lib/test_%.o: test/parser/%.c | build/lib/
 	$(E) CC '$@'
 	$(Q) $(CC) $(CCOPTS) -Ilib -c -o $@ $<
 
-$(GTEST_OBJ): build/lib/test_%.o: test/parser/%.cc | build/lib/
-	$(E) CXX '$@'
-	$(Q) $(CXX) $(CXXOPTS) -Ilib -c -o $@ $<
-
 build/lib/benchmark.o: test/benchmark/benchmark.cc | build/lib/
 	$(E) CXX '$@'
 	$(Q) $(CXX) $(CXXOPTS) -Ilib -c -o $@ $<
@@ -72,9 +56,6 @@ build/lib/:
 check-lib: build/lib/test
 	$(E) TEST '$<'
 	$(Q) $<
-
-check-gtest: build/lib/gtest
-	./$<
 
 benchmark: build/lib/benchmark
 	./$<
@@ -90,4 +71,4 @@ gperf-gen:
 	$(call GPERF_GEN, lib/foreign_attrs.c, -n)
 
 
-.PHONY: ragel-gen gperf-gen check-lib check-gtest benchmark
+.PHONY: ragel-gen gperf-gen check-lib benchmark

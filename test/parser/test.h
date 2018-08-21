@@ -1,9 +1,17 @@
+// Copyright 2018 Craig Barnes.
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef TEST_TEST_H
 #define TEST_TEST_H
 
 #include <inttypes.h>
 #include <stddef.h>
+#include <string.h>
+#include "error.h"
+#include "gumbo.h"
 #include "macros.h"
+#include "parser.h"
+#include "util.h"
 
 #ifndef HAVE_CONSTRUCTORS
 #error "Constructor support required; see test/parser/README.md"
