@@ -26,7 +26,7 @@ LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
     $(LIBGUMBO_OBJ_GPERF)
 
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    attribute string_buffer test main parser vector )
+    attribute string_buffer string_piece test main parser vector )
 
 GTEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
     char_ref test_utils tokenizer utf8 )

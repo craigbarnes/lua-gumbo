@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Craig Barnes.
+// Copyright 2018 Craig Barnes.
 // SPDX-License-Identifier: Apache-2.0
 
 #include "attribute.h"
