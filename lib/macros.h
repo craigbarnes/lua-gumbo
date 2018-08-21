@@ -70,6 +70,7 @@
     #define CONST_FN __attribute__((__const__))
     #define CONSTRUCTOR __attribute__((__constructor__))
     #define DESTRUCTOR __attribute__((__destructor__))
+    #define HAVE_CONSTRUCTORS 1
 #else
     #define MALLOC
     #define PRINTF(x)

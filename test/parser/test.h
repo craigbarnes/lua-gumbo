@@ -5,6 +5,10 @@
 #include <stddef.h>
 #include "macros.h"
 
+#ifndef HAVE_CONSTRUCTORS
+#error "Constructor support required; see test/parser/README.md"
+#endif
+
 #define TEST_F(group, name) static void CONSTRUCTOR group##name (void)
 
 #define EXPECT_EQ(a, b) do { \
