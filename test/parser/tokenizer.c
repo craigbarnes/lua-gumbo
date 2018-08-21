@@ -49,7 +49,6 @@ extern const char* kGumboTagNames[];
 } while (0)
 
 TEST(GumboTagEnumTest, TagEnumIncludesAllTags) {
-  SETUP();
   EXPECT_EQ(0, GUMBO_TAG_HTML);
   for (unsigned int i = 0; i < (unsigned int) GUMBO_TAG_UNKNOWN; i++) {
     const char* tagname = gumbo_normalized_tagname((GumboTag)i);
@@ -62,11 +61,9 @@ TEST(GumboTagEnumTest, TagEnumIncludesAllTags) {
   EXPECT_STREQ("a", gumbo_normalized_tagname(GUMBO_TAG_A));
   EXPECT_STREQ("dialog", gumbo_normalized_tagname(GUMBO_TAG_DIALOG));
   EXPECT_STREQ("template", gumbo_normalized_tagname(GUMBO_TAG_TEMPLATE));
-  TEARDOWN();
 }
 
 TEST(GumboTagEnumTest, TagLookupCaseSensitivity) {
-  SETUP();
   EXPECT_EQ(GUMBO_TAG_HTML, gumbo_tagn_enum("HTML", 4));
   EXPECT_EQ(GUMBO_TAG_BODY, gumbo_tagn_enum("boDy", 4));
   EXPECT_EQ(GUMBO_TAG_A, gumbo_tagn_enum("A", 1));
@@ -83,7 +80,6 @@ TEST(GumboTagEnumTest, TagLookupCaseSensitivity) {
   EXPECT_EQ(GUMBO_TAG_U, gumbo_tagn_enum("u", 1));
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, gumbo_tagn_enum("x", 1));
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, gumbo_tagn_enum("c", 1));
-  TEARDOWN();
 }
 
 TEST_F(GumboTokenizerTest, PartialTag) {
