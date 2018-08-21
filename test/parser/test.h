@@ -24,6 +24,13 @@
 #define EXPECT_FALSE(x) EXPECT_EQ(x, 0)
 #define EXPECT_TRUE(x) EXPECT_EQ(!!(x), 1)
 
+#define EXPECT_LE(a, b) EXPECT_EQ(1, (a) <= (b))
+#define EXPECT_GE(a, b) EXPECT_EQ(1, (a) >= (b))
+#define EXPECT_LT(a, b) EXPECT_EQ(1, (a) < (b))
+
+#define ASSERT_TRUE(x) EXPECT_TRUE(x); if (!(x)) {return;};
+#define ASSERT_EQ(a, b) EXPECT_EQ(a, b); if ((a) != (b)) {return;};
+
 #define EXPECT_STREQ(a, b) do { \
     const char *s1 = (a), *s2 = (b); \
     if (unlikely(strcmp(s1, s2) != 0)) { \

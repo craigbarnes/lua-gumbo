@@ -18,7 +18,7 @@
 #include "test.h"
 
 #define SETUP() \
-  int one_ = 1, two_ = 2, three_ = 3; \
+  UNUSED int one_ = 1, two_ = 2, three_ = 3; \
   GumboVector vector_; \
   gumbo_vector_init(2, &vector_)
 

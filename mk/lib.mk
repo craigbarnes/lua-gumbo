@@ -26,16 +26,15 @@ LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
     $(LIBGUMBO_OBJ_GPERF)
 
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    attribute string_buffer test main vector )
+    attribute string_buffer test main parser vector )
 
 GTEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    char_ref parser test_utils tokenizer utf8 )
+    char_ref test_utils tokenizer utf8 )
 
 $(GTEST_OBJ): CXXFLAGS += $(GTEST_CXXFLAGS)
 build/lib/gtest: XLDFLAGS += $(GTEST_LDFLAGS)
 build/lib/gtest: LDLIBS += $(GTEST_LDLIBS)
 build/lib/parser.o: XCFLAGS += -Wno-shadow
-build/lib/test_vector.o: XCFLAGS += -Wno-unused-variable
 
 build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
 build/lib/gtest: $(LIBGUMBO_OBJ) $(GTEST_OBJ)

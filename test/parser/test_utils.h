@@ -30,24 +30,6 @@ inline std::string ToString(const GumboStringPiece& str) {
   return std::string(str.data, str.length);
 }
 
-int GetChildCount(GumboNode* node);
-GumboTag GetTag(GumboNode* node);
-GumboNode* GetChild(GumboNode* parent, int index);
-int GetAttributeCount(GumboNode* node);
-GumboAttribute* GetAttribute(GumboNode* node, int index);
-
-// Convenience function to do some basic assertions on the structure of the
-// document (nodes are elements, nodes have the right tags) and then return
-// the body node.
-void GetAndAssertBody(GumboNode* root, GumboNode** body);
-
-void SanityCheckPointers (
-  const char* input,
-  size_t input_length,
-  const GumboNode* node,
-  int depth
-);
-
 // Base class for Gumbo tests. This provides an GumboParser object that's
 // been initialized to sane values, as normally happens in the beginning of
 // gumbo_parse, and then a destructor that cleans up after it.

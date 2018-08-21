@@ -1,4 +1,5 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+// Copyright 2018 Craig Barnes.
+// Copyright 2011 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,70 +12,181 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-// Author: jdtang@google.com (Jonathan Tang)
 
-#include <string>
+#include "parser.h"
 #include "gumbo.h"
-#include "gtest/gtest.h"
-#include "test_utils.h"
+#include "error.h"
+#include "string_piece.h"
+#include "test.h"
+#include "util.h"
 
-namespace {
+#define SETUP() \
+  GumboOptions options_ = kGumboDefaultOptions; \
+  GumboOutput* output_ = NULL; \
+  UNUSED GumboNode* root_ = NULL; \
+  GumboParser parser_; \
+  options_.max_errors = 100; \
+  parser_._options = &options_; \
+  parser_._output = gumbo_alloc(sizeof(GumboOutput)); \
+  gumbo_init_errors(&parser_);
 
-class GumboParserTest : public ::testing::Test {
- protected:
-  GumboParserTest()
-    : options_(kGumboDefaultOptions), output_(NULL), root_(NULL)
-  {}
+#define TEARDOWN() do { \
+  if (output_) { \
+    gumbo_destroy_output(output_); \
+  } \
+  gumbo_destroy_errors(&parser_); \
+  gumbo_free(parser_._output); \
+} while (0)
 
-  virtual ~GumboParserTest() {
-    if (output_) {
-      gumbo_destroy_output(output_);
+#define Parse(input) do { \
+  if (output_) { \
+    gumbo_destroy_output(output_); \
+  } \
+  output_ = gumbo_parse_with_options(&options_, input, strlen(input)); \
+  root_ = output_->document; \
+} while (0)
+
+#define ParseStringPiece(input) do { \
+  if (output_) { \
+    gumbo_destroy_output(output_); \
+  } \
+  output_ = gumbo_parse_with_options(&options_, input.data, input.length); \
+  root_ = output_->document; \
+  SanityCheckPointers(input.data, input.length, output_->root, 1000); \
+} while (0)
+
+#define ParseFragment(input, context, context_ns) do { \
+  if (output_) { \
+    gumbo_destroy_output(output_); \
+  } \
+  options_.fragment_context = context; \
+  options_.fragment_namespace = context_ns; \
+  output_ = gumbo_parse_with_options(&options_, input, strlen(input)); \
+  root_ = output_->document; \
+} while (0)
+
+static int GetChildCount(GumboNode* node) {
+  if (node->type == GUMBO_NODE_DOCUMENT) {
+    return node->v.document.children.length;
+  } else {
+    return node->v.element.children.length;
+  }
+}
+
+static GumboTag GetTag(GumboNode* node) {
+  return node->v.element.tag;
+}
+
+static GumboNode* GetChild(GumboNode* parent, int index) {
+  if (parent->type == GUMBO_NODE_DOCUMENT) {
+    return (GumboNode*)(parent->v.document.children.data[index]);
+  } else {
+    return (GumboNode*)(parent->v.element.children.data[index]);
+  }
+}
+
+static GumboAttribute* GetAttribute(GumboNode* node, int index) {
+  return (GumboAttribute*)(node->v.element.attributes.data[index]);
+}
+
+static void GetAndAssertBody(GumboNode* root, GumboNode** body) {
+  GumboNode* html = NULL;
+  for (int i = 0; i < GetChildCount(root); ++i) {
+    GumboNode* child = GetChild(root, i);
+    if (child->type != GUMBO_NODE_ELEMENT) {
+      ASSERT_EQ(GUMBO_NODE_COMMENT, child->type);
+      continue;
+    }
+    ASSERT_TRUE(html == NULL);
+    html = child;
+  }
+  ASSERT_TRUE(html != NULL);
+  ASSERT_EQ(GUMBO_NODE_ELEMENT, html->type);
+  EXPECT_EQ(GUMBO_TAG_HTML, GetTag(html));
+
+  // There may be comment/whitespace nodes; this walks through the children of
+  // <html> and assigns head/body based on them, or assert-fails if there are
+  // fewer/more than 2 such nodes.
+  GumboNode* head = NULL;
+  *body = NULL;
+  for (int i = 0; i < GetChildCount(html); ++i) {
+    GumboNode* child = GetChild(html, i);
+    if (child->type != GUMBO_NODE_ELEMENT) {
+      continue;
+    }
+
+    if (!head) {
+      head = child;
+      EXPECT_EQ(GUMBO_TAG_HEAD, GetTag(head));
+    } else if (!(*body)) {
+      *body = child;
+      EXPECT_EQ(GUMBO_TAG_BODY, GetTag(*body));
+    } else {
+      ASSERT_TRUE("More than two elements found inside <html>" != NULL);
     }
   }
+  EXPECT_TRUE(head != NULL);
+  ASSERT_TRUE(*body != NULL);
+}
 
-  virtual void Parse(const char* input) {
-    if (output_) {
-      gumbo_destroy_output(output_);
-    }
+static int GetAttributeCount(GumboNode* node) {
+  return node->v.element.attributes.length;
+}
 
-    output_ = gumbo_parse_with_options(&options_, input, strlen(input));
-    // The naming inconsistency is because these tests were initially written
-    // when gumbo_parse returned the document element instead of an GumboOutput
-    // structure.
-    root_ = output_->document;
+static void SanityCheckPointers (
+  const char* input,
+  size_t input_length,
+  const GumboNode* node,
+  unsigned int depth
+) {
+  ASSERT_TRUE(node != NULL);
+  // There are some truly pathological HTML documents out there - the
+  // integration tests for this include one where the DOM "tree" is actually a
+  // linked list 27,500 nodes deep - and so we need a limit on the recursion
+  // depth here to avoid blowing the stack. Alternatively, we could externalize
+  // the stack and use an iterative algorithm, but that gets us very little for
+  // the additional programming complexity.
+  if (node->type == GUMBO_NODE_DOCUMENT || depth > 400) {
+    // Don't sanity-check the document as well...we start with the root.
+    return;
   }
-
-  virtual void ParseFragment(
-      const char* input, GumboTag context, GumboNamespaceEnum context_ns) {
-    if (output_) {
-      gumbo_destroy_output(output_);
+  if (node->type == GUMBO_NODE_ELEMENT) {
+    const GumboElement* element = &node->v.element;
+    // Sanity checks on original* pointers, making sure they fall within the
+    // original input.
+    if (element->original_tag.data && element->original_tag.length) {
+      EXPECT_GE(element->original_tag.data, input);
+      EXPECT_LT(element->original_tag.data, input + input_length);
+      EXPECT_LE(element->original_tag.length, input_length);
     }
-
-    options_.fragment_context = context;
-    options_.fragment_namespace = context_ns;
-    output_ = gumbo_parse_with_options(&options_, input, strlen(input));
-    root_ = output_->document;
-  }
-
-  virtual void Parse(const std::string& input) {
-    // This overload is so we can test/demonstrate that computing offsets from
-    // the .data() member of an STL string works properly.
-    if (output_) {
-      gumbo_destroy_output(output_);
+    if (element->original_end_tag.data && element->original_tag.length) {
+      EXPECT_GE(element->original_end_tag.data, input);
+      EXPECT_LT(element->original_end_tag.data, input + input_length);
+      EXPECT_LE(element->original_end_tag.length, input_length);
     }
+    EXPECT_LE(element->start_pos.offset, input_length);
+    EXPECT_LE(element->end_pos.offset, input_length);
 
-    output_ = gumbo_parse_with_options(&options_, input.data(), input.length());
-    root_ = output_->document;
-    SanityCheckPointers(input.data(), input.length(), output_->root, 1000);
+    const GumboVector* children = &element->children;
+    for (unsigned int i = 0; i < children->length; ++i) {
+      const GumboNode* child = (const GumboNode*)(children->data[i]);
+      // Checks on parent/child links.
+      ASSERT_TRUE(child != NULL);
+      EXPECT_EQ(node, child->parent);
+      EXPECT_EQ(i, child->index_within_parent);
+      SanityCheckPointers(input, input_length, child, depth + 1);
+    }
+  } else {
+    const GumboText* text = &node->v.text;
+    EXPECT_GE(text->original_text.data, input);
+    EXPECT_LT(text->original_text.data, input + input_length);
+    EXPECT_LE(text->original_text.length, input_length);
+    EXPECT_LT(text->start_pos.offset, input_length);
   }
-
-  GumboOptions options_;
-  GumboOutput* output_;
-  GumboNode* root_;
-};
+}
 
 TEST_F(GumboParserTest, NullDocument) {
+  SETUP();
   Parse("");
   ASSERT_TRUE(root_);
   ASSERT_EQ(GUMBO_NODE_DOCUMENT, root_->type);
@@ -82,25 +194,29 @@ TEST_F(GumboParserTest, NullDocument) {
 
   GumboNode* body;
   GetAndAssertBody(root_, &body);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, ParseTwice) {
+  SETUP();
   Parse("");
   ASSERT_TRUE(root_);
   ASSERT_EQ(GUMBO_NODE_DOCUMENT, root_->type);
 
-  std::string second_input("");
-  Parse(second_input);
+  const GumboStringPiece second_input = STRING_PIECE("");
+  ParseStringPiece(second_input);
   ASSERT_TRUE(root_);
   ASSERT_EQ(GUMBO_NODE_DOCUMENT, root_->type);
 
   GumboNode* body;
   GetAndAssertBody(root_, &body);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, OneChar) {
-  std::string input("T");
-  Parse(input);
+  SETUP();
+  const GumboStringPiece input = STRING_PIECE("T");
+  ParseStringPiece(input);
   ASSERT_TRUE(root_);
   ASSERT_EQ(GUMBO_NODE_DOCUMENT, root_->type);
   EXPECT_EQ(GUMBO_INSERTION_BY_PARSER, root_->parse_flags);
@@ -136,11 +252,13 @@ TEST_F(GumboParserTest, OneChar) {
   EXPECT_EQ(1, text->v.text.start_pos.line);
   EXPECT_EQ(1, text->v.text.start_pos.column);
   EXPECT_EQ(0, text->v.text.start_pos.offset);
-  EXPECT_EQ(input.data(), text->v.text.original_text.data);
+  EXPECT_EQ(input.data, text->v.text.original_text.data);
   EXPECT_EQ(1, text->v.text.original_text.length);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, TextOnly) {
+  SETUP();
   Parse("Test");
   EXPECT_EQ(1, output_->errors.length);  // No doctype.
   ASSERT_EQ(1, GetChildCount(root_));
@@ -163,16 +281,20 @@ TEST_F(GumboParserTest, TextOnly) {
   GumboNode* text = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("Test", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, SelfClosingTagError) {
+  SETUP();
   Parse("<div/>");
   // TODO(jdtang): I think this is double-counting some error cases, I think we
   // may ultimately want to de-dup errors that occur on the same token.
   EXPECT_EQ(8, output_->errors.length);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, UnexpectedEndBreak) {
+  SETUP();
   Parse("</br><div></div>");
 
   GumboNode* body;
@@ -188,9 +310,11 @@ TEST_F(GumboParserTest, UnexpectedEndBreak) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, div->v.element.tag);
   ASSERT_EQ(0, GetChildCount(div));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, CaseSensitiveAttributes) {
+  SETUP();
   Parse("<div class=CamelCase>");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -200,13 +324,15 @@ TEST_F(GumboParserTest, CaseSensitiveAttributes) {
   GumboVector* attributes = &div->v.element.attributes;
   ASSERT_EQ(1, attributes->length);
 
-  GumboAttribute* clas = static_cast<GumboAttribute*>(attributes->data[0]);
+  GumboAttribute* clas = (GumboAttribute*)(attributes->data[0]);
   EXPECT_EQ(GUMBO_ATTR_NAMESPACE_NONE, clas->attr_namespace);
   EXPECT_STREQ("class", clas->name);
   EXPECT_STREQ("CamelCase", clas->value);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, ExplicitHtmlStructure) {
+  SETUP();
   Parse(
       "<!doctype html>\n<html>"
       "<head><title>Foo</title></head>\n"
@@ -229,8 +355,8 @@ TEST_F(GumboParserTest, ExplicitHtmlStructure) {
   EXPECT_EQ(3, html->v.element.end_pos.line);
   EXPECT_EQ(39, html->v.element.end_pos.column);
   EXPECT_EQ(92, html->v.element.end_pos.offset);
-  EXPECT_EQ("<html>", ToString(html->v.element.original_tag));
-  EXPECT_EQ("</html>", ToString(html->v.element.original_end_tag));
+  EXPECT_TRUE(string_piece_equal_cstr(&html->v.element.original_tag, "<html>"));
+  EXPECT_TRUE(string_piece_equal_cstr(&html->v.element.original_end_tag, "</html>"));
   ASSERT_EQ(3, GetChildCount(html));
 
   GumboNode* head = GetChild(html, 0);
@@ -252,8 +378,8 @@ TEST_F(GumboParserTest, ExplicitHtmlStructure) {
   EXPECT_EQ(3, body->v.element.end_pos.line);
   EXPECT_EQ(32, body->v.element.end_pos.column);
   EXPECT_EQ(85, body->v.element.end_pos.offset);
-  EXPECT_EQ("<body>", ToString(body->v.element.original_tag));
-  EXPECT_EQ("</body>", ToString(body->v.element.original_end_tag));
+  EXPECT_TRUE(string_piece_equal_cstr(&body->v.element.original_tag, "<body>"));
+  EXPECT_TRUE(string_piece_equal_cstr(&body->v.element.original_end_tag, "</body>"));
   EXPECT_EQ(2, body->index_within_parent);
   ASSERT_EQ(1, GetChildCount(body));
 
@@ -267,16 +393,18 @@ TEST_F(GumboParserTest, ExplicitHtmlStructure) {
   ASSERT_EQ(1, GetAttributeCount(div));
   GumboAttribute* clas = GetAttribute(div, 0);
   EXPECT_STREQ("class", clas->name);
-  EXPECT_EQ("class", ToString(clas->original_name));
+  EXPECT_TRUE(string_piece_equal_cstr(&clas->original_name, "class"));
   EXPECT_STREQ("bar", clas->value);
-  EXPECT_EQ("bar", ToString(clas->original_value));
+  EXPECT_TRUE(string_piece_equal_cstr(&clas->original_value, "bar"));
 
   GumboNode* text = GetChild(div, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("Test", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, Whitespace) {
+  SETUP();
   Parse("<ul>\n  <li>Text\n</ul>");
 
   GumboNode* body;
@@ -300,11 +428,15 @@ TEST_F(GumboParserTest, Whitespace) {
   GumboNode* text = GetChild(li, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("Text\n", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, DuplicateAttributes) {
-  std::string text("<input checked=\"false\" checked=true id=foo id='bar'>");
-  Parse(text);
+  SETUP();
+  const GumboStringPiece text = STRING_PIECE (
+    "<input checked=\"false\" checked=true id=foo id='bar'>"
+  );
+  ParseStringPiece(text);
 
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -325,9 +457,9 @@ TEST_F(GumboParserTest, DuplicateAttributes) {
   EXPECT_EQ(15, checked->name_end.column);
   EXPECT_EQ(16, checked->value_start.column);
   EXPECT_EQ(23, checked->value_end.column);
-  EXPECT_EQ(7, checked->original_name.data - text.data());
+  EXPECT_EQ(7, checked->original_name.data - text.data);
   EXPECT_EQ(7, checked->original_name.length);
-  EXPECT_EQ(15, checked->original_value.data - text.data());
+  EXPECT_EQ(15, checked->original_value.data - text.data);
   EXPECT_EQ(7, checked->original_value.length);
 
   GumboAttribute* id = GetAttribute(input, 1);
@@ -335,9 +467,11 @@ TEST_F(GumboParserTest, DuplicateAttributes) {
   EXPECT_STREQ("foo", id->value);
 
   // TODO(jdtang): Run some assertions on the parse error that's added.
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, LinkTagsInHead) {
+  SETUP();
   Parse(
       "<html>\n"
       "  <head>\n"
@@ -389,9 +523,11 @@ TEST_F(GumboParserTest, LinkTagsInHead) {
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, body->parse_flags);
   EXPECT_EQ(GUMBO_TAG_BODY, body->v.element.tag);
   ASSERT_EQ(1, GetChildCount(body));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, WhitespaceBeforeHtml) {
+  SETUP();
   Parse("<!doctype html>\n<html>Test</html>");
   ASSERT_EQ(1, GetChildCount(root_));
 
@@ -403,9 +539,11 @@ TEST_F(GumboParserTest, WhitespaceBeforeHtml) {
   GumboNode* text = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("Test", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, TextAfterHtml) {
+  SETUP();
   Parse("<html>Test</html> after doc");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -417,9 +555,11 @@ TEST_F(GumboParserTest, TextAfterHtml) {
   GumboNode* text = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("Test after doc", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, WhitespaceInHead) {
+  SETUP();
   Parse("<html>  Test</html>");
 
   GumboNode* html = GetChild(root_, 0);
@@ -439,9 +579,11 @@ TEST_F(GumboParserTest, WhitespaceInHead) {
   GumboNode* text = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("Test", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, Doctype) {
+  SETUP();
   Parse("<!doctype html>Test");
   GumboDocument* doc = &root_->v.document;
   EXPECT_EQ(1, doc->children.length);
@@ -450,9 +592,11 @@ TEST_F(GumboParserTest, Doctype) {
   EXPECT_STREQ("html", doc->name);
   EXPECT_STREQ("", doc->public_identifier);
   EXPECT_STREQ("", doc->system_identifier);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, InvalidDoctype) {
+  SETUP();
   Parse("Test<!doctype root_element SYSTEM \"DTD_location\">");
 
   // Default doc token; the declared one is ignored.
@@ -473,16 +617,20 @@ TEST_F(GumboParserTest, InvalidDoctype) {
   GumboNode* text = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("Test", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, SingleComment) {
+  SETUP();
   Parse("<!-- comment -->");
   GumboNode* comment = GetChild(root_, 0);
   ASSERT_EQ(GUMBO_NODE_COMMENT, comment->type);
   EXPECT_STREQ(" comment ", comment->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, CommentInText) {
+  SETUP();
   Parse("Start <!-- comment --> end");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -501,15 +649,19 @@ TEST_F(GumboParserTest, CommentInText) {
   GumboNode* end = GetChild(body, 2);
   ASSERT_EQ(GUMBO_NODE_TEXT, end->type);
   EXPECT_STREQ(" end", end->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, CommentBeforeNode) {
+  SETUP();
   Parse("<!--This is a comment-->\n<h1>hello world!</h1>");
   GumboNode* comment = GetChild(root_, 0);
   ASSERT_EQ(GUMBO_NODE_COMMENT, comment->type);
   EXPECT_STREQ("This is a comment", comment->v.text.text);
-  EXPECT_EQ(
-      "<!--This is a comment-->", ToString(comment->v.text.original_text));
+  EXPECT_TRUE(string_piece_equal_cstr (
+    &comment->v.text.original_text,
+    "<!--This is a comment-->"
+  ));
 
   // Newline is ignored per the rules for "initial" insertion mode.
 
@@ -520,9 +672,11 @@ TEST_F(GumboParserTest, CommentBeforeNode) {
   GumboNode* h1 = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, h1->type);
   EXPECT_EQ(GUMBO_TAG_H1, h1->v.element.tag);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, CommentInVerbatimMode) {
+  SETUP();
   Parse("<body> <div id='onegoogle'>Text</div>  </body><!-- comment \n\n-->");
 
   GumboNode* html = GetChild(root_, 0);
@@ -543,9 +697,11 @@ TEST_F(GumboParserTest, CommentInVerbatimMode) {
   ASSERT_EQ(GUMBO_NODE_COMMENT, comment->type);
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, comment->parse_flags);
   EXPECT_STREQ(" comment \n\n", comment->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, UnknownTag) {
+  SETUP();
   Parse("<foo>1<p>2</FOO>");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -554,16 +710,18 @@ TEST_F(GumboParserTest, UnknownTag) {
   GumboNode* foo = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, foo->type);
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, GetTag(foo));
-  EXPECT_EQ("<foo>", ToString(foo->v.element.original_tag));
+  EXPECT_TRUE(string_piece_equal_cstr(&foo->v.element.original_tag, "<foo>"));
   // According to the spec, the misplaced end tag is ignored, and so we return
   // an empty original_end_tag text. We may want to extend our error-reporting
   // a bit so that we close off the tag that it *would have closed*, had the
   // HTML been correct, along with a parse flag that says the end tag was in the
   // wrong place.
-  EXPECT_EQ("", ToString(foo->v.element.original_end_tag));
+  EXPECT_EQ(foo->v.element.original_end_tag.length, 0);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, UnknownTag2) {
+  SETUP();
   Parse("<div><sarcasm><div></div></sarcasm></div>");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -574,11 +732,13 @@ TEST_F(GumboParserTest, UnknownTag2) {
   GumboNode* sarcasm = GetChild(div, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, sarcasm->type);
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, GetTag(sarcasm));
-  EXPECT_EQ("<sarcasm>", ToString(sarcasm->v.element.original_tag));
-  EXPECT_EQ("</sarcasm>", ToString(sarcasm->v.element.original_end_tag));
+  EXPECT_TRUE(string_piece_equal_cstr(&sarcasm->v.element.original_tag, "<sarcasm>"));
+  EXPECT_TRUE(string_piece_equal_cstr(&sarcasm->v.element.original_end_tag, "</sarcasm>"));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, InvalidEndTag) {
+  SETUP();
   Parse("<a><img src=foo.jpg></img></a>");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -593,9 +753,11 @@ TEST_F(GumboParserTest, InvalidEndTag) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, img->type);
   EXPECT_EQ(GUMBO_TAG_IMG, GetTag(img));
   ASSERT_EQ(0, GetChildCount(img));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, Tables) {
+  SETUP();
   Parse(
       "<html><table>\n"
       "  <tr><br /></invalid-tag>\n"
@@ -676,9 +838,11 @@ TEST_F(GumboParserTest, Tables) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, GetTag(div));
   ASSERT_EQ(0, GetChildCount(div));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, StartParagraphInTable) {
+  SETUP();
   Parse("<table><P></tr></td>foo</table>");
 
   GumboNode* body;
@@ -702,9 +866,11 @@ TEST_F(GumboParserTest, StartParagraphInTable) {
   EXPECT_EQ(body, table->parent);
   EXPECT_EQ(1, table->index_within_parent);
   ASSERT_EQ(0, GetChildCount(table));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, EndParagraphInTable) {
+  SETUP();
   Parse("<table></p></table>");
 
   GumboNode* body;
@@ -724,9 +890,11 @@ TEST_F(GumboParserTest, EndParagraphInTable) {
   EXPECT_EQ(body, table->parent);
   EXPECT_EQ(1, table->index_within_parent);
   ASSERT_EQ(0, GetChildCount(table));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, UnknownTagInTable) {
+  SETUP();
   Parse("<table><foo>bar</table>");
 
   GumboNode* body;
@@ -736,7 +904,7 @@ TEST_F(GumboParserTest, UnknownTagInTable) {
   GumboNode* foo = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, foo->type);
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, GetTag(foo));
-  EXPECT_EQ("<foo>", ToString(foo->v.element.original_tag));
+  EXPECT_TRUE(string_piece_equal_cstr(&foo->v.element.original_tag, "<foo>"));
   EXPECT_EQ(body, foo->parent);
   EXPECT_EQ(0, foo->index_within_parent);
   ASSERT_EQ(1, GetChildCount(foo));
@@ -751,9 +919,11 @@ TEST_F(GumboParserTest, UnknownTagInTable) {
   EXPECT_EQ(body, table->parent);
   EXPECT_EQ(1, table->index_within_parent);
   ASSERT_EQ(0, GetChildCount(table));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, UnclosedTableTags) {
+  SETUP();
   Parse(
       "<html><table>\n"
       "  <tr>\n"
@@ -816,9 +986,11 @@ TEST_F(GumboParserTest, UnclosedTableTags) {
   GumboNode* body_text = GetChild(body, 1);
   ASSERT_EQ(GUMBO_NODE_WHITESPACE, body_text->type);
   EXPECT_STREQ("\n", body_text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, MisnestedTable) {
+  SETUP();
   Parse("<table><tr><div><td></div></table>");
 
   GumboNode* body;
@@ -849,9 +1021,11 @@ TEST_F(GumboParserTest, MisnestedTable) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, td->type);
   EXPECT_EQ(GUMBO_TAG_TD, GetTag(td));
   ASSERT_EQ(0, GetChildCount(td));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, MisnestedTable2) {
+  SETUP();
   Parse("<table><td>Cell1<table><th>Cell2<tr>Cell3</table>");
 
   GumboNode* body;
@@ -915,9 +1089,11 @@ TEST_F(GumboParserTest, MisnestedTable2) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, tr3->type);
   EXPECT_EQ(GUMBO_TAG_TR, GetTag(tr3));
   ASSERT_EQ(0, GetChildCount(tr3));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, Select) {
+  SETUP();
   Parse("<select><option>One<option>Two</select><div></div>");
 
   GumboNode* body;
@@ -943,9 +1119,11 @@ TEST_F(GumboParserTest, Select) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, GetTag(div));
   ASSERT_EQ(0, GetChildCount(div));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, ComplicatedSelect) {
+  SETUP();
   Parse(
       "<select><div class=foo></div><optgroup><option>Option"
       "</option><input></optgroup></select>");
@@ -977,9 +1155,11 @@ TEST_F(GumboParserTest, ComplicatedSelect) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, input->type);
   EXPECT_EQ(GUMBO_TAG_INPUT, GetTag(input));
   ASSERT_EQ(0, GetChildCount(input));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, DoubleSelect) {
+  SETUP();
   Parse("<select><select><div></div>");
 
   GumboNode* body;
@@ -995,9 +1175,11 @@ TEST_F(GumboParserTest, DoubleSelect) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, GetTag(div));
   ASSERT_EQ(0, GetChildCount(div));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, InputInSelect) {
+  SETUP();
   Parse("<select><input /><div></div>");
 
   GumboNode* body;
@@ -1018,9 +1200,11 @@ TEST_F(GumboParserTest, InputInSelect) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, GetTag(div));
   ASSERT_EQ(0, GetChildCount(div));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, SelectInTable) {
+  SETUP();
   Parse("<table><td><select><option value=1></table>");
 
   GumboNode* body;
@@ -1056,9 +1240,11 @@ TEST_F(GumboParserTest, SelectInTable) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, option->type);
   EXPECT_EQ(GUMBO_TAG_OPTION, GetTag(option));
   ASSERT_EQ(0, GetChildCount(option));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, ImplicitColgroup) {
+  SETUP();
   Parse("<table><col /><col /></table>");
 
   GumboNode* body;
@@ -1084,9 +1270,11 @@ TEST_F(GumboParserTest, ImplicitColgroup) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, col2->type);
   EXPECT_EQ(GUMBO_TAG_COL, GetTag(col2));
   ASSERT_EQ(0, GetChildCount(col2));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, Form) {
+  SETUP();
   Parse("<form><input type=hidden /></form>After form");
 
   GumboNode* body;
@@ -1106,10 +1294,12 @@ TEST_F(GumboParserTest, Form) {
   GumboNode* text = GetChild(body, 1);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("After form", text->v.text.text);
+  TEARDOWN();
 }
 
 // See: https://github.com/google/gumbo-parser/issues/350
 TEST_F(GumboParserTest, FormEndPos) {
+  SETUP();
   Parse(" <form><input type=hidden /></form>");
 
   GumboNode* body;
@@ -1123,9 +1313,11 @@ TEST_F(GumboParserTest, FormEndPos) {
 
   ASSERT_EQ(form->v.element.start_pos.offset, 1);
   ASSERT_EQ(form->v.element.end_pos.offset, 28);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, NestedForm) {
+  SETUP();
   Parse("<form><label>Label</label><form><input id=input2></form>After form");
 
   GumboNode* body;
@@ -1150,9 +1342,11 @@ TEST_F(GumboParserTest, NestedForm) {
   GumboNode* text = GetChild(body, 1);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("After form", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, MisnestedFormInTable) {
+  SETUP();
   // Parse of this is somewhat weird. The first <form> is opened outside the
   // table, so when </form> checks to see if there's a form in scope, it stops
   // at the <table> boundary and returns null. The form pointer is nulled out
@@ -1218,9 +1412,11 @@ TEST_F(GumboParserTest, MisnestedFormInTable) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, form2->type);
   EXPECT_EQ(GUMBO_TAG_FORM, GetTag(form2));
   ASSERT_EQ(0, GetChildCount(form2));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, NestedRawtextTags) {
+  SETUP();
   Parse(
       "<noscript><noscript jstag=false>"
       "<style>div{text-align:center}</style></noscript>");
@@ -1254,9 +1450,11 @@ TEST_F(GumboParserTest, NestedRawtextTags) {
   GumboNode* text = GetChild(style, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("div{text-align:center}", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, RawtextInBody) {
+  SETUP();
   Parse("<body><noembed jsif=false></noembed>");
 
   GumboNode* body;
@@ -1267,9 +1465,11 @@ TEST_F(GumboParserTest, RawtextInBody) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, noembed->type);
   EXPECT_EQ(GUMBO_TAG_NOEMBED, GetTag(noembed));
   EXPECT_EQ(1, GetAttributeCount(noembed));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, MetaBeforeHead) {
+  SETUP();
   Parse (
     "<html><meta http-equiv='content-type' "
     "content='text/html; charset=UTF-8' /><head></head>"
@@ -1279,9 +1479,11 @@ TEST_F(GumboParserTest, MetaBeforeHead) {
   GetAndAssertBody(root_, &body);
   // Testing for a memory leak here, but
   // TODO(jdtang): Flesh out structural asserts.
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, NoahsArkClause) {
+  SETUP();
   Parse (
     "<p><font size=4><font color=red><font size=4><font size=4>"
     "<font size=4><font size=4><font size=4><font color=red><p>X"
@@ -1319,9 +1521,11 @@ TEST_F(GumboParserTest, NoahsArkClause) {
   EXPECT_STREQ("color", red2_attr->name);
   EXPECT_STREQ("red", red2_attr->value);
   ASSERT_EQ(1, GetChildCount(red2));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, AdoptionAgency1) {
+  SETUP();
   // https://html.spec.whatwg.org/multipage/parsing.html#misnested-tags:-b-i-/b-/i
   Parse("<p>1<b>2<i>3</b>4</i>5</p>");
   ASSERT_EQ(1, GetChildCount(root_));
@@ -1392,9 +1596,11 @@ TEST_F(GumboParserTest, AdoptionAgency1) {
   ASSERT_EQ(GUMBO_NODE_TEXT, text5->type);
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, text2->parse_flags);
   EXPECT_STREQ("5", text5->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, AdoptionAgency2) {
+  SETUP();
   // https://html.spec.whatwg.org/multipage/parsing.html#misnested-tags:-b-p-/b-/p
   Parse("<b>1<p>2</b>3</p>");
   ASSERT_EQ(1, GetChildCount(root_));
@@ -1448,13 +1654,17 @@ TEST_F(GumboParserTest, AdoptionAgency2) {
   ASSERT_EQ(GUMBO_NODE_TEXT, text3->type);
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, text2->parse_flags);
   EXPECT_STREQ("3", text3->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, AdoptionAgency3) {
+  SETUP();
   Parse("<div><a><b><u><i><code><div></a>");
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, ImplicitlyCloseLists) {
+  SETUP();
   Parse(
       "<ul>\n"
       "  <li>First\n"
@@ -1484,9 +1694,11 @@ TEST_F(GumboParserTest, ImplicitlyCloseLists) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, li2->type);
   EXPECT_EQ(GUMBO_TAG_LI, GetTag(li2));
   ASSERT_EQ(1, GetChildCount(li2));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, CData) {
+  SETUP();
   Parse("<svg><![CDATA[this is text]]></svg>");
 
   GumboNode* body;
@@ -1499,9 +1711,11 @@ TEST_F(GumboParserTest, CData) {
   GumboNode* cdata = GetChild(svg, 0);
   ASSERT_EQ(GUMBO_NODE_CDATA, cdata->type);
   EXPECT_STREQ("this is text", cdata->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, CDataUnsafe) {
+  SETUP();
   // Can't use Parse() because of the strlen
   output_ =
       gumbo_parse_with_options(&options_, "<svg><![CDATA[\0filler\0text\0]]>",
@@ -1523,9 +1737,11 @@ TEST_F(GumboParserTest, CDataUnsafe) {
       "filler\xEF\xBF\xBD"
       "text\xEF\xBF\xBD",
       cdata->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, CDataInBody) {
+  SETUP();
   Parse("<div><![CDATA[this is text]]></div>");
 
   GumboNode* body;
@@ -1538,9 +1754,11 @@ TEST_F(GumboParserTest, CDataInBody) {
   GumboNode* cdata = GetChild(div, 0);
   ASSERT_EQ(GUMBO_NODE_COMMENT, cdata->type);
   EXPECT_STREQ("[CDATA[this is text]]", cdata->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, FormattingTagsInHeading) {
+  SETUP();
   Parse("<h2>This is <b>old</h2>text");
 
   GumboNode* body;
@@ -1580,9 +1798,11 @@ TEST_F(GumboParserTest, FormattingTagsInHeading) {
   ASSERT_EQ(GUMBO_NODE_TEXT, text3->type);
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, text3->parse_flags);
   EXPECT_STREQ("text", text3->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, ExtraReconstruction) {
+  SETUP();
   Parse("<span><b></span></p>");
 
   GumboNode* body;
@@ -1591,9 +1811,11 @@ TEST_F(GumboParserTest, ExtraReconstruction) {
 
   EXPECT_EQ(GUMBO_TAG_SPAN, GetTag(GetChild(body, 0)));
   EXPECT_EQ(GUMBO_TAG_P, GetTag(GetChild(body, 1)));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, LinkifiedHeading) {
+  SETUP();
   Parse("<li><h3><a href=#foo>Text</a></h3><div>Summary</div>");
 
   GumboNode* body;
@@ -1619,9 +1841,11 @@ TEST_F(GumboParserTest, LinkifiedHeading) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, GetTag(div));
   ASSERT_EQ(1, GetChildCount(div));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, MisnestedHeading) {
+  SETUP();
   Parse(
       "<h1>"
       "  <section>"
@@ -1712,9 +1936,11 @@ TEST_F(GumboParserTest, MisnestedHeading) {
   ASSERT_EQ(GUMBO_NODE_TEXT, text4->type);
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, text4->parse_flags);
   EXPECT_STREQ("After text", text4->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, DoubleBody) {
+  SETUP();
   Parse("<body class=first><body class=second id=merged>Text</body></body>");
 
   GumboNode* body;
@@ -1734,9 +1960,11 @@ TEST_F(GumboParserTest, DoubleBody) {
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, text->parse_flags);
   EXPECT_STREQ("Text", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, ThInMathMl) {
+  SETUP();
   Parse("<math><th><mI><table></table><tr></table><div><tr>0");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -1775,9 +2003,11 @@ TEST_F(GumboParserTest, ThInMathMl) {
   GumboNode* text = GetChild(div, 0);
   ASSERT_EQ(GUMBO_NODE_TEXT, text->type);
   EXPECT_STREQ("0", text->v.text.text);
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, TdInMathml) {
+  SETUP();
   Parse("<table><th><math><td></tr>");
   GumboNode* body;
   GetAndAssertBody(root_, &body);
@@ -1818,13 +2048,17 @@ TEST_F(GumboParserTest, TdInMathml) {
   EXPECT_EQ(GUMBO_TAG_TD, td->v.element.tag);
   EXPECT_EQ(GUMBO_NAMESPACE_MATHML, td->v.element.tag_namespace);
   ASSERT_EQ(0, GetChildCount(td));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, SelectInForeignContent) {
+  SETUP();
   Parse("<svg><select><foreignobject><select><select><select>");
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, TemplateInForeignContent) {
+  SETUP();
   Parse("<template><svg><template>");
 
   GumboNode* body;
@@ -1853,9 +2087,11 @@ TEST_F(GumboParserTest, TemplateInForeignContent) {
   EXPECT_EQ(GUMBO_TAG_TEMPLATE, svg_template->v.element.tag);
   EXPECT_EQ(GUMBO_NAMESPACE_SVG, svg_template->v.element.tag_namespace);
   EXPECT_EQ(0, GetChildCount(svg_template));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, TemplateNull) {
+  SETUP();
   output_ = gumbo_parse_with_options(
       &options_, "<template>\0", sizeof("<template>\0") - 1);
   root_ = output_->document;
@@ -1874,9 +2110,11 @@ TEST_F(GumboParserTest, TemplateNull) {
   ASSERT_EQ(GUMBO_NODE_TEMPLATE, template_node->type);
   EXPECT_EQ(GUMBO_TAG_TEMPLATE, template_node->v.element.tag);
   ASSERT_EQ(0, GetChildCount(template_node));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, FragmentWithNamespace) {
+  SETUP();
   ParseFragment("<div></div>", GUMBO_TAG_TITLE, GUMBO_NAMESPACE_SVG);
 
   EXPECT_EQ(1, GetChildCount(root_));
@@ -1889,9 +2127,11 @@ TEST_F(GumboParserTest, FragmentWithNamespace) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, div->v.element.tag);
   EXPECT_EQ(0, GetChildCount(div));
+  TEARDOWN();
 }
 
 TEST_F(GumboParserTest, FragmentWithTwoNodes) {
+  SETUP();
   ParseFragment("<h1>Hi</h1><br>", GUMBO_TAG_BODY, GUMBO_NAMESPACE_HTML);
 
   EXPECT_EQ(1, GetChildCount(root_));
@@ -1910,6 +2150,5 @@ TEST_F(GumboParserTest, FragmentWithTwoNodes) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, br->type);
   EXPECT_EQ(GUMBO_TAG_BR, br->v.element.tag);
   EXPECT_EQ(0, GetChildCount(br));
+  TEARDOWN();
 }
-
-}  // namespace
