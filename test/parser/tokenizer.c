@@ -41,7 +41,7 @@ extern const char* kGumboTagNames[];
 } while (0)
 
 #define Advance(num_tokens) do { \
-  for (int i = 0; i < num_tokens; ++i) { \
+  for (size_t i = 0; i < num_tokens; ++i) { \
     EXPECT_TRUE(gumbo_lex(&parser_, &token_)); \
     gumbo_token_destroy(&token_); \
   } \
@@ -750,4 +750,5 @@ TEST_F(GumboTokenizerTest, BogusEndTag) {
   EXPECT_EQ(0, token_.position.offset);
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, token_.v.end_tag);
   EXPECT_TRUE(string_piece_equal_cstr(&token_.original_text, "</div</th>"));
+  TEARDOWN();
 }
