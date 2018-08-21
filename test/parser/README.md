@@ -3,8 +3,8 @@ Parser Tests
 
 These unit tests are for internal details of the parser that are mostly
 not exposed by the Lua API. They were originally authored by Jonathan
-Tang (formerly of Google) in C++/gtest. They have since been [imported],
-expanded somewhat and eventually converted to C.
+Tang in C++/gtest. They have since been [imported], expanded somewhat
+and converted to C.
 
 The gtest framework has been replaced by a few macros in `test.h`. It's
 probably not as robust or flexible as gtest but it builds much faster,

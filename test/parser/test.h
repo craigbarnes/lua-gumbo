@@ -69,9 +69,8 @@
 
 #define BASE_SETUP() \
   GumboOptions options_ = kGumboDefaultOptions; \
-  UNUSED GumboNode* root_ = NULL; \
-  GumboParser parser_; \
   options_.max_errors = 100; \
+  GumboParser parser_; \
   parser_._options = &options_; \
   parser_._output = gumbo_alloc(sizeof(GumboOutput)); \
   gumbo_init_errors(&parser_);

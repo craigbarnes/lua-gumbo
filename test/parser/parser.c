@@ -19,6 +19,7 @@
 
 #define SETUP() \
   GumboOutput* output_ = NULL; \
+  UNUSED GumboNode* root_ = NULL; \
   BASE_SETUP()
 
 #define TEARDOWN() do { \
