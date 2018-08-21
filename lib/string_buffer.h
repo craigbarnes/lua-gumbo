@@ -6,10 +6,6 @@
 
 #include "gumbo.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // A struct representing a mutable, growable string. This consists of a
 // heap-allocated buffer that may grow (by doubling) as necessary. When
 // converting to a string, this allocates a new buffer that is only as long as
@@ -60,9 +56,5 @@ void gumbo_string_buffer_clear(GumboStringBuffer* input);
 
 // Deallocates this GumboStringBuffer.
 void gumbo_string_buffer_destroy(GumboStringBuffer* buffer);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // GUMBO_STRING_BUFFER_H_

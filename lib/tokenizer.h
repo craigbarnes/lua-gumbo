@@ -11,10 +11,6 @@
 #include "token_type.h"
 #include "tokenizer_states.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct GumboParser;
 
 // Struct containing all information pertaining to doctype tokens.
@@ -105,9 +101,5 @@ bool gumbo_lex(struct GumboParser* parser, GumboToken* output);
 // other data structure - for example, a parse tree - these do not need to be
 // freed.
 void gumbo_token_destroy(GumboToken* token);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // GUMBO_TOKENIZER_H_

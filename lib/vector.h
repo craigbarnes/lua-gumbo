@@ -3,10 +3,6 @@
 
 #include "gumbo.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Initializes a new GumboVector with the specified initial capacity.
 void gumbo_vector_init(unsigned int initial_capacity, GumboVector* vector);
 
@@ -37,9 +33,5 @@ void gumbo_vector_remove(void* element, GumboVector* vector);
 // Removes and returns an element at a specific index. Note that this is
 // potentially O(N) time and should be used sparingly.
 void* gumbo_vector_remove_at(unsigned int index, GumboVector* vector);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // GUMBO_VECTOR_H_

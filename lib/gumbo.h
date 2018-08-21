@@ -32,10 +32,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * A struct representing a character position within the original text
  * buffer. Line and column numbers are 1-based and offsets are 0-based,
@@ -787,9 +783,5 @@ const char* gumbo_status_to_string(GumboOutputStatus status);
 
 /** Release the memory used for the parse tree and parse errors. */
 void gumbo_destroy_output(GumboOutput* output);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // GUMBO_H

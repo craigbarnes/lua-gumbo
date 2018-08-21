@@ -8,10 +8,6 @@
 #include "string_buffer.h"
 #include "token_type.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct GumboParser;
 
 typedef enum {
@@ -199,9 +195,5 @@ void gumbo_print_caret_diagnostic (
   const GumboError* error,
   const char* source_text
 );
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // GUMBO_ERROR_H_
