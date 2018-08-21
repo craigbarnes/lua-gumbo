@@ -1,4 +1,5 @@
-// Copyright 2011 Google Inc. All Rights Reserved.
+// Copyright 2018 Craig Barnes.
+// Copyright 2011 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,162 +12,183 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-// Author: jdtang@google.com (Jonathan Tang)
-//
-// GUnit char_ref tests. These are quick smoke tests, mostly to identify
-// crashing bugs so that they can be fixed without having to debug
-// multi-language tests. As such, they focus on coverage rather than
-// completeness. For testing the full spec, use char_ref_py_tests, which share
-// their testdata with the Python html5lib library.
 
-#include "char_ref.h"
-
-#include <stdio.h>
 #include <string.h>
-
-#include "gtest/gtest.h"
-#include "test_utils.h"
+#include "char_ref.h"
+#include "error.h"
+#include "gumbo.h"
+#include "parser.h"
+#include "test.h"
 #include "utf8.h"
+#include "util.h"
 
-namespace {
+#define SETUP() \
+  GumboParser parser_; \
+  Utf8Iterator iter_; \
+  OneOrTwoCodepoints output_; \
+  GumboOptions options_ = kGumboDefaultOptions; \
+  options_.max_errors = 100; \
+  parser_._options = &options_; \
+  parser_._output = gumbo_alloc(sizeof(GumboOutput)); \
+  gumbo_init_errors(&parser_);
 
-class CharRefTest : public GumboTest {
- protected:
-  bool ConsumeCharRef(const char* input) {
-    return ConsumeCharRef(input, ' ', false);
-  }
+#define TEARDOWN() do { \
+  gumbo_destroy_errors(&parser_); \
+  gumbo_free(parser_._output); \
+} while (0)
 
-  bool ConsumeCharRef(
-      const char* input, int additional_allowed_char, bool is_in_attribute) {
-    text_ = input;
-    utf8iterator_init(&parser_, input, strlen(input), &iter_);
-    bool result = gumbo_consume_char_ref(
-        &parser_, &iter_, additional_allowed_char, is_in_attribute, &output_);
-    fflush(stdout);
-    return result;
-  }
+#define consumeCharRef(str) ( \
+  utf8iterator_init(&parser_, str, strlen(str), &iter_), \
+  gumbo_consume_char_ref(&parser_, &iter_, 0, false, &output_) \
+)
 
-  Utf8Iterator iter_;
-  OneOrTwoCodepoints output_;
-};
+#define consumeCharRefEx(str, extra_char, in_attr) ( \
+  utf8iterator_init(&parser_, str, strlen(str), &iter_), \
+  gumbo_consume_char_ref(&parser_, &iter_, extra_char, in_attr, &output_) \
+)
 
 TEST_F(CharRefTest, Whitespace) {
-  EXPECT_TRUE(ConsumeCharRef(" &nbsp;"));
+  SETUP();
+  EXPECT_TRUE(consumeCharRef(" &nbsp;"));
   EXPECT_EQ(kGumboNoChar, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NumericHex) {
-  EXPECT_TRUE(ConsumeCharRef("&#x12ab;"));
+  SETUP();
+  EXPECT_TRUE(consumeCharRef("&#x12ab;"));
   EXPECT_EQ(0x12ab, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NumericDecimal) {
-  EXPECT_TRUE(ConsumeCharRef("&#1234;"));
+  SETUP();
+  EXPECT_TRUE(consumeCharRef("&#1234;"));
   EXPECT_EQ(1234, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NumericInvalidDigit) {
-  errors_are_expected_ = true;
-  EXPECT_FALSE(ConsumeCharRef("&#google"));
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&#google"));
   EXPECT_EQ(kGumboNoChar, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
   EXPECT_EQ('&', utf8iterator_current(&iter_));
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NumericNoSemicolon) {
-  errors_are_expected_ = true;
-  EXPECT_FALSE(ConsumeCharRef("&#1234google"));
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&#1234google"));
   EXPECT_EQ(1234, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
   EXPECT_EQ('g', utf8iterator_current(&iter_));
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NumericReplacement) {
-  errors_are_expected_ = true;
-  EXPECT_FALSE(ConsumeCharRef("&#X82"));
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&#X82"));
   // Low quotation mark character.
   EXPECT_EQ(0x201A, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NumericInvalid) {
-  errors_are_expected_ = true;
-  EXPECT_FALSE(ConsumeCharRef("&#xDA00"));
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&#xDA00"));
   EXPECT_EQ(0xFFFD, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NumericUtfInvalid) {
-  errors_are_expected_ = true;
-  EXPECT_FALSE(ConsumeCharRef("&#x007"));
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&#x007"));
   EXPECT_EQ(0x7, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NamedReplacement) {
-  EXPECT_TRUE(ConsumeCharRef("&lt;"));
+  SETUP();
+  EXPECT_TRUE(consumeCharRef("&lt;"));
   EXPECT_EQ('<', output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NamedReplacementNoSemicolon) {
-  errors_are_expected_ = true;
-  EXPECT_FALSE(ConsumeCharRef("&gt"));
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&gt"));
   EXPECT_EQ('>', output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NamedReplacementWithInvalidUtf8) {
-  errors_are_expected_ = true;
-  EXPECT_TRUE(ConsumeCharRef("&\xc3\xa5"));
+  SETUP();
+  EXPECT_TRUE(consumeCharRef("&\xc3\xa5"));
   EXPECT_EQ(kGumboNoChar, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, NamedReplacementInvalid) {
-  errors_are_expected_ = true;
-  EXPECT_FALSE(ConsumeCharRef("&google;"));
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&google;"));
   EXPECT_EQ(kGumboNoChar, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
   EXPECT_EQ('&', utf8iterator_current(&iter_));
+  TEARDOWN();
 }
 
-// TEST_F(CharRefTest, NamedReplacementInvalidNoSemicolon) {
-//  EXPECT_FALSE(ConsumeCharRef("&google"));
-//  EXPECT_EQ(kGumboNoChar, output_.first);
-//  EXPECT_EQ(kGumboNoChar, output_.second);
-//  EXPECT_EQ('&', utf8iterator_current(&iter_));
-//}
-
-TEST_F(CharRefTest, AdditionalAllowedChar) {
-  EXPECT_TRUE(ConsumeCharRef("&\"", '"', false));
+/*
+TEST_F(CharRefTest, NamedReplacementInvalidNoSemicolon) {
+  SETUP();
+  EXPECT_FALSE(consumeCharRef("&google"));
   EXPECT_EQ(kGumboNoChar, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
   EXPECT_EQ('&', utf8iterator_current(&iter_));
+  TEARDOWN();
+}
+*/
+
+TEST_F(CharRefTest, AdditionalAllowedChar) {
+  SETUP();
+  EXPECT_TRUE(consumeCharRefEx("&\"", '"', false));
+  EXPECT_EQ(kGumboNoChar, output_.first);
+  EXPECT_EQ(kGumboNoChar, output_.second);
+  EXPECT_EQ('&', utf8iterator_current(&iter_));
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, InAttribute) {
-  EXPECT_TRUE(ConsumeCharRef("&noted", ' ', true));
+  SETUP();
+  EXPECT_TRUE(consumeCharRefEx("&noted", ' ', true));
   EXPECT_EQ(kGumboNoChar, output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
   EXPECT_EQ('&', utf8iterator_current(&iter_));
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, MultiChars) {
-  EXPECT_TRUE(ConsumeCharRef("&notindot;"));
+  SETUP();
+  EXPECT_TRUE(consumeCharRef("&notindot;"));
   EXPECT_EQ(0x22F5, output_.first);
   EXPECT_EQ(0x0338, output_.second);
+  TEARDOWN();
 }
 
 TEST_F(CharRefTest, CharAfter) {
-  EXPECT_TRUE(ConsumeCharRef("&lt;x"));
+  SETUP();
+  EXPECT_TRUE(consumeCharRef("&lt;x"));
   EXPECT_EQ('<', output_.first);
   EXPECT_EQ(kGumboNoChar, output_.second);
   EXPECT_EQ('x', utf8iterator_current(&iter_));
+  TEARDOWN();
 }
-
-}  // namespace
