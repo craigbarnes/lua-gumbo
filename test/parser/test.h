@@ -9,7 +9,8 @@
 #error "Constructor support required; see test/parser/README.md"
 #endif
 
-#define TEST_F(group, name) static void CONSTRUCTOR group##name (void)
+#define TEST(group, name) static void CONSTRUCTOR group##name (void)
+#define TEST_F(group, name) TEST(group, name)
 
 #define EXPECT_EQ(a, b) do { \
     if ((a) != (b)) { \
@@ -32,8 +33,16 @@
 #define EXPECT_GE(a, b) EXPECT_EQ(1, (a) >= (b))
 #define EXPECT_LT(a, b) EXPECT_EQ(1, (a) < (b))
 
-#define ASSERT_TRUE(x) EXPECT_TRUE(x); if (!(x)) {return;};
-#define ASSERT_EQ(a, b) EXPECT_EQ(a, b); if ((a) != (b)) {return;};
+#define ASSERT_TRUE(x) do { \
+  const bool res_ = !!(x); \
+  EXPECT_TRUE(res_); \
+  if (!res_) {return;}; \
+} while (0)
+
+#define ASSERT_EQ(a, b) do { \
+  EXPECT_EQ(a, b); \
+  if ((a) != (b)) {return;}; \
+} while (0)
 
 #define EXPECT_STREQ(a, b) do { \
     const char *s1 = (a), *s2 = (b); \
@@ -48,6 +57,20 @@
     } else { \
         passed += 1; \
     } \
+} while (0)
+
+#define BASE_SETUP() \
+  GumboOptions options_ = kGumboDefaultOptions; \
+  UNUSED GumboNode* root_ = NULL; \
+  GumboParser parser_; \
+  options_.max_errors = 100; \
+  parser_._options = &options_; \
+  parser_._output = gumbo_alloc(sizeof(GumboOutput)); \
+  gumbo_init_errors(&parser_);
+
+#define BASE_TEARDOWN() do { \
+  gumbo_destroy_errors(&parser_); \
+  gumbo_free(parser_._output); \
 } while (0)
 
 extern unsigned int passed, failed;

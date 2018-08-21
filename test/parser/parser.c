@@ -21,21 +21,14 @@
 #include "util.h"
 
 #define SETUP() \
-  GumboOptions options_ = kGumboDefaultOptions; \
   GumboOutput* output_ = NULL; \
-  UNUSED GumboNode* root_ = NULL; \
-  GumboParser parser_; \
-  options_.max_errors = 100; \
-  parser_._options = &options_; \
-  parser_._output = gumbo_alloc(sizeof(GumboOutput)); \
-  gumbo_init_errors(&parser_);
+  BASE_SETUP()
 
 #define TEARDOWN() do { \
   if (output_) { \
     gumbo_destroy_output(output_); \
   } \
-  gumbo_destroy_errors(&parser_); \
-  gumbo_free(parser_._output); \
+  BASE_TEARDOWN(); \
 } while (0)
 
 #define Parse(input) do { \

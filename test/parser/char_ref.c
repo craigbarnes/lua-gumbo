@@ -23,19 +23,12 @@
 #include "util.h"
 
 #define SETUP() \
-  GumboParser parser_; \
   Utf8Iterator iter_; \
   OneOrTwoCodepoints output_; \
-  GumboOptions options_ = kGumboDefaultOptions; \
-  options_.max_errors = 100; \
-  parser_._options = &options_; \
-  parser_._output = gumbo_alloc(sizeof(GumboOutput)); \
-  gumbo_init_errors(&parser_);
+  BASE_SETUP();
 
-#define TEARDOWN() do { \
-  gumbo_destroy_errors(&parser_); \
-  gumbo_free(parser_._output); \
-} while (0)
+#define TEARDOWN() \
+  BASE_TEARDOWN();
 
 #define consumeCharRef(str) ( \
   utf8iterator_init(&parser_, str, strlen(str), &iter_), \

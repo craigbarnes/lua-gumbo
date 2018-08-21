@@ -26,10 +26,11 @@ LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
     $(LIBGUMBO_OBJ_GPERF)
 
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    attribute char_ref string_buffer string_piece test main parser vector )
+    attribute char_ref string_buffer string_piece test tokenizer \
+    main parser vector )
 
 GTEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
-    test_utils tokenizer utf8 )
+    test_utils utf8 )
 
 $(GTEST_OBJ): CXXFLAGS += $(GTEST_CXXFLAGS)
 build/lib/gtest: XLDFLAGS += $(GTEST_LDFLAGS)
