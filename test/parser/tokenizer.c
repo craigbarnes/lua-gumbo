@@ -82,7 +82,7 @@ TEST(GumboTagEnumTest, TagLookupCaseSensitivity) {
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, gumbo_tagn_enum("c", 1));
 }
 
-TEST_F(GumboTokenizerTest, PartialTag) {
+TEST(GumboTokenizerTest, PartialTag) {
   SETUP();
   SetInput("<a");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -90,7 +90,7 @@ TEST_F(GumboTokenizerTest, PartialTag) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, PartialTagWithAttributes) {
+TEST(GumboTokenizerTest, PartialTagWithAttributes) {
   SETUP();
   SetInput("<a href=foo /");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -98,7 +98,7 @@ TEST_F(GumboTokenizerTest, PartialTagWithAttributes) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, LexCharToken) {
+TEST(GumboTokenizerTest, LexCharToken) {
   SETUP();
   SetInput("a");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -116,7 +116,7 @@ TEST_F(GumboTokenizerTest, LexCharToken) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, LexCharRef) {
+TEST(GumboTokenizerTest, LexCharRef) {
   SETUP();
   SetInput("&nbsp; Text");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -135,7 +135,7 @@ TEST_F(GumboTokenizerTest, LexCharRef) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, LexCharRef_NotCharRef) {
+TEST(GumboTokenizerTest, LexCharRef_NotCharRef) {
   SETUP();
   SetInput("&xyz");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -150,7 +150,7 @@ TEST_F(GumboTokenizerTest, LexCharRef_NotCharRef) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, LeadingWhitespace) {
+TEST(GumboTokenizerTest, LeadingWhitespace) {
   SETUP();
   SetInput("<div>\n  <span class=foo>");
   Advance(4);
@@ -175,7 +175,7 @@ TEST_F(GumboTokenizerTest, LeadingWhitespace) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, Doctype) {
+TEST(GumboTokenizerTest, Doctype) {
   SETUP();
   SetInput("<!doctype html>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -192,7 +192,7 @@ TEST_F(GumboTokenizerTest, Doctype) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, DoctypePublic) {
+TEST(GumboTokenizerTest, DoctypePublic) {
   SETUP();
   SetInput (
     "<!DOCTYPE html PUBLIC "
@@ -219,7 +219,7 @@ TEST_F(GumboTokenizerTest, DoctypePublic) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, DoctypeSystem) {
+TEST(GumboTokenizerTest, DoctypeSystem) {
   SETUP();
   SetInput("<!DOCtype root_element SYSTEM \"DTD_location\">");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -235,7 +235,7 @@ TEST_F(GumboTokenizerTest, DoctypeSystem) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, DoctypeUnterminated) {
+TEST(GumboTokenizerTest, DoctypeUnterminated) {
   SETUP();
   SetInput("<!DOCTYPE a PUBLIC''");
   EXPECT_FALSE(gumbo_lex(&parser_, &token_));
@@ -251,7 +251,7 @@ TEST_F(GumboTokenizerTest, DoctypeUnterminated) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, RawtextEnd) {
+TEST(GumboTokenizerTest, RawtextEnd) {
   SETUP();
   SetInput("<title>x ignores <tag></title>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -283,7 +283,7 @@ TEST_F(GumboTokenizerTest, RawtextEnd) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, RCDataEnd) {
+TEST(GumboTokenizerTest, RCDataEnd) {
   SETUP();
   SetInput("<title>x</title>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -303,7 +303,7 @@ TEST_F(GumboTokenizerTest, RCDataEnd) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, ScriptEnd) {
+TEST(GumboTokenizerTest, ScriptEnd) {
   SETUP();
   SetInput("<script>x = '\"></';</script>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -340,7 +340,7 @@ TEST_F(GumboTokenizerTest, ScriptEnd) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, ScriptEscapedEnd) {
+TEST(GumboTokenizerTest, ScriptEscapedEnd) {
   SETUP();
   SetInput("<title>x</title>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -360,7 +360,7 @@ TEST_F(GumboTokenizerTest, ScriptEscapedEnd) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, ScriptCommentEscaped) {
+TEST(GumboTokenizerTest, ScriptCommentEscaped) {
   SETUP();
   SetInput (
     "<script><!-- var foo = x < 7 + '</div>-- <A href=\"foo\"></a>';\n"
@@ -415,7 +415,7 @@ TEST_F(GumboTokenizerTest, ScriptCommentEscaped) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, ScriptEscapedEmbeddedLessThan) {
+TEST(GumboTokenizerTest, ScriptEscapedEmbeddedLessThan) {
   SETUP();
   SetInput("<script>/*<![CDATA[*/ x<7 /*]]>*/</script>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -447,7 +447,7 @@ TEST_F(GumboTokenizerTest, ScriptEscapedEmbeddedLessThan) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, ScriptHasTagEmbedded) {
+TEST(GumboTokenizerTest, ScriptHasTagEmbedded) {
   SETUP();
   SetInput("<script>var foo = '</div>';</script>");
   Advance(1);
@@ -475,7 +475,7 @@ TEST_F(GumboTokenizerTest, ScriptHasTagEmbedded) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, ScriptDoubleEscaped) {
+TEST(GumboTokenizerTest, ScriptDoubleEscaped) {
   SETUP();
   SetInput (
     "<script><!--var foo = '<a href=\"foo\"></a>\n"
@@ -517,7 +517,7 @@ TEST_F(GumboTokenizerTest, ScriptDoubleEscaped) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, CData) {
+TEST(GumboTokenizerTest, CData) {
   SETUP();
   // SetInput uses strlen and so can't handle nulls.
   const GumboStringPiece text = STRING_PIECE("<![CDATA[\0filler\0text\0]]>");
@@ -536,7 +536,7 @@ TEST_F(GumboTokenizerTest, CData) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, StyleHasTagEmbedded) {
+TEST(GumboTokenizerTest, StyleHasTagEmbedded) {
   SETUP();
   SetInput("<style>/* For <head> */</style>");
   Advance(1);
@@ -559,7 +559,7 @@ TEST_F(GumboTokenizerTest, StyleHasTagEmbedded) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, PreWithNewlines) {
+TEST(GumboTokenizerTest, PreWithNewlines) {
   SETUP();
   SetInput("<!DOCTYPE html><pre>\r\na</pre>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -574,7 +574,7 @@ TEST_F(GumboTokenizerTest, PreWithNewlines) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, SelfClosingStartTag) {
+TEST(GumboTokenizerTest, SelfClosingStartTag) {
   SETUP();
   SetInput("<br />");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -589,7 +589,7 @@ TEST_F(GumboTokenizerTest, SelfClosingStartTag) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, OpenTagWithAttributes) {
+TEST(GumboTokenizerTest, OpenTagWithAttributes) {
   SETUP();
   SetInput("<a href ='/search?q=foo&amp;hl=en'  id=link>");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -614,7 +614,7 @@ TEST_F(GumboTokenizerTest, OpenTagWithAttributes) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, BogusComment1) {
+TEST(GumboTokenizerTest, BogusComment1) {
   SETUP();
   SetInput("<?xml is bogus-comment>Text");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -629,7 +629,7 @@ TEST_F(GumboTokenizerTest, BogusComment1) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, BogusComment2) {
+TEST(GumboTokenizerTest, BogusComment2) {
   SETUP();
   SetInput("</#bogus-comment");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -642,7 +642,7 @@ TEST_F(GumboTokenizerTest, BogusComment2) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, MultilineAttribute) {
+TEST(GumboTokenizerTest, MultilineAttribute) {
   SETUP();
   SetInput (
     "<foo long_attr=\"SomeCode;\n"
@@ -669,7 +669,7 @@ TEST_F(GumboTokenizerTest, MultilineAttribute) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, DoubleAmpersand) {
+TEST(GumboTokenizerTest, DoubleAmpersand) {
   SETUP();
   SetInput("<span jsif=\"foo && bar\">");
   EXPECT_TRUE(gumbo_lex(&parser_, &token_));
@@ -688,7 +688,7 @@ TEST_F(GumboTokenizerTest, DoubleAmpersand) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, MatchedTagPair) {
+TEST(GumboTokenizerTest, MatchedTagPair) {
   SETUP();
   SetInput("<div id=dash<-Dash data-test=\"bar\">a</div>");
   ASSERT_TRUE(gumbo_lex(&parser_, &token_));
@@ -735,7 +735,7 @@ TEST_F(GumboTokenizerTest, MatchedTagPair) {
   TEARDOWN();
 }
 
-TEST_F(GumboTokenizerTest, BogusEndTag) {
+TEST(GumboTokenizerTest, BogusEndTag) {
   SETUP();
   // According to the spec, the correct parse of this is an end tag token for
   // "<div<>" (notice the ending bracket) with the attribute "th=th" (ignored

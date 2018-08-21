@@ -24,7 +24,7 @@ static void null_terminate_buffer(GumboStringBuffer* buffer) {
   buffer->data[buffer->length++] = '\0';
 }
 
-TEST_F(GumboStringBufferTest, Reserve) {
+TEST(GumboStringBufferTest, Reserve) {
   SETUP();
   gumbo_string_buffer_reserve(21, &buffer_);
   EXPECT_EQ(40, buffer_.capacity);
@@ -36,7 +36,7 @@ TEST_F(GumboStringBufferTest, Reserve) {
   TEARDOWN();
 }
 
-TEST_F(GumboStringBufferTest, AppendString) {
+TEST(GumboStringBufferTest, AppendString) {
   SETUP();
   GumboStringPiece str = STRING_PIECE("01234567");
   gumbo_string_buffer_append_string(&str, &buffer_);
@@ -45,7 +45,7 @@ TEST_F(GumboStringBufferTest, AppendString) {
   TEARDOWN();
 }
 
-TEST_F(GumboStringBufferTest, AppendStringWithResize) {
+TEST(GumboStringBufferTest, AppendStringWithResize) {
   SETUP();
   GumboStringPiece str = STRING_PIECE("01234567");
   gumbo_string_buffer_append_string(&str, &buffer_);
@@ -55,7 +55,7 @@ TEST_F(GumboStringBufferTest, AppendStringWithResize) {
   TEARDOWN();
 }
 
-TEST_F(GumboStringBufferTest, AppendCodepoint_1Byte) {
+TEST(GumboStringBufferTest, AppendCodepoint_1Byte) {
   SETUP();
   gumbo_string_buffer_append_codepoint('a', &buffer_);
   null_terminate_buffer(&buffer_);
@@ -63,7 +63,7 @@ TEST_F(GumboStringBufferTest, AppendCodepoint_1Byte) {
   TEARDOWN();
 }
 
-TEST_F(GumboStringBufferTest, AppendCodepoint_2Bytes) {
+TEST(GumboStringBufferTest, AppendCodepoint_2Bytes) {
   SETUP();
   gumbo_string_buffer_append_codepoint(0xE5, &buffer_);
   null_terminate_buffer(&buffer_);
@@ -71,7 +71,7 @@ TEST_F(GumboStringBufferTest, AppendCodepoint_2Bytes) {
   TEARDOWN();
 }
 
-TEST_F(GumboStringBufferTest, AppendCodepoint_3Bytes) {
+TEST(GumboStringBufferTest, AppendCodepoint_3Bytes) {
   SETUP();
   gumbo_string_buffer_append_codepoint(0x39E7, &buffer_);
   null_terminate_buffer(&buffer_);
@@ -79,7 +79,7 @@ TEST_F(GumboStringBufferTest, AppendCodepoint_3Bytes) {
   TEARDOWN();
 }
 
-TEST_F(GumboStringBufferTest, AppendCodepoint_4Bytes) {
+TEST(GumboStringBufferTest, AppendCodepoint_4Bytes) {
   SETUP();
   gumbo_string_buffer_append_codepoint(0x679E7, &buffer_);
   null_terminate_buffer(&buffer_);
@@ -87,7 +87,7 @@ TEST_F(GumboStringBufferTest, AppendCodepoint_4Bytes) {
   TEARDOWN();
 }
 
-TEST_F(GumboStringBufferTest, ToString) {
+TEST(GumboStringBufferTest, ToString) {
   SETUP();
   gumbo_string_buffer_reserve(8, &buffer_);
   strcpy(buffer_.data, "012345");

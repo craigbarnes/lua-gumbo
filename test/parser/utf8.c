@@ -39,14 +39,14 @@
 #define GetNumErrors() \
   parser_._output->errors.length
 
-TEST_F(Utf8Test, EmptyString) {
+TEST(Utf8Test, EmptyString) {
   SETUP();
   ResetText("");
   EXPECT_EQ(-1, utf8iterator_current(&input_));
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, GetPosition_EmptyString) {
+TEST(Utf8Test, GetPosition_EmptyString) {
   SETUP();
   ResetText("");
   GumboSourcePosition pos;
@@ -58,7 +58,7 @@ TEST_F(Utf8Test, GetPosition_EmptyString) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, Null) {
+TEST(Utf8Test, Null) {
   SETUP();
   // Can't use ResetText, as the implicit strlen will choke on the null.
   const char *text = "\0f";
@@ -72,7 +72,7 @@ TEST_F(Utf8Test, Null) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, OneByteChar) {
+TEST(Utf8Test, OneByteChar) {
   SETUP();
   ResetText("a");
 
@@ -91,7 +91,7 @@ TEST_F(Utf8Test, OneByteChar) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, ContinuationByte) {
+TEST(Utf8Test, ContinuationByte) {
   SETUP();
   ResetText("\x85");
 
@@ -109,7 +109,7 @@ TEST_F(Utf8Test, ContinuationByte) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MultipleContinuationBytes) {
+TEST(Utf8Test, MultipleContinuationBytes) {
   SETUP();
   ResetText("a\x85\xA0\xC2x\x9A");
   EXPECT_EQ('a', utf8iterator_current(&input_));
@@ -137,7 +137,7 @@ TEST_F(Utf8Test, MultipleContinuationBytes) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, OverlongEncoding) {
+TEST(Utf8Test, OverlongEncoding) {
   SETUP();
   // \xC0\x75 = 11000000 01110101.
   ResetText("\xC0\x75");
@@ -163,7 +163,7 @@ TEST_F(Utf8Test, OverlongEncoding) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, OverlongEncodingWithContinuationByte) {
+TEST(Utf8Test, OverlongEncodingWithContinuationByte) {
   SETUP();
   // \xC0\x85 = 11000000 10000101.
   ResetText("\xC0\x85");
@@ -188,7 +188,7 @@ TEST_F(Utf8Test, OverlongEncodingWithContinuationByte) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, TwoByteChar) {
+TEST(Utf8Test, TwoByteChar) {
   SETUP();
   // \xC3\xA5 = 11000011 10100101.
   ResetText("\xC3\xA5o");
@@ -214,7 +214,7 @@ TEST_F(Utf8Test, TwoByteChar) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, TwoByteChar2) {
+TEST(Utf8Test, TwoByteChar2) {
   SETUP();
   // \xC2\xA5 = 11000010 10100101.
   ResetText("\xC2\xA5");
@@ -229,7 +229,7 @@ TEST_F(Utf8Test, TwoByteChar2) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, ThreeByteChar) {
+TEST(Utf8Test, ThreeByteChar) {
   SETUP();
   // \xE3\xA7\xA7 = 11100011 10100111 10100111
   ResetText("\xE3\xA7\xA7\xB0");
@@ -255,7 +255,7 @@ TEST_F(Utf8Test, ThreeByteChar) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, FourByteChar) {
+TEST(Utf8Test, FourByteChar) {
   SETUP();
   // \xC3\x9A = 11000011 10011010
   // \xF1\xA7\xA7\xA7 = 11110001 10100111 10100111 10100111
@@ -275,7 +275,7 @@ TEST_F(Utf8Test, FourByteChar) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, FourByteCharWithoutContinuationChars) {
+TEST(Utf8Test, FourByteCharWithoutContinuationChars) {
   SETUP();
   // \xF1\xA7\xA7\xA7 = 11110001 10100111 10100111 10100111
   ResetText("\xF1\xA7\xA7-");
@@ -292,7 +292,7 @@ TEST_F(Utf8Test, FourByteCharWithoutContinuationChars) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, FiveByteCharIsError) {
+TEST(Utf8Test, FiveByteCharIsError) {
   SETUP();
   ResetText("\xF6\xA7\xA7\xA7\xA7x");
 
@@ -309,7 +309,7 @@ TEST_F(Utf8Test, FiveByteCharIsError) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, SixByteCharIsError) {
+TEST(Utf8Test, SixByteCharIsError) {
   SETUP();
   ResetText("\xF8\xA7\xA7\xA7\xA7\xA7x");
 
@@ -327,7 +327,7 @@ TEST_F(Utf8Test, SixByteCharIsError) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, SevenByteCharIsError) {
+TEST(Utf8Test, SevenByteCharIsError) {
   SETUP();
   ResetText("\xFC\xA7\xA7\xA7\xA7\xA7\xA7x");
 
@@ -346,7 +346,7 @@ TEST_F(Utf8Test, SevenByteCharIsError) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, xFFIsError) {
+TEST(Utf8Test, xFFIsError) {
   SETUP();
   ResetText("\xFFx");
 
@@ -358,7 +358,7 @@ TEST_F(Utf8Test, xFFIsError) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, InvalidControlCharIsError) {
+TEST(Utf8Test, InvalidControlCharIsError) {
   SETUP();
   ResetText("\x1Bx");
 
@@ -370,7 +370,7 @@ TEST_F(Utf8Test, InvalidControlCharIsError) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, TruncatedInput) {
+TEST(Utf8Test, TruncatedInput) {
   SETUP();
   ResetText("\xF1\xA7");
 
@@ -390,7 +390,7 @@ TEST_F(Utf8Test, TruncatedInput) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, Html5SpecExample) {
+TEST(Utf8Test, Html5SpecExample) {
   SETUP();
   // This example has since been removed from the spec, and the spec has been
   // changed to reference the Unicode Standard 6.2, 5.22 "Best practices for
@@ -425,7 +425,7 @@ TEST_F(Utf8Test, Html5SpecExample) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MultipleEOFReads) {
+TEST(Utf8Test, MultipleEOFReads) {
   SETUP();
   ResetText("a");
   Advance(2);
@@ -436,7 +436,7 @@ TEST_F(Utf8Test, MultipleEOFReads) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, AsciiOnly) {
+TEST(Utf8Test, AsciiOnly) {
   SETUP();
   ResetText("hello");
   Advance(4);
@@ -455,7 +455,7 @@ TEST_F(Utf8Test, AsciiOnly) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, NewlinePosition) {
+TEST(Utf8Test, NewlinePosition) {
   SETUP();
   ResetText("a\nnewline");
   Advance(1);
@@ -476,7 +476,7 @@ TEST_F(Utf8Test, NewlinePosition) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, TabPositionFreshTabstop) {
+TEST(Utf8Test, TabPositionFreshTabstop) {
   SETUP();
   ResetText("a\n\ttab");
   Advance(sizeof("a\n\t") - 1);
@@ -489,7 +489,7 @@ TEST_F(Utf8Test, TabPositionFreshTabstop) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, TabPositionMidTabstop) {
+TEST(Utf8Test, TabPositionMidTabstop) {
   SETUP();
   ResetText("a tab\tinline");
   Advance(sizeof("a tab\t") - 1);
@@ -502,7 +502,7 @@ TEST_F(Utf8Test, TabPositionMidTabstop) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, ConfigurableTabstop) {
+TEST(Utf8Test, ConfigurableTabstop) {
   SETUP();
   options_.tab_stop = 4;
   ResetText("a\n\ttab");
@@ -516,7 +516,7 @@ TEST_F(Utf8Test, ConfigurableTabstop) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, CRLF) {
+TEST(Utf8Test, CRLF) {
   SETUP();
   ResetText("Windows\r\nlinefeeds");
   Advance(sizeof("Windows") - 1);
@@ -537,7 +537,7 @@ TEST_F(Utf8Test, CRLF) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, CarriageReturn) {
+TEST(Utf8Test, CarriageReturn) {
   SETUP();
   ResetText("Mac\rlinefeeds");
   Advance(sizeof("Mac") - 1);
@@ -565,7 +565,7 @@ TEST_F(Utf8Test, CarriageReturn) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, Matches) {
+TEST(Utf8Test, Matches) {
   SETUP();
   ResetText("\xC2\xA5goobar");
   Advance(1);
@@ -574,7 +574,7 @@ TEST_F(Utf8Test, Matches) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MatchesOverflow) {
+TEST(Utf8Test, MatchesOverflow) {
   SETUP();
   ResetText("goo");
   EXPECT_FALSE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, true));
@@ -582,7 +582,7 @@ TEST_F(Utf8Test, MatchesOverflow) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MatchesEof) {
+TEST(Utf8Test, MatchesEof) {
   SETUP();
   ResetText("goo");
   EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goo", 3, true));
@@ -590,7 +590,7 @@ TEST_F(Utf8Test, MatchesEof) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MatchesCaseSensitivity) {
+TEST(Utf8Test, MatchesCaseSensitivity) {
   SETUP();
   ResetText("gooBAR");
   EXPECT_FALSE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, true));
@@ -598,7 +598,7 @@ TEST_F(Utf8Test, MatchesCaseSensitivity) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MatchesCaseInsensitive) {
+TEST(Utf8Test, MatchesCaseInsensitive) {
   SETUP();
   ResetText("gooBAR");
   EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, false));
@@ -606,7 +606,7 @@ TEST_F(Utf8Test, MatchesCaseInsensitive) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MatchFollowedByNullByte) {
+TEST(Utf8Test, MatchFollowedByNullByte) {
   SETUP();
   // Can't use ResetText, as the implicit strlen will choke on the null.
   const char *text = "CDATA\0f";
@@ -623,7 +623,7 @@ TEST_F(Utf8Test, MatchFollowedByNullByte) {
   TEARDOWN();
 }
 
-TEST_F(Utf8Test, MarkReset) {
+TEST(Utf8Test, MarkReset) {
   SETUP();
   ResetText("this is a test");
   Advance(5);

@@ -176,7 +176,7 @@ static void SanityCheckPointers (
   }
 }
 
-TEST_F(GumboParserTest, NullDocument) {
+TEST(GumboParserTest, NullDocument) {
   SETUP();
   Parse("");
   ASSERT_TRUE(root_);
@@ -188,7 +188,7 @@ TEST_F(GumboParserTest, NullDocument) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, ParseTwice) {
+TEST(GumboParserTest, ParseTwice) {
   SETUP();
   Parse("");
   ASSERT_TRUE(root_);
@@ -204,7 +204,7 @@ TEST_F(GumboParserTest, ParseTwice) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, OneChar) {
+TEST(GumboParserTest, OneChar) {
   SETUP();
   const GumboStringPiece input = STRING_PIECE("T");
   ParseStringPiece(input);
@@ -248,7 +248,7 @@ TEST_F(GumboParserTest, OneChar) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, TextOnly) {
+TEST(GumboParserTest, TextOnly) {
   SETUP();
   Parse("Test");
   EXPECT_EQ(1, output_->errors.length);  // No doctype.
@@ -275,7 +275,7 @@ TEST_F(GumboParserTest, TextOnly) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, SelfClosingTagError) {
+TEST(GumboParserTest, SelfClosingTagError) {
   SETUP();
   Parse("<div/>");
   // TODO(jdtang): I think this is double-counting some error cases, I think we
@@ -284,7 +284,7 @@ TEST_F(GumboParserTest, SelfClosingTagError) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, UnexpectedEndBreak) {
+TEST(GumboParserTest, UnexpectedEndBreak) {
   SETUP();
   Parse("</br><div></div>");
 
@@ -304,7 +304,7 @@ TEST_F(GumboParserTest, UnexpectedEndBreak) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, CaseSensitiveAttributes) {
+TEST(GumboParserTest, CaseSensitiveAttributes) {
   SETUP();
   Parse("<div class=CamelCase>");
   GumboNode* body;
@@ -322,7 +322,7 @@ TEST_F(GumboParserTest, CaseSensitiveAttributes) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, ExplicitHtmlStructure) {
+TEST(GumboParserTest, ExplicitHtmlStructure) {
   SETUP();
   Parse(
       "<!doctype html>\n<html>"
@@ -394,7 +394,7 @@ TEST_F(GumboParserTest, ExplicitHtmlStructure) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, Whitespace) {
+TEST(GumboParserTest, Whitespace) {
   SETUP();
   Parse("<ul>\n  <li>Text\n</ul>");
 
@@ -422,7 +422,7 @@ TEST_F(GumboParserTest, Whitespace) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, DuplicateAttributes) {
+TEST(GumboParserTest, DuplicateAttributes) {
   SETUP();
   const GumboStringPiece text = STRING_PIECE (
     "<input checked=\"false\" checked=true id=foo id='bar'>"
@@ -461,7 +461,7 @@ TEST_F(GumboParserTest, DuplicateAttributes) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, LinkTagsInHead) {
+TEST(GumboParserTest, LinkTagsInHead) {
   SETUP();
   Parse(
       "<html>\n"
@@ -517,7 +517,7 @@ TEST_F(GumboParserTest, LinkTagsInHead) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, WhitespaceBeforeHtml) {
+TEST(GumboParserTest, WhitespaceBeforeHtml) {
   SETUP();
   Parse("<!doctype html>\n<html>Test</html>");
   ASSERT_EQ(1, GetChildCount(root_));
@@ -533,7 +533,7 @@ TEST_F(GumboParserTest, WhitespaceBeforeHtml) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, TextAfterHtml) {
+TEST(GumboParserTest, TextAfterHtml) {
   SETUP();
   Parse("<html>Test</html> after doc");
   GumboNode* body;
@@ -549,7 +549,7 @@ TEST_F(GumboParserTest, TextAfterHtml) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, WhitespaceInHead) {
+TEST(GumboParserTest, WhitespaceInHead) {
   SETUP();
   Parse("<html>  Test</html>");
 
@@ -573,7 +573,7 @@ TEST_F(GumboParserTest, WhitespaceInHead) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, Doctype) {
+TEST(GumboParserTest, Doctype) {
   SETUP();
   Parse("<!doctype html>Test");
   GumboDocument* doc = &root_->v.document;
@@ -586,7 +586,7 @@ TEST_F(GumboParserTest, Doctype) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, InvalidDoctype) {
+TEST(GumboParserTest, InvalidDoctype) {
   SETUP();
   Parse("Test<!doctype root_element SYSTEM \"DTD_location\">");
 
@@ -611,7 +611,7 @@ TEST_F(GumboParserTest, InvalidDoctype) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, SingleComment) {
+TEST(GumboParserTest, SingleComment) {
   SETUP();
   Parse("<!-- comment -->");
   GumboNode* comment = GetChild(root_, 0);
@@ -620,7 +620,7 @@ TEST_F(GumboParserTest, SingleComment) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, CommentInText) {
+TEST(GumboParserTest, CommentInText) {
   SETUP();
   Parse("Start <!-- comment --> end");
   GumboNode* body;
@@ -643,7 +643,7 @@ TEST_F(GumboParserTest, CommentInText) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, CommentBeforeNode) {
+TEST(GumboParserTest, CommentBeforeNode) {
   SETUP();
   Parse("<!--This is a comment-->\n<h1>hello world!</h1>");
   GumboNode* comment = GetChild(root_, 0);
@@ -666,7 +666,7 @@ TEST_F(GumboParserTest, CommentBeforeNode) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, CommentInVerbatimMode) {
+TEST(GumboParserTest, CommentInVerbatimMode) {
   SETUP();
   Parse("<body> <div id='onegoogle'>Text</div>  </body><!-- comment \n\n-->");
 
@@ -691,7 +691,7 @@ TEST_F(GumboParserTest, CommentInVerbatimMode) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, UnknownTag) {
+TEST(GumboParserTest, UnknownTag) {
   SETUP();
   Parse("<foo>1<p>2</FOO>");
   GumboNode* body;
@@ -711,7 +711,7 @@ TEST_F(GumboParserTest, UnknownTag) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, UnknownTag2) {
+TEST(GumboParserTest, UnknownTag2) {
   SETUP();
   Parse("<div><sarcasm><div></div></sarcasm></div>");
   GumboNode* body;
@@ -728,7 +728,7 @@ TEST_F(GumboParserTest, UnknownTag2) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, InvalidEndTag) {
+TEST(GumboParserTest, InvalidEndTag) {
   SETUP();
   Parse("<a><img src=foo.jpg></img></a>");
   GumboNode* body;
@@ -747,7 +747,7 @@ TEST_F(GumboParserTest, InvalidEndTag) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, Tables) {
+TEST(GumboParserTest, Tables) {
   SETUP();
   Parse(
       "<html><table>\n"
@@ -832,7 +832,7 @@ TEST_F(GumboParserTest, Tables) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, StartParagraphInTable) {
+TEST(GumboParserTest, StartParagraphInTable) {
   SETUP();
   Parse("<table><P></tr></td>foo</table>");
 
@@ -860,7 +860,7 @@ TEST_F(GumboParserTest, StartParagraphInTable) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, EndParagraphInTable) {
+TEST(GumboParserTest, EndParagraphInTable) {
   SETUP();
   Parse("<table></p></table>");
 
@@ -884,7 +884,7 @@ TEST_F(GumboParserTest, EndParagraphInTable) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, UnknownTagInTable) {
+TEST(GumboParserTest, UnknownTagInTable) {
   SETUP();
   Parse("<table><foo>bar</table>");
 
@@ -913,7 +913,7 @@ TEST_F(GumboParserTest, UnknownTagInTable) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, UnclosedTableTags) {
+TEST(GumboParserTest, UnclosedTableTags) {
   SETUP();
   Parse(
       "<html><table>\n"
@@ -980,7 +980,7 @@ TEST_F(GumboParserTest, UnclosedTableTags) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, MisnestedTable) {
+TEST(GumboParserTest, MisnestedTable) {
   SETUP();
   Parse("<table><tr><div><td></div></table>");
 
@@ -1015,7 +1015,7 @@ TEST_F(GumboParserTest, MisnestedTable) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, MisnestedTable2) {
+TEST(GumboParserTest, MisnestedTable2) {
   SETUP();
   Parse("<table><td>Cell1<table><th>Cell2<tr>Cell3</table>");
 
@@ -1083,7 +1083,7 @@ TEST_F(GumboParserTest, MisnestedTable2) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, Select) {
+TEST(GumboParserTest, Select) {
   SETUP();
   Parse("<select><option>One<option>Two</select><div></div>");
 
@@ -1113,7 +1113,7 @@ TEST_F(GumboParserTest, Select) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, ComplicatedSelect) {
+TEST(GumboParserTest, ComplicatedSelect) {
   SETUP();
   Parse(
       "<select><div class=foo></div><optgroup><option>Option"
@@ -1149,7 +1149,7 @@ TEST_F(GumboParserTest, ComplicatedSelect) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, DoubleSelect) {
+TEST(GumboParserTest, DoubleSelect) {
   SETUP();
   Parse("<select><select><div></div>");
 
@@ -1169,7 +1169,7 @@ TEST_F(GumboParserTest, DoubleSelect) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, InputInSelect) {
+TEST(GumboParserTest, InputInSelect) {
   SETUP();
   Parse("<select><input /><div></div>");
 
@@ -1194,7 +1194,7 @@ TEST_F(GumboParserTest, InputInSelect) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, SelectInTable) {
+TEST(GumboParserTest, SelectInTable) {
   SETUP();
   Parse("<table><td><select><option value=1></table>");
 
@@ -1234,7 +1234,7 @@ TEST_F(GumboParserTest, SelectInTable) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, ImplicitColgroup) {
+TEST(GumboParserTest, ImplicitColgroup) {
   SETUP();
   Parse("<table><col /><col /></table>");
 
@@ -1264,7 +1264,7 @@ TEST_F(GumboParserTest, ImplicitColgroup) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, Form) {
+TEST(GumboParserTest, Form) {
   SETUP();
   Parse("<form><input type=hidden /></form>After form");
 
@@ -1289,7 +1289,7 @@ TEST_F(GumboParserTest, Form) {
 }
 
 // See: https://github.com/google/gumbo-parser/issues/350
-TEST_F(GumboParserTest, FormEndPos) {
+TEST(GumboParserTest, FormEndPos) {
   SETUP();
   Parse(" <form><input type=hidden /></form>");
 
@@ -1307,7 +1307,7 @@ TEST_F(GumboParserTest, FormEndPos) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, NestedForm) {
+TEST(GumboParserTest, NestedForm) {
   SETUP();
   Parse("<form><label>Label</label><form><input id=input2></form>After form");
 
@@ -1336,7 +1336,7 @@ TEST_F(GumboParserTest, NestedForm) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, MisnestedFormInTable) {
+TEST(GumboParserTest, MisnestedFormInTable) {
   SETUP();
   // Parse of this is somewhat weird. The first <form> is opened outside the
   // table, so when </form> checks to see if there's a form in scope, it stops
@@ -1406,7 +1406,7 @@ TEST_F(GumboParserTest, MisnestedFormInTable) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, NestedRawtextTags) {
+TEST(GumboParserTest, NestedRawtextTags) {
   SETUP();
   Parse(
       "<noscript><noscript jstag=false>"
@@ -1444,7 +1444,7 @@ TEST_F(GumboParserTest, NestedRawtextTags) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, RawtextInBody) {
+TEST(GumboParserTest, RawtextInBody) {
   SETUP();
   Parse("<body><noembed jsif=false></noembed>");
 
@@ -1459,7 +1459,7 @@ TEST_F(GumboParserTest, RawtextInBody) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, MetaBeforeHead) {
+TEST(GumboParserTest, MetaBeforeHead) {
   SETUP();
   Parse (
     "<html><meta http-equiv='content-type' "
@@ -1473,7 +1473,7 @@ TEST_F(GumboParserTest, MetaBeforeHead) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, NoahsArkClause) {
+TEST(GumboParserTest, NoahsArkClause) {
   SETUP();
   Parse (
     "<p><font size=4><font color=red><font size=4><font size=4>"
@@ -1515,7 +1515,7 @@ TEST_F(GumboParserTest, NoahsArkClause) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, AdoptionAgency1) {
+TEST(GumboParserTest, AdoptionAgency1) {
   SETUP();
   // https://html.spec.whatwg.org/multipage/parsing.html#misnested-tags:-b-i-/b-/i
   Parse("<p>1<b>2<i>3</b>4</i>5</p>");
@@ -1590,7 +1590,7 @@ TEST_F(GumboParserTest, AdoptionAgency1) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, AdoptionAgency2) {
+TEST(GumboParserTest, AdoptionAgency2) {
   SETUP();
   // https://html.spec.whatwg.org/multipage/parsing.html#misnested-tags:-b-p-/b-/p
   Parse("<b>1<p>2</b>3</p>");
@@ -1648,13 +1648,13 @@ TEST_F(GumboParserTest, AdoptionAgency2) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, AdoptionAgency3) {
+TEST(GumboParserTest, AdoptionAgency3) {
   SETUP();
   Parse("<div><a><b><u><i><code><div></a>");
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, ImplicitlyCloseLists) {
+TEST(GumboParserTest, ImplicitlyCloseLists) {
   SETUP();
   Parse(
       "<ul>\n"
@@ -1688,7 +1688,7 @@ TEST_F(GumboParserTest, ImplicitlyCloseLists) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, CData) {
+TEST(GumboParserTest, CData) {
   SETUP();
   Parse("<svg><![CDATA[this is text]]></svg>");
 
@@ -1705,7 +1705,7 @@ TEST_F(GumboParserTest, CData) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, CDataUnsafe) {
+TEST(GumboParserTest, CDataUnsafe) {
   SETUP();
   // Can't use Parse() because of the strlen
   output_ =
@@ -1731,7 +1731,7 @@ TEST_F(GumboParserTest, CDataUnsafe) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, CDataInBody) {
+TEST(GumboParserTest, CDataInBody) {
   SETUP();
   Parse("<div><![CDATA[this is text]]></div>");
 
@@ -1748,7 +1748,7 @@ TEST_F(GumboParserTest, CDataInBody) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, FormattingTagsInHeading) {
+TEST(GumboParserTest, FormattingTagsInHeading) {
   SETUP();
   Parse("<h2>This is <b>old</h2>text");
 
@@ -1792,7 +1792,7 @@ TEST_F(GumboParserTest, FormattingTagsInHeading) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, ExtraReconstruction) {
+TEST(GumboParserTest, ExtraReconstruction) {
   SETUP();
   Parse("<span><b></span></p>");
 
@@ -1805,7 +1805,7 @@ TEST_F(GumboParserTest, ExtraReconstruction) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, LinkifiedHeading) {
+TEST(GumboParserTest, LinkifiedHeading) {
   SETUP();
   Parse("<li><h3><a href=#foo>Text</a></h3><div>Summary</div>");
 
@@ -1835,7 +1835,7 @@ TEST_F(GumboParserTest, LinkifiedHeading) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, MisnestedHeading) {
+TEST(GumboParserTest, MisnestedHeading) {
   SETUP();
   Parse(
       "<h1>"
@@ -1930,7 +1930,7 @@ TEST_F(GumboParserTest, MisnestedHeading) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, DoubleBody) {
+TEST(GumboParserTest, DoubleBody) {
   SETUP();
   Parse("<body class=first><body class=second id=merged>Text</body></body>");
 
@@ -1954,7 +1954,7 @@ TEST_F(GumboParserTest, DoubleBody) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, ThInMathMl) {
+TEST(GumboParserTest, ThInMathMl) {
   SETUP();
   Parse("<math><th><mI><table></table><tr></table><div><tr>0");
   GumboNode* body;
@@ -1997,7 +1997,7 @@ TEST_F(GumboParserTest, ThInMathMl) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, TdInMathml) {
+TEST(GumboParserTest, TdInMathml) {
   SETUP();
   Parse("<table><th><math><td></tr>");
   GumboNode* body;
@@ -2042,13 +2042,13 @@ TEST_F(GumboParserTest, TdInMathml) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, SelectInForeignContent) {
+TEST(GumboParserTest, SelectInForeignContent) {
   SETUP();
   Parse("<svg><select><foreignobject><select><select><select>");
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, TemplateInForeignContent) {
+TEST(GumboParserTest, TemplateInForeignContent) {
   SETUP();
   Parse("<template><svg><template>");
 
@@ -2081,7 +2081,7 @@ TEST_F(GumboParserTest, TemplateInForeignContent) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, TemplateNull) {
+TEST(GumboParserTest, TemplateNull) {
   SETUP();
   output_ = gumbo_parse_with_options(
       &options_, "<template>\0", sizeof("<template>\0") - 1);
@@ -2104,7 +2104,7 @@ TEST_F(GumboParserTest, TemplateNull) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, FragmentWithNamespace) {
+TEST(GumboParserTest, FragmentWithNamespace) {
   SETUP();
   ParseFragment("<div></div>", GUMBO_TAG_TITLE, GUMBO_NAMESPACE_SVG);
 
@@ -2121,7 +2121,7 @@ TEST_F(GumboParserTest, FragmentWithNamespace) {
   TEARDOWN();
 }
 
-TEST_F(GumboParserTest, FragmentWithTwoNodes) {
+TEST(GumboParserTest, FragmentWithTwoNodes) {
   SETUP();
   ParseFragment("<h1>Hi</h1><br>", GUMBO_TAG_BODY, GUMBO_NAMESPACE_HTML);
 

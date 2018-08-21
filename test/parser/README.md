@@ -12,7 +12,7 @@ without dependencies, and I consider it to be sufficient. Most of the
 test cases are also exercised by the much more complete Lua test suite,
 albeit indirectly.
 
-One detail to be mindful of is that the `TEST_F()` macro automatically
+One detail to be mindful of is that the `TEST()` macro automatically
 "registers" the tests, to avoid having to call the wrapper functions one
 by one from `main()`. It does this by declaring them with the GCC/Clang
 [`constructor`] attribute. Compilers that don't support this attribute

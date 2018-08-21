@@ -17,7 +17,6 @@
 #endif
 
 #define TEST(group, name) static void CONSTRUCTOR group##name (void)
-#define TEST_F(group, name) TEST(group, name)
 
 #define EXPECT_EQ(a, b) do { \
     if ((a) != (b)) { \

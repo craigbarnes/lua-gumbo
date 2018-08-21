@@ -5,43 +5,43 @@
 #include "string_piece.h"
 #include "test.h"
 
-TEST_F(GumboStringPieceTest, Equal) {
+TEST(GumboStringPieceTest, Equal) {
   const GumboStringPiece str1 = STRING_PIECE("foo");
   const GumboStringPiece str2 = STRING_PIECE("foo");
   EXPECT_TRUE(string_piece_equal(&str1, &str2));
 }
 
-TEST_F(GumboStringPieceTest, NotEqual_DifferingCase) {
+TEST(GumboStringPieceTest, NotEqual_DifferingCase) {
   const GumboStringPiece str1 = STRING_PIECE("foo");
   const GumboStringPiece str2 = STRING_PIECE("Foo");
   EXPECT_FALSE(string_piece_equal(&str1, &str2));
 }
 
-TEST_F(GumboStringPieceTest, NotEqual_Str1Shorter) {
+TEST(GumboStringPieceTest, NotEqual_Str1Shorter) {
   const GumboStringPiece str1 = STRING_PIECE("foo");
   const GumboStringPiece str2 = STRING_PIECE("foobar");
   EXPECT_FALSE(string_piece_equal(&str1, &str2));
 }
 
-TEST_F(GumboStringPieceTest, NotEqual_Str2Shorter) {
+TEST(GumboStringPieceTest, NotEqual_Str2Shorter) {
   const GumboStringPiece str1 = STRING_PIECE("foobar");
   const GumboStringPiece str2 = STRING_PIECE("foo");
   EXPECT_FALSE(string_piece_equal(&str1, &str2));
 }
 
-TEST_F(GumboStringPieceTest, NotEqual_DifferentText) {
+TEST(GumboStringPieceTest, NotEqual_DifferentText) {
   const GumboStringPiece str1 = STRING_PIECE("bar");
   const GumboStringPiece str2 = STRING_PIECE("foo");
   EXPECT_FALSE(string_piece_equal(&str1, &str2));
 }
 
-TEST_F(GumboStringPieceTest, CaseEqual) {
+TEST(GumboStringPieceTest, CaseEqual) {
   const GumboStringPiece str1 = STRING_PIECE("foo");
   const GumboStringPiece str2 = STRING_PIECE("fOO");
   EXPECT_TRUE(string_piece_equal_icase(&str1, &str2));
 }
 
-TEST_F(GumboStringPieceTest, CaseNotEqual_Str2Shorter) {
+TEST(GumboStringPieceTest, CaseNotEqual_Str2Shorter) {
   const GumboStringPiece str1 = STRING_PIECE("foobar");
   const GumboStringPiece str2 = STRING_PIECE("foo");
   EXPECT_FALSE(string_piece_equal_icase(&str1, &str2));

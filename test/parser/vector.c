@@ -25,14 +25,14 @@
 #define TEARDOWN() \
   gumbo_vector_destroy(&vector_)
 
-TEST_F(GumboVectorTest, Init) {
+TEST(GumboVectorTest, Init) {
   SETUP();
   EXPECT_EQ(0, vector_.length);
   EXPECT_EQ(2, vector_.capacity);
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, InitZeroCapacity) {
+TEST(GumboVectorTest, InitZeroCapacity) {
   SETUP();
   gumbo_vector_destroy(&vector_);
   gumbo_vector_init(0, &vector_);
@@ -43,7 +43,7 @@ TEST_F(GumboVectorTest, InitZeroCapacity) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, Add) {
+TEST(GumboVectorTest, Add) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   EXPECT_EQ(1, vector_.length);
@@ -53,7 +53,7 @@ TEST_F(GumboVectorTest, Add) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, AddMultiple) {
+TEST(GumboVectorTest, AddMultiple) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
@@ -63,7 +63,7 @@ TEST_F(GumboVectorTest, AddMultiple) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, Realloc) {
+TEST(GumboVectorTest, Realloc) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
@@ -74,7 +74,7 @@ TEST_F(GumboVectorTest, Realloc) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, Pop) {
+TEST(GumboVectorTest, Pop) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   int result = *(int*)(gumbo_vector_pop(&vector_));
@@ -83,13 +83,13 @@ TEST_F(GumboVectorTest, Pop) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, PopEmpty) {
+TEST(GumboVectorTest, PopEmpty) {
   SETUP();
   EXPECT_EQ(NULL, gumbo_vector_pop(&vector_));
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, InsertAtFirst) {
+TEST(GumboVectorTest, InsertAtFirst) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
@@ -100,7 +100,7 @@ TEST_F(GumboVectorTest, InsertAtFirst) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, InsertAtLast) {
+TEST(GumboVectorTest, InsertAtLast) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
@@ -111,7 +111,7 @@ TEST_F(GumboVectorTest, InsertAtLast) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, Remove) {
+TEST(GumboVectorTest, Remove) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);
@@ -123,7 +123,7 @@ TEST_F(GumboVectorTest, Remove) {
   TEARDOWN();
 }
 
-TEST_F(GumboVectorTest, RemoveAt) {
+TEST(GumboVectorTest, RemoveAt) {
   SETUP();
   gumbo_vector_add(&one_, &vector_);
   gumbo_vector_add(&two_, &vector_);

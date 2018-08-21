@@ -5,7 +5,7 @@
 #include "test.h"
 #include "vector.h"
 
-TEST_F(GumboAttributeTest, GetAttribute) {
+TEST(GumboAttributeTest, GetAttribute) {
   GumboVector vector_;
   GumboAttribute attr1;
   GumboAttribute attr2;

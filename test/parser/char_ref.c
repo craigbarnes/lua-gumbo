@@ -35,7 +35,7 @@
   gumbo_consume_char_ref(&parser_, &iter_, extra_char, in_attr, &output_) \
 )
 
-TEST_F(CharRefTest, Whitespace) {
+TEST(CharRefTest, Whitespace) {
   SETUP();
   EXPECT_TRUE(consumeCharRef(" &nbsp;"));
   EXPECT_EQ(kGumboNoChar, output_.first);
@@ -43,7 +43,7 @@ TEST_F(CharRefTest, Whitespace) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NumericHex) {
+TEST(CharRefTest, NumericHex) {
   SETUP();
   EXPECT_TRUE(consumeCharRef("&#x12ab;"));
   EXPECT_EQ(0x12ab, output_.first);
@@ -51,7 +51,7 @@ TEST_F(CharRefTest, NumericHex) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NumericDecimal) {
+TEST(CharRefTest, NumericDecimal) {
   SETUP();
   EXPECT_TRUE(consumeCharRef("&#1234;"));
   EXPECT_EQ(1234, output_.first);
@@ -59,7 +59,7 @@ TEST_F(CharRefTest, NumericDecimal) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NumericInvalidDigit) {
+TEST(CharRefTest, NumericInvalidDigit) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&#google"));
   EXPECT_EQ(kGumboNoChar, output_.first);
@@ -68,7 +68,7 @@ TEST_F(CharRefTest, NumericInvalidDigit) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NumericNoSemicolon) {
+TEST(CharRefTest, NumericNoSemicolon) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&#1234google"));
   EXPECT_EQ(1234, output_.first);
@@ -77,7 +77,7 @@ TEST_F(CharRefTest, NumericNoSemicolon) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NumericReplacement) {
+TEST(CharRefTest, NumericReplacement) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&#X82"));
   // Low quotation mark character.
@@ -86,7 +86,7 @@ TEST_F(CharRefTest, NumericReplacement) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NumericInvalid) {
+TEST(CharRefTest, NumericInvalid) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&#xDA00"));
   EXPECT_EQ(0xFFFD, output_.first);
@@ -94,7 +94,7 @@ TEST_F(CharRefTest, NumericInvalid) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NumericUtfInvalid) {
+TEST(CharRefTest, NumericUtfInvalid) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&#x007"));
   EXPECT_EQ(0x7, output_.first);
@@ -102,7 +102,7 @@ TEST_F(CharRefTest, NumericUtfInvalid) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NamedReplacement) {
+TEST(CharRefTest, NamedReplacement) {
   SETUP();
   EXPECT_TRUE(consumeCharRef("&lt;"));
   EXPECT_EQ('<', output_.first);
@@ -110,7 +110,7 @@ TEST_F(CharRefTest, NamedReplacement) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NamedReplacementNoSemicolon) {
+TEST(CharRefTest, NamedReplacementNoSemicolon) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&gt"));
   EXPECT_EQ('>', output_.first);
@@ -118,7 +118,7 @@ TEST_F(CharRefTest, NamedReplacementNoSemicolon) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NamedReplacementWithInvalidUtf8) {
+TEST(CharRefTest, NamedReplacementWithInvalidUtf8) {
   SETUP();
   EXPECT_TRUE(consumeCharRef("&\xc3\xa5"));
   EXPECT_EQ(kGumboNoChar, output_.first);
@@ -126,7 +126,7 @@ TEST_F(CharRefTest, NamedReplacementWithInvalidUtf8) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, NamedReplacementInvalid) {
+TEST(CharRefTest, NamedReplacementInvalid) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&google;"));
   EXPECT_EQ(kGumboNoChar, output_.first);
@@ -136,7 +136,7 @@ TEST_F(CharRefTest, NamedReplacementInvalid) {
 }
 
 /*
-TEST_F(CharRefTest, NamedReplacementInvalidNoSemicolon) {
+TEST(CharRefTest, NamedReplacementInvalidNoSemicolon) {
   SETUP();
   EXPECT_FALSE(consumeCharRef("&google"));
   EXPECT_EQ(kGumboNoChar, output_.first);
@@ -146,7 +146,7 @@ TEST_F(CharRefTest, NamedReplacementInvalidNoSemicolon) {
 }
 */
 
-TEST_F(CharRefTest, AdditionalAllowedChar) {
+TEST(CharRefTest, AdditionalAllowedChar) {
   SETUP();
   EXPECT_TRUE(consumeCharRefEx("&\"", '"', false));
   EXPECT_EQ(kGumboNoChar, output_.first);
@@ -155,7 +155,7 @@ TEST_F(CharRefTest, AdditionalAllowedChar) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, InAttribute) {
+TEST(CharRefTest, InAttribute) {
   SETUP();
   EXPECT_TRUE(consumeCharRefEx("&noted", ' ', true));
   EXPECT_EQ(kGumboNoChar, output_.first);
@@ -164,7 +164,7 @@ TEST_F(CharRefTest, InAttribute) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, MultiChars) {
+TEST(CharRefTest, MultiChars) {
   SETUP();
   EXPECT_TRUE(consumeCharRef("&notindot;"));
   EXPECT_EQ(0x22F5, output_.first);
@@ -172,7 +172,7 @@ TEST_F(CharRefTest, MultiChars) {
   TEARDOWN();
 }
 
-TEST_F(CharRefTest, CharAfter) {
+TEST(CharRefTest, CharAfter) {
   SETUP();
   EXPECT_TRUE(consumeCharRef("&lt;x"));
   EXPECT_EQ('<', output_.first);
