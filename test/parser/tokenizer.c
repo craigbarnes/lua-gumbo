@@ -28,12 +28,13 @@ extern const char* kGumboTagNames[];
 #define SETUP() \
   BASE_SETUP(); \
   GumboToken token_; \
-  gumbo_tokenizer_state_init(&parser_, "", 0);
+  gumbo_tokenizer_state_init(&parser_, "", 0)
 
-#define TEARDOWN() \
-  gumbo_tokenizer_state_destroy(&parser_); \
+#define TEARDOWN() do { \
   gumbo_token_destroy(&token_); \
-  BASE_TEARDOWN();
+  gumbo_tokenizer_state_destroy(&parser_); \
+  BASE_TEARDOWN(); \
+} while (0)
 
 #define SetInput(input) do { \
   gumbo_tokenizer_state_destroy(&parser_); \
@@ -165,7 +166,7 @@ TEST_F(GumboTokenizerTest, LeadingWhitespace) {
   EXPECT_EQ(3, token_.position.column);
   ASSERT_EQ(1, start_tag->attributes.length);
 
-  GumboAttribute* clas = (GumboAttribute*)(start_tag->attributes.data[0]);
+  GumboAttribute* clas = start_tag->attributes.data[0];
   EXPECT_STREQ("class", clas->name);
   EXPECT_TRUE(string_piece_equal_cstr(&clas->original_name, "class"));
   EXPECT_EQ(2, clas->name_start.line);
@@ -603,13 +604,13 @@ TEST_F(GumboTokenizerTest, OpenTagWithAttributes) {
   EXPECT_FALSE(start_tag->is_self_closing);
   ASSERT_EQ(2, start_tag->attributes.length);
 
-  GumboAttribute* href = (GumboAttribute*)(start_tag->attributes.data[0]);
+  GumboAttribute* href = start_tag->attributes.data[0];
   EXPECT_STREQ("href", href->name);
   EXPECT_TRUE(string_piece_equal_cstr(&href->original_name, "href"));
   EXPECT_STREQ("/search?q=foo&hl=en", href->value);
   EXPECT_TRUE(string_piece_equal_cstr(&href->original_value, "'/search?q=foo&amp;hl=en'"));
 
-  GumboAttribute* id = (GumboAttribute*)(start_tag->attributes.data[1]);
+  GumboAttribute* id = start_tag->attributes.data[1];
   EXPECT_STREQ("id", id->name);
   EXPECT_TRUE(string_piece_equal_cstr(&id->original_name, "id"));
   EXPECT_STREQ("link", id->value);
@@ -660,7 +661,7 @@ TEST_F(GumboTokenizerTest, MultilineAttribute) {
   EXPECT_TRUE(start_tag->is_self_closing);
   ASSERT_EQ(1, start_tag->attributes.length);
 
-  GumboAttribute* long_attr = (GumboAttribute*)(start_tag->attributes.data[0]);
+  GumboAttribute* long_attr = start_tag->attributes.data[0];
   EXPECT_STREQ("long_attr", long_attr->name);
   EXPECT_TRUE(string_piece_equal_cstr(&long_attr->original_name, "long_attr"));
   EXPECT_STREQ (
@@ -683,7 +684,7 @@ TEST_F(GumboTokenizerTest, DoubleAmpersand) {
   EXPECT_FALSE(start_tag->is_self_closing);
   ASSERT_EQ(1, start_tag->attributes.length);
 
-  GumboAttribute* jsif = (GumboAttribute*)(start_tag->attributes.data[0]);
+  GumboAttribute* jsif = start_tag->attributes.data[0];
   EXPECT_STREQ("jsif", jsif->name);
   EXPECT_TRUE(string_piece_equal_cstr(&jsif->original_name, "jsif"));
   EXPECT_STREQ("foo && bar", jsif->value);
@@ -703,7 +704,7 @@ TEST_F(GumboTokenizerTest, MatchedTagPair) {
   EXPECT_FALSE(start_tag->is_self_closing);
   ASSERT_EQ(2, start_tag->attributes.length);
 
-  GumboAttribute* id = (GumboAttribute*)(start_tag->attributes.data[0]);
+  GumboAttribute* id = start_tag->attributes.data[0];
   EXPECT_STREQ("id", id->name);
   EXPECT_TRUE(string_piece_equal_cstr(&id->original_name, "id"));
   EXPECT_EQ(1, id->name_start.line);
@@ -715,7 +716,7 @@ TEST_F(GumboTokenizerTest, MatchedTagPair) {
   EXPECT_EQ(9, id->value_start.column);
   EXPECT_EQ(19, id->value_end.column);
 
-  GumboAttribute* data_attr = (GumboAttribute*)(start_tag->attributes.data[1]);
+  GumboAttribute* data_attr = start_tag->attributes.data[1];
   EXPECT_STREQ("data-test", data_attr->name);
   EXPECT_TRUE(string_piece_equal_cstr(&data_attr->original_name, "data-test"));
   EXPECT_EQ(20, data_attr->name_start.column);

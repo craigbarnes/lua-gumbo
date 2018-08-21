@@ -4,7 +4,6 @@
 #ifndef TEST_TEST_H
 #define TEST_TEST_H
 
-#include <inttypes.h>
 #include <stddef.h>
 #include <string.h>
 #include "error.h"
@@ -22,34 +21,19 @@
 
 #define EXPECT_EQ(a, b) do { \
     if ((a) != (b)) { \
-        fail ( \
-            "%s:%d: Values not equal: %" PRIdMAX ", %" PRIdMAX "\n", \
-            __FILE__, \
-            __LINE__, \
-            (intmax_t)(a), \
-            (intmax_t)(b) \
-        ); \
+        fail("%s:%d: Values not equal\n", __FILE__, __LINE__); \
     } else { \
         passed += 1; \
     } \
 } while (0)
 
-#define EXPECT_FALSE(x) EXPECT_EQ(x, 0)
-#define EXPECT_TRUE(x) EXPECT_EQ(!!(x), 1)
-
-#define EXPECT_LE(a, b) EXPECT_EQ(1, (a) <= (b))
-#define EXPECT_GE(a, b) EXPECT_EQ(1, (a) >= (b))
-#define EXPECT_LT(a, b) EXPECT_EQ(1, (a) < (b))
-
-#define ASSERT_TRUE(x) do { \
-  const bool res_ = !!(x); \
-  EXPECT_TRUE(res_); \
-  if (!res_) {return;}; \
-} while (0)
-
 #define ASSERT_EQ(a, b) do { \
-  EXPECT_EQ(a, b); \
-  if ((a) != (b)) {return;}; \
+    if ((a) != (b)) { \
+        fail("%s:%d: Values not equal\n", __FILE__, __LINE__); \
+        return; \
+    } else { \
+        passed += 1; \
+    } \
 } while (0)
 
 #define EXPECT_STREQ(a, b) do { \
@@ -66,6 +50,13 @@
         passed += 1; \
     } \
 } while (0)
+
+#define EXPECT_FALSE(x) EXPECT_EQ(x, 0)
+#define EXPECT_TRUE(x) EXPECT_EQ(!!(x), 1)
+#define EXPECT_LE(a, b) EXPECT_EQ(1, (a) <= (b))
+#define EXPECT_GE(a, b) EXPECT_EQ(1, (a) >= (b))
+#define EXPECT_LT(a, b) EXPECT_EQ(1, (a) < (b))
+#define ASSERT_TRUE(x) ASSERT_EQ(!!(x), 1)
 
 #define BASE_SETUP() \
   GumboOptions options_ = kGumboDefaultOptions; \
