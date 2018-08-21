@@ -9,7 +9,7 @@ install:
 script:
     - export VERBOSE=1
     - make -j"$(nproc)" build-lua52 build-lua51 V=1
-    - make check-lua52 check-lua51
+    - make check-lib check-lua52 check-lua51
     - make clean
     - mkdir build
     - cd build
