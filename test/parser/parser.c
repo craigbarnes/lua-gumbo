@@ -176,9 +176,36 @@ static void SanityCheckPointers (
   }
 }
 
+static char* string_repeat(const char* s, size_t count) {
+  size_t slen = strlen(s);
+  char* dest = gumbo_alloc((count * slen) + 1);
+  char* p = dest;
+  for (size_t i = 0; i < count; i++, p += slen) {
+    memcpy(p, s, slen);
+  }
+  *p = '\0';
+  return dest;
+}
+
+TEST(GumboParserTest, TreeDepthLimitEnforced) {
+  SETUP();
+  char* input = string_repeat("<div>", kGumboDefaultOptions.max_tree_depth);
+  Parse(input);
+  ASSERT_EQ(GUMBO_STATUS_TREE_TOO_DEEP, output_->status);
+  ASSERT_TRUE(root_);
+  ASSERT_EQ(GUMBO_NODE_DOCUMENT, root_->type);
+  EXPECT_EQ(GUMBO_INSERTION_BY_PARSER, root_->parse_flags);
+
+  GumboNode* body;
+  GetAndAssertBody(root_, &body);
+  gumbo_free(input);
+  TEARDOWN();
+}
+
 TEST(GumboParserTest, NullDocument) {
   SETUP();
   Parse("");
+  ASSERT_EQ(GUMBO_STATUS_OK, output_->status);
   ASSERT_TRUE(root_);
   ASSERT_EQ(GUMBO_NODE_DOCUMENT, root_->type);
   EXPECT_EQ(GUMBO_INSERTION_BY_PARSER, root_->parse_flags);
