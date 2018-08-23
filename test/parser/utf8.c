@@ -358,12 +358,12 @@ TEST(Utf8Test, xFFIsError) {
   TEARDOWN();
 }
 
-TEST(Utf8Test, InvalidControlCharIsError) {
+TEST(Utf8Test, InvalidControlCharIsNotReplaced) {
   SETUP();
   ResetText("\x1Bx");
 
   EXPECT_EQ(1, GetNumErrors());
-  EXPECT_EQ(0xFFFD, utf8iterator_current(&input_));
+  EXPECT_EQ(0x001B, utf8iterator_current(&input_));
 
   utf8iterator_next(&input_);
   EXPECT_EQ('x', utf8iterator_current(&input_));
