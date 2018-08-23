@@ -186,6 +186,7 @@ void gumbo_error_to_string (
 void gumbo_caret_diagnostic_to_string (
   const GumboError* error,
   const char* source_text,
+  size_t source_length,
   GumboStringBuffer* output
 );
 
@@ -193,7 +194,8 @@ void gumbo_caret_diagnostic_to_string (
 // of writing to a string.
 void gumbo_print_caret_diagnostic (
   const GumboError* error,
-  const char* source_text
+  const char* source_text,
+  size_t source_length
 );
 
 #endif // GUMBO_ERROR_H_
