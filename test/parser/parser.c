@@ -34,6 +34,7 @@
     gumbo_destroy_output(output_); \
   } \
   output_ = gumbo_parse_with_options(&options_, input, strlen(input)); \
+  ASSERT_EQ(output_->status, GUMBO_STATUS_OK); \
   root_ = output_->document; \
 } while (0)
 
@@ -42,8 +43,9 @@
     gumbo_destroy_output(output_); \
   } \
   output_ = gumbo_parse_with_options(&options_, input.data, input.length); \
+  ASSERT_EQ(output_->status, GUMBO_STATUS_OK); \
   root_ = output_->document; \
-  SanityCheckPointers(input.data, input.length, output_->root, 1000); \
+  SanityCheckPointers(input.data, input.length, output_->root); \
 } while (0)
 
 #define ParseFragment(input, context, context_ns) do { \
@@ -53,6 +55,7 @@
   options_.fragment_context = context; \
   options_.fragment_namespace = context_ns; \
   output_ = gumbo_parse_with_options(&options_, input, strlen(input)); \
+  ASSERT_EQ(output_->status, GUMBO_STATUS_OK); \
   root_ = output_->document; \
 } while (0)
 
@@ -127,21 +130,13 @@ static int GetAttributeCount(GumboNode* node) {
 static void SanityCheckPointers (
   const char* input,
   size_t input_length,
-  const GumboNode* node,
-  unsigned int depth
+  const GumboNode* node
 ) {
   ASSERT_TRUE(node != NULL);
-  // There are some truly pathological HTML documents out there - the
-  // integration tests for this include one where the DOM "tree" is actually a
-  // linked list 27,500 nodes deep - and so we need a limit on the recursion
-  // depth here to avoid blowing the stack. Alternatively, we could externalize
-  // the stack and use an iterative algorithm, but that gets us very little for
-  // the additional programming complexity.
-  if (node->type == GUMBO_NODE_DOCUMENT || depth > 400) {
+  if (node->type == GUMBO_NODE_DOCUMENT) {
     // Don't sanity-check the document as well...we start with the root.
     return;
-  }
-  if (node->type == GUMBO_NODE_ELEMENT) {
+  } else if (node->type == GUMBO_NODE_ELEMENT) {
     const GumboElement* element = &node->v.element;
     // Sanity checks on original* pointers, making sure they fall within the
     // original input.
@@ -165,7 +160,7 @@ static void SanityCheckPointers (
       ASSERT_TRUE(child != NULL);
       EXPECT_EQ(node, child->parent);
       EXPECT_EQ(i, child->index_within_parent);
-      SanityCheckPointers(input, input_length, child, depth + 1);
+      SanityCheckPointers(input, input_length, child);
     }
   } else {
     const GumboText* text = &node->v.text;
@@ -190,7 +185,11 @@ static char* string_repeat(const char* s, size_t count) {
 TEST(GumboParserTest, TreeDepthLimitEnforced) {
   SETUP();
   char* input = string_repeat("<div>", kGumboDefaultOptions.max_tree_depth);
-  Parse(input);
+
+  // Can't use Parse() here, since it asserts that status is GUMBO_STATUS_OK
+  output_ = gumbo_parse_with_options(&options_, input, strlen(input));
+  root_ = output_->document;
+
   ASSERT_EQ(GUMBO_STATUS_TREE_TOO_DEEP, output_->status);
   ASSERT_TRUE(root_);
   ASSERT_EQ(GUMBO_NODE_DOCUMENT, root_->type);
