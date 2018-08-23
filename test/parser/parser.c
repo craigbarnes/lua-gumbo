@@ -201,6 +201,28 @@ TEST(GumboParserTest, TreeDepthLimitEnforced) {
   TEARDOWN();
 }
 
+TEST(GumboParserTest, CustomTreeDepthLimit) {
+  SETUP();
+  options_.max_tree_depth = 800;
+
+  // 798 nested divs should parse as normal and not hit the depth
+  // limit set above
+  char* div798 = string_repeat("<div>", 798);
+  output_ = gumbo_parse_with_options(&options_, div798, strlen(div798));
+  ASSERT_EQ(GUMBO_STATUS_OK, output_->status);
+  gumbo_destroy_output(output_);
+  gumbo_free(div798);
+
+  // 799 nested divs exceeds the limit, because the parser-inserted
+  // <html> and <body> nodes make the tree 801 nodes deep.
+  char* div799 = string_repeat("<div>", 799);
+  output_ = gumbo_parse_with_options(&options_, div799, strlen(div799));
+  ASSERT_EQ(GUMBO_STATUS_TREE_TOO_DEEP, output_->status);
+  gumbo_free(div799);
+
+  TEARDOWN();
+}
+
 TEST(GumboParserTest, NullDocument) {
   SETUP();
   Parse("");
