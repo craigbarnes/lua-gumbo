@@ -12,8 +12,8 @@
 #include "macros.h"
 
 #define STRING_PIECE_INIT (GumboStringPiece) { \
-    .data = NULL, \
-    .length = 0 \
+  .data = NULL, \
+  .length = 0 \
 }
 
 #define STRING_PIECE(s) { \
