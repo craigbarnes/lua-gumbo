@@ -26,6 +26,7 @@ test:debian:
         - make clean-obj
         - make coverage.txt
         - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
+        - make benchmark
 
 test:alpine:
     stage: test
@@ -34,6 +35,7 @@ test:alpine:
         - make vars
         - make build-all
         - make check-all
+        - make benchmark
 
 test:void-musl:
     stage: test

@@ -18,3 +18,4 @@ script:
     - cd ..
     - cp build/parse.so gumbo/
     - lua runtests.lua
+    - make benchmark
