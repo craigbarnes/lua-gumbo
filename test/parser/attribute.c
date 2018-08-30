@@ -16,8 +16,8 @@ TEST(GumboAttributeTest, GetAttribute) {
 
   gumbo_vector_add(&attr1, &vector_);
   gumbo_vector_add(&attr2, &vector_);
-  EXPECT_EQ(&attr2, gumbo_get_attribute(&vector_, "foo"));
-  EXPECT_EQ(NULL, gumbo_get_attribute(&vector_, "bar"));
+  EXPECT_PTREQ(&attr2, gumbo_get_attribute(&vector_, "foo"));
+  EXPECT_PTREQ(NULL, gumbo_get_attribute(&vector_, "bar"));
 
   gumbo_vector_destroy(&vector_);
 }

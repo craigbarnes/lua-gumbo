@@ -85,7 +85,7 @@ TEST(GumboVectorTest, Pop) {
 
 TEST(GumboVectorTest, PopEmpty) {
   SETUP();
-  EXPECT_EQ(NULL, gumbo_vector_pop(&vector_));
+  EXPECT_PTREQ(NULL, gumbo_vector_pop(&vector_));
   TEARDOWN();
 }
 

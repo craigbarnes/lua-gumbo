@@ -5,6 +5,7 @@
 #define TEST_TEST_H
 
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 #include "error.h"
 #include "gumbo.h"
@@ -17,44 +18,15 @@
 #endif
 
 #define TEST(group, name) static void CONSTRUCTOR group##name (void)
-
-#define EXPECT_EQ(a, b) do { \
-    if ((a) != (b)) { \
-        fail("%s:%d: Values not equal\n", __FILE__, __LINE__); \
-    } else { \
-        passed += 1; \
-    } \
-} while (0)
-
-#define ASSERT_EQ(a, b) do { \
-    if ((a) != (b)) { \
-        fail("%s:%d: Values not equal\n", __FILE__, __LINE__); \
-        return; \
-    } else { \
-        passed += 1; \
-    } \
-} while (0)
-
-#define EXPECT_STREQ(a, b) do { \
-    const char *s1 = (a), *s2 = (b); \
-    if (unlikely(strcmp(s1, s2) != 0)) { \
-        fail ( \
-            "%s:%d: Strings not equal: '%s', '%s'\n", \
-            __FILE__, \
-            __LINE__, \
-            s1 ? s1 : "(null)", \
-            s2 ? s2 : "(null)" \
-        ); \
-    } else { \
-        passed += 1; \
-    } \
-} while (0)
-
+#define EXPECT_STREQ(s1, s2) expect_streq(s1, s2, __FILE__, __LINE__)
+#define EXPECT_PTREQ(p1, p2) expect_ptreq(p1, p2, __FILE__, __LINE__)
+#define EXPECT_EQ(a, b) expect_eq(a, b, __FILE__, __LINE__)
 #define EXPECT_FALSE(x) EXPECT_EQ(x, 0)
 #define EXPECT_TRUE(x) EXPECT_EQ(!!(x), 1)
 #define EXPECT_LE(a, b) EXPECT_EQ(1, (a) <= (b))
 #define EXPECT_GE(a, b) EXPECT_EQ(1, (a) >= (b))
 #define EXPECT_LT(a, b) EXPECT_EQ(1, (a) < (b))
+#define ASSERT_EQ(a, b) assert_eq(a, b, __FILE__, __LINE__)
 #define ASSERT_TRUE(x) ASSERT_EQ(!!(x), 1)
 
 #define BASE_SETUP() \
@@ -72,6 +44,9 @@
 
 extern unsigned int passed, failed;
 
-void fail(const char *format, ...) PRINTF(1);
+void expect_streq(const char *s1, const char *s2, const char *file, int line);
+void expect_ptreq(const void *p1, const void *p2, const char *file, int line);
+void expect_eq(intmax_t a, intmax_t b, const char *file, int line);
+void assert_eq(intmax_t a, intmax_t b, const char *file, int line);
 
 #endif

@@ -158,7 +158,7 @@ static void SanityCheckPointers (
       const GumboNode* child = (const GumboNode*)(children->data[i]);
       // Checks on parent/child links.
       ASSERT_TRUE(child != NULL);
-      EXPECT_EQ(node, child->parent);
+      EXPECT_PTREQ(node, child->parent);
       EXPECT_EQ(i, child->index_within_parent);
       SanityCheckPointers(input, input_length, child);
     }
@@ -291,7 +291,7 @@ TEST(GumboParserTest, OneChar) {
   EXPECT_EQ(1, text->v.text.start_pos.line);
   EXPECT_EQ(1, text->v.text.start_pos.column);
   EXPECT_EQ(0, text->v.text.start_pos.offset);
-  EXPECT_EQ(input.data, text->v.text.original_text.data);
+  EXPECT_PTREQ(input.data, text->v.text.original_text.data);
   EXPECT_EQ(1, text->v.text.original_text.length);
   TEARDOWN();
 }
@@ -402,7 +402,7 @@ TEST(GumboParserTest, ExplicitHtmlStructure) {
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, head->parse_flags);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, head->type);
   EXPECT_EQ(GUMBO_TAG_HEAD, head->v.element.tag);
-  EXPECT_EQ(html, head->parent);
+  EXPECT_PTREQ(html, head->parent);
   EXPECT_EQ(0, head->index_within_parent);
   EXPECT_EQ(1, GetChildCount(head));
 
@@ -410,7 +410,7 @@ TEST(GumboParserTest, ExplicitHtmlStructure) {
   EXPECT_EQ(GUMBO_INSERTION_NORMAL, body->parse_flags);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, body->type);
   EXPECT_EQ(GUMBO_TAG_BODY, body->v.element.tag);
-  EXPECT_EQ(html, body->parent);
+  EXPECT_PTREQ(html, body->parent);
   EXPECT_EQ(3, body->v.element.start_pos.line);
   EXPECT_EQ(1, body->v.element.start_pos.column);
   EXPECT_EQ(54, body->v.element.start_pos.offset);
@@ -425,7 +425,7 @@ TEST(GumboParserTest, ExplicitHtmlStructure) {
   GumboNode* div = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, div->type);
   EXPECT_EQ(GUMBO_TAG_DIV, div->v.element.tag);
-  EXPECT_EQ(body, div->parent);
+  EXPECT_PTREQ(body, div->parent);
   EXPECT_EQ(0, div->index_within_parent);
   ASSERT_EQ(1, GetChildCount(div));
 
@@ -681,7 +681,7 @@ TEST(GumboParserTest, CommentInText) {
 
   GumboNode* comment = GetChild(body, 1);
   ASSERT_EQ(GUMBO_NODE_COMMENT, comment->type);
-  EXPECT_EQ(body, comment->parent);
+  EXPECT_PTREQ(body, comment->parent);
   EXPECT_EQ(1, comment->index_within_parent);
   EXPECT_STREQ(" comment ", comment->v.text.text);
 
@@ -812,7 +812,7 @@ TEST(GumboParserTest, Tables) {
   GumboNode* br = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, br->type);
   EXPECT_EQ(GUMBO_TAG_BR, GetTag(br));
-  EXPECT_EQ(body, br->parent);
+  EXPECT_PTREQ(body, br->parent);
   EXPECT_EQ(0, br->index_within_parent);
   ASSERT_EQ(0, GetChildCount(br));
 
@@ -824,7 +824,7 @@ TEST(GumboParserTest, Tables) {
   GumboNode* table = GetChild(body, 2);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, table->type);
   EXPECT_EQ(GUMBO_TAG_TABLE, GetTag(table));
-  EXPECT_EQ(body, table->parent);
+  EXPECT_PTREQ(body, table->parent);
   EXPECT_EQ(2, table->index_within_parent);
   ASSERT_EQ(2, GetChildCount(table));
 
@@ -845,14 +845,14 @@ TEST(GumboParserTest, Tables) {
 
   GumboNode* tr_text = GetChild(tr, 0);
   ASSERT_EQ(GUMBO_NODE_WHITESPACE, tr_text->type);
-  EXPECT_EQ(tr, tr_text->parent);
+  EXPECT_PTREQ(tr, tr_text->parent);
   EXPECT_EQ(0, tr_text->index_within_parent);
   EXPECT_STREQ("\n    ", tr_text->v.text.text);
 
   GumboNode* th = GetChild(tr, 1);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, th->type);
   EXPECT_EQ(GUMBO_TAG_TH, GetTag(th));
-  EXPECT_EQ(tr, th->parent);
+  EXPECT_PTREQ(tr, th->parent);
   EXPECT_EQ(1, th->index_within_parent);
   ASSERT_EQ(1, GetChildCount(th));
 
@@ -891,7 +891,7 @@ TEST(GumboParserTest, StartParagraphInTable) {
   GumboNode* paragraph = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, paragraph->type);
   EXPECT_EQ(GUMBO_TAG_P, GetTag(paragraph));
-  EXPECT_EQ(body, paragraph->parent);
+  EXPECT_PTREQ(body, paragraph->parent);
   EXPECT_EQ(0, paragraph->index_within_parent);
   ASSERT_EQ(1, GetChildCount(paragraph));
 
@@ -902,7 +902,7 @@ TEST(GumboParserTest, StartParagraphInTable) {
   GumboNode* table = GetChild(body, 1);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, table->type);
   EXPECT_EQ(GUMBO_TAG_TABLE, GetTag(table));
-  EXPECT_EQ(body, table->parent);
+  EXPECT_PTREQ(body, table->parent);
   EXPECT_EQ(1, table->index_within_parent);
   ASSERT_EQ(0, GetChildCount(table));
   TEARDOWN();
@@ -919,14 +919,14 @@ TEST(GumboParserTest, EndParagraphInTable) {
   GumboNode* paragraph = GetChild(body, 0);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, paragraph->type);
   EXPECT_EQ(GUMBO_TAG_P, GetTag(paragraph));
-  EXPECT_EQ(body, paragraph->parent);
+  EXPECT_PTREQ(body, paragraph->parent);
   EXPECT_EQ(0, paragraph->index_within_parent);
   ASSERT_EQ(0, GetChildCount(paragraph));
 
   GumboNode* table = GetChild(body, 1);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, table->type);
   EXPECT_EQ(GUMBO_TAG_TABLE, GetTag(table));
-  EXPECT_EQ(body, table->parent);
+  EXPECT_PTREQ(body, table->parent);
   EXPECT_EQ(1, table->index_within_parent);
   ASSERT_EQ(0, GetChildCount(table));
   TEARDOWN();
@@ -944,7 +944,7 @@ TEST(GumboParserTest, UnknownTagInTable) {
   ASSERT_EQ(GUMBO_NODE_ELEMENT, foo->type);
   EXPECT_EQ(GUMBO_TAG_UNKNOWN, GetTag(foo));
   EXPECT_TRUE(string_piece_equal_cstr(&foo->v.element.original_tag, "<foo>"));
-  EXPECT_EQ(body, foo->parent);
+  EXPECT_PTREQ(body, foo->parent);
   EXPECT_EQ(0, foo->index_within_parent);
   ASSERT_EQ(1, GetChildCount(foo));
 
@@ -955,7 +955,7 @@ TEST(GumboParserTest, UnknownTagInTable) {
   GumboNode* table = GetChild(body, 1);
   ASSERT_EQ(GUMBO_NODE_ELEMENT, table->type);
   EXPECT_EQ(GUMBO_TAG_TABLE, GetTag(table));
-  EXPECT_EQ(body, table->parent);
+  EXPECT_PTREQ(body, table->parent);
   EXPECT_EQ(1, table->index_within_parent);
   ASSERT_EQ(0, GetChildCount(table));
   TEARDOWN();
