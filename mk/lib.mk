@@ -1,7 +1,3 @@
-CXX ?= g++
-CXXFLAGS ?= -g -Og
-XCXXFLAGS += -std=c++11 $(WARNINGS)
-CXXOPTS = $(XCXXFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS)
 GPERF = gperf
 GPERF_FILTER = sed -f mk/gperf-filter.sed
 RAGEL = ragel
@@ -30,13 +26,9 @@ build/lib/test: $(LIBGUMBO_OBJ) $(TEST_OBJ)
 build/lib/benchmark: $(LIBGUMBO_OBJ) build/lib/benchmark.o
 build/lib/benchmark.o: lib/gumbo.h lib/macros.h
 
-build/lib/test:
+build/lib/test build/lib/benchmark:
 	$(E) LINK '$@'
 	$(Q) $(CC) $(XLDFLAGS) $(LDFLAGS) -o $@ $^
-
-build/lib/benchmark:
-	$(E) LINK '$@'
-	$(Q) $(CXX) $(XLDFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(LIBGUMBO_OBJ): build/lib/%.o: lib/%.c | build/lib/
 	$(E) CC '$@'
@@ -46,9 +38,9 @@ $(TEST_OBJ): build/lib/test_%.o: test/parser/%.c | build/lib/
 	$(E) CC '$@'
 	$(Q) $(CC) $(CCOPTS) -Ilib -c -o $@ $<
 
-build/lib/benchmark.o: test/benchmark/benchmark.cc | build/lib/
-	$(E) CXX '$@'
-	$(Q) $(CXX) $(CXXOPTS) -Ilib -c -o $@ $<
+build/lib/benchmark.o: test/benchmark/benchmark.c | build/lib/
+	$(E) CC '$@'
+	$(Q) $(CC) $(CCOPTS) -Ilib -c -o $@ $<
 
 build/lib/:
 	@$(MKDIR) '$@'
@@ -58,7 +50,8 @@ check-lib: build/lib/test
 	$(Q) $<
 
 benchmark: build/lib/benchmark
-	./$<
+	$(E) RUN '$<'
+	$(Q) $< test/benchmark/*.html
 
 ragel-gen: | build/lib/
 	$(RAGEL) -F0 -o build/lib/char_ref.c.tmp lib/char_ref.rl
