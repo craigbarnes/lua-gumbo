@@ -1,4 +1,5 @@
 /*
+ Copyright 2018 Craig Barnes.
  Copyright 2010 Google Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +15,8 @@
  limitations under the License.
 */
 
+#include <assert.h>
+#include <stdio.h>
 #include <string.h>
 #include "string_buffer.h"
 #include "util.h"
@@ -85,6 +88,34 @@ void gumbo_string_buffer_append_string (
   maybe_resize_string_buffer(str->length, output);
   memcpy(output->data + output->length, str->data, str->length);
   output->length += str->length;
+}
+
+int gumbo_string_buffer_vsprintf (
+  GumboStringBuffer* s,
+  const char* fmt,
+  va_list ap
+) {
+    va_list ap2;
+    va_copy(ap2, ap);
+    // Calculate the required size
+    int n = vsnprintf(NULL, 0, fmt, ap2);
+    va_end(ap2);
+    if (n <= 0) {
+      return n;
+    }
+    maybe_resize_string_buffer(n + 1, s);
+    int wrote = vsnprintf(s->data + s->length, n + 1, fmt, ap);
+    assert(wrote == n);
+    s->length += wrote;
+    return wrote;
+}
+
+int gumbo_string_buffer_sprintf(GumboStringBuffer* s, const char* fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int n = gumbo_string_buffer_vsprintf(s, fmt, ap);
+    va_end(ap);
+    return n;
 }
 
 char* gumbo_string_buffer_to_string(const GumboStringBuffer* input) {

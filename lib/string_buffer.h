@@ -1,10 +1,11 @@
 #ifndef GUMBO_STRING_BUFFER_H_
 #define GUMBO_STRING_BUFFER_H_
 
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
-
 #include "gumbo.h"
+#include "macros.h"
 
 // A struct representing a mutable, growable string. This consists of a
 // heap-allocated buffer that may grow (by doubling) as necessary. When
@@ -46,6 +47,16 @@ void gumbo_string_buffer_append_string (
   GumboStringPiece* str,
   GumboStringBuffer* output
 );
+
+NONNULL_ARGS VPRINTF(2)
+int gumbo_string_buffer_vsprintf (
+  GumboStringBuffer* s,
+  const char* fmt,
+  va_list ap
+);
+
+NONNULL_ARGS PRINTF(2)
+int gumbo_string_buffer_sprintf(GumboStringBuffer* s, const char* fmt, ...);
 
 // Converts this string buffer to const char*, alloctaing a new buffer for it.
 char* gumbo_string_buffer_to_string(const GumboStringBuffer* input);

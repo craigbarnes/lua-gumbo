@@ -1,4 +1,5 @@
 /*
+ Copyright 2018 Craig Barnes.
  Copyright 2010 Google Inc.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,63 +28,18 @@
 #include "util.h"
 #include "vector.h"
 
-// Prints a formatted message to a StringBuffer. This automatically resizes the
-// StringBuffer as necessary to fit the message. Returns the number of bytes
-// written.
+// Appends a formatted message to a StringBuffer and returns the
+// number of bytes written.
 static int PRINTF(2) print_message (
   GumboStringBuffer* output,
   const char* format,
   ...
 ) {
   va_list args;
-  int remaining_capacity = output->capacity - output->length;
   va_start(args, format);
-  int bytes_written = vsnprintf (
-    output->data + output->length,
-    remaining_capacity,
-    format,
-    args
-  );
+  int n = gumbo_string_buffer_vsprintf(output, format, args);
   va_end(args);
-#ifdef _MSC_VER
-  if (bytes_written == -1) {
-    // vsnprintf returns -1 on MSVC++ if there's not enough capacity, instead of
-    // returning the number of bytes that would've been written had there been
-    // enough. In this case, we'll double the buffer size and hope it fits when
-    // we retry (letting it fail and returning 0 if it doesn't), since there's
-    // no way to smartly resize the buffer.
-    gumbo_string_buffer_reserve(output->capacity * 2, output);
-    va_start(args, format);
-    int result = vsnprintf (
-      output->data + output->length,
-      remaining_capacity,
-      format,
-      args
-    );
-    va_end(args);
-    return result == -1 ? 0 : result;
-  }
-#else
-  // -1 in standard C99 indicates an encoding error. Return 0 and do nothing.
-  if (bytes_written == -1) {
-    return 0;
-  }
-#endif
-
-  if (bytes_written >= remaining_capacity) {
-    gumbo_string_buffer_reserve(output->capacity + bytes_written, output);
-    remaining_capacity = output->capacity - output->length;
-    va_start(args, format);
-    bytes_written = vsnprintf (
-      output->data + output->length,
-      remaining_capacity,
-      format,
-      args
-    );
-    va_end(args);
-  }
-  output->length += bytes_written;
-  return bytes_written;
+  return (n <= 0) ? 0 : n;
 }
 
 static void print_tag_stack (
