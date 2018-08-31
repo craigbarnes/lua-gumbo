@@ -82,6 +82,17 @@ int main(int argc, char **argv) {
         } else if (len == 0) {
             fprintf(stderr, "Skipping zero-length file: '%s'\n", filename);
             continue;
+        } else {
+            // Ensure input parses successfully before looping
+            GumboOutput *output = gumbo_parse_with_options(&options, str, len);
+            GumboOutputStatus status = output.status;
+            gumbo_destroy_output(output);
+            if (status != GUMBO_STATUS_OK) {
+                free(str);
+                const char *error = gumbo_status_to_string(status);
+                fprintf(stderr, "Failed to parse '%s': %s\n", filename, error);
+                continue;
+            }
         }
 
         const clock_t start_time = clock();
