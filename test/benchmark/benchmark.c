@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
         } else {
             // Ensure input parses successfully before looping
             GumboOutput *output = gumbo_parse_with_options(&options, str, len);
-            GumboOutputStatus status = output.status;
+            GumboOutputStatus status = output->status;
             gumbo_destroy_output(output);
             if (status != GUMBO_STATUS_OK) {
                 free(str);
