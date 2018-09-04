@@ -115,6 +115,12 @@
     #define ALLOC_SIZE(...)
 #endif
 
+#if GNUC_AT_LEAST(4, 3) || HAS_ATTRIBUTE(hot)
+    #define HOT __attribute__((__hot__))
+#else
+    #define HOT
+#endif
+
 #if GNUC_AT_LEAST(4, 3) || HAS_ATTRIBUTE(cold)
     #define COLD __attribute__((__cold__))
 #else

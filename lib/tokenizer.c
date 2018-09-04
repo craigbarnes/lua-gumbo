@@ -490,7 +490,7 @@ static void finish_doctype_system_id(GumboParser* parser) {
 }
 
 // Writes a single specified character to the output token.
-static void emit_char(GumboParser* parser, int c, GumboToken* output) {
+static HOT void emit_char(GumboParser* parser, int c, GumboToken* output) {
   output->type = get_char_token_type(parser->_tokenizer_state->_is_in_cdata, c);
   output->v.character = c;
   finish_token(parser, output);
@@ -3192,7 +3192,7 @@ static GumboLexerStateFunction dispatch_table[] = {
   handle_cdata_state
 };
 
-bool gumbo_lex(GumboParser* parser, GumboToken* output) {
+HOT bool gumbo_lex(GumboParser* parser, GumboToken* output) {
   // Because of the spec requirements that...
   //
   // 1. Tokens be handled immediately by the parser upon emission.

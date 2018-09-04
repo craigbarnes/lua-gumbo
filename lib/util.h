@@ -16,7 +16,10 @@ void* gumbo_alloc(size_t size) XMALLOC;
 void* gumbo_realloc(void* ptr, size_t size) RETURNS_NONNULL;
 void gumbo_free(void* ptr);
 
-// Debug wrapper for printf
-void gumbo_debug(const char* format, ...) PRINTF(1);
+#ifdef GUMBO_DEBUG
+PRINTF(1) void gumbo_debug(const char* format, ...);
+#else
+PRINTF(1) static inline void gumbo_debug(const char* UNUSED_ARG(fmt), ...) {}
+#endif
 
 #endif // GUMBO_UTIL_H_

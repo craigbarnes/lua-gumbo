@@ -15,12 +15,10 @@
  limitations under the License.
 */
 
-#include "utf8.h"
-
 #include <assert.h>
 #include <stdint.h>
 #include <string.h>
-
+#include "utf8.h"
 #include "error.h"
 #include "gumbo.h"
 #include "parser.h"
@@ -215,31 +213,12 @@ void utf8iterator_init (
   read_char(iter);
 }
 
-void utf8iterator_next(Utf8Iterator* iter) {
+HOT void utf8iterator_next(Utf8Iterator* iter) {
   // We update positions based on the *last* character read, so that the first
   // character following a newline is at column 1 in the next line.
   update_position(iter);
   iter->_start += iter->_width;
   read_char(iter);
-}
-
-int utf8iterator_current(const Utf8Iterator* iter) {
-  return iter->_current;
-}
-
-void utf8iterator_get_position (
-  const Utf8Iterator* iter,
-  GumboSourcePosition* output
-) {
-  *output = iter->_pos;
-}
-
-const char* utf8iterator_get_char_pointer(const Utf8Iterator* iter) {
-  return iter->_start;
-}
-
-const char* utf8iterator_get_end_pointer(const Utf8Iterator* iter) {
-  return iter->_end;
 }
 
 bool utf8iterator_maybe_consume_match (

@@ -378,7 +378,7 @@ static void parser_state_init(GumboParser* parser) {
 
 typedef void (*TreeTraversalCallback)(GumboNode* node);
 
-static void tree_traverse(GumboNode* node, TreeTraversalCallback callback) {
+static HOT void tree_traverse(GumboNode* node, TreeTraversalCallback callback) {
   GumboNode* current_node = node;
   unsigned int offset = 0;
 
@@ -2626,7 +2626,7 @@ static bool handle_after_head(GumboParser* parser, GumboToken* token) {
 }
 
 // https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody
-static bool handle_in_body(GumboParser* parser, GumboToken* token) {
+static HOT bool handle_in_body(GumboParser* parser, GumboToken* token) {
   GumboParserState* state = parser->_parser_state;
   assert(state->_open_elements.length > 0);
   if (token->type == GUMBO_TOKEN_NULL) {
@@ -3257,7 +3257,7 @@ static bool handle_in_body(GumboParser* parser, GumboToken* token) {
 }
 
 // https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-incdata
-static bool handle_text(GumboParser* parser, GumboToken* token) {
+static HOT bool handle_text(GumboParser* parser, GumboToken* token) {
   if (
     token->type == GUMBO_TOKEN_CHARACTER
     || token->type == GUMBO_TOKEN_WHITESPACE
@@ -4427,7 +4427,7 @@ GumboOutput* gumbo_parse(const char* buffer) {
   );
 }
 
-GumboOutput* gumbo_parse_with_options (
+HOT GumboOutput* gumbo_parse_with_options (
   const GumboOptions* options,
   const char* buffer,
   size_t length

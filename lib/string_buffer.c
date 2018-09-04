@@ -53,7 +53,7 @@ void gumbo_string_buffer_reserve (
   maybe_resize_string_buffer(min_capacity - output->length, output);
 }
 
-void gumbo_string_buffer_append_codepoint (
+HOT void gumbo_string_buffer_append_codepoint (
   int c,
   GumboStringBuffer* output
 ) {
