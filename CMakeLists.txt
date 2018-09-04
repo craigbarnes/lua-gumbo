@@ -1,5 +1,10 @@
-cmake_minimum_required (VERSION 2.6)
-project (LuaGumbo C)
+cmake_minimum_required(VERSION 2.6)
+
+if(NOT WIN32 AND NOT ALLOW_ANY_OS)
+  message(FATAL_ERROR "This is just for Windows support; use 'make' instead")
+endif()
+
+project(LuaGumbo C)
 
 # Default to release build, if not otherwise specified
 if(NOT CMAKE_BUILD_TYPE)

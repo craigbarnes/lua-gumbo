@@ -13,7 +13,7 @@ script:
     - make clean
     - mkdir build
     - cd build
-    - cmake -DCMAKE_BUILD_TYPE=Debug ..
+    - cmake -DCMAKE_BUILD_TYPE=Debug -DALLOW_ANY_OS=1 ..
     - make -j"$(nproc)" VERBOSE=1
     - cd ..
     - cp build/parse.so gumbo/
