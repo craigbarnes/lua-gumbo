@@ -8,7 +8,7 @@
   .data = NULL, \
   .length = 0, \
   .capacity = 0 \
-};
+}
 
 // Initializes a new GumboVector with the specified initial capacity.
 void gumbo_vector_init(unsigned int initial_capacity, GumboVector* vector);
