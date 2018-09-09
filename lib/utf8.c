@@ -173,14 +173,21 @@ static void read_char(Utf8Iterator* iter) {
 
 static void update_position(Utf8Iterator* iter) {
   iter->_pos.offset += iter->_width;
-  if (iter->_current == '\n') {
+  switch (iter->_current) {
+  case '\n':
     ++iter->_pos.line;
     iter->_pos.column = 1;
-  } else if (iter->_current == '\t') {
+    break;
+  case '\t': {
     int tab_stop = iter->_parser->_options->tab_stop;
     iter->_pos.column = ((iter->_pos.column / tab_stop) + 1) * tab_stop;
-  } else if (iter->_current != -1) {
+    break;
+  }
+  case -1:
+    break;
+  default:
     ++iter->_pos.column;
+    break;
   }
 }
 
