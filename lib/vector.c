@@ -21,12 +21,6 @@
 #include "vector.h"
 #include "util.h"
 
-const GumboVector kGumboEmptyVector = { \
-  .data = NULL, \
-  .length = 0, \
-  .capacity = 0 \
-};
-
 void gumbo_vector_init(unsigned int initial_capacity, GumboVector* vector) {
   vector->length = 0;
   vector->capacity = initial_capacity;
@@ -57,11 +51,11 @@ static void enlarge_vector_if_full(GumboVector* vector) {
   }
 }
 
-void gumbo_vector_add(void* element, GumboVector* vector) {
+void gumbo_vector_add(void* ptr, GumboVector* vector) {
   enlarge_vector_if_full(vector);
   assert(vector->data);
   assert(vector->length < vector->capacity);
-  vector->data[vector->length++] = element;
+  vector->data[vector->length++] = ptr;
 }
 
 void* gumbo_vector_pop(GumboVector* vector) {
@@ -71,9 +65,9 @@ void* gumbo_vector_pop(GumboVector* vector) {
   return vector->data[--vector->length];
 }
 
-int gumbo_vector_index_of(GumboVector* vector, const void* element) {
-  for (unsigned int i = 0; i < vector->length; ++i) {
-    if (vector->data[i] == element) {
+int gumbo_vector_index_of(GumboVector* vector, const void* ptr) {
+  for (unsigned int i = 0, n = vector->length; i < n; ++i) {
+    if (vector->data[i] == ptr) {
       return i;
     }
   }
@@ -81,7 +75,7 @@ int gumbo_vector_index_of(GumboVector* vector, const void* element) {
 }
 
 void gumbo_vector_insert_at (
-  void* element,
+  void* ptr,
   unsigned int index,
   GumboVector* vector
 ) {
@@ -93,7 +87,7 @@ void gumbo_vector_insert_at (
     &vector->data[index],
     sizeof(void*) * (vector->length - index - 1)
   );
-  vector->data[index] = element;
+  vector->data[index] = ptr;
 }
 
 void gumbo_vector_remove(void* node, GumboVector* vector) {

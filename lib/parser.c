@@ -1084,7 +1084,7 @@ static GumboNode* create_element_from_token (
 
   // The element takes ownership of the attributes from the token, so any
   // allocated-memory fields should be nulled out.
-  start_tag->attributes = kGumboEmptyVector;
+  start_tag->attributes = GUMBO_VECTOR_INIT;
   return node;
 }
 
@@ -1852,7 +1852,7 @@ static void merge_attributes (
 #ifndef NDEBUG
   // Mark this sentinel so the assertion in the main loop knows it's been
   // destroyed.
-  token->v.start_tag.attributes = kGumboEmptyVector;
+  token->v.start_tag.attributes = GUMBO_VECTOR_INIT;
 #endif
 }
 
@@ -2291,7 +2291,7 @@ static void ignore_token(GumboParser* parser) {
   if (token->type == GUMBO_TOKEN_START_TAG) {
     // Mark this sentinel so the assertion in the main loop knows it's been
     // destroyed.
-    token->v.start_tag.attributes = kGumboEmptyVector;
+    token->v.start_tag.attributes = GUMBO_VECTOR_INIT;
   }
 #endif
 }

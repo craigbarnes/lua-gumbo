@@ -533,7 +533,7 @@ static void emit_doctype(GumboParser* parser, GumboToken* output) {
 static void mark_tag_state_as_empty(GumboTagState* tag_state) {
   UNUSED_IF_NDEBUG(tag_state);
 #ifndef NDEBUG
-  tag_state->_attributes = kGumboEmptyVector;
+  tag_state->_attributes = GUMBO_VECTOR_INIT;
 #endif
 }
 

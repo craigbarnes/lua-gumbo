@@ -2,6 +2,13 @@
 #define GUMBO_VECTOR_H_
 
 #include "gumbo.h"
+#include "macros.h"
+
+#define GUMBO_VECTOR_INIT (GumboVector) { \
+  .data = NULL, \
+  .length = 0, \
+  .capacity = 0 \
+};
 
 // Initializes a new GumboVector with the specified initial capacity.
 void gumbo_vector_init(unsigned int initial_capacity, GumboVector* vector);
@@ -18,13 +25,13 @@ void gumbo_vector_add(void* element, GumboVector* vector);
 // empty, NULL is returned.
 void* gumbo_vector_pop(GumboVector* vector);
 
+// Returns the first index at which an element appears in this vector
+// (testing by pointer equality), or `-1` if it never does.
+PURE int gumbo_vector_index_of(GumboVector* vector, const void* element);
+
 // Inserts an element at a specific index. This is potentially O(N) time, but
 // is necessary for some of the spec's behavior.
-void gumbo_vector_insert_at (
-  void* element,
-  unsigned int index,
-  GumboVector* vector
-);
+void gumbo_vector_insert_at(void* ptr, unsigned int index, GumboVector* vector);
 
 // Removes an element from the vector, or does nothing if the element is not in
 // the vector.

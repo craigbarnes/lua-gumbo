@@ -2,10 +2,6 @@
 // Copyright 2018 Craig Barnes.
 // Licensed under the Apache License, version 2.0.
 
-// We use Gumbo as a prefix for types, gumbo_ as a prefix for functions,
-// GUMBO_ as a prefix for enum constants and kGumbo as a prefix for
-// static constants
-
 /**
  * @file
  * @mainpage Gumbo HTML Parser
@@ -82,15 +78,6 @@ typedef struct {
   /** Current array capacity. */
   unsigned int capacity;
 } GumboVector;
-
-/** An empty (0-length, 0-capacity) `GumboVector`. */
-extern const GumboVector kGumboEmptyVector;
-
-/**
- * Returns the first index at which an element appears in this vector
- * (testing by pointer equality), or `-1` if it never does.
- */
-int gumbo_vector_index_of(GumboVector* vector, const void* element);
 
 /**
  * An `enum` for all the tags defined in the HTML5 standard. These
@@ -729,7 +716,7 @@ typedef enum {
    * Indicates that the maximum element nesting limit
    * (`GumboOptions::max_tree_depth`) was reached during parsing. The
    * resulting tree will be a partial document, with no further nodes
-   * created after the point where the limit was reached. The partial
+   * created after the point at which the limit was reached. The partial
    * document may be useful for constructing an error message but
    * typically shouldn't be used for other purposes.
    */
