@@ -18,7 +18,7 @@
 #include <stddef.h>
 #include <lua.h>
 #include <lauxlib.h>
-#include "gumbo.h"
+#include "../lib/gumbo.h"
 #include "compat.h"
 
 typedef enum {

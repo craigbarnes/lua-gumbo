@@ -42,7 +42,7 @@ $(BUILD_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_OBJ
 
 $(OBJ_ALL): build/lua%/gumbo/parse.o: gumbo/parse.c | build/lua%/gumbo/
 	$(E) CC '$@'
-	$(Q) $(CC) -Ilib $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
+	$(Q) $(CC) $(CCOPTS) $(LUA$*_CFLAGS) -c -o $@ $<
 
 build/lua%/gumbo/:
 	@$(MKDIR) $@
