@@ -25,8 +25,6 @@
 #include "ascii.h"
 #include "vector.h"
 
-const int kUtf8ReplacementChar = 0xFFFD;
-
 // References:
 // * https://tools.ietf.org/html/rfc3629
 // * https://html.spec.whatwg.org/multipage/parsing.html#preprocessing-the-input-stream
@@ -156,7 +154,7 @@ static void read_char(Utf8Iterator* iter) {
       // We don't want to consume the invalid continuation byte of a multi-byte
       // run, but we do want to skip past an invalid first byte.
       iter->_width = c - iter->_start + (c == iter->_start);
-      iter->_current = kUtf8ReplacementChar;
+      iter->_current = UNICODE_REPLACEMENT_CHAR;
       add_error(iter, GUMBO_ERR_UTF8_INVALID);
       return;
     }
@@ -166,7 +164,7 @@ static void read_char(Utf8Iterator* iter) {
   // rest of the iterator, and emit a replacement character. The next time we
   // enter this method, it will detect that there's no input to consume and
   // output an EOF.
-  iter->_current = kUtf8ReplacementChar;
+  iter->_current = UNICODE_REPLACEMENT_CHAR;
   iter->_width = iter->_end - iter->_start;
   add_error(iter, GUMBO_ERR_UTF8_TRUNCATED);
 }

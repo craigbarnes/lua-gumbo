@@ -4153,7 +4153,7 @@ static bool handle_in_foreign_content(GumboParser* parser, GumboToken* token) {
   switch (token->type) {
     case GUMBO_TOKEN_NULL:
       parser_add_parse_error(parser, token);
-      token->v.character = kUtf8ReplacementChar;
+      token->v.character = UNICODE_REPLACEMENT_CHAR;
       insert_text_token(parser, token);
       return false;
     case GUMBO_TOKEN_WHITESPACE:

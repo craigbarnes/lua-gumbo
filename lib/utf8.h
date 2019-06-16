@@ -24,8 +24,7 @@
 struct GumboError;
 struct GumboParser;
 
-// Unicode replacement char.
-extern const int kUtf8ReplacementChar;
+#define UNICODE_REPLACEMENT_CHAR 0xFFFD
 
 typedef struct GumboUtf8Iterator {
   // Points at the start of the code point most recently read into 'current'.
