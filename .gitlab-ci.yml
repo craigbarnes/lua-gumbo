@@ -12,15 +12,14 @@ test:debian:
         - make build-all
         - make check-all check-luajit
 
-        - make rockspecs
         - make clean-obj
-        - luarocks --lua-version=5.3 --tree=/usr make gumbo-*.53-1.rockspec
+        - luarocks --lua-version=5.3 --tree=/usr make gumbo-0.4-4.rockspec
         - lua5.3 -e 'require "gumbo"'
         - make clean-obj
-        - luarocks --lua-version=5.2 --tree=/usr make gumbo-*.52-1.rockspec
+        - luarocks --lua-version=5.2 --tree=/usr make gumbo-0.4-4.rockspec
         - lua5.2 -e 'require "gumbo"'
         - make clean-obj
-        - luarocks --lua-version=5.1 --tree=/usr make gumbo-*.51-1.rockspec
+        - luarocks --lua-version=5.1 --tree=/usr make gumbo-0.4-4.rockspec
         - lua5.1 -e 'require "gumbo"'
 
         - make clean-obj
