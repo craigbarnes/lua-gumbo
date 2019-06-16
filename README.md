@@ -9,20 +9,14 @@ Requirements
 ------------
 
 * C99 compiler
-* [GNU Make] 3.81+
 * [Lua] 5.1+ **or** [LuaJIT] 2.0+
 
 Installation
 ------------
 
-To install the latest release via [LuaRocks], first ensure the
-requirements listed above are installed, then use the command:
+To install the latest release via [LuaRocks] use the command:
 
     luarocks install gumbo
-
-**Note**: The 0.4 release only supports Unix-like systems. However,
-the current git `master` branch has support for Windows (via CMake),
-which will be available in the next release.
 
 Usage
 -----
@@ -64,7 +58,6 @@ See also: <https://craigbarnes.gitlab.io/lua-gumbo/#examples>.
 [`parseFile`]: https://craigbarnes.gitlab.io/lua-gumbo/#parsefile
 [`Document`]: https://craigbarnes.gitlab.io/lua-gumbo/#document
 [fork]: https://gitlab.com/craigbarnes/lua-gumbo/tree/master/lib
-[GNU Make]: https://www.gnu.org/software/make/
 [LuaRocks]: https://luarocks.org/modules/craigb/gumbo
 [luacov]: https://keplerproject.github.io/luacov/
 [`assert()`]: https://www.lua.org/manual/5.3/manual.html#pdf-assert
