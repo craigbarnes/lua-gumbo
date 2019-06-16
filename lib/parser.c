@@ -4419,14 +4419,6 @@ static void fragment_parser_init (
   reset_insertion_mode_appropriately(parser);
 }
 
-GumboOutput* gumbo_parse(const char* buffer) {
-  return gumbo_parse_with_options (
-    &kGumboDefaultOptions,
-    buffer,
-    strlen(buffer)
-  );
-}
-
 HOT GumboOutput* gumbo_parse_with_options (
   const GumboOptions* options,
   const char* buffer,

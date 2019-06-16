@@ -11,14 +11,6 @@
  * to parse a different encoding, run a preprocessing step to convert
  * to UTF-8. It returns a parse tree made of the structs in this file.
  *
- * Example:
- * @code
- *    GumboOutput* output = gumbo_parse(input);
- *    do_something_with_doctype(output->document);
- *    do_something_with_html_tree(output->root);
- *    gumbo_destroy_output(output);
- * @endcode
- *
  * [HTML5]: https://html.spec.whatwg.org/multipage/
  */
 
@@ -761,12 +753,6 @@ typedef struct GumboOutput {
  * Parses a buffer of UTF-8 text into an `GumboNode` parse tree. The
  * buffer must live at least as long as the parse tree, as some fields
  * (eg. `original_text`) point directly into the original buffer.
- */
-GumboOutput* gumbo_parse(const char* buffer);
-
-/**
- * Extended version of `gumbo_parse` that takes an explicit options
- * structure, buffer, and length.
  */
 GumboOutput* gumbo_parse_with_options (
   const GumboOptions* options,
