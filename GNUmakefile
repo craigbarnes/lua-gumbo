@@ -44,7 +44,7 @@ $(INSTALL_ALL): install-lua%: build-lua%
 	$(INSTALL_LMOD) gumbo.lua '$(LMOD_DIR)/'
 
 clean-obj:
-	$(RM) -r build/
+	$(RM) -r build/ gumbo/parse.o gumbo/parse.so lib/*.o
 
 clean: clean-obj clean-docs
 	$(RM) $(CLEANFILES)
