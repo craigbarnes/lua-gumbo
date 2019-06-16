@@ -1,5 +1,5 @@
 package = "gumbo"
-version = "0.4-4"
+version = "scm-1"
 
 description = {
     summary = "HTML5 parser and DOM library",
@@ -8,7 +8,7 @@ description = {
 }
 
 source = {
-    url = "https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-0.4.tar.gz"
+    url = "git+https://gitlab.com/craigbarnes/lua-gumbo.git"
 }
 
 dependencies = {
