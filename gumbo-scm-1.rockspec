@@ -44,13 +44,6 @@ build = {
                     defines = {"NDEBUG -std=gnu99 -fvisibility=hidden"}
                 }
             }
-        },
-        windows = {
-            modules = {
-                ["gumbo.parse"] = {
-                    -- defines = TODO
-                }
-            }
         }
     },
     modules = {
