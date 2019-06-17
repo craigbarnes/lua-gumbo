@@ -41,7 +41,7 @@ build = {
         unix = {
             modules = {
                 ["gumbo.parse"] = {
-                    defines = {"NDEBUG -std=gnu99 -fvisibility=hidden"}
+                    defines = {"NDEBUG -std=c99 -fvisibility=hidden"}
                 }
             }
         }
