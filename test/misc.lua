@@ -164,3 +164,19 @@ do -- Check tag name case normalization works
     local tagname = assert(element.localName)
     assert(tagname == "azhpeazkw0912zz")
 end
+
+do
+    local input = "<p>1</p>   <p>2</p>"
+    local document = assert(parse(input))
+    local p1 = assert(document.body.childNodes[1].childNodes[1])
+    local ws = assert(document.body.childNodes[2])
+    assert(p1.type == "text")
+    assert(ws.type == "whitespace")
+
+    -- Check that type values not inherited from the Text metatable
+    -- (e.g. "whitespace") are correctly cloned
+    local p1_clone = assert(p1:cloneNode())
+    local ws_clone = assert(ws:cloneNode())
+    assert(p1_clone.type == "text")
+    assert(ws_clone.type == "whitespace")
+end

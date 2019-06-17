@@ -3,7 +3,7 @@ local Node = require "gumbo.dom.Node"
 local ChildNode = require "gumbo.dom.ChildNode"
 local assertTextNode = util.assertTextNode
 local assertStringOrNil = util.assertStringOrNil
-local setmetatable = setmetatable
+local rawget, setmetatable = rawget, setmetatable
 local _ENV = nil
 
 local Text = util.merge(Node, ChildNode, {
@@ -20,7 +20,11 @@ end
 
 function Text:cloneNode()
     assertTextNode(self)
-    return setmetatable({data = self.data}, Text)
+    local clone = {
+        data = rawget(self, "data"),
+        type = rawget(self, "type")
+    }
+    return setmetatable(clone, Text)
 end
 
 function Text.getters:length()
