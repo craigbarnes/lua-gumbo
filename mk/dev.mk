@@ -1,6 +1,6 @@
 GIT_HOOKS = $(addprefix .git/hooks/, commit-msg pre-commit)
 PERF_RECORD = perf record -g --call-graph=dwarf
-LUA53_UTIL = LUA_CPATH='build/lua53/?.so;;' LUA_PATH='./?.lua;;' $(LUA53)
+LUA51_UTIL = LUA_CPATH='build/lua51/?.so;;' LUA_PATH='./?.lua;;' $(LUA51)
 LUACOV ?= luacov
 LCOV ?= lcov
 LCOVFLAGS = --config-file mk/lcovrc
@@ -19,11 +19,11 @@ $(GIT_HOOKS): .git/hooks/%: mk/git-hooks/%
 	$(Q) cp $< $@
 
 coverage-report:
-	$(MAKE) -B -j$(NPROC) check-lua53 CFLAGS='-Og -g -pipe --coverage -fno-inline' LDFLAGS='--coverage'
+	$(MAKE) -B -j$(NPROC) check-lua51 CFLAGS='-Og -g -pipe --coverage -fno-inline' LDFLAGS='--coverage'
 	$(LCOV) $(LCOVFLAGS) -c -b . -d build/ -o build/coverage.info
 	$(call LCOV_REMOVE, build/coverage.info, */lib/char_ref.c */lib/error.c */lib/util.h)
 	@echo
-	$(LUA53_UTIL) -lluacov runtests.lua
+	$(LUA51_UTIL) -lluacov runtests.lua
 	$(LUACOV) -r lcov
 	$(call LCOV_REMOVE, build/luacov-report.txt, */gumbo.lua)
 	@echo
