@@ -8,6 +8,7 @@ ARCH = $(shell uname -m)
 NPROC = $(shell sh mk/nproc.sh)
 CC_VERSION = $(shell $(CC) --version 2>/dev/null | head -n1)
 MAKE_S = $(findstring s,$(firstword -$(MAKEFLAGS)))$(filter -s,$(MAKEFLAGS))
+XARGS_P = $(call try-run, printf "1\n2" | xargs -P2 -I@ echo '@', -P$(NPROC))
 PRINTVAR = printf '\033[1m%15s\033[0m = %s$(2)\n' '$(1)' '$(strip $($(1)))' $(3)
 PRINTVARX = $(call PRINTVAR,$(1), \033[32m(%s)\033[0m, '$(origin $(1))')
 USERVARS = CC CFLAGS LDFLAGS

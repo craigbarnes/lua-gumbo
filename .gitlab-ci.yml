@@ -6,7 +6,6 @@ before_script:
 test:debian:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
-    coverage: '/^Total\s+\d+\s+\d+\s+(\d+\.\d+\%)$/'
     script:
         - make vars
         - make build-all
@@ -23,8 +22,6 @@ test:debian:
         - lua5.1 -e 'require "gumbo"'
 
         - make clean-obj
-        - make coverage.txt
-        - sed -n '/^File  *Hits .*Coverage$/,/^Total.*%$/p' coverage.txt
         - make benchmark
 
 test:alpine:
@@ -43,16 +40,20 @@ test:void-musl:
 
 pages:
     stage: dist
-    image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
+    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-debian
     artifacts: {paths: [public]}
     only: [master]
+    coverage: '/^ *lines\.*: *(\d+\.\d+\%) .*$/'
     script: &PAGES_SCRIPT
         - git fetch --tags
         - make docs doxygen dist
         - make check-dist
+        - make coverage-report
 
 pages:non-master:
     stage: test
-    image: registry.gitlab.com/craigbarnes/dockerfiles/pandoc
+    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-debian
+    artifacts: {paths: [public], expire_in: 1 week}
     except: [master]
+    coverage: '/^ *lines\.*: *(\d+\.\d+\%) .*$/'
     script: *PAGES_SCRIPT

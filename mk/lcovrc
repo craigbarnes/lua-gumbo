@@ -1,0 +1,6 @@
+lcov_excl_line = (perror|abort) *\(
+lcov_function_coverage = 0
+genhtml_function_coverage = 0
+genhtml_hi_limit = 85
+genhtml_med_limit = 50
+geninfo_external = 0

@@ -4,6 +4,4 @@ Config.mk
 lua-gumbo-*.tar.gz
 gumbo-*.rockspec
 gumbo-*.rock
-coverage.txt
-.luacov-stats.txt
 tags
