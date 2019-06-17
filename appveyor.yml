@@ -14,21 +14,11 @@ matrix:
 install:
   - set PATH=%CD%\env\bin;C:\Python27\Scripts;%PATH%
   - pip install hererocks
-  - hererocks env --%LUA%
-
-init:
-- set generator="Visual Studio 14 2015 Win64"
-
-before_build:
-- mkdir build
-- cd build
-- cmake -G %generator% ..
+  - hererocks env --%LUA% -rlatest
+  - env/bin/activate.bat
 
 build_script:
-- cmake --build . --config Debug
-
-after_build:
-- cmake --build . --config Debug --target install
+- luarocks make
 
 test_script:
 - cd "%APPVEYOR_BUILD_FOLDER%"
