@@ -5,17 +5,10 @@ compiler: [clang, gcc]
 install:
     - export DEBIAN_FRONTEND=noninteractive
     - sudo apt-get update -qq
-    - sudo apt-get -y install lua5.2 lua5.1 liblua5.2-dev liblua5.1-dev cmake
+    - sudo apt-get -y install lua5.2 lua5.1 liblua5.2-dev liblua5.1-dev
 script:
     - export VERBOSE=1
     - make -j"$(nproc)" build-lua52 build-lua51 V=1
     - make check-lib check-lua52 check-lua51
     - make clean
-    - mkdir build
-    - cd build
-    - cmake -DCMAKE_BUILD_TYPE=Debug -DALLOW_ANY_OS=1 ..
-    - make -j"$(nproc)" VERBOSE=1
-    - cd ..
-    - cp build/parse.so gumbo/
-    - lua runtests.lua
-    - make benchmark
+    - make -j"$(nproc)" benchmark V=1 CFLAGS='-O3 -pipe -DNDEBUG'
