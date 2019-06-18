@@ -166,7 +166,7 @@ gumbo_get_svg_attr_replacement (register const char *str, register size_t len)
           {
             register const char *s = wordlist[key].from;
 
-            if (s && (((unsigned char)*str ^ (unsigned char)*s) & ~32) == 0 && !gumbo_ascii_strncasecmp(str, s, len))
+            if (s && (((unsigned char)*str ^ (unsigned char)*s) & ~32) == 0 && mem_equal_icase(str, s, len))
               return &wordlist[key];
           }
     }

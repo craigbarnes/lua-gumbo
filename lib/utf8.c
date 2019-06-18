@@ -236,8 +236,8 @@ bool utf8iterator_maybe_consume_match (
     (iter->_start + length <= iter->_end)
     && (
       case_sensitive
-        ? !strncmp(iter->_start, prefix, length)
-        : !gumbo_ascii_strncasecmp(iter->_start, prefix, length)
+        ? mem_equal(iter->_start, prefix, length)
+        : mem_equal_icase(iter->_start, prefix, length)
     )
   ;
   if (matched) {

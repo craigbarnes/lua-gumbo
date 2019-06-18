@@ -318,7 +318,7 @@ static bool is_alpha(int c) {
 }
 
 static int ensure_lowercase(int c) {
-  return gumbo_ascii_tolower(c);
+  return ascii_tolower(c);
 }
 
 static GumboTokenType get_char_token_type(bool is_in_cdata, int c) {

@@ -36,7 +36,7 @@ static inline PURE NONNULL_ARGS bool string_piece_equal_icase (
 ) {
   return
     p1->length == p2->length
-    && gumbo_ascii_strncasecmp(p1->data, p2->data, p1->length) == 0;
+    && mem_equal_icase(p1->data, p2->data, p1->length);
 }
 
 static inline PURE NONNULL_ARGS bool string_piece_equal_cstr (
@@ -56,7 +56,7 @@ static inline PURE NONNULL_ARGS bool string_piece_equal_cstr_icase (
   const size_t cstr_len = strlen(cstr);
   return
     cstr_len == piece->length
-    && gumbo_ascii_strncasecmp(piece->data, cstr, cstr_len) == 0;
+    && mem_equal_icase(piece->data, cstr, cstr_len);
 }
 
 #endif // GUMBO_STRING_PIECE_H_

@@ -286,7 +286,7 @@ static bool attribute_matches (
   const char* value
 ) {
   const GumboAttribute* attr = gumbo_get_attribute(attributes, name);
-  return attr ? gumbo_ascii_strcasecmp(value, attr->value) == 0 : false;
+  return attr ? ascii_streq_icase(value, attr->value) : false;
 }
 
 // Checks if the value of the specified attribute is a case-sensitive match

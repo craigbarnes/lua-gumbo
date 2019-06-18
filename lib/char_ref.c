@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include "char_ref.h"
+#include "ascii.h"
 #include "error.h"
 #include "macros.h"
 #include "utf8.h"
@@ -13941,22 +13942,6 @@ static const int char_ref_start = 7623;
 static const int char_ref_en_valid_named_ref = 7623;
 
 
-
-static const unsigned char ascii_alnum_table[256] = {
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //   0.. 15
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  16.. 31
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //  32.. 47
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, //  48.. 63
-  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //  64.. 79
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, //  80.. 95
-  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //  96..111
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, // 112..127
-  // 128..255: implicitly zero
-};
-
-static inline bool PURE ascii_isalnum(unsigned char ch) {
-  return ascii_alnum_table[ch];
-}
 
 static bool consume_named_ref (
   struct GumboParser* parser,

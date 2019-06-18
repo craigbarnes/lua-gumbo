@@ -16,4 +16,4 @@ static inline unsigned int
 /^\#line/d
 4,31 {/^$/d}
 
-s/gperf_case_memcmp *(/gumbo_ascii_strncasecmp(/
+s/!gperf_case_memcmp *(/mem_equal_icase(/

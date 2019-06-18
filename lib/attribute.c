@@ -28,7 +28,7 @@ GumboAttribute* gumbo_get_attribute (
 ) {
   for (unsigned int i = 0; i < attributes->length; ++i) {
     GumboAttribute* attr = attributes->data[i];
-    if (!gumbo_ascii_strcasecmp(attr->name, name)) {
+    if (ascii_streq_icase(attr->name, name)) {
       return attr;
     }
   }
