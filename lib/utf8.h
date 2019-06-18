@@ -107,6 +107,12 @@ bool utf8iterator_maybe_consume_match (
   bool case_sensitive
 );
 
+#define utf8iterator_maybe_consume_literal(iter, prefix) \
+  utf8iterator_maybe_consume_match(iter, prefix, STRLEN(prefix), true)
+
+#define utf8iterator_maybe_consume_literal_icase(iter, prefix) \
+  utf8iterator_maybe_consume_match(iter, prefix, STRLEN(prefix), false)
+
 // "Marks" a particular location of interest in the input stream, so that it can
 // later be reset() to. There's also the ability to record an error at the
 // point that was marked, as oftentimes that's more useful than the last

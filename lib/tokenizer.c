@@ -2229,24 +2229,11 @@ static StateResult handle_markup_declaration_state (
   int UNUSED_ARG(c),
   GumboToken* UNUSED_ARG(output)
 ) {
-  if (
-    utf8iterator_maybe_consume_match (
-      &tokenizer->_input,
-      "--",
-      sizeof("--") - 1,
-      true
-    )
-  ) {
+  Utf8Iterator *input = &tokenizer->_input;
+  if (utf8iterator_maybe_consume_literal(input, "--")) {
     gumbo_tokenizer_set_state(parser, GUMBO_LEX_COMMENT_START);
     tokenizer->_reconsume_current_input = true;
-  } else if (
-    utf8iterator_maybe_consume_match (
-      &tokenizer->_input,
-      "DOCTYPE",
-      sizeof("DOCTYPE") - 1,
-      false
-    )
-  ) {
+  } else if (utf8iterator_maybe_consume_literal_icase(input, "DOCTYPE")) {
     gumbo_tokenizer_set_state(parser, GUMBO_LEX_DOCTYPE);
     tokenizer->_reconsume_current_input = true;
     // If we get here, we know we'll eventually emit a doctype token, so now is
@@ -2258,11 +2245,7 @@ static StateResult handle_markup_declaration_state (
     tokenizer->_doc_type_state.system_identifier = gumbo_strdup("");
   } else if (
     tokenizer->_is_current_node_foreign
-    && utf8iterator_maybe_consume_match (
-      &tokenizer->_input,
-      "[CDATA[", sizeof("[CDATA[") - 1,
-      true
-    )
+    && utf8iterator_maybe_consume_literal(input, "[CDATA[")
   ) {
     gumbo_tokenizer_set_state(parser, GUMBO_LEX_CDATA);
     tokenizer->_is_in_cdata = true;
@@ -2617,25 +2600,21 @@ static StateResult handle_after_doctype_name_state (
       tokenizer->_doc_type_state.force_quirks = true;
       emit_doctype(parser, output);
       return RETURN_ERROR;
-    default:
-      if (utf8iterator_maybe_consume_match(
-              &tokenizer->_input, "PUBLIC", sizeof("PUBLIC") - 1, false)) {
-        gumbo_tokenizer_set_state(
-            parser, GUMBO_LEX_AFTER_DOCTYPE_PUBLIC_KEYWORD);
-        tokenizer->_reconsume_current_input = true;
-      } else if (utf8iterator_maybe_consume_match(&tokenizer->_input, "SYSTEM",
-                     sizeof("SYSTEM") - 1, false)) {
-        gumbo_tokenizer_set_state(
-            parser, GUMBO_LEX_AFTER_DOCTYPE_SYSTEM_KEYWORD);
-        tokenizer->_reconsume_current_input = true;
-      } else {
-        tokenizer_add_parse_error(
-            parser, GUMBO_ERR_DOCTYPE_SPACE_OR_RIGHT_BRACKET);
-        gumbo_tokenizer_set_state(parser, GUMBO_LEX_BOGUS_DOCTYPE);
-        tokenizer->_doc_type_state.force_quirks = true;
-      }
-      return NEXT_CHAR;
   }
+
+    Utf8Iterator *input = &tokenizer->_input;
+    if (utf8iterator_maybe_consume_literal_icase(input, "PUBLIC")) {
+      gumbo_tokenizer_set_state(parser, GUMBO_LEX_AFTER_DOCTYPE_PUBLIC_KEYWORD);
+      tokenizer->_reconsume_current_input = true;
+    } else if (utf8iterator_maybe_consume_literal_icase(input, "SYSTEM")) {
+      gumbo_tokenizer_set_state(parser, GUMBO_LEX_AFTER_DOCTYPE_SYSTEM_KEYWORD);
+      tokenizer->_reconsume_current_input = true;
+    } else {
+      tokenizer_add_parse_error(parser, GUMBO_ERR_DOCTYPE_SPACE_OR_RIGHT_BRACKET);
+      gumbo_tokenizer_set_state(parser, GUMBO_LEX_BOGUS_DOCTYPE);
+      tokenizer->_doc_type_state.force_quirks = true;
+    }
+    return NEXT_CHAR;
 }
 
 // https://html.spec.whatwg.org/multipage/parsing.html#after-doctype-public-keyword-state
@@ -3102,8 +3081,7 @@ static StateResult handle_cdata_state (
   int c,
   GumboToken* output
 ) {
-  if (c == -1 || utf8iterator_maybe_consume_match(
-                     &tokenizer->_input, "]]>", sizeof("]]>") - 1, true)) {
+  if (c == -1 || utf8iterator_maybe_consume_literal(&tokenizer->_input, "]]>")) {
     tokenizer->_reconsume_current_input = true;
     reset_token_start_point(tokenizer);
     gumbo_tokenizer_set_state(parser, GUMBO_LEX_DATA);

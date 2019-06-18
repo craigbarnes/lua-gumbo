@@ -569,7 +569,7 @@ TEST(Utf8Test, Matches) {
   SETUP();
   ResetText("\xC2\xA5goobar");
   Advance(1);
-  EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goo", 3, true));
+  EXPECT_TRUE(utf8iterator_maybe_consume_literal(&input_, "goo"));
   EXPECT_EQ('b', utf8iterator_current(&input_));
   TEARDOWN();
 }
@@ -577,7 +577,7 @@ TEST(Utf8Test, Matches) {
 TEST(Utf8Test, MatchesOverflow) {
   SETUP();
   ResetText("goo");
-  EXPECT_FALSE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, true));
+  EXPECT_FALSE(utf8iterator_maybe_consume_literal(&input_, "goobar"));
   EXPECT_EQ('g', utf8iterator_current(&input_));
   TEARDOWN();
 }
@@ -585,7 +585,7 @@ TEST(Utf8Test, MatchesOverflow) {
 TEST(Utf8Test, MatchesEof) {
   SETUP();
   ResetText("goo");
-  EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goo", 3, true));
+  EXPECT_TRUE(utf8iterator_maybe_consume_literal(&input_, "goo"));
   EXPECT_EQ(-1, utf8iterator_current(&input_));
   TEARDOWN();
 }
@@ -593,7 +593,7 @@ TEST(Utf8Test, MatchesEof) {
 TEST(Utf8Test, MatchesCaseSensitivity) {
   SETUP();
   ResetText("gooBAR");
-  EXPECT_FALSE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, true));
+  EXPECT_FALSE(utf8iterator_maybe_consume_literal(&input_, "goobar"));
   EXPECT_EQ('g', utf8iterator_current(&input_));
   TEARDOWN();
 }
@@ -601,7 +601,7 @@ TEST(Utf8Test, MatchesCaseSensitivity) {
 TEST(Utf8Test, MatchesCaseInsensitive) {
   SETUP();
   ResetText("gooBAR");
-  EXPECT_TRUE(utf8iterator_maybe_consume_match(&input_, "goobar", 6, false));
+  EXPECT_TRUE(utf8iterator_maybe_consume_literal_icase(&input_, "goobar"));
   EXPECT_EQ(-1, utf8iterator_current(&input_));
   TEARDOWN();
 }
@@ -612,8 +612,7 @@ TEST(Utf8Test, MatchFollowedByNullByte) {
   const char *text = "CDATA\0f";
   utf8iterator_init(&parser_, text, 7, &input_);
 
-  EXPECT_TRUE(utf8iterator_maybe_consume_match(
-      &input_, "cdata", sizeof("cdata") - 1, false));
+  EXPECT_TRUE(utf8iterator_maybe_consume_literal_icase(&input_, "cdata"));
 
   EXPECT_EQ(0, utf8iterator_current(&input_));
   EXPECT_EQ('\0', *utf8iterator_get_char_pointer(&input_));
