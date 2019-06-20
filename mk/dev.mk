@@ -19,11 +19,12 @@ $(GIT_HOOKS): .git/hooks/%: mk/git-hooks/%
 	$(Q) cp $< $@
 
 coverage-report:
-	$(MAKE) -B -j$(NPROC) check-lib check-lua51 CFLAGS='-Og -g -pipe --coverage -fno-inline' LDFLAGS='--coverage'
+	$(MAKE) -B -j$(NPROC) build-lua51 check-lib CFLAGS='-Og -g -pipe --coverage -fno-inline' LDFLAGS='--coverage'
+	$(LUA51_UTIL) -lluacov runtests.lua
+	@echo
 	$(LCOV) $(LCOVFLAGS) -c -b . -d build/ -o build/coverage.info
 	$(call LCOV_REMOVE, build/coverage.info, */lib/char_ref.c */lib/error.c */lib/util.h */test/*)
 	@echo
-	$(LUA51_UTIL) -lluacov runtests.lua
 	$(LUACOV) -r lcov
 	$(call LCOV_REMOVE, build/luacov-report.txt, */gumbo.lua)
 	@echo
