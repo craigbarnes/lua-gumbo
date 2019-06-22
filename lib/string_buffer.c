@@ -60,7 +60,8 @@ HOT void gumbo_string_buffer_append_codepoint (
   // num_bytes is actually the number of continuation bytes, 1 less than the
   // total number of bytes. This is done to keep the loop below simple and
   // should probably change if we unroll it.
-  int num_bytes, prefix;
+  int num_bytes;
+  int prefix;
   if (c <= 0x7f) {
     num_bytes = 0;
     prefix = 0;

@@ -3227,7 +3227,9 @@ HOT bool gumbo_lex(GumboParser* parser, GumboToken* output) {
 }
 
 void gumbo_token_destroy(GumboToken* token) {
-  if (!token) return;
+  if (!token) {
+    return;
+  }
 
   switch (token->type) {
     case GUMBO_TOKEN_DOCTYPE:

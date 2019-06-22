@@ -164,10 +164,10 @@ typedef struct GumboError {
 GumboError* gumbo_add_error(struct GumboParser* parser);
 
 // Initializes the errors vector in the parser.
-void gumbo_init_errors(struct GumboParser* errors);
+void gumbo_init_errors(struct GumboParser* parser);
 
 // Frees all the errors in the 'errors_' field of the parser.
-void gumbo_destroy_errors(struct GumboParser* errors);
+void gumbo_destroy_errors(struct GumboParser* parser);
 
 // Frees the memory used for a single GumboError.
 void gumbo_error_destroy(GumboError* error);

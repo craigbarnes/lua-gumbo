@@ -649,7 +649,9 @@ static GumboInsertionMode get_appropriate_insertion_mode (
     }
     case GUMBO_TAG_TD:
     case GUMBO_TAG_TH:
-      if (!is_last) return GUMBO_INSERTION_MODE_IN_CELL;
+      if (!is_last) {
+        return GUMBO_INSERTION_MODE_IN_CELL;
+      }
       break;
     case GUMBO_TAG_TR:
       return GUMBO_INSERTION_MODE_IN_ROW;
@@ -666,7 +668,9 @@ static GumboInsertionMode get_appropriate_insertion_mode (
     case GUMBO_TAG_TEMPLATE:
       return get_current_template_insertion_mode(parser);
     case GUMBO_TAG_HEAD:
-      if (!is_last) return GUMBO_INSERTION_MODE_IN_HEAD;
+      if (!is_last) {
+        return GUMBO_INSERTION_MODE_IN_HEAD;
+      }
       break;
     case GUMBO_TAG_BODY:
       return GUMBO_INSERTION_MODE_IN_BODY;
@@ -1437,7 +1441,7 @@ static GumboQuirksModeEnum compute_quirks_mode(const GumboTokenDocType* doctype)
 
   if (
     doctype->force_quirks
-    || strcmp(doctype->name, "html")
+    || strcmp(doctype->name, "html") != 0
     || is_in_static_list(pubid, kQuirksModePublicIdPrefixes, false)
     || is_in_static_list(pubid, kQuirksModePublicIdExactMatches, true)
     || is_in_static_list(sysid, kQuirksModeSystemIdExactMatches, true)
@@ -2314,8 +2318,9 @@ static void finish_parsing(GumboParser* parser) {
     }
     node->parse_flags |= GUMBO_INSERTION_IMPLICIT_END_TAG;
   }
-  while (pop_current_node(parser))
-    ;  // Pop them all.
+  while (pop_current_node(parser)) {
+    // Pop them all.
+  }
 }
 
 static bool handle_initial(GumboParser* parser, GumboToken* token) {
@@ -2501,8 +2506,9 @@ static bool handle_in_head(GumboParser* parser, GumboToken* token) {
       parser_add_parse_error(parser, token);
       success = false;
     }
-    while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_TEMPLATE))
+    while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_TEMPLATE)) {
       ;
+    }
     clear_active_formatting_elements(parser);
     pop_template_insertion_mode(parser);
     reset_insertion_mode_appropriately(parser);
@@ -2879,8 +2885,9 @@ static HOT bool handle_in_body(GumboParser* parser, GumboToken* token) {
         parser_add_parse_error(parser, token);
         return false;
       }
-      while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_FORM))
+      while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_FORM)) {
         ;
+      }
       return success;
     } else {
       bool result = true;
@@ -3241,8 +3248,9 @@ static HOT bool handle_in_body(GumboParser* parser, GumboToken* token) {
         // TODO(jdtang): Do I need to add a parse error here?  The condition in
         // the spec seems like it's the inverse of the loop condition above, and
         // so would never fire.
-        while (node != pop_current_node(parser))
-          ;  // Pop everything.
+        while (node != pop_current_node(parser)) {
+          // Pop everything.
+        }
         return true;
       } else if (is_special_node(node)) {
         parser_add_parse_error(parser, token);
@@ -3455,8 +3463,9 @@ static bool handle_in_caption(GumboParser* parser, GumboToken* token) {
       if (!node_html_tag_is(get_current_node(parser), GUMBO_TAG_CAPTION)) {
         parser_add_parse_error(parser, token);
       }
-      while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_CAPTION))
+      while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_CAPTION)) {
         ;
+      }
       clear_active_formatting_elements(parser);
       set_insertion_mode(parser, GUMBO_INSERTION_MODE_IN_TABLE);
       return result;
@@ -3473,8 +3482,9 @@ static bool handle_in_caption(GumboParser* parser, GumboToken* token) {
       ignore_token(parser);
       return false;
     }
-    while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_CAPTION))
+    while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_CAPTION)) {
       ;
+    }
     clear_active_formatting_elements(parser);
     set_insertion_mode(parser, GUMBO_INSERTION_MODE_IN_TABLE);
     parser->_parser_state->_reprocess_current_token = true;
@@ -3927,8 +3937,9 @@ static bool handle_in_template(GumboParser* parser, GumboToken* token) {
       return true;
     }
     parser_add_parse_error(parser, token);
-    while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_TEMPLATE))
+    while (!node_html_tag_is(pop_current_node(parser), GUMBO_TAG_TEMPLATE)) {
       ;
+    }
     clear_active_formatting_elements(parser);
     pop_template_insertion_mode(parser);
     reset_insertion_mode_appropriately(parser);

@@ -23,11 +23,11 @@
 #include "util.h"
 
 GumboAttribute* gumbo_get_attribute (
-  const GumboVector* attributes,
+  const GumboVector* attrs,
   const char* name
 ) {
-  for (unsigned int i = 0; i < attributes->length; ++i) {
-    GumboAttribute* attr = attributes->data[i];
+  for (unsigned int i = 0; i < attrs->length; ++i) {
+    GumboAttribute* attr = attrs->data[i];
     if (ascii_streq_icase(attr->name, name)) {
       return attr;
     }

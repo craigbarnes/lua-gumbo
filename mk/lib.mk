@@ -9,12 +9,18 @@ define GPERF_GEN
   $(Q) $(GPERF) -m100 $(2) $(1:.c=.gperf) | $(GPERF_FILTER) > $(1)
 endef
 
-LIBGUMBO_OBJ_GPERF = $(call PREFIX_OBJ, build/lib/, \
-    foreign_attrs svg_attrs svg_tags tag_lookup )
+LIBGUMBO_GPERF = foreign_attrs svg_attrs svg_tags tag_lookup
+LIBGUMBO_RAGEL = char_ref
 
-LIBGUMBO_OBJ = $(call PREFIX_OBJ, build/lib/, \
-    ascii attribute error string_buffer tag utf8 vector char_ref parser \
-    tokenizer util ) \
+LIBGUMBO_BASIC = \
+    ascii attribute error string_buffer tag utf8 vector parser \
+    tokenizer util
+
+LIBGUMBO_OBJ_GPERF = \
+    $(call PREFIX_OBJ, build/lib/, $(LIBGUMBO_GPERF))
+
+LIBGUMBO_OBJ = \
+    $(call PREFIX_OBJ, build/lib/, $(LIBGUMBO_BASIC) $(LIBGUMBO_RAGEL)) \
     $(LIBGUMBO_OBJ_GPERF)
 
 TEST_OBJ = $(call PREFIX_OBJ, build/lib/test_, \
