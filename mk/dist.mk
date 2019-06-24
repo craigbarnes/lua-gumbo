@@ -1,4 +1,4 @@
-TAGS = 0.4 0.3 0.2 0.1
+TAGS = 0.5 0.4 0.3 0.2 0.1
 
 dist: $(addprefix public/dist/lua-gumbo-, $(addsuffix .tar.gz, $(TAGS)))
 

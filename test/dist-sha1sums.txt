@@ -2,3 +2,4 @@
 4dc53ced0228fc54f4166289273bb9a7bc385857  public/dist/lua-gumbo-0.2.tar.gz
 18e0427fa9ebd54eadf3e64660d45b3fe45ac8b7  public/dist/lua-gumbo-0.3.tar.gz
 8356b1293d9fcc61e9aa2642df8766a0c53968a7  public/dist/lua-gumbo-0.4.tar.gz
+24d582efb098fab4726e0ed15f27745879cd2afa  public/dist/lua-gumbo-0.5.tar.gz
