@@ -16,10 +16,12 @@ Released on Jun 24 2019.
   any new options will only be supported by the new API.
 * Various bug fixes to DOM methods.
 * Many performance improvements.
+* Windows support (requires MSVC 2015 or later).
 
-**Download:**
+**Downloads:**
 
 * [`lua-gumbo-0.5.tar.gz`](https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-0.5.tar.gz)
+* [`lua-gumbo-0.5.tar.gz.sig`](https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-0.5.tar.gz.sig)
 
 ### 0.4
 
@@ -28,9 +30,10 @@ Released on Dec 3 2015.
 This is the first release to target gumbo 0.10.0+ and also includes
 support for HTML fragment parsing.
 
-**Download:**
+**Downloads:**
 
 * [`lua-gumbo-0.4.tar.gz`](https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-0.4.tar.gz)
+* [`lua-gumbo-0.4.tar.gz.sig`](https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-0.4.tar.gz.sig)
 
 ---
 
@@ -43,9 +46,10 @@ Mostly just minor tweaks and build fixes since 0.2.
 This will be the last release to support Gumbo 0.9.x. Future releases
 will target 0.10.0+.
 
-**Download:**
+**Downloads:**
 
 * [`lua-gumbo-0.3.tar.gz`](https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-0.3.tar.gz)
+* [`lua-gumbo-0.3.tar.gz.sig`](https://craigbarnes.gitlab.io/dist/lua-gumbo/lua-gumbo-0.3.tar.gz.sig)
 
 
 [lib readme]: https://gitlab.com/craigbarnes/lua-gumbo/blob/07bea90bb0afbc7ab1e4475e5711faac08264d20/lib/README.md
