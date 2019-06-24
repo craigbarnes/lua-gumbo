@@ -55,6 +55,7 @@ build = {
         ["gumbo.sanitize"] = "gumbo/sanitize.lua",
         ["gumbo.serialize.Indent"] = "gumbo/serialize/Indent.lua",
         ["gumbo.serialize.html"] = "gumbo/serialize/html.lua",
+        ["gumbo.dom.util"] = "gumbo/dom/util.lua",
         ["gumbo.dom.Element"] = "gumbo/dom/Element.lua",
         ["gumbo.dom.Text"] = "gumbo/dom/Text.lua",
         ["gumbo.dom.Comment"] = "gumbo/dom/Comment.lua",
