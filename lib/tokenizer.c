@@ -1306,7 +1306,7 @@ static StateResult handle_rawtext_end_tag_name_state (
   GumboToken* output
 ) {
   assert(tokenizer->_temporary_buffer.length >= 2);
-  gumbo_debug("Last end tag: %*s\n", (int) tokenizer->_tag_state._buffer.length,
+  gumbo_debug("Last end tag: %.*s\n", (int) tokenizer->_tag_state._buffer.length,
       tokenizer->_tag_state._buffer.data);
   if (is_alpha(c)) {
     append_char_to_tag_buffer(parser, ensure_lowercase(c), true);
