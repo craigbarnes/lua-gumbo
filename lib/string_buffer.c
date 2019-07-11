@@ -53,6 +53,11 @@ void gumbo_string_buffer_reserve (
   maybe_resize_string_buffer(min_capacity - output->length, output);
 }
 
+void gumbo_string_buffer_null_terminate(GumboStringBuffer* output) {
+  maybe_resize_string_buffer(1, output);
+  output->data[output->length] = '\0';
+}
+
 HOT void gumbo_string_buffer_append_codepoint (
   int c,
   GumboStringBuffer* output
@@ -96,27 +101,27 @@ int gumbo_string_buffer_vsprintf (
   const char* fmt,
   va_list ap
 ) {
-    va_list ap2;
-    va_copy(ap2, ap);
-    // Calculate the required size
-    int n = vsnprintf(NULL, 0, fmt, ap2);
-    va_end(ap2);
-    if (n <= 0) {
-      return n;
-    }
-    maybe_resize_string_buffer(n + 1, s);
-    int wrote = vsnprintf(s->data + s->length, n + 1, fmt, ap);
-    assert(wrote == n);
-    s->length += wrote;
-    return wrote;
+  va_list ap2;
+  va_copy(ap2, ap);
+  // Calculate the required size
+  int n = vsnprintf(NULL, 0, fmt, ap2);
+  va_end(ap2);
+  if (n <= 0) {
+    return n;
+  }
+  maybe_resize_string_buffer(n + 1, s);
+  int wrote = vsnprintf(s->data + s->length, n + 1, fmt, ap);
+  assert(wrote == n);
+  s->length += wrote;
+  return wrote;
 }
 
 int gumbo_string_buffer_sprintf(GumboStringBuffer* s, const char* fmt, ...) {
-    va_list ap;
-    va_start(ap, fmt);
-    int n = gumbo_string_buffer_vsprintf(s, fmt, ap);
-    va_end(ap);
-    return n;
+  va_list ap;
+  va_start(ap, fmt);
+  int n = gumbo_string_buffer_vsprintf(s, fmt, ap);
+  va_end(ap);
+  return n;
 }
 
 char* gumbo_string_buffer_to_string(const GumboStringBuffer* input) {

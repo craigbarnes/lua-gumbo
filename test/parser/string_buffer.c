@@ -20,18 +20,14 @@
 #define SETUP() GumboStringBuffer buffer_; gumbo_string_buffer_init(&buffer_)
 #define TEARDOWN() gumbo_string_buffer_destroy(&buffer_)
 
-static void null_terminate_buffer(GumboStringBuffer* buffer) {
-  buffer->data[buffer->length++] = '\0';
-}
-
 TEST(GumboStringBufferTest, Reserve) {
   SETUP();
   gumbo_string_buffer_reserve(21, &buffer_);
   EXPECT_EQ(40, buffer_.capacity);
   strcpy(buffer_.data, "01234567890123456789");
   buffer_.length = 20;
-  null_terminate_buffer(&buffer_);
-  EXPECT_EQ(21, buffer_.length);
+  gumbo_string_buffer_null_terminate(&buffer_);
+  EXPECT_EQ(20, buffer_.length);
   EXPECT_STREQ("01234567890123456789", buffer_.data);
   TEARDOWN();
 }
@@ -40,7 +36,7 @@ TEST(GumboStringBufferTest, AppendString) {
   SETUP();
   GumboStringPiece str = STRING_PIECE("01234567");
   gumbo_string_buffer_append_string(&str, &buffer_);
-  null_terminate_buffer(&buffer_);
+  gumbo_string_buffer_null_terminate(&buffer_);
   EXPECT_STREQ("01234567", buffer_.data);
   TEARDOWN();
 }
@@ -50,7 +46,7 @@ TEST(GumboStringBufferTest, AppendStringWithResize) {
   GumboStringPiece str = STRING_PIECE("01234567");
   gumbo_string_buffer_append_string(&str, &buffer_);
   gumbo_string_buffer_append_string(&str, &buffer_);
-  null_terminate_buffer(&buffer_);
+  gumbo_string_buffer_null_terminate(&buffer_);
   EXPECT_STREQ("0123456701234567", buffer_.data);
   TEARDOWN();
 }
@@ -58,7 +54,7 @@ TEST(GumboStringBufferTest, AppendStringWithResize) {
 TEST(GumboStringBufferTest, AppendCodepoint_1Byte) {
   SETUP();
   gumbo_string_buffer_append_codepoint('a', &buffer_);
-  null_terminate_buffer(&buffer_);
+  gumbo_string_buffer_null_terminate(&buffer_);
   EXPECT_STREQ("a", buffer_.data);
   TEARDOWN();
 }
@@ -66,7 +62,7 @@ TEST(GumboStringBufferTest, AppendCodepoint_1Byte) {
 TEST(GumboStringBufferTest, AppendCodepoint_2Bytes) {
   SETUP();
   gumbo_string_buffer_append_codepoint(0xE5, &buffer_);
-  null_terminate_buffer(&buffer_);
+  gumbo_string_buffer_null_terminate(&buffer_);
   EXPECT_STREQ("\xC3\xA5", buffer_.data);
   TEARDOWN();
 }
@@ -74,7 +70,7 @@ TEST(GumboStringBufferTest, AppendCodepoint_2Bytes) {
 TEST(GumboStringBufferTest, AppendCodepoint_3Bytes) {
   SETUP();
   gumbo_string_buffer_append_codepoint(0x39E7, &buffer_);
-  null_terminate_buffer(&buffer_);
+  gumbo_string_buffer_null_terminate(&buffer_);
   EXPECT_STREQ("\xE3\xA7\xA7", buffer_.data);
   TEARDOWN();
 }
@@ -82,7 +78,7 @@ TEST(GumboStringBufferTest, AppendCodepoint_3Bytes) {
 TEST(GumboStringBufferTest, AppendCodepoint_4Bytes) {
   SETUP();
   gumbo_string_buffer_append_codepoint(0x679E7, &buffer_);
-  null_terminate_buffer(&buffer_);
+  gumbo_string_buffer_null_terminate(&buffer_);
   EXPECT_STREQ("\xF1\xA7\xA7\xA7", buffer_.data);
   TEARDOWN();
 }
@@ -96,5 +92,17 @@ TEST(GumboStringBufferTest, ToString) {
   char* dest = gumbo_string_buffer_to_string(&buffer_);
   EXPECT_STREQ("012345", dest);
   gumbo_free(dest);
+  TEARDOWN();
+}
+
+TEST(GumboStringBufferTest, FormattedAppend) {
+  SETUP();
+  gumbo_string_buffer_sprintf(&buffer_, "%s %d", "xyz", 14789);
+  gumbo_string_buffer_null_terminate(&buffer_);
+  EXPECT_EQ(buffer_.length, 9);
+  EXPECT_STREQ("xyz 14789", buffer_.data);
+  gumbo_string_buffer_sprintf(&buffer_, " %s %d", "foo", -101);
+  EXPECT_EQ(buffer_.length, 18);
+  EXPECT_STREQ("xyz 14789 foo -101", buffer_.data);
   TEARDOWN();
 }

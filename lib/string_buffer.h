@@ -34,6 +34,11 @@ void gumbo_string_buffer_reserve (
   GumboStringBuffer* output
 );
 
+// Ensures that the current buffer contents is null-terminated
+// within the bounded length. This is only guaranteed until the
+// next buffer mutation.
+void gumbo_string_buffer_null_terminate(GumboStringBuffer* output);
+
 // Appends a single Unicode codepoint onto the end of the GumboStringBuffer.
 // This is essentially a UTF-8 encoder, and may add 1-4 bytes depending on the
 // value of the codepoint.
