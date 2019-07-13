@@ -184,12 +184,8 @@ static bool maybe_add_invalid_named_reference (
   // The iterator will always be reset in this code path, so we don't need to
   // worry about consuming characters.
   const char* start = utf8iterator_get_char_pointer(input);
-  int c = utf8iterator_current(input);
-  while (
-    (c >= 'a' && c <= 'z')
-    || (c >= 'A' && c <= 'Z')
-    || (c >= '0' && c <= '9')
-  ) {
+  unsigned int c = utf8iterator_current(input);
+  while (c < 0x80 && ascii_isalnum(c)) {
     utf8iterator_next(input);
     c = utf8iterator_current(input);
   }
