@@ -470,7 +470,7 @@ function Node.setters:textContent(value)
 end
 
 local function hasbit(flags, bit)
-    return (flags and flags % (bit * 2) >= bit) and true or false
+    return flags ~= nil and flags % (bit + bit) >= bit
 end
 
 function Node.getters:insertedByParser()

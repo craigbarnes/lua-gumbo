@@ -180,3 +180,21 @@ do
     assert(p1_clone.type == "text")
     assert(ws_clone.type == "whitespace")
 end
+
+do
+    local input = "<p>Hello</p><p>world"
+    local document = assert(parse(input))
+    local head = assert(document.head)
+    local p1 = assert(document.body.childNodes[1])
+    local p2 = assert(document.body.childNodes[2])
+    assert(p1.localName == "p")
+    assert(p2.localName == "p")
+
+    -- Check that getter functions interpret Node::parseFlags correctly
+    assert(head.insertedByParser == true)
+    assert(head.implicitEndTag == true)
+    assert(p1.insertedByParser == false)
+    assert(p1.implicitEndTag == false)
+    assert(p2.insertedByParser == false)
+    assert(p2.implicitEndTag == true)
+end
