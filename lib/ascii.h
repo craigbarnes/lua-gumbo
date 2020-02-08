@@ -12,12 +12,9 @@ extern const uint8_t ascii_table[256];
 #define ASCII_DIGIT 0x08
 #define ASCII_LOWER 0x10
 #define ASCII_UPPER 0x20
-#define ASCII_HEX_LOWER 0x40
-#define ASCII_HEX_UPPER 0x80
 
 #define ASCII_ALPHA (ASCII_LOWER | ASCII_UPPER)
 #define ASCII_ALNUM (ASCII_ALPHA | ASCII_DIGIT)
-#define ASCII_XDIGIT (ASCII_DIGIT | ASCII_HEX_LOWER | ASCII_HEX_UPPER)
 
 #define ascii_test(x, mask) ((ascii_table[(unsigned char)(x)] & (mask)) != 0)
 #define ascii_islower(x) ascii_test(x, ASCII_LOWER)
@@ -25,7 +22,6 @@ extern const uint8_t ascii_table[256];
 #define ascii_isalpha(x) ascii_test(x, ASCII_ALPHA)
 #define ascii_isalnum(x) ascii_test(x, ASCII_ALNUM)
 #define ascii_isdigit(x) ascii_test(x, ASCII_DIGIT)
-#define ascii_isxdigit(x) ascii_test(x, ASCII_XDIGIT)
 
 static inline unsigned char ascii_tolower(unsigned char c)
 {
