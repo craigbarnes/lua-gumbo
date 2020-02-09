@@ -556,7 +556,7 @@ static bool tag_in (
   } else {
     return false;
   }
-  return (*tags)[(unsigned) token_tag] != 0u;
+  return (*tags)[token_tag] != 0;
 }
 
 // Like tag_in, but for the single-tag case.
@@ -570,12 +570,12 @@ static bool tag_is(const GumboToken* token, bool is_start, GumboTag tag) {
   }
 }
 
-static inline bool tagset_includes (
+static bool tagset_includes (
   const TagSet* tagset,
   GumboNamespaceEnum ns,
   GumboTag tag
 ) {
-  return ((*tagset)[(unsigned) tag] & (1u << (unsigned) ns)) != 0u;
+  return ((*tagset)[tag] & (1u << ns)) != 0;
 }
 
 // Like tag_in, but checks for the tag of a node, rather than a token.
