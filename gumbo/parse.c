@@ -1,6 +1,6 @@
 /*
  Lua bindings for the Gumbo HTML5 parsing library.
- Copyright (c) 2013-2017, Craig Barnes.
+ Copyright (c) 2013-2020, Craig Barnes.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include "../lib/gumbo.h"
+#include "../lib/ascii.h"
+#include "../lib/macros.h"
 #include "compat.h"
 
 typedef enum {
@@ -42,12 +44,14 @@ typedef enum {
 #define set_integer(L, k, v) set_field(integer, L, k, v)
 #define set_value(L, k, v) set_field(value, L, k, (v) < 0 ? (v)-1 : (v))
 
-static void setmetatable(lua_State *L, Upvalue index) {
+static void setmetatable(lua_State *L, Upvalue index)
+{
     lua_pushvalue(L, lua_upvalueindex(index));
     lua_setmetatable(L, -2);
 }
 
-static void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
+static void set_sourcepos(lua_State *L, const GumboSourcePosition pos)
+{
     if (pos.line != 0) {
         set_integer(L, "line", pos.line);
         set_integer(L, "column", pos.column);
@@ -55,30 +59,29 @@ static void set_sourcepos(lua_State *L, const GumboSourcePosition pos) {
     }
 }
 
-#if LUA_VERSION_NUM >= 502
-static void pushstring_lower(lua_State *L, const char *s, size_t len) {
+static void pushstring_lower(lua_State *L, const char *s, size_t len)
+{
     luaL_Buffer b;
+#if LUA_VERSION_NUM >= 502
     char *lower = luaL_buffinitsize(L, &b, len);
     for (size_t i = 0; i < len; i++) {
         const char c = s[i];
-        lower[i] = (c <= 'Z' && c >= 'A') ? c | 0x20 : c;
+        lower[i] = ascii_tolower(c);
     }
     luaL_addsize(&b, len);
     luaL_pushresult(&b);
-}
 #else
-static void pushstring_lower(lua_State *L, const char *s, size_t len) {
-    luaL_Buffer b;
     luaL_buffinit(L, &b);
     for (size_t i = 0; i < len; i++) {
         const char c = s[i];
-        luaL_addchar(&b, (c <= 'Z' && c >= 'A') ? c | 0x20 : c);
+        luaL_addchar(&b, ascii_tolower(c));
     }
     luaL_pushresult(&b);
-}
 #endif
+}
 
-static void set_attributes(lua_State *L, const GumboVector *attrs) {
+static void set_attributes(lua_State *L, const GumboVector *attrs)
+{
     static const char attrnsmap[][6] = {"none", "xlink", "xml", "xmlns"};
     const unsigned int length = attrs->length;
     if (length > 0) {
@@ -104,7 +107,8 @@ static void set_attributes(lua_State *L, const GumboVector *attrs) {
     }
 }
 
-static void set_tag(lua_State *L, const GumboElement *element) {
+static void set_tag(lua_State *L, const GumboElement *element)
+{
     if (element->tag_namespace == GUMBO_NAMESPACE_SVG) {
         set_literal(L, "namespace", "svg");
         GumboStringPiece original_tag = element->original_tag;
@@ -127,7 +131,8 @@ static void set_tag(lua_State *L, const GumboElement *element) {
     lua_setfield(L, -2, "localName");
 }
 
-static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
+static void create_text_node(lua_State *L, const GumboText *t, Upvalue i)
+{
     lua_createtable(L, 0, 5);
     set_string(L, "data", t->text);
     set_sourcepos(L, t->start_pos);
@@ -138,7 +143,8 @@ static void create_text_node(lua_State *L, const GumboText *t, Upvalue i) {
 static void push_node(lua_State *L, const GumboNode *node);
 
 static void
-set_children(lua_State *L, const GumboVector *vec, unsigned int start) {
+set_children(lua_State *L, const GumboVector *vec, unsigned int start)
+{
     const unsigned int length = vec->length;
     lua_createtable(L, length, 0);
     setmetatable(L, NodeList);
@@ -150,7 +156,8 @@ set_children(lua_State *L, const GumboVector *vec, unsigned int start) {
     lua_setfield(L, -2, "childNodes");
 }
 
-static void push_node(lua_State *L, const GumboNode *node) {
+static void push_node(lua_State *L, const GumboNode *node)
+{
     luaL_checkstack(L, 10, "Unable to allocate Lua stack space");
     switch (node->type) {
     case GUMBO_NODE_ELEMENT: {
@@ -202,7 +209,8 @@ static void push_node(lua_State *L, const GumboNode *node) {
     }
 }
 
-static int push_document(lua_State *L) {
+static int push_document(lua_State *L)
+{
     const GumboDocument *document = lua_touserdata(L, 1);
     lua_createtable(L, 0, 4);
     if (document->has_doctype) {
@@ -223,48 +231,56 @@ static int push_document(lua_State *L) {
     return 1;
 }
 
-static int parse(lua_State *L) {
-    size_t input_len, tagname_len;
+static int parse(lua_State *L)
+{
     GumboOptions options = kGumboDefaultOptions;
     options.max_errors = 0;
+    size_t input_len;
     const char *input = luaL_checklstring(L, 1, &input_len);
     options.tab_stop = (int)luaL_optinteger(L, 2, 8);
+
+    size_t tagname_len;
     const char *tagname = luaL_optlstring(L, 3, NULL, &tagname_len);
     if (tagname != NULL) {
         options.fragment_context = gumbo_tagn_enum(tagname, tagname_len);
     }
+
     static const char *namespaces[] = {"html", "svg", "math", NULL};
     options.fragment_namespace = luaL_checkoption(L, 4, "html", namespaces);
+
     for (int i = 1; i <= nupvalues; i++) {
         luaL_checktype(L, i + 4, LUA_TTABLE);
     }
     lua_pushcclosure(L, push_document, nupvalues);
+
     GumboOutput *output = gumbo_parse_with_options(&options, input, input_len);
-    if (output == NULL) {
+    if (unlikely(output == NULL)) {
         lua_pushnil(L);
         lua_pushliteral(L, "gumbo_parse_with_options() returned NULL");
         return 2;
     }
+
     GumboOutputStatus status = output->status;
-    if (status != GUMBO_STATUS_OK) {
+    if (unlikely(status != GUMBO_STATUS_OK)) {
         gumbo_destroy_output(output);
         lua_pushnil(L);
         lua_pushstring(L, gumbo_status_to_string(status));
         return 2;
     }
+
     lua_pushlightuserdata(L, &output->document->v.document);
     int err = lua_pcall(L, 1, 1, 0);
     gumbo_destroy_output(output);
-    if (err == 0) { // LUA_OK
-        return 1;
-    } else {
+    if (unlikely(err != 0)) { // LUA_OK
         lua_pushnil(L);
         lua_pushvalue(L, -2);
         return 2;
     }
+    return 1;
 }
 
-EXPORT int luaopen_gumbo_parse(lua_State *L) {
+EXPORT int luaopen_gumbo_parse(lua_State *L)
+{
     lua_pushcfunction(L, parse);
     return 1;
 }
