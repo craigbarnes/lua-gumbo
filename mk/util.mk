@@ -13,7 +13,6 @@ XARGS_P = $(call try-run, printf "1\n2" | xargs -P2 -I@ echo '@', -P$(NPROC))
 PRINTVAR = printf '\033[1m%15s\033[0m = %s$(2)\n' '$(1)' '$(strip $($(1)))' $(3)
 PRINTVARX = $(call PRINTVAR,$(1), \033[32m(%s)\033[0m, '$(origin $(1))')
 USERVARS = CC CFLAGS LDFLAGS
-LUAVARS = LUAS_FOUND LUA53_PC LUA52_PC LUA51_PC LUA53 LUA52 LUA51
 
 AUTOVARS = \
     KERNEL \

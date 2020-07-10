@@ -7,6 +7,7 @@ $(call make-lazy,PKGCONFIG)
 
 LUA_VERSIONS = 5.4 5.3 5.2 5.1
 LUA_SUFFIXES = $(subst .,,$(LUA_VERSIONS))
+LUAVARS = LUAS_FOUND $(foreach v, $(LUA_SUFFIXES), LUA$(v)_PC LUA$(v))
 PKGEXISTS = $(PKGCONFIG) --exists $(1) && echo $(1)
 PKGFIND = $(shell for P in $(1); do $(call PKGEXISTS, $$P) && break; done)
 PKGMATCH = $(shell $(PKGCONFIG) --exists '$(1) $(2); $(1) $(3)' && echo $(1))
