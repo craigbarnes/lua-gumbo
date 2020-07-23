@@ -1,5 +1,4 @@
 /*
- Lua bindings for the Gumbo HTML5 parsing library.
  Copyright (c) 2013-2020, Craig Barnes.
 
  Licensed under the Apache License, Version 2.0 (the "License");
