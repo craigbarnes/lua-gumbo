@@ -136,12 +136,13 @@ local filenames = expand_filenames {
     "html5test-com", "inbody01", "isindex", "main-element", "math",
     "menuitem-element", "namespace-sensitivity", "noscript01",
     "pending-spec-changes", "pending-spec-changes-plain-text-unsafe",
-    "plain-text-unsafe", "ruby", "scriptdata01", "tables01", "template",
-    "tests1", "tests2", "tests3", "tests4", "tests5", "tests6",
-    "tests7", "tests8", "tests9", "tests10", "tests11", "tests12",
-    "tests14", "tests15", "tests16", "tests17", "tests18", "tests19",
+    "plain-text-unsafe", "ruby", "scriptdata01", "svg", "tables01",
+    "template", "tests1", "tests10", "tests11", "tests12", "tests14",
+    "tests15", "tests16", "tests17", "tests18", "tests19", "tests2",
     "tests20", "tests21", "tests22", "tests23", "tests24", "tests25",
-    "tests26", "tests_innerHTML_1", "tricky01", "webkit01", "webkit02"
+    "tests26", "tests3", "tests4", "tests5", "tests6", "tests7",
+    "tests8", "tests9", "tests_innerHTML_1", "tricky01", "webkit01",
+    "webkit02"
 }
 
 do
