@@ -31,7 +31,7 @@ public/style.css: docs/layout.css docs/style.css | public/
 
 build/docs/examples.md: $(EXAMPLE_FILES) | build/docs/
 	$(E) CAT '$@'
-	$(Q) printf "## Examples\n\n" > $@
+	$(Q) printf "Examples\n--------\n\n" > $@
 	$(Q) for file in $^; do \
 	  printf '```lua\n' >> $@; \
 	  cat $$file >> $@; \
