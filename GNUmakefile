@@ -13,6 +13,7 @@ INSTALL = install
 INSTALL_LMOD = $(INSTALL) -p -m644
 INSTALL_CMOD = $(INSTALL) -p -m755
 INSTALL_DIR = $(INSTALL) -d -m755
+CTAGS = ctags
 
 DOM_IFACES = \
     Element Text Comment Document DocumentFragment DocumentType \
@@ -43,6 +44,9 @@ $(INSTALL_ALL): install-lua%: build-lua%
 	$(INSTALL_CMOD) build/lua$*/gumbo/parse.so '$(CMOD_DIR)/gumbo/'
 	$(INSTALL_LMOD) gumbo.lua '$(LMOD_DIR)/'
 
+tags:
+	$(CTAGS) -R gumbo/ lib/
+
 clean-obj:
 	$(RM) -r build/ gumbo/parse.o gumbo/parse.so lib/*.o
 
@@ -51,5 +55,5 @@ clean: clean-obj clean-docs
 
 
 .DEFAULT_GOAL = all
-.PHONY: all install install-all $(INSTALL_ALL) clean clean-obj
+.PHONY: all install install-all $(INSTALL_ALL) tags clean clean-obj
 .DELETE_ON_ERROR:
