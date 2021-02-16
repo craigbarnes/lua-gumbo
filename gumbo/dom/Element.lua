@@ -9,6 +9,7 @@ local NodeList = require "gumbo.dom.NodeList"
 local DOMTokenList = require "gumbo.dom.DOMTokenList"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
+local createtable = assert(require"gumbo.util".createtable)
 local constants = require "gumbo.constants"
 local namespaces = constants.namespaces
 local voidElements = constants.voidElements
@@ -181,7 +182,7 @@ function Element:cloneNode(deep)
         childNodes = setmetatable({}, NodeList)
     }
     if self:hasAttributes() then
-        local attrs = {} -- TODO: attrs = createtable(#self.attributes, 0)
+        local attrs = createtable(#self.attributes, 0)
         for i, attr in ipairs(self.attributes) do
             local t = {
                 name = attr.name,
