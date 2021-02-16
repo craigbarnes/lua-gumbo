@@ -39,7 +39,7 @@ $(BUILD_ALL_PHONY): build-lua%: build/lua%/gumbo/parse.so build/lua%/gumbo/util.
 
 build/lua%/gumbo/parse.o: CCOPTS += -DNEED_LUA_VER='$(patsubst 5%,50%,$*)'
 build/lua%/gumbo/util.o: CCOPTS += -DNEED_LUA_VER='$(patsubst 5%,50%,$*)'
-$(OBJ_ALL) $(LIBGUMBO_OBJ): XCFLAGS += -fpic -fvisibility=hidden
+$(OBJ_ALL) $(LIBGUMBO_OBJ): XCFLAGS += -fPIC -fvisibility=hidden
 $(OBJ_ALL): gumbo/compat.h lib/gumbo.h lib/ascii.h lib/macros.h
 
 $(PARSER_ALL): build/lua%/gumbo/parse.so: build/lua%/gumbo/parse.o $(LIBGUMBO_OBJ)
