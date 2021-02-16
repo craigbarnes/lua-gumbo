@@ -20,6 +20,7 @@
 #include <lauxlib.h>
 #include "compat.h"
 #include "../lib/ascii.h"
+#include "../lib/macros.h"
 
 static const char *do_trim(const char *str, size_t *n)
 {
@@ -37,6 +38,43 @@ static const char *do_trim(const char *str, size_t *n)
 
     *n = len;
     return str;
+}
+
+static int trim_and_collapse(lua_State *L)
+{
+    luaL_Buffer b;
+    size_t len;
+    const char *str = luaL_checklstring(L, 1, &len);
+    str = do_trim(str, &len);
+
+    #if LUA_VERSION_NUM >= 502
+        char *out = luaL_buffinitsize(L, &b, len);
+        size_t pos = 0;
+    #else
+        luaL_buffinit(L, &b);
+    #endif
+
+    for (size_t i = 0; i < len; ) {
+        char ch = str[i++];
+        if (ascii_isspace(ch)) {
+            while (i < len && ascii_isspace(str[i])) {
+                i++;
+            }
+            ch = ' ';
+        }
+        #if LUA_VERSION_NUM >= 502
+            out[pos++] = ch;
+        #else
+            luaL_addchar(&b, ch);
+        #endif
+    }
+
+    #if LUA_VERSION_NUM >= 502
+        luaL_addsize(&b, pos);
+    #endif
+
+    luaL_pushresult(&b);
+    return 1;
 }
 
 static int trim(lua_State *L)
@@ -64,6 +102,7 @@ static int createtable(lua_State *L)
 
 static const luaL_Reg lib[] = {
     {"trim", trim},
+    {"trimAndCollapseWhitespace", trim_and_collapse},
     {"createtable", createtable},
     {NULL, NULL}
 };
