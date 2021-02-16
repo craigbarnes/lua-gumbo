@@ -34,20 +34,25 @@ local parser_sources = {
     "lib/vector.c",
 }
 
+local util_sources = {
+    "gumbo/util.c",
+    "lib/ascii.c",
+}
+
 build = {
     type = "builtin",
     copy_directories = {}, -- Override the default: {"doc"}
     platforms = {
         unix = {
             modules = {
-                ["gumbo.parse"] = {
-                    defines = {"NDEBUG -std=c99 -fvisibility=hidden"}
-                }
+                ["gumbo.parse"] = {defines = {"NDEBUG -std=c99 -fvisibility=hidden"}},
+                ["gumbo.util"]  = {defines = {"NDEBUG -std=c99 -fvisibility=hidden"}},
             }
         }
     },
     modules = {
         ["gumbo.parse"] = {sources = parser_sources, defines = "NDEBUG"},
+        ["gumbo.util"] = {sources = util_sources, defines = "NDEBUG"},
         ["gumbo"] = "gumbo.lua",
         ["gumbo.Buffer"] = "gumbo/Buffer.lua",
         ["gumbo.Set"] = "gumbo/Set.lua",

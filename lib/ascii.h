@@ -9,19 +9,28 @@
 
 extern const uint8_t ascii_table[256];
 
-#define ASCII_DIGIT 0x08
-#define ASCII_LOWER 0x10
-#define ASCII_UPPER 0x20
+typedef enum {
+  ASCII_SPACE = 0x01,
+  ASCII_DIGIT = 0x02,
+  ASCII_CNTRL = 0x04,
+  ASCII_LOWER = 0x10,
+  ASCII_UPPER = 0x20,
+  ASCII_ALPHA = ASCII_LOWER | ASCII_UPPER,
+  ASCII_ALNUM = ASCII_ALPHA | ASCII_DIGIT,
+} AsciiCharType;
 
-#define ASCII_ALPHA (ASCII_LOWER | ASCII_UPPER)
-#define ASCII_ALNUM (ASCII_ALPHA | ASCII_DIGIT)
-
-#define ascii_test(x, mask) ((ascii_table[(unsigned char)(x)] & (mask)) != 0)
 #define ascii_islower(x) ascii_test(x, ASCII_LOWER)
 #define ascii_isupper(x) ascii_test(x, ASCII_UPPER)
 #define ascii_isalpha(x) ascii_test(x, ASCII_ALPHA)
 #define ascii_isalnum(x) ascii_test(x, ASCII_ALNUM)
 #define ascii_isdigit(x) ascii_test(x, ASCII_DIGIT)
+#define ascii_isspace(x) ascii_test(x, ASCII_SPACE)
+#define ascii_iscntrl(x) ascii_test(x, ASCII_CNTRL)
+
+static inline bool ascii_test(unsigned char c, AsciiCharType mask)
+{
+  return (ascii_table[c] & mask) != 0;
+}
 
 static inline unsigned char ascii_tolower(unsigned char c)
 {

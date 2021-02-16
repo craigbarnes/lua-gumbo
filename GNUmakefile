@@ -42,13 +42,14 @@ $(INSTALL_ALL): install-lua%: build-lua%
 	$(INSTALL_LMOD) $(SLZ_MODULES) '$(LMOD_DIR)/gumbo/serialize/'
 	$(INSTALL_LMOD) $(DOM_MODULES) '$(LMOD_DIR)/gumbo/dom/'
 	$(INSTALL_CMOD) build/lua$*/gumbo/parse.so '$(CMOD_DIR)/gumbo/'
+	$(INSTALL_CMOD) build/lua$*/gumbo/util.so '$(CMOD_DIR)/gumbo/'
 	$(INSTALL_LMOD) gumbo.lua '$(LMOD_DIR)/'
 
 tags:
 	$(CTAGS) -R gumbo/ lib/
 
 clean-obj:
-	$(RM) -r build/ gumbo/parse.o gumbo/parse.so lib/*.o
+	$(RM) -r build/ gumbo/*.o gumbo/*.so lib/*.o
 
 clean: clean-obj clean-docs
 	$(RM) $(CLEANFILES)

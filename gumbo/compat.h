@@ -18,3 +18,7 @@
 #if defined(NEED_LUA_VER) && NEED_LUA_VER != LUA_VERSION_NUM
 # error Lua version mismatch
 #endif
+
+#if LUA_VERSION_NUM < 502
+# define luaL_newlib(L, l) (lua_newtable(L), luaL_register(L, NULL, l))
+#endif
