@@ -21,6 +21,7 @@ BUILD_ALL = $(PARSER_ALL) $(UTIL_ALL)
 BUILD_ANY = $(PARSER_ANY) $(UTIL_ANY)
 PARSER_OBJ = $(PARSER_ALL:%.so=%.o)
 UTIL_OBJ = $(UTIL_ALL:%.so=%.o)
+OBJ_ALL = $(PARSER_OBJ) $(UTIL_OBJ)
 
 ifndef NO_DEPS
   ifneq '' '$(call cc-option,-MMD -MP -MF /dev/null)'
