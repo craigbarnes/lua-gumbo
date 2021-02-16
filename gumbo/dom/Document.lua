@@ -8,6 +8,8 @@ local ElementList = require "gumbo.dom.ElementList"
 local Buffer = require "gumbo.Buffer"
 local Set = require "gumbo.Set"
 local util = require "gumbo.dom.util"
+local strutil = require "gumbo.util"
+local trimAndCollapseWhitespace = strutil.trimAndCollapseWhitespace
 local assertDocument = util.assertDocument
 local assertNode = util.assertNode
 local assertString = util.assertString
@@ -176,18 +178,10 @@ function Document.getters:titleElement()
     end
 end
 
-local function stripAndCollapseAsciiWhitespace(text)
-    assertString(text)
-    return (text
-        :gsub("[ \t\n\f\r]+", " ")
-        :gsub("^[ \t\n\f\r]*(.-)[ \t\n\f\r]*$", "%1")
-    )
-end
-
 function Document.getters:title()
     local titleElement = self.titleElement
     if titleElement then
-        return stripAndCollapseAsciiWhitespace(titleElement.textContent)
+        return trimAndCollapseWhitespace(titleElement.textContent)
     end
     return ""
 end
