@@ -14,6 +14,7 @@
  limitations under the License.
 */
 
+#include <limits.h>
 #include <stddef.h>
 #include <lua.h>
 #include <lauxlib.h>
@@ -39,8 +40,23 @@ static int trim(lua_State *L)
     return 1;
 }
 
+static int createtable(lua_State *L)
+{
+    lua_Integer narr = luaL_checkinteger(L, 1);
+    lua_Integer nrec = luaL_checkinteger(L, 2);
+    if (unlikely(narr < 0 || narr > INT_MAX)) {
+        luaL_argerror(L, 1, "value outside valid range");
+    }
+    if (unlikely(nrec < 0 || nrec > INT_MAX)) {
+        luaL_argerror(L, 2, "value outside valid range");
+    }
+    lua_createtable(L, (int)narr, (int)nrec);
+    return 1;
+}
+
 static const luaL_Reg lib[] = {
     {"trim", trim},
+    {"createtable", createtable},
     {NULL, NULL}
 };
 
