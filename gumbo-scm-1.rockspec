@@ -47,7 +47,7 @@ build = {
         }
     },
     modules = {
-        ["gumbo.parse"] = {sources = parser_sources},
+        ["gumbo.parse"] = {sources = parser_sources, defines = "NDEBUG"},
         ["gumbo"] = "gumbo.lua",
         ["gumbo.Buffer"] = "gumbo/Buffer.lua",
         ["gumbo.Set"] = "gumbo/Set.lua",
