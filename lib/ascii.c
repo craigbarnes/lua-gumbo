@@ -10,7 +10,7 @@ enum {
 };
 
 const uint8_t ascii_table[256] = {
-  C, C, C, C, C, C, C, C, C, s, s, s, s, s, C, C, // 0x00 .. 0x0F
+  C, C, C, C, C, C, C, C, C, s, s, C, s, s, C, C, // 0x00 .. 0x0F
   C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, // 0x10 .. 0x1F
   S, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 0x20 .. 0x2F
   D, D, D, D, D, D, D, D, D, D, 0, 0, 0, 0, 0, 0, // 0x30 .. 0x3F

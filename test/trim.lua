@@ -10,7 +10,7 @@ assert(trim("") == "")
 assert(trim("\t\r\nz") == "z")
 
 do
-    local s = " \t \r\v\n\f   foo bar\n \t\r \v\n\n  "
+    local s = " \t \r\n\f   foo bar\n \t\r \n\n  "
     assert(trim(s) == "foo bar")
     assert(trim(s) == gsub_trim(s))
 end
