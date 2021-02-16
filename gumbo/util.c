@@ -21,10 +21,9 @@
 #include "compat.h"
 #include "../lib/ascii.h"
 
-static int trim(lua_State *L)
+static const char *do_trim(const char *str, size_t *n)
 {
-    size_t len;
-    const char *str = luaL_checklstring(L, 1, &len);
+    size_t len = *n;
     while (len && ascii_isspace(*str)) {
         len--;
         str++;
@@ -36,7 +35,16 @@ static int trim(lua_State *L)
         end--;
     }
 
-    lua_pushlstring(L, str, (size_t)(end - str) + 1);
+    *n = len;
+    return str;
+}
+
+static int trim(lua_State *L)
+{
+    size_t len;
+    const char *str = luaL_checklstring(L, 1, &len);
+    const char *trimmed = do_trim(str, &len);
+    lua_pushlstring(L, trimmed, len);
     return 1;
 }
 
