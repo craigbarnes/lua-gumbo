@@ -2,14 +2,12 @@
 -- TODO: Add test cases
 
 local Buffer = require "gumbo.Buffer"
+local util = require "gumbo.util"
 local constants = require "gumbo.constants"
 local voidElements = constants.voidElements
 local rcdataElements = constants.rcdataElements
+local trimAndCollapseWhitespace = util.trimAndCollapseWhitespace
 local _ENV = nil
-
-local function stripws(s)
-    return (s:gsub("^%s*(.-)%s*$", "%1"):gsub("%s+", " "))
-end
 
 return function(node, buffer)
     local buf = buffer or Buffer()
@@ -38,7 +36,7 @@ return function(node, buffer)
             if parent and rcdataElements[parent.localName] then
                 buf:write(node.data)
             else
-                buf:write(stripws(node.escapedData))
+                buf:write(trimAndCollapseWhitespace(node.escapedData))
             end
         elseif type == "document" then
             if node.doctype then
