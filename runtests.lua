@@ -30,7 +30,6 @@ local tests = {
     "test/dom/outerHTML.lua",
     "test/Set.lua",
     "test/misc.lua",
-    "test/trim.lua",
     "test/util.lua",
     "test/limits.lua",
     "test/tostring.lua",
