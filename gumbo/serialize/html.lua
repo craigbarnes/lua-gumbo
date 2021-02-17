@@ -1,6 +1,8 @@
 local Buffer = require "gumbo.Buffer"
 local Indent = require "gumbo.serialize.Indent"
 local constants = require "gumbo.constants"
+local util = require "gumbo.util"
+local trim = util.trim
 local voidElements = constants.voidElements
 local rcdataElements = constants.rcdataElements
 local _ENV = nil
@@ -9,7 +11,7 @@ local function wrap(text, indent)
     local limit = 78
     local indentWidth = #indent
     local pos = 1 - indentWidth
-    text = text:gsub("^%s*(.-)%s*$", "%1")
+    text = trim(text)
     local function reflow(start, word, stop)
         if stop - pos > limit then
             pos = start - indentWidth
