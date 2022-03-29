@@ -35,23 +35,25 @@ test:alpine:
         - make check-all
         - make benchmark CFLAGS='-O3 -DNDEBUG'
 
-pages:
-    stage: dist
-    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-debian
-    artifacts: {paths: [public]}
-    only: [master]
+.pages:
+    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-debian-10
     coverage: '/^ *lines\.*: *(\d+\.\d+\%) .*$/'
-    script: &PAGES_SCRIPT
+    artifacts:
+        paths: [public]
+        expire_in: 60 days
+    script:
         - git fetch --tags
         - make docs doxygen dist
         - make check-dist
         - luarocks install lmd5
         - make coverage-report
 
+pages:
+    extends: .pages
+    stage: dist
+    only: [master]
+
 pages:non-master:
+    extends: .pages
     stage: test
-    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-debian
-    artifacts: {paths: [public], expire_in: 1 week}
     except: [master]
-    coverage: '/^ *lines\.*: *(\d+\.\d+\%) .*$/'
-    script: *PAGES_SCRIPT
