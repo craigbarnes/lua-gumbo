@@ -45,7 +45,6 @@ test:alpine:
         - git fetch --tags
         - make docs doxygen dist
         - make check-dist
-        - luarocks install lmd5
         - make coverage-report
 
 pages:
