@@ -8,10 +8,12 @@ test:debian:
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     script:
         - make vars
-        - export LUA_VERSIONS='5.3 5.2 5.1'
         - make build-all
         - make check-all check-luajit
 
+        - make clean-obj
+        - luarocks --lua-version=5.4 --tree=/usr make gumbo-scm-1.rockspec
+        - lua5.4 -e 'require "gumbo"'
         - make clean-obj
         - luarocks --lua-version=5.3 --tree=/usr make gumbo-scm-1.rockspec
         - lua5.3 -e 'require "gumbo"'
@@ -30,7 +32,6 @@ test:alpine:
     image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-alpine
     script: &SCRIPT
         - make vars
-        - export LUA_VERSIONS='5.3 5.2 5.1'
         - make build-all
         - make check-all
         - make benchmark CFLAGS='-O3 -DNDEBUG'
