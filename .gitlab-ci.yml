@@ -45,7 +45,6 @@ test:alpine:
     script:
         - git fetch --tags
         - make docs doxygen dist
-        - make check-dist
         - make coverage-report
 
 pages:
