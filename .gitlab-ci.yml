@@ -3,7 +3,7 @@ stages: [test, dist]
 before_script:
     - export MAKEFLAGS="-j$(mk/nproc.sh)" V=1 VERBOSE=1
 
-test:debian:
+test:arch:
     stage: test
     image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     script:
