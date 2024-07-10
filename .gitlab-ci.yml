@@ -37,7 +37,7 @@ test:alpine:
         - make benchmark CFLAGS='-O3 -DNDEBUG'
 
 .pages:
-    image: registry.gitlab.com/craigbarnes/dockerfiles/cdev-debian
+    image: registry.gitlab.com/craigbarnes/dockerfiles/lua-testing
     coverage: '/^ *lines\.*: *(\d+\.\d+\%) .*$/'
     artifacts:
         paths: [public]
