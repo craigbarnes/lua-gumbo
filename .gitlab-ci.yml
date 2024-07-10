@@ -44,7 +44,7 @@ test:alpine:
         expire_in: 60 days
     script:
         - git fetch --tags
-        - make docs doxygen dist
+        - make docs dist
         - make coverage-report
 
 pages:
