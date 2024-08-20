@@ -10,7 +10,7 @@ DOCS = public/index.html public/releases.html
 docs: $(DOCS) public/api.html $(patsubst %, %.gz, $(DOCS))
 doxygen: public/libgumbo/index.html
 
-public/index.html: README.md docs/api.md build/docs/examples.md
+public/index.html: build/docs/readme.md docs/api.md build/docs/examples.md
 public/releases.html: docs/releases.md
 
 $(DOCS): public/%.html: docs/template.html | public/style.css.gz
@@ -29,8 +29,12 @@ public/style.css: docs/layout.css docs/style.css | public/
 	$(E) CAT '$@'
 	$(Q) cat $^ > $@
 
+build/docs/readme.md: README.md | build/docs/
+	$(E) GEN '$@'
+	$(Q) sed -E '/^(For full API|See also: <https:\/\/cra).*\.$$/d' $< >$@
+
 build/docs/examples.md: $(EXAMPLE_FILES) | build/docs/
-	$(E) CAT '$@'
+	$(E) GEN '$@'
 	$(Q) printf "Examples\n--------\n\n" > $@
 	$(Q) for file in $^; do \
 	  printf '```lua\n' >> $@; \
